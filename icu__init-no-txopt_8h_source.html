@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.23.1</span>
+   &#160;<span id="projectnumber">3.23.5</span>
    </div>
   </td>
  </tr>
@@ -95,7 +95,7 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="soniclib_8h.html">invn/soniclib/soniclib.h</a>&gt;</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define ICU_INIT_NO_TXOPT_MAX_SAMPLES   0           </span><span class="comment">// f/w does not perform measurements</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define ICU_INIT_NO_TXOPT_MAX_SAMPLES (IQ_SAMPLES_MAX)</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *icu_init_no_txopt_version;       <span class="comment">// version string in fw .c file</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint8_t icu_init_no_txopt_fw_text[];</div>
@@ -114,8 +114,8 @@ $(function() {
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* ICU_INIT_NO_TXOPT_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aicu_8h_html"><div class="ttname"><a href="icu_8h.html">icu.h</a></div><div class="ttdoc">Internal definitions for TDK/Chirp ICU ultrasonic sensors.</div></div>
 <div class="ttc" id="asoniclib_8h_html"><div class="ttname"><a href="soniclib_8h.html">soniclib.h</a></div><div class="ttdoc">SonicLib public API and support functions for TDK/InvenSense ultrasonic sensors (originally developed...</div></div>
-<div class="ttc" id="astructch__dev__t_html"><div class="ttname"><a href="structch__dev__t.html">ch_dev_t</a></div><div class="ttdoc">Chirp sensor device descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:789</div></div>
-<div class="ttc" id="astructch__group__t_html"><div class="ttname"><a href="structch__group__t.html">ch_group_t</a></div><div class="ttdoc">Chirp sensor group descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:762</div></div>
+<div class="ttc" id="astructch__dev__t_html"><div class="ttname"><a href="structch__dev__t.html">ch_dev_t</a></div><div class="ttdoc">Chirp sensor device descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:775</div></div>
+<div class="ttc" id="astructch__group__t_html"><div class="ttname"><a href="structch__group__t.html">ch_group_t</a></div><div class="ttdoc">Chirp sensor group descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:748</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
