@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.23.5</span>
+   &#160;<span id="projectnumber">3.27.0</span>
    </div>
   </td>
  </tr>
@@ -83,8 +83,9 @@ $(function() {
 
 <p>Internal driver functions for operation with the Chirp ultrasonic sensor.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
-<code>#include &lt;stdint.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
 </div>
 <p><a href="ch__common_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -630,6 +631,9 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_free
 <tr class="memitem:aae78dc1ad42f9744fa4392fd2f4a4096"><td class="memItemLeft" align="right" valign="top"><a id="aae78dc1ad42f9744fa4392fd2f4a4096"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_freerun_interval_us</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t interval_us)</td></tr>
 <tr class="separator:aae78dc1ad42f9744fa4392fd2f4a4096"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19a40acd44e2388d65a643ecf8eee06d"><td class="memItemLeft" align="right" valign="top"><a id="a19a40acd44e2388d65a643ecf8eee06d"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_freerun_time_hop</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, bool enable)</td></tr>
+<tr class="separator:a19a40acd44e2388d65a643ecf8eee06d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92bc89ff1d29bf49d35f17303b2c0479"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__common_8h.html#a92bc89ff1d29bf49d35f17303b2c0479">ch_common_set_frequency</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t target_freq_hz)</td></tr>
 <tr class="memdesc:a92bc89ff1d29bf49d35f17303b2c0479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the closest available operating frequency to a desired operating frequency.  <a href="ch__common_8h.html#a92bc89ff1d29bf49d35f17303b2c0479">More...</a><br /></td></tr>
 <tr class="separator:a92bc89ff1d29bf49d35f17303b2c0479"><td class="memSeparator" colspan="2">&#160;</td></tr>

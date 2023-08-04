@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.23.5</span>
+   &#160;<span id="projectnumber">3.27.0</span>
    </div>
   </td>
  </tr>
@@ -126,13 +126,13 @@ Macros</h2></td></tr>
 <tr class="separator:ac696e9971aa740b47aeb4602c622cfe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a493f7894d846693e19f866eec5c48aad"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a493f7894d846693e19f866eec5c48aad">CH_PROG_REG_STAT</a>&#160;&#160;&#160;0x43</td></tr>
 <tr class="separator:a493f7894d846693e19f866eec5c48aad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aead6a50cc1df7dbabb33c2b948c7ac4a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#aead6a50cc1df7dbabb33c2b948c7ac4a">CH_PROG_SIZEOF</a>(R)&#160;&#160;&#160;( (R) &amp; 0x40 ? 1 : 2 )</td></tr>
+<tr class="memitem:aead6a50cc1df7dbabb33c2b948c7ac4a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#aead6a50cc1df7dbabb33c2b948c7ac4a">CH_PROG_SIZEOF</a>(R)&#160;&#160;&#160;((R)&amp;0x40 ? 1 : 2)</td></tr>
 <tr class="separator:aead6a50cc1df7dbabb33c2b948c7ac4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8330fd24a12c82e7a5d66446ba2c1e9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#ae8330fd24a12c82e7a5d66446ba2c1e9">CH_PROG_XFER_SIZE</a>&#160;&#160;&#160;(256)</td></tr>
 <tr class="separator:ae8330fd24a12c82e7a5d66446ba2c1e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17d1dc5f889265639a1f76800868d3a6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a17d1dc5f889265639a1f76800868d3a6">CHDRV_BANDWIDTH_INDEX_1</a>&#160;&#160;&#160;6</td></tr>
 <tr class="separator:a17d1dc5f889265639a1f76800868d3a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4046fd810b274161f020c21ed02f9352"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a4046fd810b274161f020c21ed02f9352">CHDRV_BANDWIDTH_INDEX_2</a>&#160;&#160;&#160;(<a class="el" href="ch__driver_8h.html#a17d1dc5f889265639a1f76800868d3a6">CHDRV_BANDWIDTH_INDEX_1</a> + 1)</td></tr>
+<tr class="memitem:a4046fd810b274161f020c21ed02f9352"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a4046fd810b274161f020c21ed02f9352">CHDRV_BANDWIDTH_INDEX_2</a>&#160;&#160;&#160;	(<a class="el" href="ch__driver_8h.html#a17d1dc5f889265639a1f76800868d3a6">CHDRV_BANDWIDTH_INDEX_1</a> + 1)</td></tr>
 <tr class="separator:a4046fd810b274161f020c21ed02f9352"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66e5378460204f913bbdc04b1cb7e9fb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a66e5378460204f913bbdc04b1cb7e9fb">CHDRV_DEBUG_PIN_NUM</a>&#160;&#160;&#160;(0)</td></tr>
 <tr class="separator:a66e5378460204f913bbdc04b1cb7e9fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -143,13 +143,13 @@ Macros</h2></td></tr>
 <tr class="separator:aeba4dde00e9d53fb025d00695866ad5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19b2a185bec85a94cdd00f58ea1cc444"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a19b2a185bec85a94cdd00f58ea1cc444">CHDRV_EVENT_TIMEOUT_MS</a>&#160;&#160;&#160;(750)</td></tr>
 <tr class="separator:a19b2a185bec85a94cdd00f58ea1cc444"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30d125b6ed3ddcc504f3bc2a5c0bbe84"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a30d125b6ed3ddcc504f3bc2a5c0bbe84">CHDRV_FREQLOCK_TIMEOUT_MS</a>&#160;&#160;&#160;100</td></tr>
+<tr class="memitem:a30d125b6ed3ddcc504f3bc2a5c0bbe84"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a30d125b6ed3ddcc504f3bc2a5c0bbe84">CHDRV_FREQLOCK_TIMEOUT_MS</a>&#160;&#160;&#160;	100</td></tr>
 <tr class="separator:a30d125b6ed3ddcc504f3bc2a5c0bbe84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a632eb3a4c28778cbd004027e11fde059"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a632eb3a4c28778cbd004027e11fde059">CHDRV_I2C_MAX_WRITE_BYTES</a>&#160;&#160;&#160;256</td></tr>
 <tr class="separator:a632eb3a4c28778cbd004027e11fde059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acafd0645157c35f51250161f5379fa45"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#acafd0645157c35f51250161f5379fa45">CHDRV_I2C_SPEED_DEFAULT_HZ</a>&#160;&#160;&#160;(400000)</td></tr>
 <tr class="separator:acafd0645157c35f51250161f5379fa45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac527316c98bd7c0e1939500f02c43484"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#ac527316c98bd7c0e1939500f02c43484">CHDRV_MAX_QUEUE_LENGTH</a>&#160;&#160;&#160;CHIRP_MAX_NUM_SENSORS</td></tr>
+<tr class="memitem:ac527316c98bd7c0e1939500f02c43484"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#ac527316c98bd7c0e1939500f02c43484">CHDRV_MAX_QUEUE_LENGTH</a>&#160;&#160;&#160;	CHIRP_MAX_NUM_SENSORS</td></tr>
 <tr class="separator:ac527316c98bd7c0e1939500f02c43484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a657a87e2e6fddfb7f06988954e814f9e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a657a87e2e6fddfb7f06988954e814f9e">CHDRV_NB_TRANS_TYPE_EXTERNAL</a>&#160;&#160;&#160;(2)</td></tr>
 <tr class="separator:a657a87e2e6fddfb7f06988954e814f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,7 +159,7 @@ Macros</h2></td></tr>
 <tr class="separator:abe569bd8389300a9d3a490de4392f293"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b793c41900e340a75d1fa246614f5ff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a9b793c41900e340a75d1fa246614f5ff">CHDRV_POST_ALGO_INIT_DELAY_MS</a>&#160;&#160;&#160;3</td></tr>
 <tr class="separator:a9b793c41900e340a75d1fa246614f5ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1bcecff52fccdf97ea9c02e00b3ac80"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#af1bcecff52fccdf97ea9c02e00b3ac80">CHDRV_POST_TRIG_IEN_DELAY_US</a>&#160;&#160;&#160;10</td></tr>
+<tr class="memitem:af1bcecff52fccdf97ea9c02e00b3ac80"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#af1bcecff52fccdf97ea9c02e00b3ac80">CHDRV_POST_TRIG_IEN_DELAY_US</a>&#160;&#160;&#160;	10</td></tr>
 <tr class="separator:af1bcecff52fccdf97ea9c02e00b3ac80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcabdd3a9dfdbf2a3bd10fa2ed6fa257"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#afcabdd3a9dfdbf2a3bd10fa2ed6fa257">CHDRV_PRETRIGGER_DELAY_US</a>&#160;&#160;&#160;600</td></tr>
 <tr class="separator:afcabdd3a9dfdbf2a3bd10fa2ed6fa257"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,6 +212,9 @@ Functions</h2></td></tr>
 <tr class="memitem:af273037e1ae385b21913a48fd220300a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#af273037e1ae385b21913a48fd220300a">chdrv_burst_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes)</td></tr>
 <tr class="memdesc:af273037e1ae385b21913a48fd220300a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write multiple bytes to a sensor application register location.  <a href="ch__driver_8h.html#af273037e1ae385b21913a48fd220300a">More...</a><br /></td></tr>
 <tr class="separator:af273037e1ae385b21913a48fd220300a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29b2e6c2bf6c22421c45efc8d76cebf9"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a29b2e6c2bf6c22421c45efc8d76cebf9">chdrv_check_reset_state</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t *reset_state)</td></tr>
+<tr class="memdesc:a29b2e6c2bf6c22421c45efc8d76cebf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if sensor reset has occurred.  <a href="ch__driver_8h.html#a29b2e6c2bf6c22421c45efc8d76cebf9">More...</a><br /></td></tr>
+<tr class="separator:a29b2e6c2bf6c22421c45efc8d76cebf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dea5da36604025423fcd06156e3c154"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a0dea5da36604025423fcd06156e3c154">chdrv_cpu_freq_adjust</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t pmut_freq)</td></tr>
 <tr class="memdesc:a0dea5da36604025423fcd06156e3c154"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adjust sensor micro-controller CPU frequency.  <a href="ch__driver_8h.html#a0dea5da36604025423fcd06156e3c154">More...</a><br /></td></tr>
 <tr class="separator:a0dea5da36604025423fcd06156e3c154"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -587,7 +590,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">R</td><td>)</td>
-          <td>&#160;&#160;&#160;( (R) &amp; 0x40 ? 1 : 2 )</td>
+          <td>&#160;&#160;&#160;((R)&amp;0x40 ? 1 : 2)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -632,11 +635,11 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CHDRV_BANDWIDTH_INDEX_2&#160;&#160;&#160;(<a class="el" href="ch__driver_8h.html#a17d1dc5f889265639a1f76800868d3a6">CHDRV_BANDWIDTH_INDEX_1</a> + 1)</td>
+          <td class="memname">#define CHDRV_BANDWIDTH_INDEX_2&#160;&#160;&#160;	(<a class="el" href="ch__driver_8h.html#a17d1dc5f889265639a1f76800868d3a6">CHDRV_BANDWIDTH_INDEX_1</a> + 1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Index of second sample to use for calculating bandwidth. </p>
+<p>Index of second sample to \ use for calculating bandwidth. </p>
 
 </div>
 </div>
@@ -692,11 +695,11 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CHDRV_FREQLOCK_TIMEOUT_MS&#160;&#160;&#160;100</td>
+          <td class="memname">#define CHDRV_FREQLOCK_TIMEOUT_MS&#160;&#160;&#160;	100</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Time to wait in <a class="el" href="ch__driver_8h.html#a63e3b09d53c3c46f7ab50673f610db01" title="Initalize and start a group of sensors.">chdrv_group_start()</a> for sensor initialization, in milliseconds. <br  />
+<p>Time to wait in <a class="el" href="ch__driver_8h.html#a63e3b09d53c3c46f7ab50673f610db01" title="Initalize and start a group of sensors.">chdrv_group_start()</a> for sensor \ initialization, in milliseconds. <br  />
  </p>
 
 </div>
@@ -738,7 +741,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CHDRV_MAX_QUEUE_LENGTH&#160;&#160;&#160;CHIRP_MAX_NUM_SENSORS</td>
+          <td class="memname">#define CHDRV_MAX_QUEUE_LENGTH&#160;&#160;&#160;	CHIRP_MAX_NUM_SENSORS</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -813,7 +816,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CHDRV_POST_TRIG_IEN_DELAY_US&#160;&#160;&#160;10</td>
+          <td class="memname">#define CHDRV_POST_TRIG_IEN_DELAY_US&#160;&#160;&#160;	10</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1172,6 +1175,45 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a29b2e6c2bf6c22421c45efc8d76cebf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29b2e6c2bf6c22421c45efc8d76cebf9">&#9670;&nbsp;</a></span>chdrv_check_reset_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t chdrv_check_reset_state </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>reset_state_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if sensor reset has occurred. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">reset_state_ptr</td><td>pointer to variable that will be updated with 0 = No Reset, 1 = Reset has occurred.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero otherwise</dd></dl>
+<p>This function checks if an PUC (Power Up Clear) main reset event has occurred by checking the PUC_PND status bit in CPU_STAT debug register. The function updates the "<em>reset_state_ptr</em> is set to 1 if the sensor was reset, otherwise it is set to zero. Note this will continue to return a reset state as set until the PUC_PND bit is cleared by writing a 1 to it, which is done in chdrv_reset_and_run function. </p>
+
+</div>
+</div>
 <a id="a0dea5da36604025423fcd06156e3c154"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0dea5da36604025423fcd06156e3c154">&#9670;&nbsp;</a></span>chdrv_cpu_freq_adjust()</h2>
 
@@ -1236,8 +1278,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Sensor CPU frequency, in Hz</dd></dl>
-<p>This function calculates and returns the processor frequency, in Hz, of the internal micro-controller in the sensor. <br  />
- </p>
+<p>This function calculates and returns the processor frequency, in Hz, of the internal micro-controller in the sensor. </p>
 
 </div>
 </div>
@@ -1562,8 +1603,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero otherwise</dd></dl>
-<p>This function queues an I2C/SPI transaction for an "external" device (i.e. not a Chirp sensor). It is used when the I2C/SPI bus is shared between the Chirp sensor(s) and other devices. <br  />
-</p>
+<p>This function queues an I2C/SPI transaction for an "external" device (i.e. not a Chirp sensor). It is used when the I2C/SPI bus is shared between the Chirp sensor(s) and other devices.</p>
 <p>The transaction is flagged for special handling when the I/O operation completes. Specifically, the <em><a class="el" href="chirp__bsp_8h.html#a3a3ecf5c737e49a39bbe34a7c9100158" title="Interrupt handler callout for external devices sharing the SPI/I2C bus.">chbsp_external_irq_handler()</a></em> will be called by the driver to allow the board support packate (BSP) to perform any necessary operations. </p>
 
 </div>
@@ -1592,10 +1632,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 for success, non-zero if write(s) failed to any sensor initially detected as present</dd></dl>
-<p>This function probes the SPI or I2C bus for each device in the group. For each detected sensor, the firmware is programmed into the device, and in CHx01 sensors the application I2C address is set. <br  />
- Then the sensor is reset and execution starts.</p>
-<p>Once started, each device will begin an internal initialization and self-test sequence. <br  />
-</p>
+<p>This function probes the SPI or I2C bus for each device in the group. For each detected sensor, the firmware is programmed into the device, and in CHx01 sensors the application I2C address is set. Then the sensor is reset and execution starts.</p>
+<p>Once started, each device will begin an internal initialization and self-test sequence.</p>
 <dl class="section note"><dt>Note</dt><dd>For CHx01 sensors, this routine will leave the PROG pin de-asserted for all devices in the group when it completes.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -2268,8 +2306,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function asserts the interrupt lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for interrupt pin (INT1 or INT2) will be set to a low (active) level. <br  />
- For CH101/CH201 sensors, the sensors' INT lines will be set to a high level.</p>
+<p>This function asserts the interrupt lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for interrupt pin (INT1 or INT2) will be set to a low (active) level. For CH101/CH201 sensors, the sensors' INT lines will be set to a high level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em><a class="el" href="ch__driver_8h.html#afc765a2d807b342663885146ee42ab36" title="De-assert the hardware trigger line for a sensor.">chdrv_trig_deassert()</a></em>, <em><a class="el" href="ch__driver_8h.html#a92499dcecad1de83c11c294f51d019cc" title="Assert the hardware trigger lines for all sensors in a group.">chdrv_trig_group_assert()</a></em> </p>
 
@@ -2298,8 +2335,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function de-asserts the interrupt lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for interrupt pin (INT1 or INT2) will be reset to a high (inactive) level. <br  />
- For CH101/CH201 sensors, the sensors' INT lines will be reset to a low level.</p>
+<p>This function de-asserts the interrupt lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for interrupt pin (INT1 or INT2) will be reset to a high (inactive) level. For CH101/CH201 sensors, the sensors' INT lines will be reset to a low level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em><a class="el" href="ch__driver_8h.html#afc765a2d807b342663885146ee42ab36" title="De-assert the hardware trigger line for a sensor.">chdrv_trig_deassert()</a></em>, <em><a class="el" href="ch__driver_8h.html#a92499dcecad1de83c11c294f51d019cc" title="Assert the hardware trigger lines for all sensors in a group.">chdrv_trig_group_assert()</a></em> </p>
 
@@ -2630,8 +2666,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>range in millimeters, or <em>CH_NO_TARGET</em> (0xFFFFFFFF) if no object is detected. <br  />
- The range result format is fixed point with 5 binary fractional digits (divide by 32 to convert to mm).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>range in millimeters, or <em>CH_NO_TARGET</em> (0xFFFFFFFF) if no object is detected. The range result format is fixed point with 5 binary fractional digits (divide by 32 to convert to mm).</dd></dl>
 <p>This function takes the time-of-flight and scale factor values from the sensor, and computes the actual one-way range based on the formulas given in the sensor datasheet.</p>
 <p>Convert the sensor register values to a range using the calibration data in the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> struct.</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -3271,8 +3306,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>range in millimeters, or <em>CH_NO_TARGET</em> (0xFFFFFFFF) if no object is detected. <br  />
- The range result format is fixed point with 5 binary fractional digits (divide by 32 to convert to mm).</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>range in millimeters, or <em>CH_NO_TARGET</em> (0xFFFFFFFF) if no object is detected. The range result format is fixed point with 5 binary fractional digits (divide by 32 to convert to mm).</dd></dl>
 <p>This function takes the time-of-flight and scale factor values from the sensor, and computes the actual round-trip range based on the formulas given in the sensor datasheet. </p>
 
 </div>
@@ -3489,8 +3523,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function asserts the specified sensor's h/w trigger line to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be set to a low (active) level. <br  />
- For CH101/CH201 sensors, the single INT line will be set to a high level.</p>
+<p>This function asserts the specified sensor's h/w trigger line to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be set to a low (active) level. For CH101/CH201 sensors, the single INT line will be set to a high level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em>chdrv_group_trig_assert()</em>, <em><a class="el" href="ch__driver_8h.html#afc765a2d807b342663885146ee42ab36" title="De-assert the hardware trigger line for a sensor.">chdrv_trig_deassert()</a></em> </p>
 
@@ -3519,8 +3552,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function de-asserts the specified sensor's h/w trigger line used to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be reset to a high (inactive) level. <br  />
- For CH101/CH201 sensors, the single INT line will be reset to a low level.</p>
+<p>This function de-asserts the specified sensor's h/w trigger line used to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be reset to a high (inactive) level. For CH101/CH201 sensors, the single INT line will be reset to a low level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em>chdrv_group_trig_assert()</em>, <em><a class="el" href="ch__driver_8h.html#a6f8f74c8a25453be98107dfd79f79708" title="Assert the hardware trigger line for a sensor.">chdrv_trig_assert()</a></em> </p>
 
@@ -3549,8 +3581,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function asserts the h/w trigger lines for all sensors in a group to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be set to a low (active) level. <br  />
- For CH101/CH201 sensors, the sensors' INT lines will be set to a high level.</p>
+<p>This function asserts the h/w trigger lines for all sensors in a group to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be set to a low (active) level. For CH101/CH201 sensors, the sensors' INT lines will be set to a high level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em><a class="el" href="ch__driver_8h.html#a6f8f74c8a25453be98107dfd79f79708" title="Assert the hardware trigger line for a sensor.">chdrv_trig_assert()</a></em>, <em><a class="el" href="ch__driver_8h.html#abbf1c16036d133563467f06b7b5062e2" title="De-assert the hardware trigger lines for all sensors in a group.">chdrv_trig_group_deassert()</a></em> </p>
 
@@ -3579,8 +3610,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function de-asserts the h/w trigger lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be reset to a high (inactive) level. <br  />
- For CH101/CH201 sensors, the sensors' INT lines will be reset to a low level.</p>
+<p>This function de-asserts the h/w trigger lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be reset to a high (inactive) level. For CH101/CH201 sensors, the sensors' INT lines will be reset to a low level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em><a class="el" href="ch__driver_8h.html#afc765a2d807b342663885146ee42ab36" title="De-assert the hardware trigger line for a sensor.">chdrv_trig_deassert()</a></em>, <em><a class="el" href="ch__driver_8h.html#a92499dcecad1de83c11c294f51d019cc" title="Assert the hardware trigger lines for all sensors in a group.">chdrv_trig_group_assert()</a></em> </p>
 

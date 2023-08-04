@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.23.5</span>
+   &#160;<span id="projectnumber">3.27.0</span>
    </div>
   </td>
  </tr>
@@ -91,66 +91,66 @@ $(function() {
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef CH_COMMON_H_</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define CH_COMMON_H_</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="soniclib_8h.html">invn/soniclib/soniclib.h</a>&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">/* All sensor common definitions */</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define CH_COMMON_RTC_CAL_PULSE_MS          100     </span><span class="comment">// typical (default) rtc calibration pulse, in ms</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">/* CH-x01 common definitions */</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define CHX01_SCALEFACTOR_INDEX         4       </span><span class="comment">// sample of BIST data for scale factor calc</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define CHX01_BANDWIDTH_INDEX_1 6       </span><span class="comment">// first sample of BIST data for b/w calc</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define CHX01_BANDWIDTH_INDEX_2 7       </span><span class="comment">// second sample of BIST data for b/w calc</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#if (CH101_DATA_MEM_SIZE == CH201_DATA_MEM_SIZE)            </span><span class="comment">// make sure CH101 and CH201 are the same</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define CHX01_DATA_MEM_SIZE             CH101_DATA_MEM_SIZE </span><span class="comment">// data memory size</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#if (CH101_DATA_MEM_ADDR == CH201_DATA_MEM_ADDR)</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#define CHX01_DATA_MEM_ADDR             CH101_DATA_MEM_ADDR </span><span class="comment">// data memory address</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#if (CH101_PROG_MEM_SIZE == CH201_PROG_MEM_SIZE)</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#define CHX01_PROG_MEM_SIZE             CH101_PROG_MEM_SIZE </span><span class="comment">// program memory size</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#if (CH101_PROG_MEM_ADDR == CH201_PROG_MEM_ADDR)</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#define CHX01_PROG_MEM_ADDR             CH101_PROG_MEM_ADDR </span><span class="comment">// program memory address</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#if (CH101_FW_SIZE == CH201_FW_SIZE)</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#define CHX01_FW_SIZE                   CH101_FW_SIZE       </span><span class="comment">// sensor f/w size</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#define CHX01_COMMON_CAL_TRIG_USE_BUS   (0x80)              </span><span class="comment">// calibration trigger cmd to use bus speed</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define CHX01_I2C_RTC_CYCLES            (128)               </span><span class="comment">// RTC counter duration when using bus calibration</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/* CH-101 common definitions */</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_OPMODE         0x01</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TICK_INTERVAL  0x02</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_PERIOD         0x05</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_CAL_TRIG       0x06</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_MAX_RANGE      0x07</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TIME_PLAN      0x09</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TX_LENGTH      0x10</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_CAL_RESULT     0x0A</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_REV_CYCLES     0x0C</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_DCO_PERIOD     0x0E</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_RX_HOLDOFF     0x11</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_STAT_RANGE     0x12</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_STAT_COEFF     0x13</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_READY          0x14</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TOF_SF         0x16</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TOF            0x18</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_AMPLITUDE      0x1A</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_DATA           0x1C</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#define CH101_COMMON_I2CREGS_OFFSET     0</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#define CH101_COMMON_READY_FREQ_LOCKED  (0x02)</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#define CH101_COMMON_FREQCOUNTERCYCLES  (128)</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#define CH101_COMMON_STAT_COEFF_DEFAULT (6)     </span><span class="comment">// default value for stationary target coefficient</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#define CH101_COMMON_NUM_THRESHOLDS     (6)     </span><span class="comment">// total number of thresholds</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="soniclib_8h.html">invn/soniclib/soniclib.h</a>&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/* All sensor common definitions */</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define CH_COMMON_RTC_CAL_PULSE_MS 100  </span><span class="comment">// typical (default) rtc calibration pulse, in ms</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">/* CH-x01 common definitions */</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define CHX01_SCALEFACTOR_INDEX 4  </span><span class="comment">// sample of BIST data for scale factor calc</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define CHX01_BANDWIDTH_INDEX_1 6  </span><span class="comment">// first sample of BIST data for b/w calc</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define CHX01_BANDWIDTH_INDEX_2 7  </span><span class="comment">// second sample of BIST data for b/w calc</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#if (CH101_DATA_MEM_SIZE == CH201_DATA_MEM_SIZE)  </span><span class="comment">// make sure CH101 and CH201 are the same</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define CHX01_DATA_MEM_SIZE CH101_DATA_MEM_SIZE   </span><span class="comment">// data memory size</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#if (CH101_DATA_MEM_ADDR == CH201_DATA_MEM_ADDR)</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define CHX01_DATA_MEM_ADDR CH101_DATA_MEM_ADDR  </span><span class="comment">// data memory address</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#if (CH101_PROG_MEM_SIZE == CH201_PROG_MEM_SIZE)</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#define CHX01_PROG_MEM_SIZE CH101_PROG_MEM_SIZE  </span><span class="comment">// program memory size</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#if (CH101_PROG_MEM_ADDR == CH201_PROG_MEM_ADDR)</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#define CHX01_PROG_MEM_ADDR CH101_PROG_MEM_ADDR  </span><span class="comment">// program memory address</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#if (CH101_FW_SIZE == CH201_FW_SIZE)</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#define CHX01_FW_SIZE CH101_FW_SIZE  </span><span class="comment">// sensor f/w size</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define CHX01_COMMON_CAL_TRIG_USE_BUS (0x80)  </span><span class="comment">// calibration trigger cmd to use bus speed</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#define CHX01_I2C_RTC_CYCLES          (128)   </span><span class="comment">// RTC counter duration when using bus calibration</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">/* CH-101 common definitions */</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_OPMODE        0x01</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TICK_INTERVAL 0x02</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_PERIOD        0x05</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_CAL_TRIG      0x06</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_MAX_RANGE     0x07</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TIME_PLAN     0x09</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TX_LENGTH     0x10</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_CAL_RESULT    0x0A</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_REV_CYCLES    0x0C</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_DCO_PERIOD    0x0E</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_RX_HOLDOFF    0x11</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_STAT_RANGE    0x12</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_STAT_COEFF    0x13</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_READY         0x14</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TOF_SF        0x16</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_TOF           0x18</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_AMPLITUDE     0x1A</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#define CH101_COMMON_REG_DATA          0x1C</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#define CH101_COMMON_I2CREGS_OFFSET 0</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#define CH101_COMMON_READY_FREQ_LOCKED (0x02)</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#define CH101_COMMON_FREQCOUNTERCYCLES (128)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#define CH101_COMMON_STAT_COEFF_DEFAULT (6)  </span><span class="comment">// default value for stationary target coefficient</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#define CH101_COMMON_NUM_THRESHOLDS     (6)  </span><span class="comment">// total number of thresholds</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">/* CH-201 common definitions */</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
@@ -170,74 +170,74 @@ $(function() {
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_ST_RANGE       0x12</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_READY          0x14</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_THRESH_LEN_4   0x15</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_THRESHOLDS     0x16    </span><span class="comment">// start of array of six 2-byte threshold levels</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_THRESHOLDS     0x16  </span><span class="comment">// start of array of six 2-byte threshold levels</span></div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_TOF_SF         0x22</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_TOF            0x24</span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_AMPLITUDE      0x26</span></div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#define CH201_COMMON_REG_DATA           0x28</span></div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#define CH201_COMMON_I2CREGS_OFFSET     0</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#define CH201_COMMON_I2CREGS_OFFSET 0</span></div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#define CH201_COMMON_READY_FREQ_LOCKED  (0x02)</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#define CH201_COMMON_READY_FREQ_LOCKED (0x02)</span></div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#define CH201_COMMON_FREQCOUNTERCYCLES  (128)</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#define CH201_COMMON_RX_LOW_GAIN_MIN    (8)         </span><span class="comment">// minimum low-gain sample count</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#define CH201_COMMON_FREQCOUNTERCYCLES (128)</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#define CH201_COMMON_RX_LOW_GAIN_MIN   (8)  </span><span class="comment">// minimum low-gain sample count</span></div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#define CHX01_COMMON_NUM_THRESHOLDS     (6)     </span><span class="comment">// total number of thresholds</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#define CHX01_COMMON_NUM_THRESHOLDS (6)  </span><span class="comment">// total number of thresholds</span></div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_OPMODE          0x01</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_TICK_INTERVAL   0x02</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_LOW_GAIN_RXLEN  0x04</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_PERIOD          0x05</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_CAL_TRIG        0x06</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_MAX_RANGE       0x07</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_0    0x08</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_1    0x09</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_CAL_RESULT      0x0A</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_2    0x0C</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_3    0x0D</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_TX_LENGTH       0x10</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_RX_HOLDOFF      0x11</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_ST_RANGE        0x12</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_READY           0x14</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_4    0x15</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESHOLDS      0x16    </span><span class="comment">// start of array of six 2-byte threshold levels</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_TOF_SF      0x22</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_TOF             0x24</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_AMPLITUDE       0x26</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_DATA            0x28</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_OPMODE         0x01</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_TICK_INTERVAL  0x02</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_LOW_GAIN_RXLEN 0x04</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_PERIOD         0x05</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_CAL_TRIG       0x06</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_MAX_RANGE      0x07</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_0   0x08</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_1   0x09</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_CAL_RESULT     0x0A</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_2   0x0C</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_3   0x0D</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_TX_LENGTH      0x10</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_RX_HOLDOFF     0x11</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_ST_RANGE       0x12</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_READY          0x14</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESH_LEN_4   0x15</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_THRESHOLDS     0x16  </span><span class="comment">// start of array of six 2-byte threshold levels</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_TOF_SF         0x22</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_TOF            0x24</span></div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_AMPLITUDE      0x26</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="preprocessor">#define CHX01_GPRMT_REG_DATA           0x28</span></div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="preprocessor">#define NSEC_PER_SEC (1000000000U)</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor">#define PMUT_FREQUENCY_ERROR_CODE       (1)     </span><span class="comment">//this indicates some error in the frequency measurement</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="preprocessor">#define NSEC_PER_SEC              (1000000000U)</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor">#define PMUT_FREQUENCY_ERROR_CODE (1)  </span><span class="comment">// this indicates some error in the frequency measurement</span></div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment">/* ICU sensor common definitions */</span></div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">#ifdef INCLUDE_ALGO_RANGEFINDER</span></div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">#define ICU_COMMON_NUM_THRESHOLDS       (LEN_THRESH)    </span><span class="comment">// total number of thresholds from shasta_external_regs.h</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">#define ICU_COMMON_NUM_THRESHOLDS (LEN_THRESH)  </span><span class="comment">// total number of thresholds from shasta_external_regs.h</span></div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">#define ICU_COMMON_NUM_THRESHOLDS       (0)             </span><span class="comment">// no thresholds</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// INCLUDE_ALGO_RANGEFINDER</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">#define ICU_COMMON_NUM_THRESHOLDS (0)  </span><span class="comment">// no thresholds</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">#endif                                 </span><span class="comment">// INCLUDE_ALGO_RANGEFINDER</span></div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment">/* Function prototypes */</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;uint8_t ch_common_init(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num, <a class="code" href="soniclib_8h.html#a1318c8ebfcd0a9c5f0d9acda119188d5">ch_fw_init_func_t</a> fw_init_func);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">/* Function prototypes */</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;uint8_t ch_common_init(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num, <a class="code" href="soniclib_8h.html#a1318c8ebfcd0a9c5f0d9acda119188d5">ch_fw_init_func_t</a> fw_init_func);</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;uint8_t ch_common_group_start(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr);</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;uint8_t ch_common_group_start(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;uint8_t ch_common_set_mode(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">ch_mode_t</a> mode);</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;uint8_t ch_common_set_mode(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">ch_mode_t</a> mode);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;uint8_t ch_common_fw_load(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;uint8_t ch_common_fw_load(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;uint8_t ch_common_set_rtc(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a95396c4034eb6e41fffcfa7d9dbcd830">ch_rtc_src_t</a> rtc_source, uint16_t rtc_freq);</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;uint8_t ch_common_set_rtc(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a95396c4034eb6e41fffcfa7d9dbcd830">ch_rtc_src_t</a> rtc_source, uint16_t rtc_freq);</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;uint8_t ch_common_set_sample_interval(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t interval_ms); <span class="comment">// deprecated</span></div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;uint8_t ch_common_set_freerun_interval(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t interval_ms);</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;uint8_t ch_common_set_sample_interval(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t interval_ms);  <span class="comment">// deprecated</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;uint8_t ch_common_set_freerun_interval(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t interval_ms);</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;uint8_t ch_common_set_freerun_interval_us(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t interval_us);</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;uint8_t ch_common_set_freerun_interval_us(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t interval_us);</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;uint8_t ch_common_set_freerun_interval_ticks(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t interval_periods);</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;uint8_t ch_common_set_freerun_interval_ticks(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t interval_periods);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;uint8_t ch_common_set_freerun_time_hop(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">bool</span> enable);</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;uint8_t ch_common_set_num_samples( <a class="code" href="structch__dev__t.html">ch_dev_t</a>* dev_ptr, uint16_t num_samples );</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;uint8_t ch_common_set_num_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_samples);</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;uint16_t ch_common_get_num_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
@@ -273,167 +273,162 @@ $(function() {
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;uint16_t ch_common_samples_to_mm(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_samples);</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;uint8_t ch_common_get_iq_data(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__iq__sample__t.html">ch_iq_sample_t</a> *buf_ptr, uint16_t start_sample, uint16_t num_samples, <a class="code" href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a> nonblock);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;uint8_t  ch_common_set_sample_window(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t start_sample, uint16_t end_sample);</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;uint8_t ch_common_set_time_plan(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a> time_plan);</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<a class="code" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a> ch_common_get_time_plan(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;uint16_t ch_common_get_amplitude_avg(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;uint8_t ch_common_get_amplitude_data(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t *buf_ptr, uint16_t start_sample, uint16_t num_samples, </div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;                                     <a class="code" href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a> mode);</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;uint8_t ch_common_get_amp_thresh_data(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__amp__thresh__t.html">ch_amp_thresh_t</a> *buf_ptr, uint16_t start_sample, </div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;                                      uint16_t num_samples, <a class="code" href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a> mode);</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;uint8_t ch_common_set_rx_holdoff(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t rx_holdoff);</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;uint16_t ch_common_get_rx_holdoff(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;uint8_t  ch_common_set_rx_low_gain(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_samples);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;uint16_t ch_common_get_rx_low_gain(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;uint8_t  ch_common_set_tx_length(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_cycles);</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;uint16_t ch_common_get_tx_length(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;uint8_t ch_common_set_cal_result(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__cal__result__t.html">ch_cal_result_t</a> *cal_ptr);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;uint8_t ch_common_get_cal_result(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__cal__result__t.html">ch_cal_result_t</a> *cal_ptr);</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;uint8_t ch_common_check_program(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;uint8_t <a class="code" href="ch__common_8h.html#a92bc89ff1d29bf49d35f17303b2c0479">ch_common_set_frequency</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t target_freq_hz);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;uint8_t ch_common_group_set_frequency(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint32_t frequency);</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;uint8_t ch_common_set_pmut_clock(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#aca9006600c4c232750578f7ed6c0416e">ch_pmut_clk_cfg_t</a> clock_cfg);</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;uint8_t ch_common_watchdog_enable(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;uint8_t ch_common_watchdog_disable(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="preprocessor">#ifdef INCLUDE_SHASTA_SUPPORT</span></div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;uint8_t ch_common_meas_init_queue(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;uint8_t ch_common_meas_reset(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;uint8_t ch_common_meas_init(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__meas__config__t.html">ch_meas_config_t</a> *meas_config_ptr, <a class="code" href="structch__thresholds__t.html">ch_thresholds_t</a> *thresh_ptr);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;uint8_t ch_common_get_mfg_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__mfg__info__t.html">ch_mfg_info_t</a> *info_ptr);</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;uint8_t ch_common_meas_import(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structmeasurement__queue.html">measurement_queue_t</a> *meas_queue_ptr, <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;uint8_t ch_common_meas_add_segment(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;uint8_t ch_common_meas_add_segment_count(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_cycles, uint8_t int_enable);</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;uint8_t ch_common_meas_add_segment_rx(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples, uint8_t gain, uint8_t atten, uint8_t int_enable);</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;uint8_t ch_common_meas_add_segment_tx(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_cycles, uint8_t pulse_width, uint8_t phase,</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                                        uint8_t int_enable);</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="keywordtype">void</span> ch_common_meas_init_segment_count(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_cycles, uint8_t int_enable);</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="keywordtype">void</span> ch_common_meas_init_segment_rx(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_samples, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr, uint8_t gain, uint8_t atten, uint8_t int_enable);</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="keywordtype">void</span> ch_common_meas_init_segment_tx(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_cycles, uint8_t pulse_width, uint8_t phase, </div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                                    uint8_t int_enable);</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;uint8_t ch_common_meas_optimize(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structmeasurement__queue.html">measurement_queue_t</a> *meas_queue_ptr, <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;uint8_t ch_common_meas_write_config(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;uint8_t ch_common_meas_update_counts(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structmeasurement.html">measurement_t</a> *meas_ptr);</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="keywordtype">void</span> ch_common_meas_activate(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;<span class="keywordtype">void</span> ch_common_meas_standby(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;uint8_t ch_common_meas_switch(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;uint8_t ch_common_meas_get_last_num(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="keywordtype">void</span> ch_common_meas_get_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__meas__info__t.html">ch_meas_info_t</a> *info_ptr);</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="keywordtype">void</span> ch_common_meas_get_queue_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__meas__queue__info__t.html">ch_meas_queue_info_t</a> *info_ptr);</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="keywordtype">void</span> ch_common_meas_get_seg_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t seg_num, <a class="code" href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a> *info_ptr);</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;uint8_t ch_common_meas_set_interval(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t interval_ms);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;uint8_t ch_common_meas_set_interval_us(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t interval_us);</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;uint8_t ch_common_meas_set_interval_ticks(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t rtc_periods);</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;uint16_t ch_common_meas_get_interval(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;uint32_t ch_common_meas_get_interval_us(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;uint32_t ch_common_meas_get_interval_ticks(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;uint8_t ch_common_meas_set_num_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;uint16_t ch_common_meas_get_num_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;uint8_t ch_common_meas_set_max_range(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t max_range_mm);</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;uint8_t ch_common_meas_set_odr(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr);</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> ch_common_meas_get_odr(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;uint16_t ch_common_meas_mm_to_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_mm);</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;uint16_t ch_common_meas_samples_to_mm(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;uint8_t ch_common_meas_set_num_ranges(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t num_ranges);</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;uint8_t ch_common_meas_get_num_ranges(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;uint8_t ch_common_meas_set_thresholds(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr);</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;uint8_t ch_common_meas_get_thresholds(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr);</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;uint8_t ch_common_meas_set_ringdown_cancel(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;uint16_t ch_common_meas_get_ringdown_cancel(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;uint8_t ch_common_meas_set_static_filter(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;uint16_t ch_common_meas_get_static_filter(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;uint8_t ch_common_meas_set_rx_holdoff(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;uint16_t ch_common_meas_get_rx_holdoff(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;uint8_t <a class="code" href="ch__common_8h.html#a61be2dd8eab1703414df08ac1195113e">ch_common_read_meas_config</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;uint8_t ch_common_meas_set_iq_output(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> output_format);</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<a class="code" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> ch_common_meas_get_iq_output(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;uint8_t ch_common_meas_set_filter_update(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t update_interval);</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;uint8_t ch_common_meas_get_filter_update(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;uint8_t ch_common_init_algo(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;uint8_t ch_common_get_algo_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structicu__algo__info.html">ICU_ALGO_SHASTA_INFO</a> *algo_info_ptr);</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;uint8_t ch_common_get_algo_config(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;uint8_t ch_common_get_algo_output(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_out_ptr);</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;uint8_t ch_common_get_algo_state(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_state_ptr);</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;uint8_t ch_common_set_interrupt_mode(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a> mode);</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;<a class="code" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a> ch_common_get_interrupt_mode(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;uint8_t ch_common_get_iq_data(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__iq__sample__t.html">ch_iq_sample_t</a> *buf_ptr, uint16_t start_sample, uint16_t num_samples,</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                              <a class="code" href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a> nonblock);</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;uint8_t ch_common_set_sample_window(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t start_sample, uint16_t end_sample);</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;uint8_t ch_common_set_time_plan(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a> time_plan);</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160; </div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<a class="code" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a> ch_common_get_time_plan(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;uint16_t ch_common_get_amplitude_avg(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;uint8_t ch_common_get_amplitude_data(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t *buf_ptr, uint16_t start_sample, uint16_t num_samples,</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;                                     <a class="code" href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a> mode);</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;uint8_t ch_common_get_amp_thresh_data(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__amp__thresh__t.html">ch_amp_thresh_t</a> *buf_ptr, uint16_t start_sample,</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;                                      uint16_t num_samples, <a class="code" href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a> mode);</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;uint8_t ch_common_set_rx_holdoff(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t rx_holdoff);</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;uint16_t ch_common_get_rx_holdoff(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;uint8_t ch_common_set_rx_low_gain(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_samples);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;uint16_t ch_common_get_rx_low_gain(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;uint8_t ch_common_set_tx_length(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_cycles);</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;uint16_t ch_common_get_tx_length(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160; </div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;uint8_t ch_common_set_cal_result(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__cal__result__t.html">ch_cal_result_t</a> *cal_ptr);</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;uint8_t ch_common_get_cal_result(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__cal__result__t.html">ch_cal_result_t</a> *cal_ptr);</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;uint8_t ch_common_check_program(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;uint8_t <a class="code" href="ch__common_8h.html#a92bc89ff1d29bf49d35f17303b2c0479">ch_common_set_frequency</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t target_freq_hz);</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;uint8_t ch_common_group_set_frequency(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint32_t frequency);</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;uint8_t ch_common_set_pmut_clock(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#aca9006600c4c232750578f7ed6c0416e">ch_pmut_clk_cfg_t</a> clock_cfg);</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;uint8_t ch_common_watchdog_enable(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;uint8_t ch_common_watchdog_disable(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="preprocessor">#ifdef INCLUDE_SHASTA_SUPPORT</span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;uint8_t ch_common_meas_init_queue(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;uint8_t ch_common_meas_reset(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;uint8_t ch_common_meas_init(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__meas__config__t.html">ch_meas_config_t</a> *meas_config_ptr,</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                            <a class="code" href="structch__thresholds__t.html">ch_thresholds_t</a> *thresh_ptr);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;uint8_t ch_common_get_mfg_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__mfg__info__t.html">ch_mfg_info_t</a> *info_ptr);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;uint8_t ch_common_meas_import(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structmeasurement__queue.html">measurement_queue_t</a> *meas_queue_ptr, <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;uint8_t ch_common_meas_add_segment(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;uint8_t ch_common_meas_add_segment_count(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_cycles, uint8_t int_enable);</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;uint8_t ch_common_meas_add_segment_rx(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples, uint8_t gain,</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                                      uint8_t atten, uint8_t int_enable);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;uint8_t ch_common_meas_add_segment_tx(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_cycles, uint8_t pulse_width,</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                                      uint8_t phase, uint8_t int_enable);</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="keywordtype">void</span> ch_common_meas_init_segment_count(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_cycles, uint8_t int_enable);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="keywordtype">void</span> ch_common_meas_init_segment_rx(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_samples, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr, uint8_t gain,</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                                    uint8_t atten, uint8_t int_enable);</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="keywordtype">void</span> ch_common_meas_init_segment_tx(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_cycles, uint8_t pulse_width, uint8_t phase,</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                                    uint8_t int_enable);</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;uint8_t ch_common_meas_optimize(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structmeasurement__queue.html">measurement_queue_t</a> *meas_queue_ptr, <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;uint8_t ch_common_meas_write_config(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;uint8_t ch_common_meas_update_counts(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structmeasurement.html">measurement_t</a> *meas_ptr);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="keywordtype">void</span> ch_common_meas_activate(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="keywordtype">void</span> ch_common_meas_standby(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;uint8_t ch_common_meas_switch(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;uint8_t ch_common_meas_get_last_num(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="keywordtype">void</span> ch_common_meas_get_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__meas__info__t.html">ch_meas_info_t</a> *info_ptr);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="keywordtype">void</span> ch_common_meas_get_queue_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__meas__queue__info__t.html">ch_meas_queue_info_t</a> *info_ptr);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="keywordtype">void</span> ch_common_meas_get_seg_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t seg_num, <a class="code" href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a> *info_ptr);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;uint8_t ch_common_meas_set_interval(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t interval_ms);</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;uint8_t ch_common_meas_set_interval_us(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t interval_us);</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;uint8_t ch_common_meas_set_interval_ticks(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t rtc_periods);</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;uint16_t ch_common_meas_get_interval(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;uint32_t ch_common_meas_get_interval_us(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;uint32_t ch_common_meas_get_interval_ticks(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;uint8_t ch_common_meas_set_num_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;uint16_t ch_common_meas_get_num_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;uint8_t ch_common_meas_set_max_range(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t max_range_mm);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;uint8_t ch_common_meas_set_odr(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr);</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> ch_common_meas_get_odr(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;uint16_t ch_common_meas_mm_to_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_mm);</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;uint16_t ch_common_meas_samples_to_mm(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;uint8_t ch_common_meas_set_num_ranges(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t num_ranges);</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;uint8_t ch_common_meas_get_num_ranges(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;uint8_t ch_common_meas_set_thresholds(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr);</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;uint8_t ch_common_meas_get_thresholds(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr);</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;uint8_t ch_common_meas_set_ringdown_cancel(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;uint16_t ch_common_meas_get_ringdown_cancel(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;uint8_t ch_common_meas_set_static_filter(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;uint16_t ch_common_meas_get_static_filter(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;uint8_t ch_common_meas_set_rx_holdoff(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;uint16_t ch_common_meas_get_rx_holdoff(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;uint8_t <a class="code" href="ch__common_8h.html#a61be2dd8eab1703414df08ac1195113e">ch_common_read_meas_config</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;uint8_t ch_common_meas_set_iq_output(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> output_format);</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<a class="code" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> ch_common_meas_get_iq_output(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;uint8_t ch_common_meas_set_filter_update(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t update_interval);</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;uint8_t ch_common_meas_get_filter_update(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;uint8_t ch_common_init_algo(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;uint8_t ch_common_get_algo_info(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structicu__algo__info.html">ICU_ALGO_SHASTA_INFO</a> *algo_info_ptr);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;uint8_t ch_common_get_algo_config(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;uint8_t ch_common_get_algo_output(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_out_ptr);</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;uint8_t ch_common_get_algo_state(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_state_ptr);</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// INCLUDE_SHASTA_SUPPORT</span></div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;uint8_t ch_common_set_target_interrupt(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a> tgt_filter_mode);</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<a class="code" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a> ch_common_get_target_interrupt(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;uint8_t ch_common_set_data_output(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__output__t.html">ch_output_t</a> *output_ptr);</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;uint8_t ch_common_get_num_targets(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;uint32_t <a class="code" href="ch__common_8h.html#a640c5a7362fc0201abc4774b0368d8b9">ch_common_range_lsb_to_mm</a>(<span class="keyword">const</span> <a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr,</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;                                   uint32_t time_of_flight,</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;                                   <a class="code" href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a> range_type);</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160; </div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;uint32_t ch_common_get_target_range(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num, <a class="code" href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a> range_type);</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;uint16_t ch_common_get_target_amplitude(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num);</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;uint32_t ch_common_get_target_tof_us(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num);</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;uint32_t ch_common_samples_to_cycles(uint16_t num_samples, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr);</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;uint16_t ch_common_cycles_to_samples(uint32_t num_cycles, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr);</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;uint32_t ch_common_usec_to_cycles(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_usec);</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;uint32_t ch_common_cycles_to_usec(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_cycles);</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;uint32_t ch_common_usec_to_ticks(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_usec);</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;uint32_t ch_common_ticks_to_usec(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_rtc_periods);</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;uint8_t ch_common_set_interrupt_mode(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a> mode);</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<a class="code" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a> ch_common_get_interrupt_mode(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// INCLUDE_SHASTA_SUPPORT</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160; </div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;uint8_t ch_common_set_target_interrupt(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a> tgt_filter_mode);</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<a class="code" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a> ch_common_get_target_interrupt(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;uint8_t ch_common_set_data_output(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__output__t.html">ch_output_t</a> *output_ptr);</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;uint8_t ch_common_get_num_targets(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;uint32_t <a class="code" href="ch__common_8h.html#a640c5a7362fc0201abc4774b0368d8b9">ch_common_range_lsb_to_mm</a>(<span class="keyword">const</span> <a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t time_of_flight, <a class="code" href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a> range_type);</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160; </div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;uint32_t ch_common_get_target_range(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num, <a class="code" href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a> range_type);</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;uint16_t ch_common_get_target_amplitude(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num);</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;uint32_t ch_common_get_target_tof_us(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num);</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;uint32_t ch_common_samples_to_cycles(uint16_t num_samples, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr);</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;uint16_t ch_common_cycles_to_samples(uint32_t num_cycles, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr);</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;uint32_t ch_common_usec_to_cycles(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_usec);</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;uint32_t ch_common_cycles_to_usec(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_cycles);</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;uint32_t ch_common_usec_to_ticks(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_usec);</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;uint32_t ch_common_ticks_to_usec(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_rtc_periods);</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;uint16_t ch_common_get_num_output_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160; </div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;uint16_t ch_common_get_num_output_samples(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">/* CH_COMMON_H_ */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160; </div>
-<div class="ttc" id="ach__common_8h_html_a61be2dd8eab1703414df08ac1195113e"><div class="ttname"><a href="ch__common_8h.html#a61be2dd8eab1703414df08ac1195113e">ch_common_read_meas_config</a></div><div class="ttdeci">uint8_t ch_common_read_meas_config(ch_dev_t *dev_ptr)</div><div class="ttdoc">Read configuration settings associated with the last measurement.</div><div class="ttdef"><b>Definition:</b> ch_common.c:3650</div></div>
-<div class="ttc" id="ach__common_8h_html_a640c5a7362fc0201abc4774b0368d8b9"><div class="ttname"><a href="ch__common_8h.html#a640c5a7362fc0201abc4774b0368d8b9">ch_common_range_lsb_to_mm</a></div><div class="ttdeci">uint32_t ch_common_range_lsb_to_mm(const ch_dev_t *dev_ptr, uint32_t time_of_flight, ch_range_t range_type)</div><div class="ttdoc">Convert the raw range from the sensor to millimeters.</div><div class="ttdef"><b>Definition:</b> ch_common.c:677</div></div>
-<div class="ttc" id="ach__common_8h_html_a92bc89ff1d29bf49d35f17303b2c0479"><div class="ttname"><a href="ch__common_8h.html#a92bc89ff1d29bf49d35f17303b2c0479">ch_common_set_frequency</a></div><div class="ttdeci">uint8_t ch_common_set_frequency(ch_dev_t *dev_ptr, uint32_t target_freq_hz)</div><div class="ttdoc">Set the closest available operating frequency to a desired operating frequency.</div><div class="ttdef"><b>Definition:</b> ch_common.c:2133</div></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* CH_COMMON_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="ach__common_8h_html_a61be2dd8eab1703414df08ac1195113e"><div class="ttname"><a href="ch__common_8h.html#a61be2dd8eab1703414df08ac1195113e">ch_common_read_meas_config</a></div><div class="ttdeci">uint8_t ch_common_read_meas_config(ch_dev_t *dev_ptr)</div><div class="ttdoc">Read configuration settings associated with the last measurement.</div><div class="ttdef"><b>Definition:</b> ch_common.c:3647</div></div>
+<div class="ttc" id="ach__common_8h_html_a640c5a7362fc0201abc4774b0368d8b9"><div class="ttname"><a href="ch__common_8h.html#a640c5a7362fc0201abc4774b0368d8b9">ch_common_range_lsb_to_mm</a></div><div class="ttdeci">uint32_t ch_common_range_lsb_to_mm(const ch_dev_t *dev_ptr, uint32_t time_of_flight, ch_range_t range_type)</div><div class="ttdoc">Convert the raw range from the sensor to millimeters.</div><div class="ttdef"><b>Definition:</b> ch_common.c:725</div></div>
+<div class="ttc" id="ach__common_8h_html_a92bc89ff1d29bf49d35f17303b2c0479"><div class="ttname"><a href="ch__common_8h.html#a92bc89ff1d29bf49d35f17303b2c0479">ch_common_set_frequency</a></div><div class="ttdeci">uint8_t ch_common_set_frequency(ch_dev_t *dev_ptr, uint32_t target_freq_hz)</div><div class="ttdoc">Set the closest available operating frequency to a desired operating frequency.</div><div class="ttdef"><b>Definition:</b> ch_common.c:2148</div></div>
 <div class="ttc" id="asoniclib_8h_html"><div class="ttname"><a href="soniclib_8h.html">soniclib.h</a></div><div class="ttdoc">SonicLib public API and support functions for TDK/InvenSense ultrasonic sensors (originally developed...</div></div>
-<div class="ttc" id="asoniclib_8h_html_a0da193cf2f2476d27fd7ceb533f8cdc4"><div class="ttname"><a href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">ch_mode_t</a></div><div class="ttdeci">ch_mode_t</div><div class="ttdoc">Sensor operating modes.</div><div class="ttdef"><b>Definition:</b> soniclib.h:265</div></div>
-<div class="ttc" id="asoniclib_8h_html_a1318c8ebfcd0a9c5f0d9acda119188d5"><div class="ttname"><a href="soniclib_8h.html#a1318c8ebfcd0a9c5f0d9acda119188d5">ch_fw_init_func_t</a></div><div class="ttdeci">uint8_t(* ch_fw_init_func_t)(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index)</div><div class="ttdoc">ASIC firmware init function pointer typedef.</div><div class="ttdef"><b>Definition:</b> soniclib.h:623</div></div>
-<div class="ttc" id="asoniclib_8h_html_a1b137d77afad79d536e322eacdfebd0c"><div class="ttname"><a href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a></div><div class="ttdeci">ch_range_t</div><div class="ttdoc">Range data types.</div><div class="ttdef"><b>Definition:</b> soniclib.h:258</div></div>
-<div class="ttc" id="asoniclib_8h_html_a23d84a030c9fc403cb538f5d0c3f3a52"><div class="ttname"><a href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a></div><div class="ttdeci">ch_time_plan_t</div><div class="ttdoc">Time plan.</div><div class="ttdef"><b>Definition:</b> soniclib.h:394</div></div>
-<div class="ttc" id="asoniclib_8h_html_a4962ca7e356fbfa6e40863fe5abf519c"><div class="ttname"><a href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a></div><div class="ttdeci">ch_interrupt_mode_t</div><div class="ttdoc">Sensor interrupt modes.</div><div class="ttdef"><b>Definition:</b> soniclib.h:311</div></div>
-<div class="ttc" id="asoniclib_8h_html_a5143295fdd1fdd439dad873fb9e04948"><div class="ttname"><a href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a></div><div class="ttdeci">ch_output_type_t</div><div class="ttdoc">Output type.</div><div class="ttdef"><b>Definition:</b> soniclib.h:402</div></div>
-<div class="ttc" id="asoniclib_8h_html_a66b7f8516a2c66f0ccc72704f7d5d94a"><div class="ttname"><a href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a></div><div class="ttdeci">ch_io_mode_t</div><div class="ttdoc">I/O blocking mode flags.</div><div class="ttdef"><b>Definition:</b> soniclib.h:388</div></div>
-<div class="ttc" id="asoniclib_8h_html_a86140657375a7e7c24ecf430da97c189"><div class="ttname"><a href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a></div><div class="ttdeci">ch_odr_t</div><div class="ttdoc">Sensor output data rate (ODR).</div><div class="ttdef"><b>Definition:</b> soniclib.h:346</div></div>
-<div class="ttc" id="asoniclib_8h_html_a95396c4034eb6e41fffcfa7d9dbcd830"><div class="ttname"><a href="soniclib_8h.html#a95396c4034eb6e41fffcfa7d9dbcd830">ch_rtc_src_t</a></div><div class="ttdeci">ch_rtc_src_t</div><div class="ttdoc">Sensor real-time clock sources.</div><div class="ttdef"><b>Definition:</b> soniclib.h:356</div></div>
-<div class="ttc" id="asoniclib_8h_html_ac2d701c38ecfaa08151839826667df20"><div class="ttname"><a href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a></div><div class="ttdeci">ch_tgt_int_filter_t</div><div class="ttdoc">Target interrupt filter modes.</div><div class="ttdef"><b>Definition:</b> soniclib.h:335</div></div>
-<div class="ttc" id="asoniclib_8h_html_aca9006600c4c232750578f7ed6c0416e"><div class="ttname"><a href="soniclib_8h.html#aca9006600c4c232750578f7ed6c0416e">ch_pmut_clk_cfg_t</a></div><div class="ttdeci">ch_pmut_clk_cfg_t</div><div class="ttdoc">PMUT clock configuration (ICU sensors)</div><div class="ttdef"><b>Definition:</b> soniclib.h:381</div></div>
-<div class="ttc" id="astructch__amp__thresh__t_html"><div class="ttname"><a href="structch__amp__thresh__t.html">ch_amp_thresh_t</a></div><div class="ttdoc">Sensor combined amplitude + detection threshold sample value.</div><div class="ttdef"><b>Definition:</b> soniclib.h:450</div></div>
-<div class="ttc" id="astructch__cal__result__t_html"><div class="ttname"><a href="structch__cal__result__t.html">ch_cal_result_t</a></div><div class="ttdoc">Calibration result structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:473</div></div>
-<div class="ttc" id="astructch__dev__t_html"><div class="ttname"><a href="structch__dev__t.html">ch_dev_t</a></div><div class="ttdoc">Chirp sensor device descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:775</div></div>
-<div class="ttc" id="astructch__group__t_html"><div class="ttname"><a href="structch__group__t.html">ch_group_t</a></div><div class="ttdoc">Chirp sensor group descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:748</div></div>
-<div class="ttc" id="astructch__iq__sample__t_html"><div class="ttname"><a href="structch__iq__sample__t.html">ch_iq_sample_t</a></div><div class="ttdoc">Sensor I/Q data value.</div><div class="ttdef"><b>Definition:</b> soniclib.h:444</div></div>
-<div class="ttc" id="astructch__meas__config__t_html"><div class="ttname"><a href="structch__meas__config__t.html">ch_meas_config_t</a></div><div class="ttdoc">Measurement configuration - used during ch_meas_init()</div><div class="ttdef"><b>Definition:</b> soniclib.h:528</div></div>
-<div class="ttc" id="astructch__meas__info__t_html"><div class="ttname"><a href="structch__meas__info__t.html">ch_meas_info_t</a></div><div class="ttdoc">Measurement info.</div><div class="ttdef"><b>Definition:</b> soniclib.h:570</div></div>
-<div class="ttc" id="astructch__meas__queue__info__t_html"><div class="ttname"><a href="structch__meas__queue__info__t.html">ch_meas_queue_info_t</a></div><div class="ttdoc">Measurement queue info.</div><div class="ttdef"><b>Definition:</b> soniclib.h:599</div></div>
-<div class="ttc" id="astructch__meas__seg__info__t_html"><div class="ttname"><a href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a></div><div class="ttdoc">Measurement segment info.</div><div class="ttdef"><b>Definition:</b> soniclib.h:586</div></div>
-<div class="ttc" id="astructch__meas__segment__t_html"><div class="ttname"><a href="structch__meas__segment__t.html">ch_meas_segment_t</a></div><div class="ttdoc">Measurement segment.</div><div class="ttdef"><b>Definition:</b> soniclib.h:564</div></div>
-<div class="ttc" id="astructch__mfg__info__t_html"><div class="ttname"><a href="structch__mfg__info__t.html">ch_mfg_info_t</a></div><div class="ttdoc">Sensor manufacturing info.</div><div class="ttdef"><b>Definition:</b> soniclib.h:609</div></div>
-<div class="ttc" id="astructch__output__t_html"><div class="ttname"><a href="structch__output__t.html">ch_output_t</a></div><div class="ttdoc">Data output structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:498</div></div>
-<div class="ttc" id="astructch__thresholds__t_html"><div class="ttname"><a href="structch__thresholds__t.html">ch_thresholds_t</a></div><div class="ttdoc">Multiple detection threshold structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:464</div></div>
+<div class="ttc" id="asoniclib_8h_html_a0da193cf2f2476d27fd7ceb533f8cdc4"><div class="ttname"><a href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">ch_mode_t</a></div><div class="ttdeci">ch_mode_t</div><div class="ttdoc">Sensor operating modes.</div><div class="ttdef"><b>Definition:</b> soniclib.h:261</div></div>
+<div class="ttc" id="asoniclib_8h_html_a1318c8ebfcd0a9c5f0d9acda119188d5"><div class="ttname"><a href="soniclib_8h.html#a1318c8ebfcd0a9c5f0d9acda119188d5">ch_fw_init_func_t</a></div><div class="ttdeci">uint8_t(* ch_fw_init_func_t)(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index)</div><div class="ttdoc">ASIC firmware init function pointer typedef.</div><div class="ttdef"><b>Definition:</b> soniclib.h:610</div></div>
+<div class="ttc" id="asoniclib_8h_html_a1b137d77afad79d536e322eacdfebd0c"><div class="ttname"><a href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a></div><div class="ttdeci">ch_range_t</div><div class="ttdoc">Range data types.</div><div class="ttdef"><b>Definition:</b> soniclib.h:254</div></div>
+<div class="ttc" id="asoniclib_8h_html_a23d84a030c9fc403cb538f5d0c3f3a52"><div class="ttname"><a href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a></div><div class="ttdeci">ch_time_plan_t</div><div class="ttdoc">Time plan.</div><div class="ttdef"><b>Definition:</b> soniclib.h:390</div></div>
+<div class="ttc" id="asoniclib_8h_html_a4962ca7e356fbfa6e40863fe5abf519c"><div class="ttname"><a href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a></div><div class="ttdeci">ch_interrupt_mode_t</div><div class="ttdoc">Sensor interrupt modes.</div><div class="ttdef"><b>Definition:</b> soniclib.h:307</div></div>
+<div class="ttc" id="asoniclib_8h_html_a5143295fdd1fdd439dad873fb9e04948"><div class="ttname"><a href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a></div><div class="ttdeci">ch_output_type_t</div><div class="ttdoc">Output type.</div><div class="ttdef"><b>Definition:</b> soniclib.h:393</div></div>
+<div class="ttc" id="asoniclib_8h_html_a66b7f8516a2c66f0ccc72704f7d5d94a"><div class="ttname"><a href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a></div><div class="ttdeci">ch_io_mode_t</div><div class="ttdoc">I/O blocking mode flags.</div><div class="ttdef"><b>Definition:</b> soniclib.h:384</div></div>
+<div class="ttc" id="asoniclib_8h_html_a86140657375a7e7c24ecf430da97c189"><div class="ttname"><a href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a></div><div class="ttdeci">ch_odr_t</div><div class="ttdoc">Sensor output data rate (ODR).</div><div class="ttdef"><b>Definition:</b> soniclib.h:342</div></div>
+<div class="ttc" id="asoniclib_8h_html_a95396c4034eb6e41fffcfa7d9dbcd830"><div class="ttname"><a href="soniclib_8h.html#a95396c4034eb6e41fffcfa7d9dbcd830">ch_rtc_src_t</a></div><div class="ttdeci">ch_rtc_src_t</div><div class="ttdoc">Sensor real-time clock sources.</div><div class="ttdef"><b>Definition:</b> soniclib.h:352</div></div>
+<div class="ttc" id="asoniclib_8h_html_ac2d701c38ecfaa08151839826667df20"><div class="ttname"><a href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a></div><div class="ttdeci">ch_tgt_int_filter_t</div><div class="ttdoc">Target interrupt filter modes.</div><div class="ttdef"><b>Definition:</b> soniclib.h:331</div></div>
+<div class="ttc" id="asoniclib_8h_html_aca9006600c4c232750578f7ed6c0416e"><div class="ttname"><a href="soniclib_8h.html#aca9006600c4c232750578f7ed6c0416e">ch_pmut_clk_cfg_t</a></div><div class="ttdeci">ch_pmut_clk_cfg_t</div><div class="ttdoc">PMUT clock configuration (ICU sensors)</div><div class="ttdef"><b>Definition:</b> soniclib.h:377</div></div>
+<div class="ttc" id="astructch__amp__thresh__t_html"><div class="ttname"><a href="structch__amp__thresh__t.html">ch_amp_thresh_t</a></div><div class="ttdoc">Sensor combined amplitude + detection threshold sample value.</div><div class="ttdef"><b>Definition:</b> soniclib.h:440</div></div>
+<div class="ttc" id="astructch__cal__result__t_html"><div class="ttname"><a href="structch__cal__result__t.html">ch_cal_result_t</a></div><div class="ttdoc">Calibration result structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:461</div></div>
+<div class="ttc" id="astructch__dev__t_html"><div class="ttname"><a href="structch__dev__t.html">ch_dev_t</a></div><div class="ttdoc">Chirp sensor device descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:757</div></div>
+<div class="ttc" id="astructch__group__t_html"><div class="ttname"><a href="structch__group__t.html">ch_group_t</a></div><div class="ttdoc">Chirp sensor group descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:730</div></div>
+<div class="ttc" id="astructch__iq__sample__t_html"><div class="ttname"><a href="structch__iq__sample__t.html">ch_iq_sample_t</a></div><div class="ttdoc">Sensor I/Q data value.</div><div class="ttdef"><b>Definition:</b> soniclib.h:434</div></div>
+<div class="ttc" id="astructch__meas__config__t_html"><div class="ttname"><a href="structch__meas__config__t.html">ch_meas_config_t</a></div><div class="ttdoc">Measurement configuration - used during ch_meas_init()</div><div class="ttdef"><b>Definition:</b> soniclib.h:517</div></div>
+<div class="ttc" id="astructch__meas__info__t_html"><div class="ttname"><a href="structch__meas__info__t.html">ch_meas_info_t</a></div><div class="ttdoc">Measurement info.</div><div class="ttdef"><b>Definition:</b> soniclib.h:558</div></div>
+<div class="ttc" id="astructch__meas__queue__info__t_html"><div class="ttname"><a href="structch__meas__queue__info__t.html">ch_meas_queue_info_t</a></div><div class="ttdoc">Measurement queue info.</div><div class="ttdef"><b>Definition:</b> soniclib.h:587</div></div>
+<div class="ttc" id="astructch__meas__seg__info__t_html"><div class="ttname"><a href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a></div><div class="ttdoc">Measurement segment info.</div><div class="ttdef"><b>Definition:</b> soniclib.h:574</div></div>
+<div class="ttc" id="astructch__meas__segment__t_html"><div class="ttname"><a href="structch__meas__segment__t.html">ch_meas_segment_t</a></div><div class="ttdoc">Measurement segment.</div><div class="ttdef"><b>Definition:</b> soniclib.h:552</div></div>
+<div class="ttc" id="astructch__mfg__info__t_html"><div class="ttname"><a href="structch__mfg__info__t.html">ch_mfg_info_t</a></div><div class="ttdoc">Sensor manufacturing info.</div><div class="ttdef"><b>Definition:</b> soniclib.h:597</div></div>
+<div class="ttc" id="astructch__output__t_html"><div class="ttname"><a href="structch__output__t.html">ch_output_t</a></div><div class="ttdoc">Data output structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:487</div></div>
+<div class="ttc" id="astructch__thresholds__t_html"><div class="ttname"><a href="structch__thresholds__t.html">ch_thresholds_t</a></div><div class="ttdoc">Multiple detection threshold structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:452</div></div>
 <div class="ttc" id="astructicu__algo__info_html"><div class="ttname"><a href="structicu__algo__info.html">icu_algo_info</a></div><div class="ttdef"><b>Definition:</b> icu_algo_info.h:10</div></div>
-<div class="ttc" id="astructmeasurement__queue_html"><div class="ttname"><a href="structmeasurement__queue.html">measurement_queue</a></div><div class="ttdef"><b>Definition:</b> shasta_external_regs.h:60</div></div>
-<div class="ttc" id="astructmeasurement_html"><div class="ttname"><a href="structmeasurement.html">measurement</a></div><div class="ttdef"><b>Definition:</b> shasta_external_regs.h:44</div></div>
+<div class="ttc" id="astructmeasurement__queue_html"><div class="ttname"><a href="structmeasurement__queue.html">measurement_queue</a></div><div class="ttdef"><b>Definition:</b> shasta_external_regs.h:62</div></div>
+<div class="ttc" id="astructmeasurement_html"><div class="ttname"><a href="structmeasurement.html">measurement</a></div><div class="ttdef"><b>Definition:</b> shasta_external_regs.h:46</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

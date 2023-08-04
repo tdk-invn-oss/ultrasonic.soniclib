@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.23.5</span>
+   &#160;<span id="projectnumber">3.27.0</span>
    </div>
   </td>
  </tr>
@@ -123,6 +123,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a2e2516fcfa225c8f677197defe53de97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a2e2516fcfa225c8f677197defe53de97">chdrv_burst_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t mem_addr, uint8_t *data_ptr, uint16_t num_bytes)</td></tr>
 <tr class="memdesc:a2e2516fcfa225c8f677197defe53de97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write multiple bytes to a sensor application register location.  <a href="ch__driver_8c.html#a2e2516fcfa225c8f677197defe53de97">More...</a><br /></td></tr>
 <tr class="separator:a2e2516fcfa225c8f677197defe53de97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad22f6473bdb9dabc1b3baa65e820da8"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#aad22f6473bdb9dabc1b3baa65e820da8">chdrv_check_reset_state</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t *reset_state_ptr)</td></tr>
+<tr class="memdesc:aad22f6473bdb9dabc1b3baa65e820da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if sensor reset has occurred.  <a href="ch__driver_8c.html#aad22f6473bdb9dabc1b3baa65e820da8">More...</a><br /></td></tr>
+<tr class="separator:aad22f6473bdb9dabc1b3baa65e820da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad5034f51177aab7de0c67e5807f8a63"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#aad5034f51177aab7de0c67e5807f8a63">chdrv_cpu_freq_adjust</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t pmut_op_freq)</td></tr>
 <tr class="memdesc:aad5034f51177aab7de0c67e5807f8a63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adjust sensor micro-controller CPU frequency.  <a href="ch__driver_8c.html#aad5034f51177aab7de0c67e5807f8a63">More...</a><br /></td></tr>
 <tr class="separator:aad5034f51177aab7de0c67e5807f8a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -595,6 +598,45 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aad22f6473bdb9dabc1b3baa65e820da8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad22f6473bdb9dabc1b3baa65e820da8">&#9670;&nbsp;</a></span>chdrv_check_reset_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t chdrv_check_reset_state </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>reset_state_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if sensor reset has occurred. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">reset_state_ptr</td><td>pointer to variable that will be updated with 0 = No Reset, 1 = Reset has occurred.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero otherwise</dd></dl>
+<p>This function checks if an PUC (Power Up Clear) main reset event has occurred by checking the PUC_PND status bit in CPU_STAT debug register. The function updates the "<em>reset_state_ptr</em> is set to 1 if the sensor was reset, otherwise it is set to zero. Note this will continue to return a reset state as set until the PUC_PND bit is cleared by writing a 1 to it, which is done in chdrv_reset_and_run function. </p>
+
+</div>
+</div>
 <a id="aad5034f51177aab7de0c67e5807f8a63"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aad5034f51177aab7de0c67e5807f8a63">&#9670;&nbsp;</a></span>chdrv_cpu_freq_adjust()</h2>
 
@@ -659,8 +701,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Sensor CPU frequency, in Hz</dd></dl>
-<p>This function calculates and returns the processor frequency, in Hz, of the internal micro-controller in the sensor. <br  />
- </p>
+<p>This function calculates and returns the processor frequency, in Hz, of the internal micro-controller in the sensor. </p>
 
 </div>
 </div>
@@ -1432,8 +1473,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function asserts the interrupt lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for interrupt pin (INT1 or INT2) will be set to a low (active) level. <br  />
- For CH101/CH201 sensors, the sensors' INT lines will be set to a high level.</p>
+<p>This function asserts the interrupt lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for interrupt pin (INT1 or INT2) will be set to a low (active) level. For CH101/CH201 sensors, the sensors' INT lines will be set to a high level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em><a class="el" href="ch__driver_8h.html#afc765a2d807b342663885146ee42ab36" title="De-assert the hardware trigger line for a sensor.">chdrv_trig_deassert()</a></em>, <em><a class="el" href="ch__driver_8h.html#a92499dcecad1de83c11c294f51d019cc" title="Assert the hardware trigger lines for all sensors in a group.">chdrv_trig_group_assert()</a></em> </p>
 
@@ -1462,8 +1502,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function de-asserts the interrupt lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for interrupt pin (INT1 or INT2) will be reset to a high (inactive) level. <br  />
- For CH101/CH201 sensors, the sensors' INT lines will be reset to a low level.</p>
+<p>This function de-asserts the interrupt lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for interrupt pin (INT1 or INT2) will be reset to a high (inactive) level. For CH101/CH201 sensors, the sensors' INT lines will be reset to a low level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em><a class="el" href="ch__driver_8h.html#afc765a2d807b342663885146ee42ab36" title="De-assert the hardware trigger line for a sensor.">chdrv_trig_deassert()</a></em>, <em><a class="el" href="ch__driver_8h.html#a92499dcecad1de83c11c294f51d019cc" title="Assert the hardware trigger lines for all sensors in a group.">chdrv_trig_group_assert()</a></em> </p>
 
@@ -2484,8 +2523,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function asserts the specified sensor's h/w trigger line to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be set to a low (active) level. <br  />
- For CH101/CH201 sensors, the single INT line will be set to a high level.</p>
+<p>This function asserts the specified sensor's h/w trigger line to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be set to a low (active) level. For CH101/CH201 sensors, the single INT line will be set to a high level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em>chdrv_group_trig_assert()</em>, <em><a class="el" href="ch__driver_8h.html#afc765a2d807b342663885146ee42ab36" title="De-assert the hardware trigger line for a sensor.">chdrv_trig_deassert()</a></em> </p>
 
@@ -2514,8 +2552,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function de-asserts the specified sensor's h/w trigger line used to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be reset to a high (inactive) level. <br  />
- For CH101/CH201 sensors, the single INT line will be reset to a low level.</p>
+<p>This function de-asserts the specified sensor's h/w trigger line used to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be reset to a high (inactive) level. For CH101/CH201 sensors, the single INT line will be reset to a low level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em>chdrv_group_trig_assert()</em>, <em><a class="el" href="ch__driver_8h.html#a6f8f74c8a25453be98107dfd79f79708" title="Assert the hardware trigger line for a sensor.">chdrv_trig_assert()</a></em> </p>
 
@@ -2544,8 +2581,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function asserts the h/w trigger lines for all sensors in a group to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be set to a low (active) level. <br  />
- For CH101/CH201 sensors, the sensors' INT lines will be set to a high level.</p>
+<p>This function asserts the h/w trigger lines for all sensors in a group to initiate a measurement. For ICU sensors, the line indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be set to a low (active) level. For CH101/CH201 sensors, the sensors' INT lines will be set to a high level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em><a class="el" href="ch__driver_8h.html#a6f8f74c8a25453be98107dfd79f79708" title="Assert the hardware trigger line for a sensor.">chdrv_trig_assert()</a></em>, <em><a class="el" href="ch__driver_8h.html#abbf1c16036d133563467f06b7b5062e2" title="De-assert the hardware trigger lines for all sensors in a group.">chdrv_trig_group_deassert()</a></em> </p>
 
@@ -2574,8 +2610,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function de-asserts the h/w trigger lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be reset to a high (inactive) level. <br  />
- For CH101/CH201 sensors, the sensors' INT lines will be reset to a low level.</p>
+<p>This function de-asserts the h/w trigger lines for all sensors in a group. For ICU sensors, the lines indicated by the current measurement configuration for trigger pin (INT1 or INT2) will be reset to a high (inactive) level. For CH101/CH201 sensors, the sensors' INT lines will be reset to a low level.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to manipulate the line levels.</p>
 <p>See also <em><a class="el" href="ch__driver_8h.html#afc765a2d807b342663885146ee42ab36" title="De-assert the hardware trigger line for a sensor.">chdrv_trig_deassert()</a></em>, <em><a class="el" href="ch__driver_8h.html#a92499dcecad1de83c11c294f51d019cc" title="Assert the hardware trigger lines for all sensors in a group.">chdrv_trig_group_assert()</a></em> </p>
 

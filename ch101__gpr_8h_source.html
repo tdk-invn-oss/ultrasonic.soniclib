@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.23.5</span>
+   &#160;<span id="projectnumber">3.27.0</span>
    </div>
   </td>
  </tr>
@@ -96,46 +96,43 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">/* GPR firmware registers */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_OPMODE            0x01</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_TICK_INTERVAL     0x02</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_PERIOD            0x05</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_CAL_TRIG          0x06</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_CAL_TRIG          0x06</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_MAX_RANGE         0x07</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_CALC              0x08</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_REV_CYCLES        0x0C</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_DCO_PERIOD        0x0E</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_ST_RANGE          0x12</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_READY             0x14</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_TOF_SF            0x16</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_TOF               0x18</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_AMPLITUDE         0x1A</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_CAL_RESULT        0x0A</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_DATA              0x1C</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_OPMODE        0x01</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_TICK_INTERVAL 0x02</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_PERIOD        0x05</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_CAL_TRIG      0x06</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_CAL_TRIG      0x06</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_MAX_RANGE     0x07</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_CALC          0x08</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_REV_CYCLES    0x0C</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_DCO_PERIOD    0x0E</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_ST_RANGE      0x12</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_READY         0x14</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_TOF_SF        0x16</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_TOF           0x18</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_AMPLITUDE     0x1A</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_CAL_RESULT    0x0A</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#define CH101_GPR_REG_DATA          0x1C</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#define CH101_GPR_MAX_SAMPLES           (225)</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#define CH101_GPR_MAX_SAMPLES (225)</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *ch101_gpr_version;       <span class="comment">// version string in fw .c file</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint8_t ch101_gpr_fw_text[];</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint8_t ch101_gpr_fw_vec[];</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint16_t ch101_gpr_text_size;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint16_t ch101_gpr_vec_size;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;uint16_t get_ch101_gpr_fw_ram_init_addr(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;uint16_t get_ch101_gpr_fw_ram_init_size(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *ch101_gpr_version;  <span class="comment">// version string in fw .c file</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint8_t ch101_gpr_fw_text[];</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint8_t ch101_gpr_fw_vec[];</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint16_t ch101_gpr_text_size;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> uint16_t ch101_gpr_vec_size;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;uint16_t get_ch101_gpr_fw_ram_init_addr(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;uint16_t get_ch101_gpr_fw_ram_init_size(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *get_ram_ch101_gpr_init_ptr(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> * get_ram_ch101_gpr_init_ptr(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;uint8_t ch101_gpr_init(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;uint8_t ch101_gpr_init(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="ach101_8h_html"><div class="ttname"><a href="ch101_8h.html">ch101.h</a></div><div class="ttdoc">Internal definitions for the Chirp CH101 ultrasonic sensor.</div></div>
 <div class="ttc" id="asoniclib_8h_html"><div class="ttname"><a href="soniclib_8h.html">soniclib.h</a></div><div class="ttdoc">SonicLib public API and support functions for TDK/InvenSense ultrasonic sensors (originally developed...</div></div>
-<div class="ttc" id="astructch__dev__t_html"><div class="ttname"><a href="structch__dev__t.html">ch_dev_t</a></div><div class="ttdoc">Chirp sensor device descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:775</div></div>
-<div class="ttc" id="astructch__group__t_html"><div class="ttname"><a href="structch__group__t.html">ch_group_t</a></div><div class="ttdoc">Chirp sensor group descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:748</div></div>
+<div class="ttc" id="astructch__dev__t_html"><div class="ttname"><a href="structch__dev__t.html">ch_dev_t</a></div><div class="ttdoc">Chirp sensor device descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:757</div></div>
+<div class="ttc" id="astructch__group__t_html"><div class="ttname"><a href="structch__group__t.html">ch_group_t</a></div><div class="ttdoc">Chirp sensor group descriptor structure.</div><div class="ttdef"><b>Definition:</b> soniclib.h:730</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

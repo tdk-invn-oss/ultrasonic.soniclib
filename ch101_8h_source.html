@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.23.5</span>
+   &#160;<span id="projectnumber">3.27.0</span>
    </div>
   </td>
  </tr>
@@ -91,23 +91,24 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#ifndef CH101_H_</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define CH101_H_</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#define CH101_DATA_MEM_SIZE         0x800   </span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define CH101_DATA_MEM_ADDR         0x0200</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#define CH101_PROG_MEM_SIZE         0x800   </span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#define CH101_PROG_MEM_ADDR         0xF800</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define CH101_FW_SIZE               CH101_PROG_MEM_SIZE</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#define CH101_DATA_MEM_SIZE 0x800</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define CH101_DATA_MEM_ADDR 0x0200</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#define CH101_PROG_MEM_SIZE 0x800</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#define CH101_PROG_MEM_ADDR 0xF800</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define CH101_FW_SIZE       CH101_PROG_MEM_SIZE</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="ch101_8h.html#af647c475d501301c6295cdd1068f9f87">   31</a></span>&#160;<span class="preprocessor">#define CH101_BANDWIDTH_INDEX_1     6                               </span></div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="ch101_8h.html#ae3ef7686baa489d58467479e9822dd6d">   32</a></span>&#160;<span class="preprocessor">#define CH101_BANDWIDTH_INDEX_2     (CH101_BANDWIDTH_INDEX_1 + 1)   </span></div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="ch101_8h.html#aa8eea8d975e260a8dd7901c91e7f578d">   33</a></span>&#160;<span class="preprocessor">#define CH101_SCALEFACTOR_INDEX     4                               </span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define CH101_MAX_TICK_INTERVAL     128</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define CH101_DCO_LOW                   (100)</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define CH101_DCO_HIGH                  (250)</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define CH101_DCO_SEARCH_THRESHOLD      (100) </span><span class="comment">//Hz, if error is above this, do a search</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define CH101_REVDRIVE_DEFAULT          (2)</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="ch101_8h.html#af647c475d501301c6295cdd1068f9f87">   31</a></span>&#160;<span class="preprocessor">#define CH101_BANDWIDTH_INDEX_1 6 </span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define CH101_BANDWIDTH_INDEX_2                                                                                        \</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="ch101_8h.html#ae3ef7686baa489d58467479e9822dd6d">   33</a></span>&#160;<span class="preprocessor">    (CH101_BANDWIDTH_INDEX_1 + 1) </span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="ch101_8h.html#aa8eea8d975e260a8dd7901c91e7f578d">   34</a></span>&#160;<span class="preprocessor">#define CH101_SCALEFACTOR_INDEX 4 </span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define CH101_MAX_TICK_INTERVAL 128</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define CH101_DCO_LOW              (100)</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define CH101_DCO_HIGH             (250)</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define CH101_DCO_SEARCH_THRESHOLD (100)  </span><span class="comment">// Hz, if error is above this, do a search</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define CH101_REVDRIVE_DEFAULT     (2)</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

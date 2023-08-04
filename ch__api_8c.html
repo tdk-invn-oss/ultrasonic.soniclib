@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.23.5</span>
+   &#160;<span id="projectnumber">3.27.0</span>
    </div>
   </td>
  </tr>
@@ -82,7 +82,8 @@ $(function() {
 
 <p>Chirp SonicLib public API functions for using the Chirp ultrasonic sensor.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="ch__common_8h_source.html">invn/soniclib/details/ch_common.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="ch__driver_8h_source.html">invn/soniclib/details/ch_driver.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="chirp__bsp_8h_source.html">invn/soniclib/chirp_bsp.h</a>&gt;</code><br />
@@ -93,12 +94,21 @@ Functions</h2></td></tr>
 <tr class="memitem:a0705078371bc0ec34bd112b9a8ab1ebe"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#a0705078371bc0ec34bd112b9a8ab1ebe">ch_check_program</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a0705078371bc0ec34bd112b9a8ab1ebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check sensor firmware program.  <a href="ch__api_8c.html#a0705078371bc0ec34bd112b9a8ab1ebe">More...</a><br /></td></tr>
 <tr class="separator:a0705078371bc0ec34bd112b9a8ab1ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a659b8b3969c202074c09bfb54ee9b7"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#a1a659b8b3969c202074c09bfb54ee9b7">ch_check_reset_state</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#a8579cbcd7ce6352dcb003317568123c9">ch_sensor_reset_state_t</a> *reset_state_ptr)</td></tr>
+<tr class="memdesc:a1a659b8b3969c202074c09bfb54ee9b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if sensor reset has occurred.  <a href="ch__api_8c.html#a1a659b8b3969c202074c09bfb54ee9b7">More...</a><br /></td></tr>
+<tr class="separator:a1a659b8b3969c202074c09bfb54ee9b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bb8ea1621ef563bf279d7fedd1f16ef"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#a9bb8ea1621ef563bf279d7fedd1f16ef">ch_cycles_to_samples</a> (uint32_t num_cycles, <a class="el" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr)</td></tr>
 <tr class="memdesc:a9bb8ea1621ef563bf279d7fedd1f16ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert sensor cycles to samples.  <a href="ch__api_8c.html#a9bb8ea1621ef563bf279d7fedd1f16ef">More...</a><br /></td></tr>
 <tr class="separator:a9bb8ea1621ef563bf279d7fedd1f16ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#acde0dc4f438051bd4fcfd19aad8b3f9c">ch_cycles_to_usec</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_cycles)</td></tr>
 <tr class="memdesc:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert sensor cycles to microseconds.  <a href="ch__api_8c.html#acde0dc4f438051bd4fcfd19aad8b3f9c">More...</a><br /></td></tr>
 <tr class="separator:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fe624d21c6e4c116469570a5b46f70f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#a3fe624d21c6e4c116469570a5b46f70f">ch_freerun_time_hop_disable</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:a3fe624d21c6e4c116469570a5b46f70f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable time-hopping on measure period freerunning mode.  <a href="ch__api_8c.html#a3fe624d21c6e4c116469570a5b46f70f">More...</a><br /></td></tr>
+<tr class="separator:a3fe624d21c6e4c116469570a5b46f70f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1698edd099e87aaa2787cda5f12e373f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#a1698edd099e87aaa2787cda5f12e373f">ch_freerun_time_hop_enable</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:a1698edd099e87aaa2787cda5f12e373f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable time-hopping on measure period freerunning mode.  <a href="ch__api_8c.html#a1698edd099e87aaa2787cda5f12e373f">More...</a><br /></td></tr>
+<tr class="separator:a1698edd099e87aaa2787cda5f12e373f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac05e1055eb673ae1c6e03d8d72046039"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#ac05e1055eb673ae1c6e03d8d72046039">ch_get_algo_config</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, void *algo_cfg_ptr)</td></tr>
 <tr class="memdesc:ac05e1055eb673ae1c6e03d8d72046039"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the measurement algorithm configuration data from a sensor.  <a href="ch__api_8c.html#ac05e1055eb673ae1c6e03d8d72046039">More...</a><br /></td></tr>
 <tr class="separator:ac05e1055eb673ae1c6e03d8d72046039"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -648,6 +658,46 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1a659b8b3969c202074c09bfb54ee9b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a659b8b3969c202074c09bfb54ee9b7">&#9670;&nbsp;</a></span>ch_check_reset_state()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_check_reset_state </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="soniclib_8h.html#a8579cbcd7ce6352dcb003317568123c9">ch_sensor_reset_state_t</a> *&#160;</td>
+          <td class="paramname"><em>reset_state_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if sensor reset has occurred. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">reset_state_ptr</td><td>pointer to variable that will be updated with the ch_sensor_reset_state_t value. 0 = No Reset, 1 = Reset has occurred.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero otherwise</dd></dl>
+<p>This function calls the driver function to check if the sensor has reset.</p>
+<p>This API can be called periodically in a measurement loop to check if the sensor was arbitrarily reset. If this reset event is detected during normal sensor operation the sensor has to be completely re-initialized similar to a power-on condition. </p>
+
+</div>
+</div>
 <a id="a9bb8ea1621ef563bf279d7fedd1f16ef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9bb8ea1621ef563bf279d7fedd1f16ef">&#9670;&nbsp;</a></span>ch_cycles_to_samples()</h2>
 
@@ -728,6 +778,66 @@ Functions</h2></td></tr>
 <p>For ICU (Shasta architecture) sensors, <em>num_cycles</em> are in units of PMUT State Machine Clock (SMCLK) cycles. The SMCLK rate is 16 times the ultrasonic transducer acoustic operating frequency. These are the same units used to specify measurement transmit and count segment lengths.</p>
 <p>For CH101 and CH201 (Whitney architecture) sensors, <em>num_cycles</em> are ultrasonic transducer cycles, so are 1/16 the corresponding ICU sensor value.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#a5d8b3ddcc0010bf7bd1f7acc1fba4232" title="Convert microseconds to sensor cycles.">ch_usec_to_cycles()</a></em>. </p>
+
+</div>
+</div>
+<a id="a3fe624d21c6e4c116469570a5b46f70f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fe624d21c6e4c116469570a5b46f70f">&#9670;&nbsp;</a></span>ch_freerun_time_hop_disable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_freerun_time_hop_disable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable time-hopping on measure period freerunning mode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if successful.</dd></dl>
+<p>This function disable the time-hopping for a sensor operating in freerunning mode (<em>CH_MODE_FREERUN</em>).</p>
+<dl class="section note"><dt>Note</dt><dd>This function has no effect for a sensor operating in one of the triggered modes</dd></dl>
+<p>See also <em><a class="el" href="soniclib_8h.html#a1698edd099e87aaa2787cda5f12e373f" title="Enable time-hopping on measure period freerunning mode.">ch_freerun_time_hop_enable()</a></em>, <em><a class="el" href="soniclib_8h.html#a7b7369be7d454541ab7bacdea4d694a2" title="Get the internal sensing timing interval for a sensor, in RTC clock ticks.">ch_get_freerun_interval_ticks()</a></em>, <em><a class="el" href="soniclib_8h.html#a8d3ad9e2c87572430228205103a28927" title="Set the internal sensing interval for freerunning mode, in milliseconds.">ch_set_freerun_interval()</a></em>, <em><a class="el" href="soniclib_8h.html#a3312f5018fc80ed86d32205efd643e48" title="Set the internal sensing interval for freerunning mode, in microseconds.">ch_set_freerun_interval_us()</a></em>, <em><a class="el" href="soniclib_8h.html#af210149982301db673e5ad03095d8b06" title="Set the internal sensing interval for freerunning mode, in RTC clock ticks.">ch_set_freerun_interval_ticks()</a></em>. </p>
+
+</div>
+</div>
+<a id="a1698edd099e87aaa2787cda5f12e373f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1698edd099e87aaa2787cda5f12e373f">&#9670;&nbsp;</a></span>ch_freerun_time_hop_enable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_freerun_time_hop_enable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable time-hopping on measure period freerunning mode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if successful.</dd></dl>
+<p>This function enables the time-hopping for a sensor operating in freerunning mode (<em>CH_MODE_FREERUN</em>). The sensor will use its internal real-time clock (RTC) to wake and perform a measurement every <em>measure</em> interval plus a random delay to avoid coexistence with other sensors. Mean measure period is however equals to <em>measure</em> interval.</p>
+<dl class="section note"><dt>Note</dt><dd>This function has no effect for a sensor operating in one of the triggered modes.</dd></dl>
+<p>See also <em><a class="el" href="soniclib_8h.html#a3fe624d21c6e4c116469570a5b46f70f" title="Disable time-hopping on measure period freerunning mode.">ch_freerun_time_hop_disable()</a></em>, <em><a class="el" href="soniclib_8h.html#a7b7369be7d454541ab7bacdea4d694a2" title="Get the internal sensing timing interval for a sensor, in RTC clock ticks.">ch_get_freerun_interval_ticks()</a></em>, <em><a class="el" href="soniclib_8h.html#a8d3ad9e2c87572430228205103a28927" title="Set the internal sensing interval for freerunning mode, in milliseconds.">ch_set_freerun_interval()</a></em>, <em><a class="el" href="soniclib_8h.html#a3312f5018fc80ed86d32205efd643e48" title="Set the internal sensing interval for freerunning mode, in microseconds.">ch_set_freerun_interval_us()</a></em>, <em><a class="el" href="soniclib_8h.html#af210149982301db673e5ad03095d8b06" title="Set the internal sensing interval for freerunning mode, in RTC clock ticks.">ch_set_freerun_interval_ticks()</a></em>. </p>
 
 </div>
 </div>
@@ -948,8 +1058,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if error</dd></dl>
 <p>This function obtains specially formatted sample data from the sensor, in which both the amplitude and the detection threshold are reported for each sample in a measurement.</p>
-<p>This function is similar to <em><a class="el" href="soniclib_8h.html#af95998b37600ae7ef3a2300c10519fdf" title="Get the raw amplitude measurement data from a sensor.">ch_get_amplitude_data()</a></em>, except that the data values each contains a 16-bit unsigned threshold value in addition to the 16-bit unsigned sample amplitude. <br  />
- The threshold value is the required amplitude at that sample offset to detect a target object, as set by ch_set_thesholds(). This output format may be useful in tuning and debugging the detection threshold values.</p>
+<p>This function is similar to <em><a class="el" href="soniclib_8h.html#af95998b37600ae7ef3a2300c10519fdf" title="Get the raw amplitude measurement data from a sensor.">ch_get_amplitude_data()</a></em>, except that the data values each contains a 16-bit unsigned threshold value in addition to the 16-bit unsigned sample amplitude. The threshold value is the required amplitude at that sample offset to detect a target object, as set by ch_set_thesholds(). This output format may be useful in tuning and debugging the detection threshold values.</p>
 <p>Each output sample consists of a <a class="el" href="structch__amp__thresh__t.html" title="Sensor combined amplitude + detection threshold sample value.">ch_amp_thresh_t</a> structure, containing one unsigned 16-bit integer value threshold value followed by one unsigned 16-bit amplitude value.</p>
 <p>See <em><a class="el" href="soniclib_8h.html#af95998b37600ae7ef3a2300c10519fdf" title="Get the raw amplitude measurement data from a sensor.">ch_get_amplitude_data()</a></em> for more information on reading amplitude values. </p>
 
@@ -1073,8 +1182,7 @@ Functions</h2></td></tr>
 <p>The raw amplitude data are updated on every measurement cycle, even if no target was detected (i.e. even if <em><a class="el" href="soniclib_8h.html#a5cbb4847d39cc9418373b6d1ac8dadc6" title="Get the measured range from a sensor.">ch_get_range()</a></em> returns <em>CH_NO_TARGET</em>). (Note that this is different than the regular amplitude value, as returned by <em><a class="el" href="soniclib_8h.html#aa2ef517f154bb269d31fdf3f4e0cc7a2" title="Get the measured amplitude from a sensor.">ch_get_amplitude()</a></em>, which is <em>not</em> updated unless a target is detected.)</p>
 <p>Each sample amplitude consists of one unsigned 16-bit integer value.</p>
 <p>Amplitude values in the sensor are expressed only in internal ADC counts (least-significant bits, or LSBs) and are not calibrated to any standard units.</p>
-<p>The number of samples available in each amplitude trace is determined by the maximum range setting for the device. If it is set to less than the maximum possible range, not all samples will contain valid data. To determine the number of active samples within the trace, use <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>. <br  />
-</p>
+<p>The number of samples available in each amplitude trace is determined by the maximum range setting for the device. If it is set to less than the maximum possible range, not all samples will contain valid data. To determine the number of active samples within the trace, use <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>.</p>
 <ul>
 <li>To read all valid amplitude data, set <em>start_sample</em> to zero (0), and set <em>num_samples</em> to the value returned by <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>.</li>
 </ul>
@@ -1091,8 +1199,7 @@ Functions</h2></td></tr>
 <li>Your callback function (set in step #1 above) will be called as each individual sensor's read completes. Your callback function should initiate any further processing of the I/Q data, possibly by setting a flag that will be checked from within the application's main execution loop. The callback function will likely be called at interrupt level, so the amount of processing within it should be kept to a minimum.</li>
 </ol>
 <p>For a CH101 sensor, up to 150 samples are taken during each measurement cycle; for a CH201 sensor, up to 450 samples are taken. So, a complete CH101 amplitude trace will contain up to 300 bytes of data (150 samples x 2 bytes per sample), and a CH201 amplitude trace may contain up to 900 bytes. The buffer specified by <em>buf_ptr</em> must be large enough to hold this amount of data.</p>
-<p>When the amplitude data is read from the sensor, the additional time required to transfer the amplitude data over the SPI/I2C bus must be taken into account when planning how often the sensor can be read (sample interval). <br  />
-</p>
+<p>When the amplitude data is read from the sensor, the additional time required to transfer the amplitude data over the SPI/I2C bus must be taken into account when planning how often the sensor can be read (sample interval).</p>
 <dl class="section note"><dt>Note</dt><dd>It is important that any data I/O operations to or from the sensor, including reading the amplitude data, complete before a new measurement cycle is triggered, or the new measurement may be affected.</dd>
 <dd>
 This function only obtains the data from the most recently completed measurement cycle. It does not actually trigger a measurement. </dd></dl>
@@ -1122,8 +1229,7 @@ This function only obtains the data from the most recently completed measurement
   </table>
   </dd>
 </dl>
-<p>This function returns the operating frequency of the sensor. This is the primary frequency of the ultrasonic pulse that is emitted by the device when transmitting. <br  />
-</p>
+<p>This function returns the operating frequency of the sensor. This is the primary frequency of the ultrasonic pulse that is emitted by the device when transmitting.</p>
 <dl class="section return"><dt>Returns</dt><dd>Sensor bandwidth, in Hz, or 0 if error or bandwidth measurement is not available</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The bandwidth measurement is only available when using special sensor firmware packages from Chirp. It is generally not available in General Purpose Rangefinding (GPR) firmware. </dd></dl>
 
@@ -1365,8 +1471,7 @@ This function only obtains the data from the most recently completed measurement
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Device number</dd></dl>
-<p>This function returns the device number (I/O index) of the sensor within its sensor group. <br  />
- Normally, this also corresponds to the sensor's port number on the board, and is used for indexing arrays of pin definitions etc. within the board support package routines. </p>
+<p>This function returns the device number (I/O index) of the sensor within its sensor group. Normally, this also corresponds to the sensor's port number on the board, and is used for indexing arrays of pin definitions etc. within the board support package routines. </p>
 
 </div>
 </div>
@@ -1607,8 +1712,7 @@ This function only obtains the data from the most recently completed measurement
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>CH_INTERRUPT_MODE_PULSE if interrupt uses pulse mode, CH_INTERRUPT_MODE_LATCH if latching mode</dd></dl>
 <p>This function returns the current setting for interrupt mode (pulsed or latching).</p>
-<dl class="section note"><dt>Note</dt><dd>CH101 and CH201 sensors always use pulse interrupt mode for normal sensor interrupts, so this routine will always return CH_INTERRUPT_MODE_PULSE. <br  />
- </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>CH101 and CH201 sensors always use pulse interrupt mode for normal sensor interrupts, so this routine will always return CH_INTERRUPT_MODE_PULSE. </dd></dl>
 
 </div>
 </div>
@@ -1670,13 +1774,11 @@ This function only obtains the data from the most recently completed measurement
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if error</dd></dl>
 <p>This function reads the raw I/Q measurement data from the sensor. The I/Q data set includes a discrete pair of values for each of the samples that make up a full measurement cycle. Each individual sample is reported as a pair of values, I and Q, in a quadrature format. The I/Q values may be used to calculate the relative amplitude of the measured ultrasound signal.</p>
 <p>The contents of the I/Q trace are updated on every measurement cycle, even if no target was detected (i.e. even if <em><a class="el" href="soniclib_8h.html#a5cbb4847d39cc9418373b6d1ac8dadc6" title="Get the measured range from a sensor.">ch_get_range()</a></em> returns <em>CH_NO_TARGET</em>). (Note that this is different than the regular amplitude value, as returned by <em><a class="el" href="soniclib_8h.html#aa2ef517f154bb269d31fdf3f4e0cc7a2" title="Get the measured amplitude from a sensor.">ch_get_amplitude()</a></em>, which is <em>not</em> updated unless a target is detected.)</p>
-<p>Each sample I/Q pair consists of two signed 16-bit integers and is described by the <em><a class="el" href="structch__iq__sample__t.html" title="Sensor I/Q data value.">ch_iq_sample_t</a></em> structure. To convert any given pair of I/Q values to the amplitude value for that sample, square both I and Q, and take the square root of the sum: <br  />
- </p><p class="formulaDsp">
+<p>Each sample I/Q pair consists of two signed 16-bit integers and is described by the <em><a class="el" href="structch__iq__sample__t.html" title="Sensor I/Q data value.">ch_iq_sample_t</a></em> structure. To convert any given pair of I/Q values to the amplitude value for that sample, square both I and Q, and take the square root of the sum: </p><p class="formulaDsp">
 \[Amp_n = \sqrt{(I_n)^2 + (Q_n)^2}\]
 </p>
 <p> Amplitude values in the sensor are expressed only in internal ADC counts (least-significant bits, or LSBs) and are not calibrated to any standard units.</p>
-<p>The number of samples used in each I/Q trace is determined by the maximum range setting for the device. If it is set to less than the maximum possible range, not all samples will contain valid data. To determine the number of active samples within the trace, use <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>. <br  />
-</p>
+<p>The number of samples used in each I/Q trace is determined by the maximum range setting for the device. If it is set to less than the maximum possible range, not all samples will contain valid data. To determine the number of active samples within the trace, use <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>.</p>
 <ul>
 <li>To read all valid I/Q data, set <em>start_sample</em> to zero (0), and set <em>num_samples</em> to the value returned by <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>.</li>
 </ul>
@@ -1692,8 +1794,7 @@ This function only obtains the data from the most recently completed measurement
 <li>Your callback function (set in step #1 above) will be called as each individual sensor's read completes. Your callback function should initiate any further processing of the I/Q data, possibly by setting a flag that will be checked from within the application's main execution loop. The callback function will likely be called at interrupt level, so the amount of processing within it should be kept to a minimum.</li>
 </ol>
 <p>For a CH101 sensor, up to 150 samples are taken during each measurement cycle; for a CH201 sensor, up to 450 samples are taken. So, a complete CH101 I/Q trace will contain up to 600 bytes of data (150 samples x 4 bytes per sample), and a CH201 I/Q trace may contain up to 1800 bytes. The buffer specified by <em>buf_ptr</em> must be large enough to hold this amount of data.</p>
-<p>When the I/Q data is read from the sensor, the additional time required to transfer the I/Q data over the SPI/I2C bus must be taken into account when planning how often the sensor can be read (sample interval). <br  />
-</p>
+<p>When the I/Q data is read from the sensor, the additional time required to transfer the I/Q data over the SPI/I2C bus must be taken into account when planning how often the sensor can be read (sample interval).</p>
 <dl class="section note"><dt>Note</dt><dd>It is important that any data I/O operations to or from the sensor, including reading the I/Q data, complete before a new measurement cycle is triggered, or the new measurement may be affected.</dd>
 <dd>
 This function only obtains the data from the most recently completed measurement cycle. It does not actually trigger a measurement. </dd></dl>
@@ -1865,8 +1966,7 @@ This function only obtains the data from the most recently completed measurement
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of output samples in last measurement</dd></dl>
 <p>This function returns the number of valid samples in the most recently completed measurement, as reported by the sensor. The sensor will be queried dynamically over the I/O bus interface.</p>
-<p>In general, this number will match the configured sample count for the last measurement, which can be obtained using <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>. That function is recommended for typical use, because it requires no additional I/O to the sensor. <br  />
-</p>
+<p>In general, this number will match the configured sample count for the last measurement, which can be obtained using <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>. That function is recommended for typical use, because it requires no additional I/O to the sensor.</p>
 <dl class="section note"><dt>Note</dt><dd>For CH101 and CH201 sensors, this function will always return the configured sample count, not a dynamic value from the sensor (i.e. it is identical to <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>).</dd></dl>
 <p>See also <em><a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda" title="Get the number of samples per measurement cycle.">ch_get_num_samples()</a></em>, <em><a class="el" href="soniclib_8h.html#a9bf5688451893bddde1d3623dd34f48d" title="Get the number of samples per measurement cycle for a specific measurement.">ch_meas_get_num_samples()</a></em>. </p>
 
@@ -2236,8 +2336,7 @@ The <em>range_type</em> parameter only controls how this function interprets the
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of samples that have low gain at beginning of measurement</dd></dl>
-<p>This function gets the receive (rx) low-gain range from the sensor. The low-gain range is a count of samples at the beginning of a measurement that will have lower gain applied during the ultrasound receive operation. <br  />
-</p>
+<p>This function gets the receive (rx) low-gain range from the sensor. The low-gain range is a count of samples at the beginning of a measurement that will have lower gain applied during the ultrasound receive operation.</p>
 <p>The returned low-gain range is either the default value for the sensor firmware, or a value previously set by <em><a class="el" href="soniclib_8h.html#aba0abd6a2546fb40cb8fc9b832a6d63b" title="Set the receive low-gain sample count.">ch_set_rx_low_gain()</a></em>.</p>
 <p>To convert the returned sample count to a physical distance, use <em><a class="el" href="soniclib_8h.html#a290f3e5de2ee174e37ff4522df51d376" title="Convert sample count to millimeters for a sensor.">ch_samples_to_mm()</a></em>.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#aba0abd6a2546fb40cb8fc9b832a6d63b" title="Set the receive low-gain sample count.">ch_set_rx_low_gain()</a></em>.</p>
@@ -2493,8 +2592,7 @@ The <em>range_type</em> parameter only controls how this function interprets the
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Static target rejection range setting, in samples, or 0 if not enabled</dd></dl>
-<p>This function returns the number of samples at the beginning of a measurement cycle over which static target rejection filtering will be applied. <br  />
-</p>
+<p>This function returns the number of samples at the beginning of a measurement cycle over which static target rejection filtering will be applied.</p>
 <p>To calculate the physical distance that corresponds to the number of samples, use the <em><a class="el" href="soniclib_8h.html#a290f3e5de2ee174e37ff4522df51d376" title="Convert sample count to millimeters for a sensor.">ch_samples_to_mm()</a></em> function.</p>
 <p>For ICU sensors, this function always returns the value for the default measurement definition. To specify which measurement to query, use the <em><a class="el" href="soniclib_8h.html#a51c0e681571dfc49caf3514fd084d33f" title="Get the number of static target filter samples for a measurement.">ch_meas_get_static_filter()</a></em> function.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#ab7b5aecb6cfe54c6d2df428e26192d9a" title="Configure static target rejection.">ch_set_static_range()</a></em>. </p>
@@ -2805,8 +2903,7 @@ For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function obtains the current detection threshold values from the sensor and returns them in a <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure specified by <em>thresh_ptr</em>. The <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure holds an array of <a class="el" href="structch__thresh__t.html" title="Detection threshold value.">ch_thresh_t</a> structures, each of which contains a starting sample number and amplitude threshold value. <br  />
-</p>
+<p>This function obtains the current detection threshold values from the sensor and returns them in a <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure specified by <em>thresh_ptr</em>. The <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure holds an array of <a class="el" href="structch__thresh__t.html" title="Detection threshold value.">ch_thresh_t</a> structures, each of which contains a starting sample number and amplitude threshold value.</p>
 <p>For ICU sensors, this function only reports the thresholds for the default measurement (CH_DEFAULT_MEAS_NUM). If both measurements are being used, the thresholds for each may be obtained individually by using the <em><a class="el" href="soniclib_8h.html#ae4041161cfd2f313d3f0aaae5b301c33" title="Get detection thresholds for a specific measurement.">ch_meas_get_thresholds()</a></em> function.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#a7e948bfbdc2cbca2f04bc97459541e5f" title="Set detection thresholds.">ch_set_thresholds()</a></em>.</p>
 <dl class="section note"><dt>Note</dt><dd>This function is available for ICU sensors and when using most sensor firmware for CH201 sensors. If using other CH101/CH201 firmware with only a single detection treshold, use <em><a class="el" href="soniclib_8h.html#a05448e0cd2c7bd018c6ca10d29aa5673" title="Get the detection threshold.">ch_get_threshold()</a></em>. </dd></dl>
@@ -2901,10 +2998,8 @@ For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>trigger type, either CH_TRIGGER_TYPE_HW or CH_TRIGGER_TYPE_SW</dd></dl>
 <p>This function gets the current trigger type to be used to initiate a measurement on a sensor when in triggered mode.</p>
-<p>By default, sensors are triggered using a hardware signal on the INT line, and this function will return CH_TRIGGER_TYPE_HW. <br  />
-</p>
-<p>Alternatively, software triggering may be used, using a special SPI command to the sensor. In this case, this function will return CH_TRIGGER_TYPE_SW. <br  />
-</p>
+<p>By default, sensors are triggered using a hardware signal on the INT line, and this function will return CH_TRIGGER_TYPE_HW.</p>
+<p>Alternatively, software triggering may be used, using a special SPI command to the sensor. In this case, this function will return CH_TRIGGER_TYPE_SW.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#a035896185096ae0cc1e4c54db205d38c" title="Set the trigger type for a sensor.">ch_set_trigger_type()</a></em>, <em><a class="el" href="soniclib_8h.html#ade5083e622e8cc3852a4193f6d8dce9c" title="Trigger a measurement on one sensor.">ch_trigger()</a></em>. </p>
 
 </div>
@@ -2997,8 +3092,7 @@ For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with 
   </table>
   </dd>
 </dl>
-<p>This function returns the nominal acoustic operating frequency for a group of sensors whose frequencies have been adjusted using <em><a class="el" href="soniclib_8h.html#a5c373443ede97b6665a9919b23074328" title="Set the operating frequency for a group of sensors.">ch_group_set_frequency()</a></em>. <br  />
- A return value of zero indicates that no group frequency has been set.</p>
+<p>This function returns the nominal acoustic operating frequency for a group of sensors whose frequencies have been adjusted using <em><a class="el" href="soniclib_8h.html#a5c373443ede97b6665a9919b23074328" title="Set the operating frequency for a group of sensors.">ch_group_set_frequency()</a></em>. A return value of zero indicates that no group frequency has been set.</p>
 <p>In general, the actual operating frequency for each device will vary slightly from the nominal group value. Use <em><a class="el" href="soniclib_8h.html#a7ae60d24c0b1d0fb5f06e2449c0fa149" title="Get the operating frequency of a sensor.">ch_get_frequency()</a></em> to obtain the adjusted operating frequency for an individual sensor.</p>
 <dl class="section return"><dt>Returns</dt><dd>Group nominal frequency, in Hz, or zero if no group frequency has been set</dd></dl>
 <p>See also <em><a class="el" href="soniclib_8h.html#a5c373443ede97b6665a9919b23074328" title="Set the operating frequency for a group of sensors.">ch_group_set_frequency()</a></em>, <em><a class="el" href="soniclib_8h.html#a7ae60d24c0b1d0fb5f06e2449c0fa149" title="Get the operating frequency of a sensor.">ch_get_frequency()</a></em>.</p>
@@ -4489,7 +4583,7 @@ For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of ringdown cancellation samples</dd></dl>
-<p>This function returns the number of samples in the specified measurement that will receive "ringdown 
+<p>This function returns the number of samples in the specified measurement that will receive "ringdown
 cancellation" processing. These samples are always the first in the measurement (corresponding to targets closest to the sensor).</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#ab5bef9e19109bf21b9178b016dc50b0a" title="Set the number of ringdown cancellation samples for a measurement.">ch_meas_set_ringdown_cancel()</a></em>. </p>
 
@@ -4530,8 +4624,7 @@ cancellation" processing. These samples are always the first in the measurement 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of samples that are ignored at the beginning of each measurement</dd></dl>
-<p>This function gets the receive (rx) holdoff sample count for the specified measurement. <br  />
- The rx holdoff count is the number of samples at the beginning of a measurement that will be ignored for the purpose of detecting a target, as previously set by <em><a class="el" href="soniclib_8h.html#ad42fd8a483dc12533ec07681c16468c9" title="Set the receive holdoff sample count for a specific measurement.">ch_meas_set_rx_holdoff()</a></em>.</p>
+<p>This function gets the receive (rx) holdoff sample count for the specified measurement. The rx holdoff count is the number of samples at the beginning of a measurement that will be ignored for the purpose of detecting a target, as previously set by <em><a class="el" href="soniclib_8h.html#ad42fd8a483dc12533ec07681c16468c9" title="Set the receive holdoff sample count for a specific measurement.">ch_meas_set_rx_holdoff()</a></em>.</p>
 <p>To convert the returned sample count to a physical distance, use <em><a class="el" href="soniclib_8h.html#a290f3e5de2ee174e37ff4522df51d376" title="Convert sample count to millimeters for a sensor.">ch_samples_to_mm()</a></em>.</p>
 <p>The <em><a class="el" href="soniclib_8h.html#ab71d5ac02276e0d9b77549eb29195d6c" title="Get the receive holdoff sample count.">ch_get_rx_holdoff()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#ad42fd8a483dc12533ec07681c16468c9" title="Set the receive holdoff sample count for a specific measurement.">ch_meas_set_rx_holdoff()</a></em>. </p>
@@ -4731,8 +4824,7 @@ This function is only available in select Chirp sensor firmware versions. </dd><
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
 <p>This function obtains the current detection threshold values for one of the two measurements, as specified by <em>meas_num</em>.</p>
-<p>The threshold values are returned in a <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure specified by <em>thresh_ptr</em>. The <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure holds an array of <a class="el" href="structch__thresh__t.html" title="Detection threshold value.">ch_thresh_t</a> structures, each of which contains a starting sample number and amplitude threshold value. <br  />
-</p>
+<p>The threshold values are returned in a <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure specified by <em>thresh_ptr</em>. The <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure holds an array of <a class="el" href="structch__thresh__t.html" title="Detection threshold value.">ch_thresh_t</a> structures, each of which contains a starting sample number and amplitude threshold value.</p>
 <p>The <em><a class="el" href="soniclib_8h.html#a9ea0971363f3a1c9fdc7e8f040489edd" title="Get detection thresholds.">ch_get_thresholds()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
 <dl class="section note"><dt>Note</dt><dd>This function is only available for ICU sensors. </dd></dl>
 
@@ -4836,8 +4928,7 @@ This function is only available in select Chirp sensor firmware versions. </dd><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function initializes the measurement specified by <em>meas_num</em> with the specified configuration and detection thresholds. <br  />
- <em>meas_config_ptr</em> is a pointer to a <a class="el" href="structch__meas__config__t.html" title="Measurement configuration - used during ch_meas_init()">ch_meas_config_t</a> structure which must have already been initialized. The fields in this structure specify various parameters for the measurement including</p><ul>
+<p>This function initializes the measurement specified by <em>meas_num</em> with the specified configuration and detection thresholds. <em>meas_config_ptr</em> is a pointer to a <a class="el" href="structch__meas__config__t.html" title="Measurement configuration - used during ch_meas_init()">ch_meas_config_t</a> structure which must have already been initialized. The fields in this structure specify various parameters for the measurement including</p><ul>
 <li>num_ranges - maximum number of separate target range values to report</li>
 <li>odr - output data rate for the sensor (time between samples within measurement)</li>
 <li>meas_period - repeat period for measurement, in ticks (optional, freerun interval may be set later)</li>
@@ -5147,8 +5238,7 @@ This function is only available in select Chirp sensor firmware versions. </dd><
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
 <p>This function optimizes the transmit sequences during measurements for a sensor. The original transmit segments are replaced by a longer sequence that is tuned to the specific sensor. In particular, the "ringdown" in the sensor following a transmission is actively reduced. The sensor is able to receive the echo signal sooner, thus permitting measurements at closer distances.</p>
-<p>Optimization is performed on a defined measurement, such as the result of combining measurement segments using <em><a class="el" href="soniclib_8h.html#a063940d1f4d8613c4c0abaa421a17b0c" title="Add a segment to a measurement.">ch_meas_add_segment()</a></em> etc. These segments are part of the "measurement queue" for the sensor. <br  />
-</p>
+<p>Optimization is performed on a defined measurement, such as the result of combining measurement segments using <em><a class="el" href="soniclib_8h.html#a063940d1f4d8613c4c0abaa421a17b0c" title="Add a segment to a measurement.">ch_meas_add_segment()</a></em> etc. These segments are part of the "measurement queue" for the sensor.</p>
 <p>To optimize the current measurement settings and make no other changes to the configuration, specify NULL for both <em>meas_queue_ptr</em> and <em>algo_cfg_ptr</em>.</p>
 <p>Alternatively, a new measurement queue may be imported, optimized, and applied using this function, similar to the <em><a class="el" href="soniclib_8h.html#a719bb8d611224839c6d9404d339bc9e8" title="Import an externally defined measurement configuration.">ch_meas_import()</a></em> function (e.g. to use an exported measurement queue definition from the SonicLink development kit). In this case, set <em>meas_queue_ptr</em> to the location containing the measurement queue to be optimized. The new measurement queue will be optimized, and the resulting settings will be written to the sensor. The input measurement queue definition specified by <em>meas_queue_ptr</em> will not be modified.</p>
 <p>The <em>algo_cfg_ptr</em> parameter specifies a new measurement algorithm configuration to be applied. If <em>algo_cfg_ptr</em> is NULL, the current configuration will be left unchanged.</p>
@@ -5244,8 +5334,7 @@ This feature is only available for ICU sensors.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>Number of millimeters</dd></dl>
 <p>This function converts the sample count specified in <em>num_samples</em> and converts it to the corresponding physical distance in millimeters for the specified measurement. The conversion uses values set during device initialization and calibration that describe the internal timing of the sensor.</p>
 <p>This function may be helpful when working with both physical distances (as reported by the <em><a class="el" href="soniclib_8h.html#a5cbb4847d39cc9418373b6d1ac8dadc6" title="Get the measured range from a sensor.">ch_get_range()</a></em> function) and sample-oriented values, such as data obtained from <em><a class="el" href="soniclib_8h.html#acde1c47209421107f576b7e01b6fa5e8" title="Get the raw I/Q measurement data from a sensor.">ch_get_iq_data()</a></em> or parameters for static target rejection (see <em><a class="el" href="soniclib_8h.html#ab7b5aecb6cfe54c6d2df428e26192d9a" title="Configure static target rejection.">ch_set_static_range()</a></em>).</p>
-<dl class="section note"><dt>Note</dt><dd>The number of samples corresponding to a certain distance is determined by the ODR (output data rate) for the sensor, which is the rate at which the received ultrasound is sampled within each measurement. So, the ODR must be known to calculate this conversion. <br  />
-</dd>
+<dl class="section note"><dt>Note</dt><dd>The number of samples corresponding to a certain distance is determined by the ODR (output data rate) for the sensor, which is the rate at which the received ultrasound is sampled within each measurement. So, the ODR must be known to calculate this conversion.</dd>
 <dd>
 In ICU sensors, the ODR is configurable. The default is one sample per 8 transceiver cycles (CH_ODR_FREQ_DIV_8, also known as CH_ODR_DEFAULT). If the default ODR will not be not used, the new ODR must be set for the specified measurement before this function is called, either as a standard parameter during <em><a class="el" href="soniclib_8h.html#ac4ca589635feb0c221ac8e01e6731586" title="Initialize a measurement.">ch_meas_init()</a></em>, or by calling <em><a class="el" href="soniclib_8h.html#adc5748ec903986b27b78f4a52b8c9e23" title="Set the output data rate for a measurement.">ch_meas_set_odr()</a></em>.</dd></dl>
 <p>The <em><a class="el" href="soniclib_8h.html#a290f3e5de2ee174e37ff4522df51d376" title="Convert sample count to millimeters for a sensor.">ch_samples_to_mm()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
@@ -5728,7 +5817,7 @@ In ICU sensors, the ODR is configurable. The default is one sample per 8 transce
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function sets the number of samples in the specified measurement that will receive "ringdown 
+<p>This function sets the number of samples in the specified measurement that will receive "ringdown
 cancellation" processing. These samples are always the first in the measurement (corresponding to targets closest to the sensor).</p>
 <p>Ringdown is the physical settling time of the ultrasound transducer after generating a transmit pulse. This settling causes a large false signal in the first receive samples after the transmit segment ends. Ringdown cancellation is a filtering technique to remove these ringdown artifacts. However, it can also affect the sensing ability at close range. The number of ringdown samples may be tuned to obtain the best performance in a specific application.</p>
 <p>If the ringdown cancel sample count is too low, it will result in false detections at very close indicated ranges.</p>
@@ -5778,8 +5867,7 @@ cancellation" processing. These samples are always the first in the measurement 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function sets the receive (rx) holdoff sample count for the specified measurement. <br  />
- <em>num_samples</em> specifies a number of samples at the beginning of a measurement that will be ignored for the purpose of detecting a target. (These samples correspond to the closest distances from the sensor.)</p>
+<p>This function sets the receive (rx) holdoff sample count for the specified measurement. <em>num_samples</em> specifies a number of samples at the beginning of a measurement that will be ignored for the purpose of detecting a target. (These samples correspond to the closest distances from the sensor.)</p>
 <p>To convert a physical distance into a sample count value to use here, use <em><a class="el" href="soniclib_8h.html#a4203c97c07e47db67bf2e1c1eb16b054" title="Convert millimeters to sample count for a specific measurement.">ch_meas_mm_to_samples()</a></em>.</p>
 <p>The <em><a class="el" href="soniclib_8h.html#a4d2f18445966ba0094e54bfdae39bc0a" title="Set the receive holdoff sample count.">ch_set_rx_holdoff()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#a786ba819cd4146dca4c70547879c0a62" title="Get the receive holdoff sample count for a specific measurement.">ch_meas_get_rx_holdoff()</a></em>. </p>
@@ -6026,8 +6114,7 @@ cancellation" processing. These samples are always the first in the measurement 
 <dl class="section return"><dt>Returns</dt><dd>Number of samples</dd></dl>
 <p>This function converts the distance in millimeters specified by <em>num_mm</em> and converts it to the corresponding number of sensor samples. The conversion uses values set during device initialization and calibration that describe the internal timing of the sensor, which affects how many samples correspond to a given distance.</p>
 <p>This function may be helpful when working with both physical distances (as reported by the <em><a class="el" href="soniclib_8h.html#a5cbb4847d39cc9418373b6d1ac8dadc6" title="Get the measured range from a sensor.">ch_get_range()</a></em> function) and sample-oriented values, such as data obtained from <em><a class="el" href="soniclib_8h.html#acde1c47209421107f576b7e01b6fa5e8" title="Get the raw I/Q measurement data from a sensor.">ch_get_iq_data()</a></em> or parameters for filtering such as static target rejection (see <em><a class="el" href="soniclib_8h.html#ab7b5aecb6cfe54c6d2df428e26192d9a" title="Configure static target rejection.">ch_set_static_range()</a></em>).</p>
-<dl class="section note"><dt>Note</dt><dd>The number of samples corresponding to a certain distance is determined by the ODR (output data rate) for the sensor, which is the rate at which the received ultrasound is sampled within each measurement. So, the ODR must be known to calculate this conversion. <br  />
- This function always uses the ODR value for the default measurement (CH_DEFAULT_MEAS_NUM). To get the conversion for a specific measurement, use <em><a class="el" href="soniclib_8h.html#a4203c97c07e47db67bf2e1c1eb16b054" title="Convert millimeters to sample count for a specific measurement.">ch_meas_mm_to_samples()</a></em>.</dd>
+<dl class="section note"><dt>Note</dt><dd>The number of samples corresponding to a certain distance is determined by the ODR (output data rate) for the sensor, which is the rate at which the received ultrasound is sampled within each measurement. So, the ODR must be known to calculate this conversion. This function always uses the ODR value for the default measurement (CH_DEFAULT_MEAS_NUM). To get the conversion for a specific measurement, use <em><a class="el" href="soniclib_8h.html#a4203c97c07e47db67bf2e1c1eb16b054" title="Convert millimeters to sample count for a specific measurement.">ch_meas_mm_to_samples()</a></em>.</dd>
 <dd>
 In ICU sensors, the ODR is configurable. The default is one sample per 8 transceiver cycles (CH_ODR_FREQ_DIV_8, also known as CH_ODR_DEFAULT). If the default ODR will not be not used, the new ODR must be applied before this function is called, either as a standard parameter during <em><a class="el" href="soniclib_8h.html#ac4ca589635feb0c221ac8e01e6731586" title="Initialize a measurement.">ch_meas_init()</a></em>, or by calling <em><a class="el" href="soniclib_8h.html#adc5748ec903986b27b78f4a52b8c9e23" title="Set the output data rate for a measurement.">ch_meas_set_odr()</a></em> using CH_DEFAULT_MEAS_NUM as the measurement number.</dd>
 <dd>
@@ -6184,8 +6271,7 @@ For ICU sensors, this function always returns the conversion values for the defa
 <dl class="section return"><dt>Returns</dt><dd>Number of millimeters</dd></dl>
 <p>This function converts the sample count specified in <em>num_samples</em> and converts it to the corresponding physical distance in millimeters. The conversion uses values set during device initialization and calibration that describe the internal timing of the sensor.</p>
 <p>This function may be helpful when working with both physical distances (as reported by the <em><a class="el" href="soniclib_8h.html#a5cbb4847d39cc9418373b6d1ac8dadc6" title="Get the measured range from a sensor.">ch_get_range()</a></em> function) and sample-oriented values, such as data obtained from <em><a class="el" href="soniclib_8h.html#acde1c47209421107f576b7e01b6fa5e8" title="Get the raw I/Q measurement data from a sensor.">ch_get_iq_data()</a></em> or parameters for static target rejection (see <em><a class="el" href="soniclib_8h.html#ab7b5aecb6cfe54c6d2df428e26192d9a" title="Configure static target rejection.">ch_set_static_range()</a></em>).</p>
-<dl class="section note"><dt>Note</dt><dd>The number of samples corresponding to a certain distance is determined by the ODR (output data rate) for the sensor, which is the rate at which the received ultrasound is sampled within each measurement. So, the ODR must be known to calculate this conversion. <br  />
-</dd>
+<dl class="section note"><dt>Note</dt><dd>The number of samples corresponding to a certain distance is determined by the ODR (output data rate) for the sensor, which is the rate at which the received ultrasound is sampled within each measurement. So, the ODR must be known to calculate this conversion.</dd>
 <dd>
 In ICU sensors, the ODR is configurable. The default is one sample per 8 transceiver cycles (CH_ODR_FREQ_DIV_8, also known as CH_ODR_DEFAULT). If the default ODR will not be not used, the new ODR must be specified before this function is called, either as a standard parameter during <em><a class="el" href="soniclib_8h.html#ac4ca589635feb0c221ac8e01e6731586" title="Initialize a measurement.">ch_meas_init()</a></em>, or by calling <em><a class="el" href="soniclib_8h.html#adc5748ec903986b27b78f4a52b8c9e23" title="Set the output data rate for a measurement.">ch_meas_set_odr()</a></em> using CH_DEFAULT_MEAS_NUM as the measurement number.</dd>
 <dd>
@@ -6299,8 +6385,7 @@ For ICU sensors, this function always returns the conversion values for the defa
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if error</dd></dl>
 <p>This function sets multiple configuration options within the sensor. The configuration settings are passed in a <a class="el" href="structch__config__t.html" title="Combined configuration structure.">ch_config_t</a> structure, whose address is specified by <em>config_ptr</em>. The fields in the <a class="el" href="structch__config__t.html" title="Combined configuration structure.">ch_config_t</a> structure must have been set with your new configuration values before this function is called.</p>
-<dl class="section note"><dt>Note</dt><dd>The individual configuration values set by this function may also be set using dedicated single-value functions. These two methods are completely equivalent and may be freely mixed. <br  />
- See <em><a class="el" href="soniclib_8h.html#af427c34df885a028ee0f7cdddc981001" title="Configure a sensor for the specified operating mode.">ch_set_mode()</a></em>, <em><a class="el" href="soniclib_8h.html#a41a264ebc25b13778176e83c0c910997" title="Set the maximum range for a sensor.">ch_set_max_range()</a></em>, <em><a class="el" href="soniclib_8h.html#a8d3ad9e2c87572430228205103a28927" title="Set the internal sensing interval for freerunning mode, in milliseconds.">ch_set_freerun_interval()</a></em>, <em><a class="el" href="soniclib_8h.html#ab7b5aecb6cfe54c6d2df428e26192d9a" title="Configure static target rejection.">ch_set_static_range()</a></em>, <em><a class="el" href="soniclib_8h.html#a7e948bfbdc2cbca2f04bc97459541e5f" title="Set detection thresholds.">ch_set_thresholds()</a></em>, and <em><a class="el" href="soniclib_8h.html#ab462c77e75fd5b959eb3d49e918d49e8" title="Configure target interrupt filtering mode.">ch_set_target_interrupt()</a></em>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The individual configuration values set by this function may also be set using dedicated single-value functions. These two methods are completely equivalent and may be freely mixed. See <em><a class="el" href="soniclib_8h.html#af427c34df885a028ee0f7cdddc981001" title="Configure a sensor for the specified operating mode.">ch_set_mode()</a></em>, <em><a class="el" href="soniclib_8h.html#a41a264ebc25b13778176e83c0c910997" title="Set the maximum range for a sensor.">ch_set_max_range()</a></em>, <em><a class="el" href="soniclib_8h.html#a8d3ad9e2c87572430228205103a28927" title="Set the internal sensing interval for freerunning mode, in milliseconds.">ch_set_freerun_interval()</a></em>, <em><a class="el" href="soniclib_8h.html#ab7b5aecb6cfe54c6d2df428e26192d9a" title="Configure static target rejection.">ch_set_static_range()</a></em>, <em><a class="el" href="soniclib_8h.html#a7e948bfbdc2cbca2f04bc97459541e5f" title="Set detection thresholds.">ch_set_thresholds()</a></em>, and <em><a class="el" href="soniclib_8h.html#ab462c77e75fd5b959eb3d49e918d49e8" title="Configure target interrupt filtering mode.">ch_set_target_interrupt()</a></em>. </dd></dl>
 
 </div>
 </div>
@@ -7121,8 +7206,7 @@ For ICU sensors, this function always returns the conversion values for the defa
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero if error</dd></dl>
-<p>This function sets the sample range to be included in the sample window used for amplitude averaging. <em>start_sample</em> is the number of the first sample that will be included in the averaging window. <em>num_samples</em> is the total number of samples that will be included. <br  />
-</p>
+<p>This function sets the sample range to be included in the sample window used for amplitude averaging. <em>start_sample</em> is the number of the first sample that will be included in the averaging window. <em>num_samples</em> is the total number of samples that will be included.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#aecd6ee85a061f71da4e98aab683fef5b" title="Get the averaged measured amplitude over the sample window.">ch_get_amplitude_avg()</a></em>, <em><a class="el" href="soniclib_8h.html#a56c552c6a09c2400766ee329efcaeaa1" title="Get the sample window for amplitude averaging.">ch_get_sample_window()</a></em>.</p>
 <dl class="section note"><dt>Note</dt><dd>Internal sample window averaging is available when using special sensor firmware packages from Chirp. In General Purpose Rangefinding (GPR) firmware, a software only implementation is used. </dd></dl>
 
@@ -7312,8 +7396,7 @@ For ICU sensors, this function always returns the conversion values for the defa
 <p>In normal operation (if target detection interrupt filtering is not enabled), the sensor will assert the INT line at the end of each measurement even if no target is detected. This is the default behavior if this function is not used, or if <em>tgt_int_filter</em> is CH_TGT_INT_FILTER_OFF.</p>
 <p>When basic target interrupt filtering is enabled, the sensor will assert the INT line at the end of each measurement only if a target object was detected. If no target is detected, the sensor will not interrupt, and there is no indication from the sensor that the measurement has completed.</p>
 <p>To use basic target interrupt filtering, set <em>tgt_int_filter</em> to <em>CH_TGT_INT_FILTER_ANY</em>.</p>
-<p>Target counter mode provides another level of filtering, across multiple measurements. When counter filtering is enabled, the sensor will only interrupt after multiple measurements have detected a target within a certain total number of consecutive recent measurements. <br  />
- A configurable history of previous measurements is recorded, and the results are compared against a threshold number of target detections. The sensor will generate an interrupt only when the count of target detections within the set of recent measurements meets the threshold value,</p>
+<p>Target counter mode provides another level of filtering, across multiple measurements. When counter filtering is enabled, the sensor will only interrupt after multiple measurements have detected a target within a certain total number of consecutive recent measurements. A configurable history of previous measurements is recorded, and the results are compared against a threshold number of target detections. The sensor will generate an interrupt only when the count of target detections within the set of recent measurements meets the threshold value,</p>
 <p>To use counter mode filtering, set <em>tgt_int_filter</em> to <em>CH_TGT_INT_FILTER_COUNTER</em>. The measurement history and target detection threshold count used in the filter can be set by using the <em><a class="el" href="soniclib_8h.html#a21906ecff45b2f188d8cf6b4b7b2e596" title="Configure the target interrupt counter filter.">ch_set_target_int_counter()</a></em> function.</p>
 <p>If not otherwise specified, the default measurement history length is 5 measurements. The current measurement is combined with the measurements from the history, so a total of 6 measurements are used. The default interrupt threshold is 3 target detections. So by default, 3 of the 6 most recent measurements must detect a target to generate an interrupt.</p>
 <p>By default, the counter filter maintains its history and counter values after an interrupt is generated, so the next measurement may again interrupt based on the threshold comparison as usual. The counter filter may instead be configured to reset after generating an interrupt by using <em><a class="el" href="soniclib_8h.html#a21906ecff45b2f188d8cf6b4b7b2e596" title="Configure the target interrupt counter filter.">ch_set_target_int_counter()</a></em>. In this case, the full <em>thresh_count</em> threshold must be met based on new detections, so that minimum number of measurements must occur before another interrupt will be generated.</p>
@@ -7537,8 +7620,7 @@ For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function sets the length (duration) of the ultrasonic pulse sent by the sensor when it transmits. <em>num_cycles</em> specifies the length of the pulse. <br  />
-</p>
+<p>This function sets the length (duration) of the ultrasonic pulse sent by the sensor when it transmits. <em>num_cycles</em> specifies the length of the pulse.</p>
 <p>For ICU (Shasta architecture) sensors, <em>num_cycles</em> are in units of Measurement State Machine Clock (SMCLK) cycles.</p>
 <p>For CH101 and CH201 (Whitney architecture) sensors, <em>num_cycles</em> are ultrasonic transducer (PMUT) cycles, so are 1/16 the corresponding ICU sensor value.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#a29a46285cbf72cb4d1c163f6575edf2f" title="Get the ultrasound transmit pulse length.">ch_get_tx_length()</a></em>.</p>
@@ -7680,8 +7762,7 @@ For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Number of sensor cycles.</dd></dl>
-<p>This function takes a period of time specified in microseconds and converts it to the corresponding number of internal sensor cycles. <br  />
-</p>
+<p>This function takes a period of time specified in microseconds and converts it to the corresponding number of internal sensor cycles.</p>
 <p>For ICU (Shasta architecture) sensors, <em>cycles</em> are in units of PMUT State Machine Clock (SMCLK) cycles. The PMUT clock rate is 16 times the ultrasonic transducer acoustic operating frequency. These are the same cycle units used to specify measurement transmit and count segment lengths.</p>
 <p>For CH101 and CH201 (Whitney architecture) sensors, <em>cycles</em> are ultrasonic transducer cycles, so are 1/16 the corresponding ICU sensor value.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#acde0dc4f438051bd4fcfd19aad8b3f9c" title="Convert sensor cycles to microseconds.">ch_cycles_to_usec()</a></em>. </p>
