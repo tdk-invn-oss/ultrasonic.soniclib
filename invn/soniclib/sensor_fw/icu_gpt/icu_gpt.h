@@ -27,9 +27,9 @@
 #include <invn/soniclib/soniclib.h>
 #include <stdint.h>
 
-#define ICU_GPT_MAX_SAMPLES		(IQ_SAMPLES_MAX)	// from shasta_external_regs.h
+#define ICU_GPT_MAX_SAMPLES (IQ_SAMPLES_MAX)  // from shasta_external_regs.h
 
-extern const char *icu_gpt_version;		// version string in fw .c file
+extern const char *icu_gpt_version;  // version string in fw .c file
 extern const uint8_t icu_gpt_fw_text[];
 extern const uint8_t icu_gpt_fw_vec[];
 extern const uint16_t icu_gpt_text_size;
@@ -38,9 +38,8 @@ extern const uint16_t icu_gpt_vec_size;
 uint16_t get_icu_gpt_fw_ram_init_addr(void);
 uint16_t get_icu_gpt_fw_ram_init_size(void);
 
-const unsigned char * get_ram_icu_gpt_init_ptr(void);
+const unsigned char *get_ram_icu_gpt_init_ptr(void);
 
 uint8_t icu_gpt_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index);
 
-
-#endif	/* ICU_GPT_H_ */
+#endif /* ICU_GPT_H_ */

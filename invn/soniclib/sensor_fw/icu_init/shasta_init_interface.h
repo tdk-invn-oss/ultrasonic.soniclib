@@ -5,7 +5,7 @@
 #ifndef SHASTA_NONE_SHASTA_INIT_INTERFACE_H
 #define SHASTA_NONE_SHASTA_INIT_INTERFACE_H
 
-#include "icu_init/icu_shasta_algo_structs.h"
+#include "icu_shasta_algo_structs.h"
 #include "icu_algo_info.h"
 
 typedef struct shasta_init{
