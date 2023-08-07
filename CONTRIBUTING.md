@@ -19,6 +19,40 @@ You can simply include lines like the following on a per-file basis:
 
 Or you can include it at a finer scope if you wish.
 
+## Formatting
+
+This project is set up to use clang-format to ensure consistent formatting of
+the source code. You can install this using python.
+
+```
+python -m pip install clang-format
+```
+
+You can run clang-format locally using the following command to check for issues:
+
+```
+clang-format --files=format_flist.txt --dry-run -Werror
+```
+
+To fix issues, run:
+
+```
+clang-format --files=format_flist.txt -i
+```
+
+If there are special cases where you would like to disable clang-format, you can
+surround your code with:
+
+```c
+// clang-format off
+...
+// clang-format on
+```
+
+This will prevent clang-format from touching any code between the off and on
+commands. Currently this is used to preserve markdown tables within doxygen
+block comments.
+
 ## Contribution flow
 
 To start contributing, you will first need to fork this repository. From you

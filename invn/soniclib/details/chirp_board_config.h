@@ -1,7 +1,7 @@
 /*
  * chirp_board_config.h
  *
- * This file defines default values for the required symbols used to build an 
+ * This file defines default values for the required symbols used to build an
  * application with the Chirp SonicLib API and driver.  These symbols are used
  * for static array allocations and counters in SonicLib (and often
  * applications), and are based on the number of specific resources on the
@@ -43,27 +43,27 @@
 #define INCLUDE_WHITNEY_SUPPORT
 #endif
 
- /* Settings for the Chirp driver test setup */
+/* Settings for the Chirp driver test setup */
 #ifndef CHIRP_MAX_NUM_SENSORS
-#define CHIRP_MAX_NUM_SENSORS 		4		// maximum possible number of sensor devices
+#define CHIRP_MAX_NUM_SENSORS 4  // maximum possible number of sensor devices
 #endif
 
 #ifndef CHIRP_NUM_BUSES
-#define CHIRP_NUM_BUSES      		2		// number of I2C/SPI buses used by sensors
+#define CHIRP_NUM_BUSES 2  // number of I2C/SPI buses used by sensors
 #endif
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 #ifndef CHIRP_SENSOR_INT_PIN
-#define CHIRP_SENSOR_INT_PIN 		1
+#define CHIRP_SENSOR_INT_PIN 1
 #endif
 #ifndef CHIRP_SENSOR_TRIG_PIN
-#define CHIRP_SENSOR_TRIG_PIN 		1
+#define CHIRP_SENSOR_TRIG_PIN 1
 #endif
 #ifndef CHIRP_NO_INIT_FW
-#define CHIRP_NO_INIT_FW			0		// if non-zero, do not include separate init f/w
+#define CHIRP_NO_INIT_FW 0  // if non-zero, do not include separate init f/w
 #endif
 #ifndef CHIRP_NO_TX_OPTIMIZATION
-#define CHIRP_NO_TX_OPTIMIZATION	0		// if non-zero, do not use init f/w with tx optimization
+#define CHIRP_NO_TX_OPTIMIZATION 0  // if non-zero, do not use init f/w with tx optimization
 #endif
 #endif  // INCLUDE_SHASTA_SUPPORT
 

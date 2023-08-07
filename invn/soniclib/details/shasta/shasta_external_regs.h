@@ -41,6 +41,8 @@ typedef struct raw_output_data{
 #define ODR_BM ((uint8_t)7)
 #define MEAS_FLAGS_SUPPRESS_DR_BM (0x01) // suppress the data ready interrupt
                                          // if this bit is set
+#define MEAS_PERIOD_TIME_HOP_MASK (0xC000) // If bits set, time-hopping disabled
+
 typedef struct measurement{ // size: 172 bytes
     volatile pmut_transceiver_inst_t trx_inst[32]; // 0x00
     volatile uint16_t meas_period; // 0x80 the number of RTC clock periods to wait between the start of this measurement and the next

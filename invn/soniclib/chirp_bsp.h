@@ -189,7 +189,6 @@
 #ifndef __CHIRP_BSP_H_
 #define __CHIRP_BSP_H_
 
-
 #include <invn/soniclib/soniclib.h>
 
 /*!
@@ -431,7 +430,6 @@ void chbsp_group_set_int1_dir_in(ch_group_t *grp_ptr);
  */
 void chbsp_set_int1_dir_in(ch_dev_t *dev_ptr);
 
-
 /*!
  * \brief Set the INT1 pins low for a group of sensors.
  *
@@ -590,7 +588,6 @@ void chbsp_group_set_int2_dir_in(ch_group_t *grp_ptr);
  */
 void chbsp_set_int2_dir_in(ch_dev_t *dev_ptr);
 
-
 /*!
  * \brief Set the INT2 pins as inactive for a group of sensors.
  *
@@ -693,7 +690,6 @@ void chbsp_group_int2_interrupt_disable(ch_group_t *grp_ptr);
  * This function is OPTIONAL for ICU sensors.  It is not used for CH101 or CH201 sensors.
  */
 void chbsp_int2_interrupt_disable(ch_dev_t *dev_ptr);
-
 
 /*!
  * \brief Delay for specified number of microseconds
@@ -803,6 +799,7 @@ uint8_t chbsp_i2c_get_info(ch_group_t *grp_ptr, uint8_t dev_num, ch_i2c_info_t *
  */
 int chbsp_i2c_write(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes);
 
+// clang-format off
 /*!
  * \brief Write bytes to an I2C slave using memory addressing.
  *
@@ -832,8 +829,10 @@ int chbsp_i2c_write(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes);
  * \note Implementations of this function should use the \a ch_get_i2c_address() function to obtain
  * the device I2C address.
  */
+// clang-format on
 int chbsp_i2c_mem_write(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes);
 
+// clang-format off
 /*!
  * \brief Write bytes to an I2C slave using memory addressing, non-blocking.
  *
@@ -865,6 +864,7 @@ int chbsp_i2c_mem_write(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uin
  * the device I2C address.
  */
 int chbsp_i2c_mem_write_nb(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes);
+// clang-format on
 
 /*!
  * \brief Read bytes from an I2C slave.
@@ -885,6 +885,7 @@ int chbsp_i2c_mem_write_nb(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, 
  */
 int chbsp_i2c_read(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes);
 
+// clang-format off
 /*!
  * \brief Read bytes from an I2C slave using memory addressing.
  *
@@ -928,6 +929,8 @@ int chbsp_i2c_read(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes);
  * \note Implementations of this function should use the \a ch_get_i2c_address() function to obtain
  * the device I2C address.
  */
+// clang-format on
+
 int chbsp_i2c_mem_read(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes);
 
 /*!
@@ -1259,4 +1262,4 @@ void chbsp_led_toggle(uint8_t led_num);
  */
 void chbsp_print_str(char *str);
 
-#endif  /* __CHIRP_BSP_H_ */
+#endif /* __CHIRP_BSP_H_ */

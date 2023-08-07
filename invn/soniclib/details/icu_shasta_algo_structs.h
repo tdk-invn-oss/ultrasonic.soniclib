@@ -1,7 +1,7 @@
 /*! \file icu_shasta_algo_structs.h
  *
  * \brief Local SonicLib version of sensor algorithm header file
- * 
+ *
  * This is simply a wrapper header file that uses build symbols to select the
  * appropriate version of the icu_shasta_algo_structs.h file located in a
  * specific subdirectory under sensor_fw (which must be in the include path).
@@ -28,7 +28,7 @@
 /* add new sensor f/w interfaces here */
 
 #elif defined(INCLUDE_ALGO_NONE)
-#include <invn/soniclib/sensor_fw/icu_init/icu_shasta_algo_structs.h>		// no algorithm - initialization only
+#include <invn/soniclib/sensor_fw/icu_init/icu_shasta_algo_structs.h>  // no algorithm - initialization only
 #endif
 
-#endif //SONICLIB_ICU_SHASTA_ALGO_STRUCTS_H
+#endif  // SONICLIB_ICU_SHASTA_ALGO_STRUCTS_H
