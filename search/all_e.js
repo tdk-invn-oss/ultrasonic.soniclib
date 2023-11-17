@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['ram_5finit_659',['ram_init',['../structch__dev__t.html#a2e2f32cd475586be3f25f1d794a7bee3',1,'ch_dev_t']]],
-  ['range_660',['range',['../structch__log__data__t.html#ac2b2cc293542d23e885f2278088266a3',1,'ch_log_data_t']]],
-  ['raw_5foutput_5fdata_661',['raw_output_data',['../structraw__output__data.html',1,'']]],
-  ['rd_5fwrb_662',['rd_wrb',['../structchdrv__transaction.html#ab4a8fcfa684197edbf7a66faea528810',1,'chdrv_transaction']]],
-  ['read_5fpending_663',['read_pending',['../structchdrv__queue.html#ab4d6866f3aa67980361f80b0cdbbbb33',1,'chdrv_queue']]],
-  ['reg_5fmap_5fformat_664',['reg_map_format',['../structreg__map__format.html',1,'']]],
+  ['ram_5finit_661',['ram_init',['../structch__dev__t.html#a2e2f32cd475586be3f25f1d794a7bee3',1,'ch_dev_t']]],
+  ['range_662',['range',['../structch__log__data__t.html#ac2b2cc293542d23e885f2278088266a3',1,'ch_log_data_t']]],
+  ['rd_5fwrb_663',['rd_wrb',['../structchdrv__transaction.html#ab4a8fcfa684197edbf7a66faea528810',1,'chdrv_transaction']]],
+  ['read_5fpending_664',['read_pending',['../structchdrv__queue.html#ab4d6866f3aa67980361f80b0cdbbbb33',1,'chdrv_queue']]],
   ['restart_5fonly_665',['restart_only',['../structch__dev__t.html#a1e5bea672e974799c0e40117b47b3631',1,'ch_dev_t']]],
   ['restart_5fpending_666',['restart_pending',['../structch__dev__t.html#ac8cc898ff139131e7dac34826e3cb355',1,'ch_dev_t']]],
   ['rev_667',['rev',['../structch__version__t.html#a93299bb2e5c3085634e6f58ce4d6307c',1,'ch_version_t']]],

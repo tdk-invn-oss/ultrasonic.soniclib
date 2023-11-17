@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.28.0</span>
+   &#160;<span id="projectnumber">3.32.6</span>
    </div>
   </td>
  </tr>
@@ -2401,9 +2401,8 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
 <p>Return a free-running counter value in milliseconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>a 32-bit free-running counter value in milliseconds</dd></dl>
 <p>This function should use a running timer to provide an updated timestamp, in milliseconds, when called.</p>
-<p>If <em>CHDRV_DEBUG</em> is defined, this function is used by the SonicLib driver to calculate elapsed times for various operations.</p>
-<p>This function is OPTIONAL.</p>
-<dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. </dd></dl>
+<p>If <em>CHDRV_DEBUG</em> is defined, this function is used too by the SonicLib driver to calculate elapsed times for various operations.</p>
+<p>This function is REQUIRED for ICU and CH101/CH201 sensors. </p>
 
 </div>
 </div>

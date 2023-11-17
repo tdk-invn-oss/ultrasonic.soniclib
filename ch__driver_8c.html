@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.28.0</span>
+   &#160;<span id="projectnumber">3.32.6</span>
    </div>
   </td>
  </tr>
@@ -90,6 +90,7 @@ $(function() {
 <code>#include &lt;<a class="el" href="ch__driver_8h_source.html">invn/soniclib/details/ch_driver.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="ch__common_8h_source.html">invn/soniclib/details/ch_common.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="ch__asic__shasta_8h_source.html">invn/soniclib/details/ch_asic_shasta.h</a>&gt;</code><br />
+<code>#include &lt;invn/icu_interface/shasta_pmut_cmds.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
@@ -222,16 +223,16 @@ Functions</h2></td></tr>
 <tr class="memitem:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a2ebb9684c74cad8c53ab2ce34fc69872">chdrv_int_set_dir_in</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the interrupt line for a sensor as an input.  <a href="ch__driver_8c.html#a2ebb9684c74cad8c53ab2ce34fc69872">More...</a><br /></td></tr>
 <tr class="separator:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9741825591693ed0c4884d96f34cee8e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a9741825591693ed0c4884d96f34cee8e">chdrv_meas_queue_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *q_buf_ptr)</td></tr>
+<tr class="memitem:a9741825591693ed0c4884d96f34cee8e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a9741825591693ed0c4884d96f34cee8e">chdrv_meas_queue_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, measurement_queue_t *q_buf_ptr)</td></tr>
 <tr class="memdesc:a9741825591693ed0c4884d96f34cee8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the measurement queue from a sensor.  <a href="ch__driver_8c.html#a9741825591693ed0c4884d96f34cee8e">More...</a><br /></td></tr>
 <tr class="separator:a9741825591693ed0c4884d96f34cee8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2cd4dacdd3d867e791b5502f8110a45"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#aa2cd4dacdd3d867e791b5502f8110a45">chdrv_meas_queue_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *q_buf_ptr)</td></tr>
+<tr class="memitem:aa2cd4dacdd3d867e791b5502f8110a45"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#aa2cd4dacdd3d867e791b5502f8110a45">chdrv_meas_queue_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, measurement_queue_t *q_buf_ptr)</td></tr>
 <tr class="memdesc:aa2cd4dacdd3d867e791b5502f8110a45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the measurement queue to a sensor.  <a href="ch__driver_8c.html#aa2cd4dacdd3d867e791b5502f8110a45">More...</a><br /></td></tr>
 <tr class="separator:aa2cd4dacdd3d867e791b5502f8110a45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a145c3f53fda70a1b872d1cdd1d877090"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a145c3f53fda70a1b872d1cdd1d877090">chdrv_one_way_range</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t tof, uint16_t tof_sf)</td></tr>
 <tr class="memdesc:a145c3f53fda70a1b872d1cdd1d877090"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert register values to a range using the calibration data.  <a href="ch__driver_8c.html#a145c3f53fda70a1b872d1cdd1d877090">More...</a><br /></td></tr>
 <tr class="separator:a145c3f53fda70a1b872d1cdd1d877090"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a547d063f57d215470c073e9a0892767a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a547d063f57d215470c073e9a0892767a">chdrv_otpmem_copy</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structotp__copy.html">otp_copy_t</a> *otp_ptr)</td></tr>
+<tr class="memitem:a547d063f57d215470c073e9a0892767a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a547d063f57d215470c073e9a0892767a">chdrv_otpmem_copy</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, otp_copy_t *otp_ptr)</td></tr>
 <tr class="memdesc:a547d063f57d215470c073e9a0892767a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy OTP memory contents.  <a href="ch__driver_8c.html#a547d063f57d215470c073e9a0892767a">More...</a><br /></td></tr>
 <tr class="separator:a547d063f57d215470c073e9a0892767a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2709af034db554ab779aa3621dedc39b"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a2709af034db554ab779aa3621dedc39b">chdrv_otpmem_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
@@ -1727,7 +1728,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *&#160;</td>
+          <td class="paramtype">measurement_queue_t *&#160;</td>
           <td class="paramname"><em>q_buf_ptr</em>&#160;</td>
         </tr>
         <tr>
@@ -1767,7 +1768,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *&#160;</td>
+          <td class="paramtype">measurement_queue_t *&#160;</td>
           <td class="paramname"><em>q_buf_ptr</em>&#160;</td>
         </tr>
         <tr>
@@ -1855,7 +1856,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structotp__copy.html">otp_copy_t</a> *&#160;</td>
+          <td class="paramtype">otp_copy_t *&#160;</td>
           <td class="paramname"><em>otp_copy_ptr</em>&#160;</td>
         </tr>
         <tr>

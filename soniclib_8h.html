@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.28.0</span>
+   &#160;<span id="projectnumber">3.32.6</span>
    </div>
   </td>
  </tr>
@@ -86,9 +86,10 @@ $(function() {
 
 <p>SonicLib public API and support functions for TDK/InvenSense ultrasonic sensors (originally developed by Chirp Microsystems).  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="icu_8h_source.html">invn/soniclib/details/icu.h</a>&gt;</code><br />
-<code>#include &quot;details/shasta/shasta_external_regs.h&quot;</code><br />
-<code>#include &quot;details/shasta/icu_algo_info.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;chirp_board_config.h&quot;</code><br />
+<code>#include &lt;<a class="el" href="icu_8h_source.html">invn/soniclib/details/icu.h</a>&gt;</code><br />
+<code>#include &lt;invn/icu_interface/shasta_external_regs.h&gt;</code><br />
+<code>#include &lt;invn/icu_interface/icu_algo_info.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="icu__gpt_8h_source.html">invn/soniclib/sensor_fw/icu_gpt/icu_gpt.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="icu__init_8h_source.html">invn/soniclib/sensor_fw/icu_init/icu_init.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="icu__init-no-txopt_8h_source.html">invn/soniclib/sensor_fw/icu_init-no-txopt/icu_init-no-txopt.h</a>&gt;</code><br />
@@ -98,7 +99,6 @@ $(function() {
 <code>#include &lt;<a class="el" href="ch101__gpr_8h_source.html">invn/soniclib/sensor_fw/ch101/ch101_gpr.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="ch101__gprmt_8h_source.html">invn/soniclib/sensor_fw/ch101/ch101_gprmt.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="ch201__gprmt_8h_source.html">invn/soniclib/sensor_fw/ch201/ch201_gprmt.h</a>&gt;</code><br />
-<code>#include &quot;chirp_board_config.h&quot;</code><br />
 <code>#include &lt;<a class="el" href="ch__driver_8h_source.html">invn/soniclib/details/ch_driver.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="ch__math__utils_8h_source.html">invn/soniclib/details/ch_math_utils.h</a>&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
@@ -255,9 +255,9 @@ Macros</h2></td></tr>
 <tr class="separator:a81ce5d7830511d03cc7a9b48268d9552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3407caaf3d2f8bb12e8c26bccbe3ae40">SONICLIB_VER_MAJOR</a>&#160;&#160;&#160;(3)</td></tr>
 <tr class="separator:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(28)</td></tr>
+<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(32)</td></tr>
 <tr class="separator:a3114f821e7b6c5971ddf1c363597b761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(0)</td></tr>
+<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(6)</td></tr>
 <tr class="separator:a602271af8c1cf2ba218e68b49e5d465f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87026a07278934542ce439d706df7aef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87026a07278934542ce439d706df7aef">SONICLIB_VER_SUFFIX</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
 <tr class="separator:a87026a07278934542ce439d706df7aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -457,6 +457,11 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a3bd6fee8199de517e429ac1d38d4bdc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor group status.  <a href="soniclib_8h.html#a3bd6fee8199de517e429ac1d38d4bdc2">More...</a><br /></td></tr>
 <tr class="separator:a3bd6fee8199de517e429ac1d38d4bdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3406ad6d96900bf23674fc44468caf5d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">ch_interrupt_drive_t</a> { <a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5daec532a96d78d822477341ea4e23e9436">CH_INTERRUPT_DRIVE_OPEN_DRAIN</a> = 0
+, <a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5dac13d00ce95a29bf7d3f2164a9d7e2152">CH_INTERRUPT_DRIVE_PUSH_PULL</a> = 1
+ }</td></tr>
+<tr class="memdesc:a3406ad6d96900bf23674fc44468caf5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor interrupt drive type.  <a href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">More...</a><br /></td></tr>
+<tr class="separator:a3406ad6d96900bf23674fc44468caf5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4962ca7e356fbfa6e40863fe5abf519c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a> { <a class="el" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519ca365614144ea724a4037cd78289cead64">CH_INTERRUPT_MODE_PULSE</a> = 0
 , <a class="el" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519ca7edd38f507e4dcd60491d6aafa912622">CH_INTERRUPT_MODE_LATCH</a> = 1
  }</td></tr>
@@ -517,10 +522,14 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a00b8943dd0033cdbdd6e4da6334f283b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement status.  <a href="soniclib_8h.html#a00b8943dd0033cdbdd6e4da6334f283b">More...</a><br /></td></tr>
 <tr class="separator:a00b8943dd0033cdbdd6e4da6334f283b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0da193cf2f2476d27fd7ceb533f8cdc4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">ch_mode_t</a> { <a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4ae0c08b8a3177f79eeb861205c7dac1f1">CH_MODE_IDLE</a> = 0x00
+<tr class="memitem:a0da193cf2f2476d27fd7ceb533f8cdc4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">ch_mode_t</a> { <br />
+&#160;&#160;<a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4ae0c08b8a3177f79eeb861205c7dac1f1">CH_MODE_IDLE</a> = 0x00
 , <a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4aaf3c359ba59ec257f215b09ad9d98248">CH_MODE_FREERUN</a> = 0x02
 , <a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4ab4ab53a6ca9bbf9c090e07b3e69d5c0e">CH_MODE_TRIGGERED_TX_RX</a> = 0x10
 , <a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4a78858c96eade25f0eee8dfcf7a629d01">CH_MODE_TRIGGERED_RX_ONLY</a> = 0x20
+, <br />
+&#160;&#160;<a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4a513288221c7b0af95ec03c88b68ab506">CH_MODE_CONTINUOUS_RX</a> = 0x40
+<br />
  }</td></tr>
 <tr class="memdesc:a0da193cf2f2476d27fd7ceb533f8cdc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor operating modes.  <a href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">More...</a><br /></td></tr>
 <tr class="separator:a0da193cf2f2476d27fd7ceb533f8cdc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -707,6 +716,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ab5496937b5fae4e2c04ff2fa23ed9fbf"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ab5496937b5fae4e2c04ff2fa23ed9fbf">ch_get_i2c_address</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:ab5496937b5fae4e2c04ff2fa23ed9fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the active I2C address for a sensor.  <a href="soniclib_8h.html#ab5496937b5fae4e2c04ff2fa23ed9fbf">More...</a><br /></td></tr>
 <tr class="separator:ab5496937b5fae4e2c04ff2fa23ed9fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b3b587cdcbe5917de925f5b8fa47888"><td class="memItemLeft" align="right" valign="top"><a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">ch_interrupt_drive_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a0b3b587cdcbe5917de925f5b8fa47888">ch_get_interrupt_drive</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:a0b3b587cdcbe5917de925f5b8fa47888"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the pulse interrupt drive setting.  <a href="soniclib_8h.html#a0b3b587cdcbe5917de925f5b8fa47888">More...</a><br /></td></tr>
+<tr class="separator:a0b3b587cdcbe5917de925f5b8fa47888"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3692aeb8fee72b3cc2825547261b1777"><td class="memItemLeft" align="right" valign="top"><a class="el" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3692aeb8fee72b3cc2825547261b1777">ch_get_interrupt_mode</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a3692aeb8fee72b3cc2825547261b1777"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the pulse interrupt mode setting.  <a href="soniclib_8h.html#a3692aeb8fee72b3cc2825547261b1777">More...</a><br /></td></tr>
 <tr class="separator:a3692aeb8fee72b3cc2825547261b1777"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -926,7 +938,7 @@ Functions</h2></td></tr>
 <tr class="memitem:abc69e96679d03384c1cf912ebf66c614"><td class="memItemLeft" align="right" valign="top"><a class="el" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#abc69e96679d03384c1cf912ebf66c614">ch_meas_get_odr</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
 <tr class="memdesc:abc69e96679d03384c1cf912ebf66c614"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the output data rate for a measurement.  <a href="soniclib_8h.html#abc69e96679d03384c1cf912ebf66c614">More...</a><br /></td></tr>
 <tr class="separator:abc69e96679d03384c1cf912ebf66c614"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a591525a8a8a249db1a0e26504391c8bb"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a591525a8a8a249db1a0e26504391c8bb">ch_meas_get_queue</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *meas_queue_ptr)</td></tr>
+<tr class="memitem:a591525a8a8a249db1a0e26504391c8bb"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a591525a8a8a249db1a0e26504391c8bb">ch_meas_get_queue</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, measurement_queue_t *meas_queue_ptr)</td></tr>
 <tr class="memdesc:a591525a8a8a249db1a0e26504391c8bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get measurement queue values for a sensor.  <a href="soniclib_8h.html#a591525a8a8a249db1a0e26504391c8bb">More...</a><br /></td></tr>
 <tr class="separator:a591525a8a8a249db1a0e26504391c8bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3800e5639a3dae4272db79573180641d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3800e5639a3dae4272db79573180641d">ch_meas_get_queue_info</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__meas__queue__info__t.html">ch_meas_queue_info_t</a> *info_ptr)</td></tr>
@@ -950,7 +962,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ae4041161cfd2f313d3f0aaae5b301c33"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ae4041161cfd2f313d3f0aaae5b301c33">ch_meas_get_thresholds</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr)</td></tr>
 <tr class="memdesc:ae4041161cfd2f313d3f0aaae5b301c33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get detection thresholds for a specific measurement.  <a href="soniclib_8h.html#ae4041161cfd2f313d3f0aaae5b301c33">More...</a><br /></td></tr>
 <tr class="separator:ae4041161cfd2f313d3f0aaae5b301c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a719bb8d611224839c6d9404d339bc9e8"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a719bb8d611224839c6d9404d339bc9e8">ch_meas_import</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *meas_queue_ptr, void *algo_cfg_ptr)</td></tr>
+<tr class="memitem:a719bb8d611224839c6d9404d339bc9e8"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a719bb8d611224839c6d9404d339bc9e8">ch_meas_import</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr)</td></tr>
 <tr class="memdesc:a719bb8d611224839c6d9404d339bc9e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import an externally defined measurement configuration.  <a href="soniclib_8h.html#a719bb8d611224839c6d9404d339bc9e8">More...</a><br /></td></tr>
 <tr class="separator:a719bb8d611224839c6d9404d339bc9e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4ca589635feb0c221ac8e01e6731586"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ac4ca589635feb0c221ac8e01e6731586">ch_meas_init</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="structch__meas__config__t.html">ch_meas_config_t</a> *meas_config_ptr, <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *thresh_ptr)</td></tr>
@@ -971,7 +983,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a4203c97c07e47db67bf2e1c1eb16b054"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a4203c97c07e47db67bf2e1c1eb16b054">ch_meas_mm_to_samples</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_mm)</td></tr>
 <tr class="memdesc:a4203c97c07e47db67bf2e1c1eb16b054"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert millimeters to sample count for a specific measurement.  <a href="soniclib_8h.html#a4203c97c07e47db67bf2e1c1eb16b054">More...</a><br /></td></tr>
 <tr class="separator:a4203c97c07e47db67bf2e1c1eb16b054"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d21dc9fdd39ade2eef9c269ba027272"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a6d21dc9fdd39ade2eef9c269ba027272">ch_meas_optimize</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *meas_queue_ptr, void *algo_cfg_ptr)</td></tr>
+<tr class="memitem:a6d21dc9fdd39ade2eef9c269ba027272"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a6d21dc9fdd39ade2eef9c269ba027272">ch_meas_optimize</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr)</td></tr>
 <tr class="memdesc:a6d21dc9fdd39ade2eef9c269ba027272"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optimize ultrasound measurement sequences for a sensor.  <a href="soniclib_8h.html#a6d21dc9fdd39ade2eef9c269ba027272">More...</a><br /></td></tr>
 <tr class="separator:a6d21dc9fdd39ade2eef9c269ba027272"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d2b49af5ae78b7b277666ff7c4f0937"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a8d2b49af5ae78b7b277666ff7c4f0937">ch_meas_reset</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
@@ -1070,6 +1082,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a5c6b0cc10159a9a9bb4dd74f38384d3a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a5c6b0cc10159a9a9bb4dd74f38384d3a">ch_set_frequency</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t request_op_freq_hz)</td></tr>
 <tr class="memdesc:a5c6b0cc10159a9a9bb4dd74f38384d3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the operating frequency of a sensor.  <a href="soniclib_8h.html#a5c6b0cc10159a9a9bb4dd74f38384d3a">More...</a><br /></td></tr>
 <tr class="separator:a5c6b0cc10159a9a9bb4dd74f38384d3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ddffdfb6704d3598c34f7ba93094bbd"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a1ddffdfb6704d3598c34f7ba93094bbd">ch_set_interrupt_drive</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">ch_interrupt_drive_t</a> drive)</td></tr>
+<tr class="memdesc:a1ddffdfb6704d3598c34f7ba93094bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set interrupt drive (open drain or push pull)  <a href="soniclib_8h.html#a1ddffdfb6704d3598c34f7ba93094bbd">More...</a><br /></td></tr>
+<tr class="separator:a1ddffdfb6704d3598c34f7ba93094bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1611f339f145d08e71ed5405d72e1bc"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ab1611f339f145d08e71ed5405d72e1bc">ch_set_interrupt_mode</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#a4962ca7e356fbfa6e40863fe5abf519c">ch_interrupt_mode_t</a> mode)</td></tr>
 <tr class="memdesc:ab1611f339f145d08e71ed5405d72e1bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set interrupt mode (pulsed or latching)  <a href="soniclib_8h.html#ab1611f339f145d08e71ed5405d72e1bc">More...</a><br /></td></tr>
 <tr class="separator:ab1611f339f145d08e71ed5405d72e1bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1674,7 +1689,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Max for ICU sensors, from <a class="el" href="shasta__external__regs_8h_source.html">shasta_external_regs.h</a> </p>
+<p>Max for ICU sensors, from shasta_external_regs.h </p>
 
 </div>
 </div>
@@ -1715,7 +1730,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(28)</td>
+          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(32)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1730,7 +1745,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(0)</td>
+          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(6)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1795,6 +1810,28 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a3bd6fee8199de517e429ac1d38d4bdc2a048eba248e2d51b5048ca915b85ea129"></a>CH_GROUP_STAT_INIT_PENDING&#160;</td><td class="fielddoc"><p>Group initialization pending. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a3bd6fee8199de517e429ac1d38d4bdc2a7359a4119461467b0f67ae8a9aea7d89"></a>CH_GROUP_STAT_INIT_OK&#160;</td><td class="fielddoc"><p>Group initialized. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a3406ad6d96900bf23674fc44468caf5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3406ad6d96900bf23674fc44468caf5d">&#9670;&nbsp;</a></span>ch_interrupt_drive_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">ch_interrupt_drive_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sensor interrupt drive type. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3406ad6d96900bf23674fc44468caf5daec532a96d78d822477341ea4e23e9436"></a>CH_INTERRUPT_DRIVE_OPEN_DRAIN&#160;</td><td class="fielddoc"><p>Open drain type. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a3406ad6d96900bf23674fc44468caf5dac13d00ce95a29bf7d3f2164a9d7e2152"></a>CH_INTERRUPT_DRIVE_PUSH_PULL&#160;</td><td class="fielddoc"><p>Push pull type. </p>
 </td></tr>
 </table>
 
@@ -1963,6 +2000,9 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a0da193cf2f2476d27fd7ceb533f8cdc4ab4ab53a6ca9bbf9c090e07b3e69d5c0e"></a>CH_MODE_TRIGGERED_TX_RX&#160;</td><td class="fielddoc"><p>Triggered transmit/receive mode - transmits and receives when INT line triggered. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a0da193cf2f2476d27fd7ceb533f8cdc4a78858c96eade25f0eee8dfcf7a629d01"></a>CH_MODE_TRIGGERED_RX_ONLY&#160;</td><td class="fielddoc"><p>Triggered receive-only mode - for pitch-catch operation with another sensor. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a0da193cf2f2476d27fd7ceb533f8cdc4a513288221c7b0af95ec03c88b68ab506"></a>CH_MODE_CONTINUOUS_RX&#160;</td><td class="fielddoc"><p>Continuous receive mode. </p>
+<p>In this mode, the receiver runs continuously. There is no measurement frame-trigger. Data is double-buffered on the ASIC. The host reads one buffer while the ASIC writes the other. </p>
 </td></tr>
 </table>
 
@@ -3298,6 +3338,35 @@ This function only obtains the data from the most recently completed measurement
 <dl class="section return"><dt>Returns</dt><dd>I2C address, or 0 if error</dd></dl>
 <p>This function returns the currently active I2C address for a CHx01 sensor device. This function may be used by board support package routines to determine the proper I2C address to use for a specified sensor.</p>
 <p>Zero is returned if this function is called for ICU sensors, which use a SPI bus interface. </p>
+
+</div>
+</div>
+<a id="a0b3b587cdcbe5917de925f5b8fa47888"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b3b587cdcbe5917de925f5b8fa47888">&#9670;&nbsp;</a></span>ch_get_interrupt_drive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">ch_interrupt_drive_t</a> ch_get_interrupt_drive </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the pulse interrupt drive setting. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>CH_INTERRUPT_DRIVE_OPEN_DRAIN if interrupt uses open drain drive, CH_INTERRUPT_DRIVE_PUSH_PULL if push pull drive</dd></dl>
+<p>This function returns the current setting for interrupt drive (open drain or push pull).</p>
+<dl class="section note"><dt>Note</dt><dd>CH101 and CH201 sensors always use active-high, pull low interrupt drive for normal sensor interrupts, so this routine will always return CH_INTERRUPT_DRIVE_OPEN_DRAIN. </dd></dl>
 
 </div>
 </div>
@@ -6152,7 +6221,7 @@ For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *&#160;</td>
+          <td class="paramtype">measurement_queue_t *&#160;</td>
           <td class="paramname"><em>meas_queue_ptr</em>&#160;</td>
         </tr>
         <tr>
@@ -6521,7 +6590,7 @@ This function is only available in select Chirp sensor firmware versions. </dd><
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *&#160;</td>
+          <td class="paramtype">measurement_queue_t *&#160;</td>
           <td class="paramname"><em>meas_queue_ptr</em>, </td>
         </tr>
         <tr>
@@ -6886,7 +6955,7 @@ This function is only available in select Chirp sensor firmware versions. </dd><
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmeasurement__queue.html">measurement_queue_t</a> *&#160;</td>
+          <td class="paramtype">measurement_queue_t *&#160;</td>
           <td class="paramname"><em>meas_queue_ptr</em>, </td>
         </tr>
         <tr>
@@ -7749,7 +7818,8 @@ cancellation" processing. These samples are always the first in the measurement 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function writes a complete measurement queue configuration to the sensor device. The measurement queue settings must have already been defined, by using the standard API functions (initializing one or more measurements and adding a sequence of measurement segments). </p>
+<p>This function writes a complete measurement queue configuration to the sensor device. The measurement queue settings must have already been defined, by using the standard API functions (initializing one or more measurements and adding a sequence of measurement segments).</p>
+<p>This function additionally sanitizes the measurement queue by performing several checks to ensure it is compatible with the selected sensor mode. This function potentially modifies the queue, so users should examine the passed queue after loading it. </p>
 
 </div>
 </div>
@@ -8338,6 +8408,47 @@ For ICU sensors, this function always returns the conversion values for the defa
 
 </div>
 </div>
+<a id="a1ddffdfb6704d3598c34f7ba93094bbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ddffdfb6704d3598c34f7ba93094bbd">&#9670;&nbsp;</a></span>ch_set_interrupt_drive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_set_interrupt_drive </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">ch_interrupt_drive_t</a>&#160;</td>
+          <td class="paramname"><em>drive</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set interrupt drive (open drain or push pull) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">drive</td><td>CH_INTERRUPT_DRIVE_OPEN_DRAIN for open drain interrupt drive, CH_INTERRUPT_DRIVE_PUSH_PULL for push pull drive</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function sets the sensor interrupt to use an open-drain or push-pull drive. In open drain, the sensor will actively drive the line low and use a pull-up resistor for the hight level. In push-pull drive, the sensor will actively drive the line both low and high. Additionally, the pull-up resistor on the interrupt pin used for hardware trigger is disabled. By default, ICU sensors use open drain interrupt drive (CH_INTERRUPT_DRIVE_OPEN_DRAIN).</p>
+<p>To use this function, set <em>drive</em> to CH_INTERRUPT_DRIVE_OPEN_DRAIN to enable open drain drive. Set <em>drive</em> to CH_INTERRUPT_DRIVE_PUSH_PULL to use push-pull drive.</p>
+<dl class="section note"><dt>Note</dt><dd>This option is only available for ICU sensors. CH101 and CH201 sensors always use active-high, pull low interupts. Attempting to set <em>drive</em> to CH_INTERRUPT_MODE_PUSH_PULL on a CH101 or CH201 will return an error. </dd></dl>
+
+</div>
+</div>
 <a id="ab1611f339f145d08e71ed5405d72e1bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab1611f339f145d08e71ed5405d72e1bc">&#9670;&nbsp;</a></span>ch_set_interrupt_mode()</h2>
 
@@ -8459,7 +8570,8 @@ For ICU sensors, this function always returns the conversion values for the defa
 <li><em>CH_MODE_IDLE</em> - low power idle mode, no measurements take place</li>
 <li><em>CH_MODE_FREERUN</em> - free-running mode, sensor uses internal clock to wake and measure</li>
 <li><em>CH_MODE_TRIGGERED_TX_RX</em> - hardware-triggered, sensor both transmits and receives</li>
-<li><em>CH_MODE_TRIGGERED_RX_ONLY</em> - hardware triggered, sensor only receives </li>
+<li><em>CH_MODE_TRIGGERED_RX_ONLY</em> - hardware triggered, sensor only receives</li>
+<li><em>CH_MODE_CONTINUOUS_RX</em> - (ICU parts only) In this mode, the sensor receives continuously. There is no frame-based trigger. Receive samples are double-buffered. While the host is reading one buffer, the sensor is writing new samples into the other buffer. </li>
 </ul>
 
 </div>

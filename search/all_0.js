@@ -12,5 +12,5 @@ var searchData=
   ['api_5ffuncs_9',['api_funcs',['../structch__dev__t.html#a5f441a6e32e9af54d2d8dfc198b917e1',1,'ch_dev_t']]],
   ['app_5fi2c_5faddress_10',['app_i2c_address',['../structch__dev__t.html#a8d6841d7fa6fbf7978815f1816ed2420',1,'ch_dev_t']]],
   ['asic_5fgen_11',['asic_gen',['../structch__dev__t.html#a77dac13212627c13d44b68e2529c3584',1,'ch_dev_t']]],
-  ['atp_12',['atp',['../structatp.html',1,'']]]
+  ['asic_5fready_12',['asic_ready',['../structch__dev__t.html#af9d60f7317a1de3c1dbb6d2e6bddb61d',1,'ch_dev_t']]]
 ];
