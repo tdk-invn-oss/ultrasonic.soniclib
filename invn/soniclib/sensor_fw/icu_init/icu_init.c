@@ -57,8 +57,8 @@ uint8_t icu_init_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, 
 	/* Init API function pointers */
 	dev_ptr->api_funcs.fw_load              = ch_common_fw_load;
 	dev_ptr->api_funcs.set_mode             = ch_common_set_mode;
-	dev_ptr->api_funcs.set_num_samples      = NULL;
-	dev_ptr->api_funcs.set_max_range        = NULL;
+	dev_ptr->api_funcs.set_num_samples      = ch_common_set_num_samples;
+	dev_ptr->api_funcs.set_max_range        = ch_common_set_max_range;
 	dev_ptr->api_funcs.set_static_range     = NULL;
 	dev_ptr->api_funcs.set_rx_holdoff       = NULL;
 	dev_ptr->api_funcs.get_rx_holdoff       = NULL;
@@ -67,7 +67,7 @@ uint8_t icu_init_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, 
 	dev_ptr->api_funcs.get_iq_data          = ch_common_get_iq_data;
 	dev_ptr->api_funcs.get_amplitude_data   = NULL;
 	dev_ptr->api_funcs.get_tof_us           = NULL;
-	dev_ptr->api_funcs.samples_to_mm        = NULL;
+	dev_ptr->api_funcs.samples_to_mm        = ch_common_samples_to_mm;
 	dev_ptr->api_funcs.mm_to_samples        = NULL;
 	dev_ptr->api_funcs.get_thresholds       = NULL;
 	dev_ptr->api_funcs.set_thresholds       = NULL;

@@ -28,6 +28,10 @@
 #ifndef CH_DRIVER_H_
 #define CH_DRIVER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // #define CHDRV_DEBUG
 
 // #define USE_PRE_PROD_SERIAL_NUM		// if defined, handle pre-production ICU serial number
@@ -1189,5 +1193,9 @@ uint8_t chdrv_meas_queue_read(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr)
 void chdrv_group_measure_pmut(ch_group_t *grp_ptr);
 
 uint8_t chdrv_check_reset_state(ch_dev_t *dev_ptr, uint8_t *reset_state);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CH_DRIVER_H_ */

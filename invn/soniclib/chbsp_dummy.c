@@ -30,10 +30,6 @@ __attribute__((weak)) void chbsp_print_str(char *str) {
 	(void)(str);
 }
 
-__attribute__((weak)) uint32_t chbsp_timestamp_ms() {
-	return 0;
-}
-
 __attribute__((weak)) void chbsp_group_int1_interrupt_enable(ch_group_t *grp_ptr) {
 	(void)(grp_ptr);
 }

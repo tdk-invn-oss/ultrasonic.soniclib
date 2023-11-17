@@ -867,6 +867,16 @@ ch_interrupt_mode_t ch_get_interrupt_mode(ch_dev_t *dev_ptr) {
 
 	return ch_common_get_interrupt_mode(dev_ptr);
 }
+
+uint8_t ch_set_interrupt_drive(ch_dev_t *dev_ptr, ch_interrupt_drive_t drive) {
+
+	return ch_common_set_interrupt_drive(dev_ptr, drive);
+}
+
+ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr) {
+
+	return ch_common_get_interrupt_drive(dev_ptr);
+}
 #endif
 
 uint8_t ch_set_static_coeff(ch_dev_t *dev_ptr, uint8_t static_coeff) {

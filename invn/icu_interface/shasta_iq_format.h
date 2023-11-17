@@ -11,7 +11,9 @@ typedef struct qi_data {//as in Whitney, data is packed with q first. Unlike Whi
     int16_t i;
 } qi_t;
 
-#define IQ_SAMPLES_MAX 340 // 4.9m at 95kHz and ODR=4
+// NB: Each application defines its own IQ buffer size. This value is left for
+// legacy purposes but generally should not be trusted
+#define IQ_SAMPLES_MAX          (340)
 #define MEAS_QUEUE_MAX_MEAS     (2)
 #define IQ_OUTPUT_NORMAL        (0) //normal qi_t (Q,I) pairs
 #define IQ_OUTPUT_MAG_THRESH    (1) //magnitude,threshold pairs

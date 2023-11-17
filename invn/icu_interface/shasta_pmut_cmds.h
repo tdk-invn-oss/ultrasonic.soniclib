@@ -32,6 +32,11 @@
 #define PMUT_TEST_SIGNAL_EN_BITSHIFT         (7)
 
 
+#define MAKE_PMUT_RX_CMD(RXGAIN, RXATTEN, CFG_BITS) \
+    (PMUT_CMD_RX | CFG_BITS \
+     | (RXGAIN << PMUT_RXGAIN_RED_BITSHIFT) \
+     | (RXATTEN << PMUT_RXATTEN_BITSHIFT))
+
 void construct_tx_cmd(pmut_transceiver_inst_t * inst, uint8_t pulsewidth, uint8_t txphase, uint16_t length);
 void construct_rx_cmd(pmut_transceiver_inst_t * inst, uint8_t gain_reduction, uint8_t atten, uint8_t befloat, uint16_t length);
 void construct_delay_cmd(pmut_transceiver_inst_t * inst, uint16_t length);

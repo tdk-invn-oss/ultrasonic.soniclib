@@ -31,7 +31,7 @@
 #include <invn/soniclib/soniclib.h>
 #include <stdint.h>
 
-#define ICU_INIT_NO_TXOPT_MAX_SAMPLES (IQ_SAMPLES_MAX)
+#define ICU_INIT_NO_TXOPT_MAX_SAMPLES (680)
 
 extern const char *icu_init_no_txopt_version;  // version string in fw .c file
 extern const uint8_t icu_init_no_txopt_fw_text[];

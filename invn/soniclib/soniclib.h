@@ -105,11 +105,15 @@
 #ifndef __SONICLIB_H_
 #define __SONICLIB_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*==============  SonicLib Version Info ===================*/
 /* SonicLib API/Driver version */
 #define SONICLIB_VER_MAJOR  (3)  /*!< SonicLib major version. */
-#define SONICLIB_VER_MINOR  (27) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (0)  /*!< SonicLib revision. */
+#define SONICLIB_VER_MINOR  (32) /*!< SonicLib minor version. */
+#define SONICLIB_VER_REV    (6)  /*!< SonicLib revision. */
 #define SONICLIB_VER_SUFFIX ""   /*!< SonicLib version suffix (contains pre-release info) */
 
 /*==============  Verbose Debug Output Control ===================*/
@@ -121,6 +125,14 @@
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
 
 /*==============  Header files for installed sensor firmware packages ===================*/
+
+#ifdef INVN_SONICLIB_INTERNAL_BOARD_CONFIG
+#include <invn/soniclib/details/chirp_board_config.h> /* Header from board support package containing h/w params */
+#else
+// Support external board config by default. This was previously assumed to be
+// directly on the include path.
+#include "chirp_board_config.h"
+#endif
 
 #ifndef INCLUDE_ALGO_EXTERNAL     // If no external algo is used
 #define USE_INTERNAL_ALGO         // Sensor algo is handled internally
@@ -137,8 +149,8 @@ typedef struct ch_group_t ch_group_t;
 
 /* ICU (second generation) Firmware  */
 #include <invn/soniclib/details/icu.h>
-#include "details/shasta/shasta_external_regs.h"       /* Shasta firmware interface */
-#include "details/shasta/icu_algo_info.h"              /* ICU sensor algorithm interface */
+#include <invn/icu_interface/shasta_external_regs.h>   /* Shasta firmware interface */
+#include <invn/icu_interface/icu_algo_info.h>          /* ICU sensor algorithm interface */
 #include <invn/soniclib/sensor_fw/icu_gpt/icu_gpt.h>   /* ICU GPT General Purpose Transceiver firmware */
 #include <invn/soniclib/sensor_fw/icu_init/icu_init.h> /* ICU Init + tx optimization firmware */
 #include <invn/soniclib/sensor_fw/icu_init-no-txopt/icu_init-no-txopt.h> /* ICU Init-only firmware */
@@ -157,24 +169,20 @@ typedef struct ch_group_t ch_group_t;
 #endif
 #endif  // USE_INTERNAL_ALGO
 
+#ifdef INCLUDE_WHITNEY_SUPPORT
 /* CH-x01 (first generation) Firmware */
 /* General Purpose Rangefinding (GPR) */
 #include <invn/soniclib/sensor_fw/ch101/ch101_gpr.h> /* GPR - CH101 */
 #include <invn/soniclib/sensor_fw/ch101/ch101_gprmt.h>
 #include <invn/soniclib/sensor_fw/ch201/ch201_gprmt.h> /* GPR / Multi-Threshold - CH201 */
+#endif                                                 // INCLUDE_WHITNEY_SUPPORT
+
 /* ADD NEW HEADER FILES HERE */
 
 /*======================== End of sensor firmware header files ================================*/
 
 /* Miscellaneous header files */
 
-#ifdef INVN_SONICLIB_INTERNAL_BOARD_CONFIG
-#include <invn/soniclib/details/chirp_board_config.h> /* Header from board support package containing h/w params */
-#else
-// Support external board config by default. This was previously assumed to be
-// directly on the include path.
-#include "chirp_board_config.h"
-#endif
 #include <invn/soniclib/details/ch_driver.h>     /* Internal Chirp driver defines */
 #include <invn/soniclib/details/ch_math_utils.h> /* math utility functions */
 
@@ -259,13 +267,19 @@ typedef enum {
 
 //! Sensor operating modes.
 typedef enum {
-	CH_MODE_IDLE    = 0x00,          /*!< Idle mode - low-power sleep, no sensing is enabled. */
-	CH_MODE_FREERUN = 0x02,          /*!< Free-running mode - sensor uses internal clock to wake
-	                                      and measure. */
-	CH_MODE_TRIGGERED_TX_RX = 0x10,  /*!< Triggered transmit/receive mode - transmits and receives
-	                                      when INT line triggered.*/
-	CH_MODE_TRIGGERED_RX_ONLY = 0x20 /*!< Triggered receive-only mode - for pitch-catch operation
+	CH_MODE_IDLE    = 0x00,           /*!< Idle mode - low-power sleep, no sensing is enabled. */
+	CH_MODE_FREERUN = 0x02,           /*!< Free-running mode - sensor uses internal clock to wake
+	                                       and measure. */
+	CH_MODE_TRIGGERED_TX_RX = 0x10,   /*!< Triggered transmit/receive mode - transmits and receives
+	                                       when INT line triggered.*/
+	CH_MODE_TRIGGERED_RX_ONLY = 0x20, /*!< Triggered receive-only mode - for pitch-catch operation
 	                                      with another sensor. */
+	//! Continuous receive mode
+	/*! In this mode, the receiver runs continuously. There is no measurement
+	 * frame-trigger. Data is double-buffered on the ASIC. The host reads one
+	 * buffer while the ASIC writes the other.
+	 */
+	CH_MODE_CONTINUOUS_RX = 0x40
 } ch_mode_t;
 
 //! Sensor group status.
@@ -308,6 +322,12 @@ typedef enum {
 	CH_INTERRUPT_MODE_PULSE = 0, /*!< Pulse mode. */
 	CH_INTERRUPT_MODE_LATCH = 1  /*!< Latching mode. */
 } ch_interrupt_mode_t;
+
+//! Sensor interrupt drive type
+typedef enum {
+	CH_INTERRUPT_DRIVE_OPEN_DRAIN = 0, /*!< Open drain type. */
+	CH_INTERRUPT_DRIVE_PUSH_PULL  = 1  /*!< Push pull type. */
+} ch_interrupt_drive_t;
 
 //! Sensor interrupt types.
 typedef enum {
@@ -804,11 +824,13 @@ struct ch_dev_t {
 	ch_meas_status_t meas_status;       /*!< Sensor measurement status */
 	ch_trigger_type_t trig_type;        /*!< Sensor triggering type (hardware or software) */
 	ch_interrupt_mode_t int_mode;       /*!< Sensor interrupt mode (pulse or latching) */
+	ch_interrupt_drive_t int_drive;     /*!< Sensor interrupt drive type (open drain or push pull) */
 	ch_tgt_int_filter_t tgt_int_filter; /*!< Target interrupt filter mode */
 	ch_fw_init_func_t fw_init_func;     /*!< Function called during last init */
 #ifdef INCLUDE_SHASTA_SUPPORT
 	ch_fw_init_func_t fw_reinit_func; /*!< Function to call during next re-init */
 	uint8_t restart_pending;          /*!< Reinit/restart is pending */
+	uint8_t asic_ready;               /*!< Indicates ASIC is ready for commands */
 	ch_clock_cal_t test_clock_cal;    /*!< Clock calibration values from factory test */
 
 	/* Sensor measurement queue */
@@ -822,6 +844,7 @@ struct ch_dev_t {
 	uint16_t meas_max_range_mm[CH_MEAS_MAX_MEAS];     // max range setting based on num_rx_samples (millimeters)
 
 	uint8_t last_measurement; /*!< Number of last completed measurement */
+	uint8_t is_continuous;    /*!< 1 if last meas was continuous mode */
 	uint8_t odr_out;          /*!< Output ODR used in last measurement */
 	uint8_t iq_output_format; /*!< I/Q output format in last measurement */
 	uint16_t num_iq_bytes;    /*!< Number of valid I/Q bytes in last measurement */
@@ -1240,6 +1263,10 @@ ch_mode_t ch_get_mode(ch_dev_t *dev_ptr);
  *	- \a CH_MODE_FREERUN - free-running mode, sensor uses internal clock to wake and measure
  *	- \a CH_MODE_TRIGGERED_TX_RX - hardware-triggered, sensor both transmits and receives
  *	- \a CH_MODE_TRIGGERED_RX_ONLY - hardware triggered, sensor only receives
+ *	- \a CH_MODE_CONTINUOUS_RX - (ICU parts only) In this mode, the sensor
+ *	     receives continuously. There is no frame-based trigger. Receive samples
+ *	     are double-buffered. While the host is reading one buffer, the sensor
+ *	     is writing new samples into the other buffer.
  */
 uint8_t ch_set_mode(ch_dev_t *dev_ptr, ch_mode_t mode);
 
@@ -2559,6 +2586,49 @@ uint8_t ch_set_interrupt_mode(ch_dev_t *dev_ptr, ch_interrupt_mode_t mode);
 ch_interrupt_mode_t ch_get_interrupt_mode(ch_dev_t *dev_ptr);
 
 /*!
+ * \brief Set interrupt drive (open drain or push pull)
+ *
+ * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
+ * \param drive  	CH_INTERRUPT_DRIVE_OPEN_DRAIN for open drain interrupt drive, CH_INTERRUPT_DRIVE_PUSH_PULL for push
+ * pull drive
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function sets the sensor interrupt to use an open-drain or push-pull
+ * drive.  In open drain, the sensor will actively drive the line low and use a
+ * pull-up resistor for the hight level.  In push-pull drive, the sensor will
+ * actively drive the line both low and high.  Additionally, the pull-up
+ * resistor on the interrupt pin used for hardware trigger is disabled.  By
+ * default, ICU sensors use open drain interrupt drive
+ * (CH_INTERRUPT_DRIVE_OPEN_DRAIN).
+ *
+ * To use this function, set \a drive to CH_INTERRUPT_DRIVE_OPEN_DRAIN to enable
+ * open drain drive.  Set \a drive to CH_INTERRUPT_DRIVE_PUSH_PULL to use
+ * push-pull drive.
+ *
+ * \note This option is only available for ICU sensors.  CH101 and CH201 sensors
+ * always use active-high, pull low interupts.  Attempting to set \a drive to
+ * CH_INTERRUPT_MODE_PUSH_PULL on a CH101 or CH201 will return an error.
+ */
+uint8_t ch_set_interrupt_drive(ch_dev_t *dev_ptr, ch_interrupt_drive_t drive);
+
+/*!  \brief Get the pulse interrupt drive setting.
+ *
+ * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
+ *
+ * \return CH_INTERRUPT_DRIVE_OPEN_DRAIN if interrupt uses open drain drive,
+ * CH_INTERRUPT_DRIVE_PUSH_PULL if push pull drive
+ *
+ * This function returns the current setting for interrupt drive (open drain or
+ * push pull).
+ *
+ * \note CH101 and CH201 sensors always use active-high, pull low interrupt
+ * drive for normal sensor interrupts, so this routine will always return
+ * CH_INTERRUPT_DRIVE_OPEN_DRAIN.
+ */
+ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr);
+
+/*!
  * \brief Set the static coefficient for sensor IIR filter.
  *
  * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
@@ -3173,6 +3243,11 @@ uint8_t ch_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_config_t *meas
  * This function writes a complete measurement queue configuration to the sensor device.  The measurement
  * queue settings must have already been defined, by using the standard API functions (initializing one
  * or more measurements and adding a sequence of measurement segments).
+ *
+ * This function additionally sanitizes the measurement queue by performing several checks
+ * to ensure it is compatible with the selected sensor mode. This function
+ * potentially modifies the queue, so users should examine the passed queue
+ * after loading it.
  */
 uint8_t ch_meas_write_config(ch_dev_t *dev_ptr);
 
@@ -4851,5 +4926,9 @@ uint8_t ch_watchdog_disable(ch_dev_t *dev_ptr);
  *
  */
 uint8_t ch_check_reset_state(ch_dev_t *dev_ptr, ch_sensor_reset_state_t *reset_state_ptr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __SONICLIB_H_ */

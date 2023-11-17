@@ -26,6 +26,7 @@
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 #include <invn/soniclib/details/ch_asic_shasta.h>
+#include <invn/icu_interface/shasta_pmut_cmds.h>
 #endif
 
 /* DEBUG : Uncomment to toogle GPIO DEBUG1 when waiting sensor interrupt */
@@ -563,13 +564,19 @@ void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num) {
 	/* avoid being retriggered when pin control changes */
 	chdrv_int_interrupt_disable(dev_ptr);
 
-	interrupt_sensors |= (1 << dev_num);
-
 	/* Get interrupt type */
 	if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 		uint16_t int_source_reg_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->common.int_source);
-		if (dev_ptr->sens_cfg_addr != 0) {
+		if (!dev_ptr->asic_ready) {
+			// dummy read needed in this case because we have not yet read the
+			// sensor config address, but we still need the asic to release the
+			// interrupt line
+			chdrv_read_word(dev_ptr, SHASTA_DATA_MEM_ADDR, (uint16_t *)&int_type);
+			// manually set this because dummy read result is garbage
+			int_type            = CH_INTERRUPT_TYPE_PGM_LOADED;
+			dev_ptr->asic_ready = 1;
+		} else if (dev_ptr->sens_cfg_addr != 0) {
 			chdrv_read_word(dev_ptr, int_source_reg_addr, (uint16_t *)&int_type);
 
 			if (int_type == CH_INTERRUPT_TYPE_DATA_RDY) {  // store num if meas just completed
@@ -590,6 +597,8 @@ void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num) {
 	} else {                                    // if CH_ASIC_GEN_1_WHITNEY
 		int_type = CH_INTERRUPT_TYPE_DATA_RDY;  //   Whitney only has data ready interrupt
 	}
+
+	interrupt_sensors |= (1 << dev_num);
 
 	/* Call application callback function - pass device number to identify device within group */
 	if ((func_ptr != NULL) && (grp_ptr->status == CH_GROUP_STAT_INIT_OK)) {
@@ -849,6 +858,198 @@ uint8_t chdrv_event_trigger_and_wait(ch_dev_t *dev_ptr, uint16_t event) {
 	return err;
 }
 
+static const int max_num_trx = sizeof(((measurement_t *)0)->trx_inst) / sizeof(((measurement_t *)0)->trx_inst[0]);
+
+//! Clear all interrupts from instruction array and perform some basic error checking
+static uint8_t clear_interrupts(volatile pmut_transceiver_inst_t *inst_ptr, int *eof_idx, int *rx_idx, int *rx_len) {
+	uint8_t err = 0;
+	*rx_len     = 0;   // total RX length in SMCLK cycles
+	*eof_idx    = -1;  // index of EOF instruction
+	*rx_idx     = -1;  // offset of first RX instruction
+	int j       = 0;
+	while (j < max_num_trx && (inst_ptr[j].cmd_config & PMUT_CMD_BITS) != PMUT_CMD_EOF) {
+#ifdef CHDRV_DEBUG
+		printf("inst %d: cmd=%d\n", j, inst_ptr[j].cmd_config & PMUT_CMD_BITS);
+#endif
+		inst_ptr[j].cmd_config &= ~PMUT_RDY_IEN_BITS;
+		inst_ptr[j].cmd_config &= ~PMUT_DONE_IEN_BITS;
+		if ((inst_ptr[j].cmd_config & PMUT_CMD_BITS) == PMUT_CMD_RX) {
+			if (*rx_idx < 0) {
+				*rx_idx = j;
+			}
+			*rx_len += inst_ptr[j].length;
+		}
+		j++;
+	}
+	if (j == max_num_trx || j == 0) {
+		// return an error when EOF is either missing or the first
+		// instruction
+		err = 1;
+	} else if (*rx_idx < 0) {
+		// return an error when there are no RX instructions
+		err = 2;
+	} else {
+		*eof_idx = j;
+	}
+#ifdef CHDRV_DEBUG
+	printf("clear_interrupts: eof_idx=%d rx_idx=%d\n", *eof_idx, *rx_idx);
+#endif
+	return err;
+}
+
+//! Remove n instructions from the start of the instruction array
+static uint8_t remove_from_start(volatile pmut_transceiver_inst_t *inst_ptr, int n) {
+	for (int i = n; i < max_num_trx; i++) {
+		inst_ptr[i - n] = inst_ptr[i];
+	}
+	return 0;
+}
+
+//! Copy instructions from src to dst
+static uint8_t copy_instructions(volatile pmut_transceiver_inst_t *dst, const volatile pmut_transceiver_inst_t *src) {
+	for (int i = 0; i < max_num_trx; i++) {
+		dst[i] = src[i];
+	}
+	return 0;
+}
+
+static uint8_t limit_rx_len(volatile measurement_t *meas, int rx_len, int eof_idx, uint16_t iq_samples_max) {
+	// add one to be safe
+	const int rx_samples = (rx_len >> (11 - meas->odr)) + 1;
+	if (rx_samples > iq_samples_max) {
+		const int samples_to_cut = rx_samples - iq_samples_max;
+		const int len_to_cut     = samples_to_cut << (11 - meas->odr);
+		if (meas->trx_inst[eof_idx - 1].length > (1 << (11 - meas->odr)) + len_to_cut) {
+			// make sure resulting rx instruction will have at least one RX sample left
+			// in it after the cut.
+			meas->trx_inst[eof_idx - 1].length -= len_to_cut;
+			return 0;
+		} else {
+			return 1;
+		}
+	} else {
+		return 0;
+	}
+}
+
+//! Adjust the rx length so that it's compatible with continuous RX
+/*! In continuous RX mode, the total RX length must be set to an integer number
+ * of RX samples. The number of RX samples given RX length (in SMCLK cycles)
+ * depends on the ODR. This function will truncate the RX length such that the
+ * new length satisfies the integer number of samples condition.
+ *
+ * \param meas a pointer to a measurement_t. The instructions contained in the
+ * measurement_t will be potentially modified by this function.
+ * \param rx_len the total rx length in SMCLK cycles
+ * \param eof_idx the index of the EOF instruction
+ */
+static uint8_t adjust_rx_len(volatile measurement_t *meas, int rx_len, int eof_idx) {
+	const int rx_samples = rx_len >> (11 - meas->odr);
+	const int new_rx_len = rx_samples << (11 - meas->odr);
+	int samples_to_cut   = rx_len - new_rx_len;
+#ifdef CHDRV_DEBUG
+	printf("rx_len=%d rx_samples=%d new_rx_len=%d samples_to_cut=%d\n", rx_len, rx_samples, new_rx_len, samples_to_cut);
+#endif
+	if (meas->trx_inst[eof_idx - 1].length > (1 << (11 - meas->odr)) + samples_to_cut) {
+		// make sure resulting rx instruction will have at least one RX sample left
+		// in it after the cut.
+		meas->trx_inst[eof_idx - 1].length -= samples_to_cut;
+		return 0;
+	} else {
+		// return error otherwise
+		return 1;
+	}
+}
+
+//! Sanitize the measurement queue
+/*! This function sanitizes the measurement queue by performing several checks
+ * to ensure it is compatible with the selected sensor mode. This function
+ * potentially modifies the queue, so users should examine the passed queue
+ * after loading it.
+ *
+ * What we check and correct:
+ *  - done interrupt is set only on last RX instruction and no others
+ *  - in continuous RX, if the first measurement config is good but the second is blank, just make
+ *    the second a copy of the first
+ *  - in continuous RX, ready interrupt is set on last RX and no others
+ *  - in continuous RX, RX length results in an integer number of RX samples
+ */
+static uint8_t meas_queue_sanitize(measurement_queue_t *q_buf_ptr, uint16_t iq_samples_max) {
+	int eof_idx[2];
+	int rx_idx[2];
+	int rx_len[2];
+#ifdef CHDRV_DEBUG
+	printf("clear_interrupts 0\n");
+#endif
+	uint8_t err = clear_interrupts(q_buf_ptr->meas[0].trx_inst, &eof_idx[0], &rx_idx[0], &rx_len[0]);
+	if (err) {
+		// if meas queue 0 is bad, just abort
+		return err;
+	}
+#ifdef CHDRV_DEBUG
+	printf("clear_interrupts 1\n");
+#endif
+	err = clear_interrupts(q_buf_ptr->meas[1].trx_inst, &eof_idx[1], &rx_idx[1], &rx_len[1]);
+	switch (q_buf_ptr->trigsrc) {
+	case TRIGSRC_CONTINUOUS_RX:
+		if (err) {
+			// if meas queue 1 is bad, make it a copy of meas queue 0
+			q_buf_ptr->meas[1].meas_flags  = q_buf_ptr->meas[0].meas_flags;
+			q_buf_ptr->meas[1].meas_period = q_buf_ptr->meas[0].meas_period;
+			q_buf_ptr->meas[1].odr         = q_buf_ptr->meas[0].odr;
+			copy_instructions(q_buf_ptr->meas[1].trx_inst, q_buf_ptr->meas[0].trx_inst);
+			eof_idx[1] = eof_idx[0];
+			rx_idx[1]  = rx_idx[0];
+			rx_len[1]  = rx_len[0];
+			err        = 0;
+		}
+		for (int i = 0; i < 2; i++) {
+			// ready interrupt enable on last instruction
+			q_buf_ptr->meas[i].trx_inst[eof_idx[i] - 1].cmd_config |= PMUT_RDY_IEN_BITS;
+			// buffer size is halved in continuous mode
+			limit_rx_len(&q_buf_ptr->meas[i], rx_len[i], eof_idx[i], iq_samples_max / 2);
+			// if we can't adjust the rx length, then return an error but
+			// otherwise still try to send the queue
+			err = adjust_rx_len(&q_buf_ptr->meas[i], rx_len[i], eof_idx[i]);
+			// remove transmit instructions
+			remove_from_start(q_buf_ptr->meas[i].trx_inst, rx_idx[i]);
+			// adjust EOF and RX indices
+			eof_idx[i] -= rx_idx[i];
+			rx_idx[i]   = 0;
+		}
+		// both measurements must be enabled for continuous RX
+		q_buf_ptr->meas_start = 0;
+		q_buf_ptr->meas_stop  = 1;
+		for (int i = 0; i < 2; i++) {
+			// done interrupt enable on last instruction
+			q_buf_ptr->meas[i].trx_inst[eof_idx[i] - 1].cmd_config |= PMUT_DONE_IEN_BITS;
+		}
+		break;
+	default:
+		for (int i = 0; i < 2; i++) {
+			if (err && i == 1) {
+				// if meas queue 1 is bad, do not attempt to limit rx len or
+				// set the done IEN. Return the error condition
+				break;
+			}
+			limit_rx_len(&q_buf_ptr->meas[i], rx_len[i], eof_idx[i], iq_samples_max);
+			// done interrupt enable on last instruction
+			q_buf_ptr->meas[i].trx_inst[eof_idx[i] - 1].cmd_config |= PMUT_DONE_IEN_BITS;
+		}
+		break;
+	}
+#ifdef CHDRV_DEBUG
+	for (int i = 0; i < 2; i++) {
+		printf("meas queue %d after sanitize:\n", i);
+		for (int j = 0; j < max_num_trx; j++) {
+			printf("inst %d: cmd=0x%04x len=%d\n", j, q_buf_ptr->meas[i].trx_inst[j].cmd_config,
+			       q_buf_ptr->meas[i].trx_inst[j].length);
+		}
+	}
+#endif
+	return err;
+}
+
 uint8_t chdrv_meas_queue_write(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr) {
 	uint16_t meas_queue_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->meas_queue);  // addr on sensor
 	uint8_t err              = 0;
@@ -856,6 +1057,12 @@ uint8_t chdrv_meas_queue_write(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr
 	if (q_buf_ptr == NULL) {
 		q_buf_ptr = &(dev_ptr->meas_queue);  // source is local copy in ch_dev_t
 	}
+	// Note that we do not abort the write when the sanitize funciton returns an
+	// error. This is mostly for historical reasons. We have previously allowed
+	// writing invalid queues. It is OK to write them so long as they are not
+	// used, and it's a bit confusing for us to just arbitrarily set them when
+	// the user has not requested it
+	meas_queue_sanitize(q_buf_ptr, dev_ptr->max_samples);
 	err |= chdrv_burst_write(dev_ptr, meas_queue_addr, (uint8_t *)q_buf_ptr, sizeof(measurement_queue_t));
 
 	return err;
@@ -2031,6 +2238,7 @@ static int chdrv_reset_and_halt(ch_dev_t *dev_ptr) {
 	int ch_err = 0;
 #ifdef INCLUDE_SHASTA_SUPPORT
 	volatile uint16_t cpu_ctl_val = 0;
+	dev_ptr->asic_ready           = 0;
 
 	ch_err |= chdrv_sys_ctrl_write(dev_ptr, (SYS_CTRL_DEBUG | SYS_CTRL_RESET_N));
 	// clear reset, enter debug mode
@@ -2066,7 +2274,8 @@ static int chdrv_reset_and_halt(ch_dev_t *dev_ptr) {
  * This function resets and runs a sensor device by writing to the control registers.
  */
 static int chdrv_reset_and_run(ch_dev_t *dev_ptr) {
-	int ch_err = 0;
+	int ch_err          = 0;
+	dev_ptr->asic_ready = 0;
 
 	ch_err |= chdrv_sys_ctrl_write(dev_ptr, SYS_CTRL_DEBUG);  // reset (SYS_CTRL_RESET_N is low)
 	ch_err |= chdrv_sys_ctrl_write(dev_ptr, (SYS_CTRL_DEBUG | SYS_CTRL_RESET_N));
@@ -2116,6 +2325,7 @@ int chdrv_prog_ping(ch_dev_t *dev_ptr) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 	uint16_t reg_val         = 0;
 	uint8_t sys_ctrl_reg_val = 0;
+	dev_ptr->asic_ready      = 0;
 
 	ch_err |= chdrv_sys_ctrl_read(dev_ptr, (uint8_t *)&sys_ctrl_reg_val);
 
@@ -2255,6 +2465,14 @@ int chdrv_detect_and_program(ch_dev_t *dev_ptr) {
 		if (!ch_err) {
 			ch_err = chdrv_algo_info_read(dev_ptr, &(dev_ptr->algo_info));
 		}
+		uint16_t iq_data_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->raw.IQdata);  // start of I/Q data
+		// find the IQ buffer size through pointer arithmetic. IQ buffer is
+		// always guaranteed to be followed by algo_out. Divide by 4 to get the
+		// result in terms of IQ samples instead of bytes
+		dev_ptr->max_samples = ((uint16_t)dev_ptr->algo_info.algo_out_ptr - iq_data_addr) >> 2;
+#ifdef CHDRV_DEBUG
+		printf("dev_ptr->max_samples=%d\n", dev_ptr->max_samples);
+#endif
 
 #ifdef USE_INTERNAL_ALGO
 		/* Initialize algorithm on sensor */

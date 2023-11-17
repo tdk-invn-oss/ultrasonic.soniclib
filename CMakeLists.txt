@@ -47,7 +47,8 @@ set(SOURCES ${SRC_PATH}/chbsp_dummy.c
             ${SRC_PATH}/ch_api.c
             ${SRC_PATH}/ch_common.c
             ${SRC_PATH}/ch_driver.c
-            ${SRC_PATH}/ch_math_utils.c)
+            ${SRC_PATH}/ch_math_utils.c
+            ${SRC_PATH}/extra/ch_extra_display_utils.c)
 
 if(INCLUDE_SHASTA_SUPPORT)
     if (NOT INCLUDE_ALGO_EXTERNAL)

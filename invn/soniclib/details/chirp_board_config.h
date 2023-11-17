@@ -39,6 +39,10 @@
 #ifndef CHIRP_BOARD_CONFIG_H_
 #define CHIRP_BOARD_CONFIG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if !defined(INCLUDE_SHASTA_SUPPORT) && !defined(INCLUDE_WHITNEY_SUPPORT)
 #define INCLUDE_WHITNEY_SUPPORT
 #endif
@@ -66,5 +70,9 @@
 #define CHIRP_NO_TX_OPTIMIZATION 0  // if non-zero, do not use init f/w with tx optimization
 #endif
 #endif  // INCLUDE_SHASTA_SUPPORT
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CHIRP_BOARD_CONFIG_H_ */

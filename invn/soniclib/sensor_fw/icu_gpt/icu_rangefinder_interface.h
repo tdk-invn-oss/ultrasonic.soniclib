@@ -1,10 +1,12 @@
 #ifndef _ICU_ALGO_RANGEFINDER_INTERFACE_H_
 #define _ICU_ALGO_RANGEFINDER_INTERFACE_H_
 
-#include "shasta_iq_format.h"
+#include <invn/icu_interface/shasta_iq_format.h>
 
 #define EVENT_TYPE_RANGEFINDER_DETECTED_MASK (1<<0)
 #define RINGDOWN_CANCEL_SAMPLES_MAX 60
+
+#define GPT_IQ_SAMPLES_MAX 340
 
 typedef struct target {
     volatile uint16_t range; //the range to the target, in ticks. The tick frequency is the frequency of the PMUT3M clock * (2^ODR-4)
@@ -49,9 +51,9 @@ typedef struct
 
 typedef struct
 {
-    InvnAlgoRangeFinderConfig * config;
+    const InvnAlgoRangeFinderConfig * config;
     qi_t qifilt[RINGDOWN_CANCEL_SAMPLES_MAX][MEAS_QUEUE_MAX_MEAS];
-    uint32_t magfilt_raw[IQ_SAMPLES_MAX+2];
+    uint32_t magfilt_raw[GPT_IQ_SAMPLES_MAX+2];
     uint32_t * magfilt;
     uint8_t filter_uninitialized[MEAS_QUEUE_MAX_MEAS];
     uint8_t update_count[MEAS_QUEUE_MAX_MEAS];
