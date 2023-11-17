@@ -11,6 +11,10 @@
 #ifndef CH_MATH_UTILS_H_
 #define CH_MATH_UTILS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <math.h>
 #include <stdint.h>
@@ -82,5 +86,9 @@ fixed_t FP_log(fixed_t x);
  * https://github.com/chmike/fpsqrt/blob/master/fpsqrt.c
  */
 int32_t sqrt_int32(int32_t v);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CH_MATH_UTILS_H_ */

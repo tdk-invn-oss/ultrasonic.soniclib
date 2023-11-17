@@ -189,6 +189,10 @@
 #ifndef __CHIRP_BSP_H_
 #define __CHIRP_BSP_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <invn/soniclib/soniclib.h>
 
 /*!
@@ -729,12 +733,10 @@ void chbsp_delay_ms(uint32_t ms);
  * This function should use a running timer to provide an updated timestamp, in milliseconds,
  * when called.
  *
- * If \a CHDRV_DEBUG is defined, this function is used by the SonicLib driver to calculate
+ * If \a CHDRV_DEBUG is defined, this function is used too by the SonicLib driver to calculate
  * elapsed times for various operations.
  *
- * This function is OPTIONAL.
- *
- * \note OPTIONAL - Implementing this function is optional and only needed for debugging support.
+ * This function is REQUIRED for ICU and CH101/CH201 sensors.
  */
 uint32_t chbsp_timestamp_ms(void);
 
@@ -1261,5 +1263,9 @@ void chbsp_led_toggle(uint8_t led_num);
  * \note OPTIONAL - Implementing this function is optional and only needed for debugging support.
  */
 void chbsp_print_str(char *str);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __CHIRP_BSP_H_ */

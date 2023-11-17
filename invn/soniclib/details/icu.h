@@ -23,6 +23,10 @@
 #ifndef ICU_H_
 #define ICU_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <invn/soniclib/details/ch_asic_shasta.h>
 
 #define ICU_DATA_MEM_SIZE SHASTA_DATA_MEM_SIZE
@@ -43,5 +47,9 @@
 
 #define ICU_COMMON_READY_FREQ_LOCKED (0)    // TODO not needed - should be removed
 #define ICU_COMMON_FREQCOUNTERCYCLES (128)  // TODO not needed - should be removed
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // ICU_H_

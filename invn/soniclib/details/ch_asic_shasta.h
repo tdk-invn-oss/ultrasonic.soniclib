@@ -17,6 +17,10 @@
 #ifndef CH_ASIC_SHASTA_H_
 #define CH_ASIC_SHASTA_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SHASTA_CPU_ID_VALUE (0x2041)
 
 #define SHASTA_DATA_MEM_SIZE      0x1000
@@ -288,5 +292,9 @@
 #define SPI_CMD_DBG_REG_WRITE (SPI_CMD_DBG_REG_ACCESS | SPI_CMD_WRITE)  // (0xC000)	// command bits for debug reg write
 #define SPI_CMD_MEM_READ      (SPI_CMD_MEM_ACCESS | SPI_CMD_READ)       // (0x0000)	// command bits for mem read
 #define SPI_CMD_MEM_WRITE     (SPI_CMD_MEM_ACCESS | SPI_CMD_WRITE)      // (0x4000)	// command bits for mem write
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CH_ASIC_SHASTA_H_ */

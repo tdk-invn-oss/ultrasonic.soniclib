@@ -80,7 +80,6 @@ uint8_t icu_init_no_txopt_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i
 	dev_ptr->api_funcs.set_tx_length        = ch_common_set_tx_length;
 	dev_ptr->api_funcs.get_tx_length        = ch_common_get_tx_length;
 
-	/* Init max sample count */
 	dev_ptr->max_samples = ICU_INIT_NO_TXOPT_MAX_SAMPLES;
 
 	/* This firmware does not use oversampling */

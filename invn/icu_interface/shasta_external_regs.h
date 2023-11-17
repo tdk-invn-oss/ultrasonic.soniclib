@@ -14,7 +14,7 @@
 #define REG_FMT_MAJOR   (1)
 #define REG_FMT_MINOR   (0)
 
-
+#define LAST_MEASUREMENT_CONTINUOUS (0x80)
 typedef struct raw_output_data{
     volatile uint16_t rtc_cal_result; //the raw result of the RTC calibration process
     volatile uint16_t pmut_clock_fcount; //the raw result of the PMUT3M clk frequency count process
@@ -24,15 +24,15 @@ typedef struct raw_output_data{
     volatile uint8_t iq_output_format;//the format of the IQdata buffer (See IQ_OUTPUT_*)
     volatile int8_t reserved; //used for INTCONFIG_ON_TARGET; -1 by default if no algo present
     volatile uint16_t reserved2; //hack to align this struct...
-    volatile uint16_t num_iq_bytes; //number of valid IQ bytes from latest measurement
+    //! Number of IQ bytes in last measurement
+    volatile uint16_t num_iq_bytes;
 #ifndef INVN_NO_VIRTUAL_REGS
     // IQdata now defined by ASIC app layer. It is placed at the end of this
     // struct by specifying memory location at link step. For shared memory
-    // usage, the host can treat this like a regular register. Note that some
-    // applications change the size of IQdata, so sizeof(IQdata) is not a
-    // reliable way to dermine maximum buffer length. Reference
-    // ICU_APP_IQ_SAMPLES_MAX instead.
-    volatile qi_t IQdata[IQ_SAMPLES_MAX];
+    // usage, the host can reference the address of this field to get the correct
+    // offset. This field is actually an array on the ASIC. Reference dev_ptr->max_samples
+    // to get the array size.
+    volatile qi_t IQdata;
 #endif
 }raw_output_data_t;
 
@@ -54,10 +54,12 @@ typedef struct measurement{ // size: 172 bytes
 #define TRIGSRC_HWTRIGGER_INT1      (1<<0)
 #define TRIGSRC_HWTRIGGER_INT2      (1<<1)
 #define TRIGSRC_RTC                 (1<<2)
+#define TRIGSRC_CONTINUOUS_RX        (1<<3)
 
 #define INTCONFIG_DR_INT2       (1<<0) //if this bit is set, use int2 for DATAREADY
 #define INTCONFIG_ON_TARGET     (1<<1) //if this bit is set, only output DATAREADY when a target is detected
 #define INTCONFIG_PULSE_INT     (1<<2) //if this bit is set, pulse the configured INT rather than latch it til next SPI read
+#define INTCONFIG_PUSH_PULL_INT (1<<3)  // if this bit is set, int will be actively driven high instead of using PU resistor
 
 typedef struct measurement_queue{ // size: 142 bytes
     volatile uint8_t intconfig; // 0x02 switch interrupts to INT2 (see INTCONFIG_*)

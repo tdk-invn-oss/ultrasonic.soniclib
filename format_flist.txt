@@ -1,5 +1,6 @@
 invn\soniclib\soniclib.h
 invn\soniclib\chirp_bsp.h
+invn\soniclib\ch_extra_display_utils.h
 invn\soniclib\chbsp_dummy.c
 invn\soniclib\ch_math_utils.c
 invn\soniclib\ch_driver.c
@@ -12,6 +13,7 @@ invn\soniclib\details\ch_math_utils.h
 invn\soniclib\details\chirp_board_config.h
 invn\soniclib\details\icu_shasta_algo_structs.h
 invn\soniclib\details\icu.h
+invn\soniclib\extra\ch_extra_display_utils.c
 invn\soniclib\sensor_fw\ch101\ch101_gpr.c
 invn\soniclib\sensor_fw\ch101\ch101_gpr.h
 invn\soniclib\sensor_fw\ch101\ch101_gprmt.c

@@ -27,7 +27,7 @@
 #include <invn/soniclib/soniclib.h>
 #include <stdint.h>
 
-#define ICU_GPT_MAX_SAMPLES (IQ_SAMPLES_MAX)  // from shasta_external_regs.h
+#define ICU_GPT_MAX_SAMPLES (IQ_SAMPLES_MAX)
 
 extern const char *icu_gpt_version;  // version string in fw .c file
 extern const uint8_t icu_gpt_fw_text[];

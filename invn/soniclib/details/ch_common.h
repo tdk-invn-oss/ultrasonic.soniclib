@@ -25,12 +25,18 @@
 #ifndef CH_COMMON_H_
 #define CH_COMMON_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <invn/soniclib/soniclib.h>
 
 /* All sensor common definitions */
 #define CH_COMMON_RTC_CAL_PULSE_MS 100  // typical (default) rtc calibration pulse, in ms
+
+#ifdef INCLUDE_WHITNEY_SUPPORT
 
 /* CH-x01 common definitions */
 #define CHX01_SCALEFACTOR_INDEX 4  // sample of BIST data for scale factor calc
@@ -140,6 +146,8 @@
 #define CHX01_GPRMT_REG_TOF            0x24
 #define CHX01_GPRMT_REG_AMPLITUDE      0x26
 #define CHX01_GPRMT_REG_DATA           0x28
+
+#endif /* INCLUDE_WHITNEY_SUPPORT */
 
 #define NSEC_PER_SEC              (1000000000U)
 #define PMUT_FREQUENCY_ERROR_CODE (1)  // this indicates some error in the frequency measurement
@@ -327,6 +335,9 @@ uint8_t ch_common_get_algo_state(ch_dev_t *dev_ptr, void *algo_state_ptr);
 uint8_t ch_common_set_interrupt_mode(ch_dev_t *dev_ptr, ch_interrupt_mode_t mode);
 ch_interrupt_mode_t ch_common_get_interrupt_mode(ch_dev_t *dev_ptr);
 
+uint8_t ch_common_set_interrupt_drive(ch_dev_t *dev_ptr, ch_interrupt_drive_t drive);
+ch_interrupt_drive_t ch_common_get_interrupt_drive(ch_dev_t *dev_ptr);
+
 #endif  // INCLUDE_SHASTA_SUPPORT
 
 uint8_t ch_common_set_target_interrupt(ch_dev_t *dev_ptr, ch_tgt_int_filter_t tgt_filter_mode);
@@ -365,5 +376,9 @@ uint32_t ch_common_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec);
 uint32_t ch_common_ticks_to_usec(ch_dev_t *dev_ptr, uint32_t num_rtc_periods);
 
 uint16_t ch_common_get_num_output_samples(ch_dev_t *dev_ptr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CH_COMMON_H_ */
