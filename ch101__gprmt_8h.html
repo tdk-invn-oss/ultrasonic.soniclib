@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -84,9 +84,10 @@ $(function() {
 
 <p>Internal definitions for the Chirp CH101 GPR Multi-threshold sensor firmware.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="ch101_8h_source.html">ch101.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="ch101_8h_source.html">ch101.h</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="ch__rangefinder_8h_source.html">invn/soniclib/ch_rangefinder.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
-<code>#include &lt;stdint.h&gt;</code><br />
 </div>
 <p><a href="ch101__gprmt_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -161,9 +162,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acb5d43b26cb3f7370a5d504b1fb9cdd7"><td class="memItemLeft" align="right" valign="top"><a id="acb5d43b26cb3f7370a5d504b1fb9cdd7"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch101_gprmt_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index)</td></tr>
-<tr class="separator:acb5d43b26cb3f7370a5d504b1fb9cdd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a344580d6a55e93e6c7a8f9da0522a779"><td class="memItemLeft" align="right" valign="top"><a id="a344580d6a55e93e6c7a8f9da0522a779"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch101_gprmt_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structfw__info__st.html">fw_info_t</a> **fw_info)</td></tr>
+<tr class="separator:a344580d6a55e93e6c7a8f9da0522a779"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2213059770b1c8b9cec6393fcf25e181"><td class="memItemLeft" align="right" valign="top"><a id="a2213059770b1c8b9cec6393fcf25e181"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>get_ch101_gprmt_fw_ram_init_addr</b> (void)</td></tr>
 <tr class="separator:a2213059770b1c8b9cec6393fcf25e181"><td class="memSeparator" colspan="2">&#160;</td></tr>

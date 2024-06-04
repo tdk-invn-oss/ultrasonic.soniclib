@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -90,14 +90,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aee7859753505aab0f44d1153f3c0b1da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0de38f900df5fa47fc963f18d5a5412e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__config__t.html#a0de38f900df5fa47fc963f18d5a5412e">sample_interval</a></td></tr>
 <tr class="separator:a0de38f900df5fa47fc963f18d5a5412e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fee713611e6f4b6ac8c2205b898c6ed"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__config__t.html#a7fee713611e6f4b6ac8c2205b898c6ed">static_range</a></td></tr>
-<tr class="separator:a7fee713611e6f4b6ac8c2205b898c6ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc25de2827bfda9e81c56d2c76165bc0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__config__t.html#acc25de2827bfda9e81c56d2c76165bc0">tgt_int_filter</a></td></tr>
 <tr class="separator:acc25de2827bfda9e81c56d2c76165bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a044d10d7fd85ac639ad57e53481431d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__config__t.html#a044d10d7fd85ac639ad57e53481431d9">thresh_ptr</a></td></tr>
-<tr class="separator:a044d10d7fd85ac639ad57e53481431d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ddbbed11177b9764839f90f05c4de3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__config__t.html#a1ddbbed11177b9764839f90f05c4de3c">time_plan</a></td></tr>
-<tr class="separator:a1ddbbed11177b9764839f90f05c4de3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Combined configuration structure. </p>
@@ -147,21 +141,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a7fee713611e6f4b6ac8c2205b898c6ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fee713611e6f4b6ac8c2205b898c6ed">&#9670;&nbsp;</a></span>static_range</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t ch_config_t::static_range</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>static target rejection range, in mm (0 if unused) </p>
-
-</div>
-</div>
 <a id="acc25de2827bfda9e81c56d2c76165bc0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc25de2827bfda9e81c56d2c76165bc0">&#9670;&nbsp;</a></span>tgt_int_filter</h2>
 
@@ -174,36 +153,6 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>target interrupt filtering mode </p>
-
-</div>
-</div>
-<a id="a044d10d7fd85ac639ad57e53481431d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a044d10d7fd85ac639ad57e53481431d9">&#9670;&nbsp;</a></span>thresh_ptr</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a>* ch_config_t::thresh_ptr</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>ptr to detection thresholds structure (if supported), should be NULL (0) for CH101 </p>
-
-</div>
-</div>
-<a id="a1ddbbed11177b9764839f90f05c4de3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ddbbed11177b9764839f90f05c4de3c">&#9670;&nbsp;</a></span>time_plan</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a> ch_config_t::time_plan</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>time plan, should be 0 for CH201 </p>
 
 </div>
 </div>

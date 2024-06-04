@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['get_5ffw_5fram_5finit_5faddr_582',['get_fw_ram_init_addr',['../structch__dev__t.html#a8937c27f3f107e9ee520c5dd6a4198c3',1,'ch_dev_t']]],
-  ['get_5ffw_5fram_5finit_5fsize_583',['get_fw_ram_init_size',['../structch__dev__t.html#aa451f737257dd0dc969b85fdcd82e837',1,'ch_dev_t']]],
-  ['get_5flocked_5fstate_584',['get_locked_state',['../structch__dev__t.html#a0454015aeaac50780f76b71a505fcfac',1,'ch_dev_t']]],
-  ['group_585',['group',['../structch__dev__t.html#a6a0a1d353ed15ce290542b3e84f47126',1,'ch_dev_t']]]
+  ['get_5ffw_5fram_5finit_5faddr_572',['get_fw_ram_init_addr',['../structfw__info__st.html#a4dfa67906bb2bfdbe7f61dccbe4db9b7',1,'fw_info_st']]],
+  ['get_5ffw_5fram_5finit_5fsize_573',['get_fw_ram_init_size',['../structfw__info__st.html#a359fd69d63cacd1dcd48b64dc76c0f9a',1,'fw_info_st']]],
+  ['get_5flocked_5fstate_574',['get_locked_state',['../structch__calib__funcs__t.html#a4423724a07593655c8d12e7d535d8cd8',1,'ch_calib_funcs_t']]],
+  ['group_575',['group',['../structch__dev__t.html#a6a0a1d353ed15ce290542b3e84f47126',1,'ch_dev_t']]]
 ];

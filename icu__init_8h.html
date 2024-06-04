@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -84,9 +84,12 @@ $(function() {
 
 <p>Internal definitions for the Chirp ICU Initialization sensor firmware.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="icu_8h_source.html">invn/soniclib/details/icu.h</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="icu_8h_source.html">invn/soniclib/details/icu.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
-<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;invn/soniclib/sensor_fw/icu_init/icu_algo_format.h&gt;</code><br />
+<code>#include &lt;invn/soniclib/sensor_fw/icu_init/icu_shasta_algo_structs.h&gt;</code><br />
+<code>#include &lt;invn/soniclib/sensor_fw/icu_init/shasta_init_interface.h&gt;</code><br />
 </div>
 <p><a href="icu__init_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -107,9 +110,9 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>get_icu_init_fw_r
 <tr class="memitem:ade4fd31ed1375a3c8dbb9e4ae15bc030"><td class="memItemLeft" align="right" valign="top"><a id="ade4fd31ed1375a3c8dbb9e4ae15bc030"></a>
 const unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><b>get_ram_icu_init_init_ptr</b> (void)</td></tr>
 <tr class="separator:ade4fd31ed1375a3c8dbb9e4ae15bc030"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9fc062aac703c342dc6be7ed7d79758"><td class="memItemLeft" align="right" valign="top"><a id="ae9fc062aac703c342dc6be7ed7d79758"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>icu_init_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index)</td></tr>
-<tr class="separator:ae9fc062aac703c342dc6be7ed7d79758"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab979a8fa9bdb15c761b6974bd8fa3d49"><td class="memItemLeft" align="right" valign="top"><a id="ab979a8fa9bdb15c761b6974bd8fa3d49"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>icu_init_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structfw__info__st.html">fw_info_t</a> **fw_info)</td></tr>
+<tr class="separator:ab979a8fa9bdb15c761b6974bd8fa3d49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>

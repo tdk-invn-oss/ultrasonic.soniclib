@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -77,6 +77,26 @@ $(function() {
 </li>
 <li>CH101_BANDWIDTH_INDEX_2
 : <a class="el" href="ch101_8h.html#ae3ef7686baa489d58467479e9822dd6d">ch101.h</a>
+</li>
+<li>ch101_gpr_get_in_ringdown_idx()
+: <a class="el" href="ch101__gpr_8c.html#a4c37a7d9c85abf7b09b4722aca6987ef">ch101_gpr.c</a>
+, <a class="el" href="ch101__gpr_8h.html#a4c37a7d9c85abf7b09b4722aca6987ef">ch101_gpr.h</a>
+</li>
+<li>ch101_gpr_get_in_ringdown_ths()
+: <a class="el" href="ch101__gpr_8c.html#ae224ad50ac01bdcdb17c56795eff4a9b">ch101_gpr.c</a>
+, <a class="el" href="ch101__gpr_8h.html#ae224ad50ac01bdcdb17c56795eff4a9b">ch101_gpr.h</a>
+</li>
+<li>ch101_gpr_get_target_in_ringdown()
+: <a class="el" href="ch101__gpr_8c.html#afb9bd002e3b367cf2651b9fe0d9d6206">ch101_gpr.c</a>
+, <a class="el" href="ch101__gpr_8h.html#afb9bd002e3b367cf2651b9fe0d9d6206">ch101_gpr.h</a>
+</li>
+<li>ch101_gpr_set_in_ringdown_idx()
+: <a class="el" href="ch101__gpr_8c.html#ae4608ff0ac90727baa329eb155e9c26c">ch101_gpr.c</a>
+, <a class="el" href="ch101__gpr_8h.html#ae4608ff0ac90727baa329eb155e9c26c">ch101_gpr.h</a>
+</li>
+<li>ch101_gpr_set_in_ringdown_ths()
+: <a class="el" href="ch101__gpr_8c.html#aeee2aaec82587779682f0f4a1d273887">ch101_gpr.c</a>
+, <a class="el" href="ch101__gpr_8h.html#aeee2aaec82587779682f0f4a1d273887">ch101_gpr.h</a>
 </li>
 <li>CH101_MAX_NUM_SAMPLES
 : <a class="el" href="soniclib_8h.html#a28a351939686e7af66da8f2b70a9b709">soniclib.h</a>
@@ -165,10 +185,7 @@ $(function() {
 , <a class="el" href="soniclib_8h.html#a1698edd099e87aaa2787cda5f12e373f">soniclib.h</a>
 </li>
 <li>ch_fw_init_func_t
-: <a class="el" href="soniclib_8h.html#a1318c8ebfcd0a9c5f0d9acda119188d5">soniclib.h</a>
-</li>
-<li>ch_fw_load_func_t
-: <a class="el" href="soniclib_8h.html#ac65288f02a091f49bd3f24eeffdff0c9">soniclib.h</a>
+: <a class="el" href="soniclib_8h.html#a6c5f9dbeb75e38d6e3b81540a35b7fe0">soniclib.h</a>
 </li>
 <li>ch_get_algo_config()
 : <a class="el" href="ch__api_8c.html#ac05e1055eb673ae1c6e03d8d72046039">ch_api.c</a>
@@ -218,6 +235,9 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#a2047b5e506b99131585bcfb4ce37b4ac">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a2047b5e506b99131585bcfb4ce37b4ac">soniclib.h</a>
 </li>
+<li>ch_get_config_func_t
+: <a class="el" href="soniclib_8h.html#aaf56bd1399ab66e3c363a3d8c68c1d21">soniclib.h</a>
+</li>
 <li>ch_get_cpu_frequency()
 : <a class="el" href="ch__api_8c.html#a7747e4f758aa7d957d3e69a94ced2363">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a7747e4f758aa7d957d3e69a94ced2363">soniclib.h</a>
@@ -225,10 +245,6 @@ $(function() {
 <li>ch_get_data_ready_delay()
 : <a class="el" href="ch__api_8c.html#aacf8233ee597b2795c3e478e70f3aefd">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#aacf8233ee597b2795c3e478e70f3aefd">soniclib.h</a>
-</li>
-<li>ch_get_demodulated_rx_data()
-: <a class="el" href="ch__api_8c.html#ae5ff4d0e6ed644477bb4adca610af511">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ae5ff4d0e6ed644477bb4adca610af511">soniclib.h</a>
 </li>
 <li>ch_get_dev_num()
 : <a class="el" href="ch__api_8c.html#a775e8fcdd9f1c1fa3dd90d87024101ab">ch_api.c</a>
@@ -243,8 +259,8 @@ $(function() {
 , <a class="el" href="soniclib_8h.html#a2f5c83e0d155e17ab8ac74951f44ea02">soniclib.h</a>
 </li>
 <li>ch_get_freerun_interval_ticks()
-: <a class="el" href="ch__api_8c.html#a7b7369be7d454541ab7bacdea4d694a2">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a7b7369be7d454541ab7bacdea4d694a2">soniclib.h</a>
+: <a class="el" href="ch__api_8c.html#aaa6ab6e5862a95c8610a176bf3e88554">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#aaa6ab6e5862a95c8610a176bf3e88554">soniclib.h</a>
 </li>
 <li>ch_get_freerun_interval_us()
 : <a class="el" href="ch__api_8c.html#a94c77bb8b753ccc41de9b11f316e9c7e">ch_api.c</a>
@@ -303,12 +319,12 @@ $(function() {
 , <a class="el" href="soniclib_8h.html#a53cba94e769a33dfd290555efb412dda">soniclib.h</a>
 </li>
 <li>ch_get_num_targets()
-: <a class="el" href="ch__api_8c.html#a0fef1804e3c80f73d9b4f9bf7b9ad685">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a0fef1804e3c80f73d9b4f9bf7b9ad685">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a0fef1804e3c80f73d9b4f9bf7b9ad685">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a0fef1804e3c80f73d9b4f9bf7b9ad685">ch_rangefinder.h</a>
 </li>
 <li>ch_get_num_thresholds()
-: <a class="el" href="ch__api_8c.html#a288392d485ecb7293e189d4e9b6b33cb">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a288392d485ecb7293e189d4e9b6b33cb">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#af1845a2ae19a7be6b18f144eda2f5066">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#af1845a2ae19a7be6b18f144eda2f5066">ch_rangefinder.h</a>
 </li>
 <li>ch_get_part_number()
 : <a class="el" href="ch__api_8c.html#ad57e731b7b145a37aa7685a2fbe320c9">ch_api.c</a>
@@ -335,7 +351,7 @@ $(function() {
 , <a class="el" href="soniclib_8h.html#a3157748b36bfb84930fd16ab06570eb7">soniclib.h</a>
 </li>
 <li>ch_get_rx_holdoff()
-: <a class="el" href="ch__api_8c.html#ab71d5ac02276e0d9b77549eb29195d6c">ch_api.c</a>
+: <a class="el" href="ch__rangefinder_8c.html#ab71d5ac02276e0d9b77549eb29195d6c">ch_rangefinder.c</a>
 , <a class="el" href="soniclib_8h.html#ab71d5ac02276e0d9b77549eb29195d6c">soniclib.h</a>
 </li>
 <li>ch_get_rx_low_gain()
@@ -345,10 +361,6 @@ $(function() {
 <li>ch_get_rx_pretrigger()
 : <a class="el" href="ch__api_8c.html#a295d2393cc610d13bfa63987de35c303">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a295d2393cc610d13bfa63987de35c303">soniclib.h</a>
-</li>
-<li>ch_get_rx_pulse_length()
-: <a class="el" href="ch__api_8c.html#a0cb39266281e4aa908a2e57565a95696">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a0cb39266281e4aa908a2e57565a95696">soniclib.h</a>
 </li>
 <li>ch_get_sample_interval()
 : <a class="el" href="ch__api_8c.html#a973ae35d4ac7064704da5bcf2d05f6ef">ch_api.c</a>
@@ -366,17 +378,13 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#a76945903073c49706d025c7679b07059">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a76945903073c49706d025c7679b07059">soniclib.h</a>
 </li>
-<li>ch_get_static_coeff()
-: <a class="el" href="ch__api_8c.html#a7667d98222225444cc20a66649bbb36c">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a7667d98222225444cc20a66649bbb36c">soniclib.h</a>
-</li>
 <li>ch_get_static_range()
-: <a class="el" href="ch__api_8c.html#ad7b0b54393d6373c0f1c3db35d7f1cd8">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ad7b0b54393d6373c0f1c3db35d7f1cd8">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a48883557bd21adef2ea2621e4de824af">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a48883557bd21adef2ea2621e4de824af">ch_rangefinder.h</a>
 </li>
 <li>ch_get_target_amplitude()
-: <a class="el" href="ch__api_8c.html#a2ecb1677cd9f1a8d767c2715a133670e">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a2ecb1677cd9f1a8d767c2715a133670e">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a2ecb1677cd9f1a8d767c2715a133670e">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a2ecb1677cd9f1a8d767c2715a133670e">ch_rangefinder.h</a>
 </li>
 <li>ch_get_target_int_counter()
 : <a class="el" href="ch__api_8c.html#abf08ef3543bda6135f4f5663283241cf">ch_api.c</a>
@@ -387,28 +395,24 @@ $(function() {
 , <a class="el" href="soniclib_8h.html#abdc2253cbd8774013965ab82eadba27c">soniclib.h</a>
 </li>
 <li>ch_get_target_range()
-: <a class="el" href="ch__api_8c.html#a24683d6023095d66f876895e2cd01cd2">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a24683d6023095d66f876895e2cd01cd2">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a24683d6023095d66f876895e2cd01cd2">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a24683d6023095d66f876895e2cd01cd2">ch_rangefinder.h</a>
 </li>
 <li>ch_get_target_tof_us()
-: <a class="el" href="ch__api_8c.html#a8b1f2f18f9ff1bd6e61902790e541d86">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a8b1f2f18f9ff1bd6e61902790e541d86">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a8b1f2f18f9ff1bd6e61902790e541d86">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a8b1f2f18f9ff1bd6e61902790e541d86">ch_rangefinder.h</a>
 </li>
 <li>ch_get_threshold()
-: <a class="el" href="ch__api_8c.html#a05448e0cd2c7bd018c6ca10d29aa5673">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a05448e0cd2c7bd018c6ca10d29aa5673">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a05448e0cd2c7bd018c6ca10d29aa5673">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a05448e0cd2c7bd018c6ca10d29aa5673">ch_rangefinder.h</a>
 </li>
 <li>ch_get_thresholds()
-: <a class="el" href="ch__api_8c.html#a9ea0971363f3a1c9fdc7e8f040489edd">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a9ea0971363f3a1c9fdc7e8f040489edd">soniclib.h</a>
-</li>
-<li>ch_get_time_plan()
-: <a class="el" href="ch__api_8c.html#a38f2a32508f42eef57521790587023e6">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a38f2a32508f42eef57521790587023e6">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a9ea0971363f3a1c9fdc7e8f040489edd">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a9ea0971363f3a1c9fdc7e8f040489edd">ch_rangefinder.h</a>
 </li>
 <li>ch_get_tof_us()
-: <a class="el" href="ch__api_8c.html#a86e1f2558e33beb47fec253dd6813eed">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a86e1f2558e33beb47fec253dd6813eed">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a86e1f2558e33beb47fec253dd6813eed">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a86e1f2558e33beb47fec253dd6813eed">ch_rangefinder.h</a>
 </li>
 <li>ch_get_trigger_type()
 : <a class="el" href="ch__api_8c.html#a74355ffe5e8887d74e9cdf5b3bd48a6f">ch_api.c</a>
@@ -429,6 +433,10 @@ $(function() {
 <li>ch_group_get_pmut_clock_freq()
 : <a class="el" href="ch__api_8c.html#af80e105e4c2bcee89f2f606d35015050">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#af80e105e4c2bcee89f2f606d35015050">soniclib.h</a>
+</li>
+<li>ch_group_init()
+: <a class="el" href="ch__api_8c.html#aaedc8fdec2ebbecb1b89c6856f63bd60">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#aaedc8fdec2ebbecb1b89c6856f63bd60">soniclib.h</a>
 </li>
 <li>ch_group_reset()
 : <a class="el" href="ch__api_8c.html#a63c386c49a6c8ad4bb506c4d00e3bcf5">ch_api.c</a>
@@ -476,12 +484,6 @@ $(function() {
 <li>ch_init_algo()
 : <a class="el" href="ch__api_8c.html#ad725040c45603cc81f47ccb4ab104efc">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#ad725040c45603cc81f47ccb4ab104efc">soniclib.h</a>
-</li>
-<li>CH_INIT_AND_OPT_INIT_FUNC
-: <a class="el" href="soniclib_8h.html#a6b21779fe85d8f4df9bdb4584df9ec1c">soniclib.h</a>
-</li>
-<li>CH_INIT_ONLY_INIT_FUNC
-: <a class="el" href="soniclib_8h.html#ac1e2d9b1c7921ad1bb3c79a93a4058e5">soniclib.h</a>
 </li>
 <li>ch_interrupt()
 : <a class="el" href="ch__api_8c.html#a68080a85a27dc680ce55c020f575c5c3">ch_api.c</a>
@@ -585,6 +587,10 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#ac78bd32dde57faf8200f39786151040c">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a21c53aa278150f204d7dd4eaef3cbb95">soniclib.h</a>
 </li>
+<li>ch_is_target_in_ringdown()
+: <a class="el" href="ch__rangefinder_8c.html#a55601853843f7961a7ed107cf4c67d53">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a55601853843f7961a7ed107cf4c67d53">ch_rangefinder.h</a>
+</li>
 <li>ch_log_append()
 : <a class="el" href="ch__api_8c.html#a21e0ba880449ca3c613730091ba089c4">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a21e0ba880449ca3c613730091ba089c4">soniclib.h</a>
@@ -619,10 +625,6 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#a8214b6c4e8592686ae3bb9daa0833012">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a8214b6c4e8592686ae3bb9daa0833012">soniclib.h</a>
 </li>
-<li>ch_meas_get_filter_update()
-: <a class="el" href="ch__api_8c.html#af18c365c79cbe09dccbaf81421d7df13">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#af18c365c79cbe09dccbaf81421d7df13">soniclib.h</a>
-</li>
 <li>ch_meas_get_info()
 : <a class="el" href="ch__api_8c.html#aa3d2278773b6676145e9d86bb1cdf769">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#aa3d2278773b6676145e9d86bb1cdf769">soniclib.h</a>
@@ -651,10 +653,6 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#acd7763faeec4c696c10410544cb01365">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#acd7763faeec4c696c10410544cb01365">soniclib.h</a>
 </li>
-<li>ch_meas_get_num_ranges()
-: <a class="el" href="ch__api_8c.html#a5d7a77ac962f28b420a03ba2f04a06c6">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a5d7a77ac962f28b420a03ba2f04a06c6">soniclib.h</a>
-</li>
 <li>ch_meas_get_num_samples()
 : <a class="el" href="ch__api_8c.html#a9bf5688451893bddde1d3623dd34f48d">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a9bf5688451893bddde1d3623dd34f48d">soniclib.h</a>
@@ -671,37 +669,21 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#a3800e5639a3dae4272db79573180641d">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a3800e5639a3dae4272db79573180641d">soniclib.h</a>
 </li>
-<li>ch_meas_get_ringdown_cancel()
-: <a class="el" href="ch__api_8c.html#a6e47b863c967ba1eb4d8f1ec54d4fee8">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a6e47b863c967ba1eb4d8f1ec54d4fee8">soniclib.h</a>
-</li>
-<li>ch_meas_get_rx_holdoff()
-: <a class="el" href="ch__api_8c.html#a786ba819cd4146dca4c70547879c0a62">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a786ba819cd4146dca4c70547879c0a62">soniclib.h</a>
-</li>
 <li>ch_meas_get_seg_info()
 : <a class="el" href="ch__api_8c.html#a081ad1d7648bac0ed82f3ff93d7f0321">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a081ad1d7648bac0ed82f3ff93d7f0321">soniclib.h</a>
 </li>
-<li>ch_meas_get_static_filter()
-: <a class="el" href="ch__api_8c.html#a51c0e681571dfc49caf3514fd084d33f">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a51c0e681571dfc49caf3514fd084d33f">soniclib.h</a>
-</li>
 <li>ch_meas_get_status()
 : <a class="el" href="ch__api_8c.html#a90245534189e3893901e90e63fc9e26c">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a90245534189e3893901e90e63fc9e26c">soniclib.h</a>
-</li>
-<li>ch_meas_get_thresholds()
-: <a class="el" href="ch__api_8c.html#ae4041161cfd2f313d3f0aaae5b301c33">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ae4041161cfd2f313d3f0aaae5b301c33">soniclib.h</a>
 </li>
 <li>ch_meas_import()
 : <a class="el" href="ch__api_8c.html#a719bb8d611224839c6d9404d339bc9e8">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a719bb8d611224839c6d9404d339bc9e8">soniclib.h</a>
 </li>
 <li>ch_meas_init()
-: <a class="el" href="ch__api_8c.html#ac4ca589635feb0c221ac8e01e6731586">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ac4ca589635feb0c221ac8e01e6731586">soniclib.h</a>
+: <a class="el" href="ch__api_8c.html#a0dfa2a99ca4868b9cd6d363a7f14270e">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a0dfa2a99ca4868b9cd6d363a7f14270e">soniclib.h</a>
 </li>
 <li>ch_meas_init_queue()
 : <a class="el" href="ch__api_8c.html#a5c5abc7618cd984d09270ec7c2599e76">ch_api.c</a>
@@ -718,6 +700,14 @@ $(function() {
 <li>ch_meas_init_segment_tx()
 : <a class="el" href="ch__api_8c.html#adde2d67659346569ec81c5e7f51d7647">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#adde2d67659346569ec81c5e7f51d7647">soniclib.h</a>
+</li>
+<li>ch_meas_insert_instruction()
+: <a class="el" href="ch__api_8c.html#ab2c95d14cdd3f9656e2f4e9b9a805c4b">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#ab2c95d14cdd3f9656e2f4e9b9a805c4b">soniclib.h</a>
+</li>
+<li>ch_meas_insert_segment()
+: <a class="el" href="ch__api_8c.html#a15e8410407cea43d44abada1eb739f42">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a15e8410407cea43d44abada1eb739f42">soniclib.h</a>
 </li>
 <li>CH_MEAS_MAX_MEAS
 : <a class="el" href="soniclib_8h.html#a4b3b9a6b7fbc378c0326a3ae1e5422ca">soniclib.h</a>
@@ -742,6 +732,14 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#a6d21dc9fdd39ade2eef9c269ba027272">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a6d21dc9fdd39ade2eef9c269ba027272">soniclib.h</a>
 </li>
+<li>ch_meas_remove_instruction()
+: <a class="el" href="ch__api_8c.html#a8224fdbf97c25d75219f9fee87ab9a98">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a8224fdbf97c25d75219f9fee87ab9a98">soniclib.h</a>
+</li>
+<li>ch_meas_remove_segment()
+: <a class="el" href="ch__api_8c.html#a0ee0747d4c1668e07ef242f4c17dbdbf">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a0ee0747d4c1668e07ef242f4c17dbdbf">soniclib.h</a>
+</li>
 <li>ch_meas_reset()
 : <a class="el" href="ch__api_8c.html#a8d2b49af5ae78b7b277666ff7c4f0937">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a8d2b49af5ae78b7b277666ff7c4f0937">soniclib.h</a>
@@ -752,10 +750,6 @@ $(function() {
 </li>
 <li>ch_meas_seg_type_t
 : <a class="el" href="soniclib_8h.html#ac868f9fc5f6e275b007cda19c9ef15eb">soniclib.h</a>
-</li>
-<li>ch_meas_set_filter_update()
-: <a class="el" href="ch__api_8c.html#a6e3831cb60ad3e13be3f6b3d5411bb4f">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a6e3831cb60ad3e13be3f6b3d5411bb4f">soniclib.h</a>
 </li>
 <li>ch_meas_set_interval()
 : <a class="el" href="ch__api_8c.html#a52398f9f8bf2f5a20531e7c8ab1852fd">ch_api.c</a>
@@ -777,10 +771,6 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#acfc7192978564ab0f477ee2132870fea">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#acfc7192978564ab0f477ee2132870fea">soniclib.h</a>
 </li>
-<li>ch_meas_set_num_ranges()
-: <a class="el" href="ch__api_8c.html#a02c65a7375aaaadc831dd9aec300b4f4">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a02c65a7375aaaadc831dd9aec300b4f4">soniclib.h</a>
-</li>
 <li>ch_meas_set_num_samples()
 : <a class="el" href="ch__api_8c.html#a7d24256fc81eaadb687786ee41bec7c9">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a7d24256fc81eaadb687786ee41bec7c9">soniclib.h</a>
@@ -788,22 +778,6 @@ $(function() {
 <li>ch_meas_set_odr()
 : <a class="el" href="ch__api_8c.html#adc5748ec903986b27b78f4a52b8c9e23">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#adc5748ec903986b27b78f4a52b8c9e23">soniclib.h</a>
-</li>
-<li>ch_meas_set_ringdown_cancel()
-: <a class="el" href="ch__api_8c.html#ab5bef9e19109bf21b9178b016dc50b0a">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ab5bef9e19109bf21b9178b016dc50b0a">soniclib.h</a>
-</li>
-<li>ch_meas_set_rx_holdoff()
-: <a class="el" href="ch__api_8c.html#ad42fd8a483dc12533ec07681c16468c9">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ad42fd8a483dc12533ec07681c16468c9">soniclib.h</a>
-</li>
-<li>ch_meas_set_static_filter()
-: <a class="el" href="ch__api_8c.html#ab55e5bb1776423c68271ec4374593fd1">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ab55e5bb1776423c68271ec4374593fd1">soniclib.h</a>
-</li>
-<li>ch_meas_set_thresholds()
-: <a class="el" href="ch__api_8c.html#a00d772caf7d515801a13b3963733e4de">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a00d772caf7d515801a13b3963733e4de">soniclib.h</a>
 </li>
 <li>ch_meas_standby()
 : <a class="el" href="ch__api_8c.html#afc64afbffb1f34e6881528e31bce9286">ch_api.c</a>
@@ -833,6 +807,14 @@ $(function() {
 <li>ch_meas_switch()
 : <a class="el" href="ch__api_8c.html#a20576be17d3be2e6c3293c753c94c434">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a20576be17d3be2e6c3293c753c94c434">soniclib.h</a>
+</li>
+<li>ch_meas_time_hop_disable()
+: <a class="el" href="ch__api_8c.html#a8421a242bc38e92a27e96814c64c1c95">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a8421a242bc38e92a27e96814c64c1c95">soniclib.h</a>
+</li>
+<li>ch_meas_time_hop_enable()
+: <a class="el" href="ch__api_8c.html#aa2b5b2e869a15194c08ae15f0e20cb14">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#aa2b5b2e869a15194c08ae15f0e20cb14">soniclib.h</a>
 </li>
 <li>ch_meas_write_config()
 : <a class="el" href="ch__api_8c.html#a8f9450f4a5d409c8e1474d4ae078fbe4">ch_api.c</a>
@@ -867,7 +849,7 @@ $(function() {
 : <a class="el" href="soniclib_8h.html#acb22435c0d7a9acf8898eefbaeb82791">soniclib.h</a>
 </li>
 <li>CH_NUM_THRESHOLDS
-: <a class="el" href="soniclib_8h.html#a564329279fbaa1d5d99bc15f30f229fe">soniclib.h</a>
+: <a class="el" href="ch__rangefinder__types_8h.html#a564329279fbaa1d5d99bc15f30f229fe">ch_rangefinder_types.h</a>
 </li>
 <li>CH_ODR_DEFAULT
 : <a class="el" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189a7ef028e41993001ff703026fb127cfbc">soniclib.h</a>
@@ -1072,6 +1054,10 @@ $(function() {
 <li>ch_sensor_reset_state_t
 : <a class="el" href="soniclib_8h.html#a8579cbcd7ce6352dcb003317568123c9">soniclib.h</a>
 </li>
+<li>ch_set_algo_config()
+: <a class="el" href="ch__api_8c.html#a0946a2fe093c2eb4c8de5d4d7535c159">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a0946a2fe093c2eb4c8de5d4d7535c159">soniclib.h</a>
+</li>
 <li>ch_set_cal_result()
 : <a class="el" href="ch__api_8c.html#a0d01cb587379697f451459a2e4204d0c">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a0d01cb587379697f451459a2e4204d0c">soniclib.h</a>
@@ -1104,6 +1090,10 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#a5c6b0cc10159a9a9bb4dd74f38384d3a">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a5c6b0cc10159a9a9bb4dd74f38384d3a">soniclib.h</a>
 </li>
+<li>ch_set_init_firmware()
+: <a class="el" href="ch__api_8c.html#ab06071a7f3eeb6376fcf9ab4a2da9a2e">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#ab06071a7f3eeb6376fcf9ab4a2da9a2e">soniclib.h</a>
+</li>
 <li>ch_set_interrupt_drive()
 : <a class="el" href="ch__api_8c.html#a1ddffdfb6704d3598c34f7ba93094bbd">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a1ddffdfb6704d3598c34f7ba93094bbd">soniclib.h</a>
@@ -1120,10 +1110,6 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#af427c34df885a028ee0f7cdddc981001">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#af427c34df885a028ee0f7cdddc981001">soniclib.h</a>
 </li>
-<li>ch_set_modulated_tx_data()
-: <a class="el" href="ch__api_8c.html#a88cb1bc6d170aaeb43e7cb695bf417af">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a88cb1bc6d170aaeb43e7cb695bf417af">soniclib.h</a>
-</li>
 <li>ch_set_num_samples()
 : <a class="el" href="ch__api_8c.html#a8a92fdea71bf1aff4b05891a933a5e84">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a8a92fdea71bf1aff4b05891a933a5e84">soniclib.h</a>
@@ -1137,7 +1123,7 @@ $(function() {
 , <a class="el" href="soniclib_8h.html#a5e0552ddb44341f86d96a9c5b4d9a1ca">soniclib.h</a>
 </li>
 <li>ch_set_rx_holdoff()
-: <a class="el" href="ch__api_8c.html#a4d2f18445966ba0094e54bfdae39bc0a">ch_api.c</a>
+: <a class="el" href="ch__rangefinder_8c.html#a4d2f18445966ba0094e54bfdae39bc0a">ch_rangefinder.c</a>
 , <a class="el" href="soniclib_8h.html#a4d2f18445966ba0094e54bfdae39bc0a">soniclib.h</a>
 </li>
 <li>ch_set_rx_low_gain()
@@ -1156,13 +1142,9 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#a183c63e3d6794848986656895b918d10">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a183c63e3d6794848986656895b918d10">soniclib.h</a>
 </li>
-<li>ch_set_static_coeff()
-: <a class="el" href="ch__api_8c.html#a872db7bc23cd2a4d2f1abe5e7551a484">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a872db7bc23cd2a4d2f1abe5e7551a484">soniclib.h</a>
-</li>
 <li>ch_set_static_range()
-: <a class="el" href="ch__api_8c.html#ab7b5aecb6cfe54c6d2df428e26192d9a">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ab7b5aecb6cfe54c6d2df428e26192d9a">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#ab7b5aecb6cfe54c6d2df428e26192d9a">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#ab7b5aecb6cfe54c6d2df428e26192d9a">ch_rangefinder.h</a>
 </li>
 <li>ch_set_target_int_counter()
 : <a class="el" href="ch__api_8c.html#a21906ecff45b2f188d8cf6b4b7b2e596">ch_api.c</a>
@@ -1173,16 +1155,12 @@ $(function() {
 , <a class="el" href="soniclib_8h.html#ab462c77e75fd5b959eb3d49e918d49e8">soniclib.h</a>
 </li>
 <li>ch_set_threshold()
-: <a class="el" href="ch__api_8c.html#a221935be365b6c9fa5b2711c7df57750">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a221935be365b6c9fa5b2711c7df57750">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a221935be365b6c9fa5b2711c7df57750">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a221935be365b6c9fa5b2711c7df57750">ch_rangefinder.h</a>
 </li>
 <li>ch_set_thresholds()
-: <a class="el" href="ch__api_8c.html#a7e948bfbdc2cbca2f04bc97459541e5f">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a7e948bfbdc2cbca2f04bc97459541e5f">soniclib.h</a>
-</li>
-<li>ch_set_time_plan()
-: <a class="el" href="ch__api_8c.html#a521bfb331d13a9fa2cdfecf909038c92">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a521bfb331d13a9fa2cdfecf909038c92">soniclib.h</a>
+: <a class="el" href="ch__rangefinder_8c.html#a7e948bfbdc2cbca2f04bc97459541e5f">ch_rangefinder.c</a>
+, <a class="el" href="ch__rangefinder_8h.html#a7e948bfbdc2cbca2f04bc97459541e5f">ch_rangefinder.h</a>
 </li>
 <li>ch_set_trigger_type()
 : <a class="el" href="ch__api_8c.html#a035896185096ae0cc1e4c54db205d38c">ch_api.c</a>
@@ -1223,11 +1201,8 @@ $(function() {
 : <a class="el" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">soniclib.h</a>
 </li>
 <li>ch_ticks_to_usec()
-: <a class="el" href="ch__api_8c.html#ab1ca4c8de7c62723e084c93e7c22effc">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#ab1ca4c8de7c62723e084c93e7c22effc">soniclib.h</a>
-</li>
-<li>ch_time_plan_t
-: <a class="el" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">soniclib.h</a>
+: <a class="el" href="ch__api_8c.html#a505a6478f9e04cc440e3e3a05a565da9">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a505a6478f9e04cc440e3e3a05a565da9">soniclib.h</a>
 </li>
 <li>ch_timer_callback_t
 : <a class="el" href="soniclib_8h.html#aa0e5a58672f5728ead1a7b43ed248841">soniclib.h</a>
@@ -1254,8 +1229,8 @@ $(function() {
 , <a class="el" href="soniclib_8h.html#a5d8b3ddcc0010bf7bd1f7acc1fba4232">soniclib.h</a>
 </li>
 <li>ch_usec_to_ticks()
-: <a class="el" href="ch__api_8c.html#a6192a5ea3da58911509b7083d5c60b99">ch_api.c</a>
-, <a class="el" href="soniclib_8h.html#a6192a5ea3da58911509b7083d5c60b99">soniclib.h</a>
+: <a class="el" href="ch__api_8c.html#a6b94b407af323faa524787e399347594">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a6b94b407af323faa524787e399347594">soniclib.h</a>
 </li>
 <li>ch_watchdog_disable()
 : <a class="el" href="ch__api_8c.html#aabaaeecabbda3d134a582405cc2ec812">ch_api.c</a>
@@ -1267,9 +1242,6 @@ $(function() {
 </li>
 <li>CH_WINDOW_MAX_SAMPLES
 : <a class="el" href="soniclib_8h.html#aa1da760901be29ccd5e81133119969f9">soniclib.h</a>
-</li>
-<li>chbsp_board_init()
-: <a class="el" href="chirp__bsp_8h.html#a1af911fb2af6031340dc1ffd93449a57">chirp_bsp.h</a>
 </li>
 <li>chbsp_debug_off()
 : <a class="el" href="chirp__bsp_8h.html#ab6906af86783768f5f091d0858ef7462">chirp_bsp.h</a>
@@ -1353,7 +1325,7 @@ $(function() {
 : <a class="el" href="chirp__bsp_8h.html#ab86eef3f74f74eb5ac347eccd562be99">chirp_bsp.h</a>
 </li>
 <li>chbsp_i2c_write()
-: <a class="el" href="chirp__bsp_8h.html#a4e9cea84db78f3b5ce517ba1e19011e6">chirp_bsp.h</a>
+: <a class="el" href="chirp__bsp_8h.html#a9ad104074a6edb4b68b01b5e0843f5a6">chirp_bsp.h</a>
 </li>
 <li>chbsp_int1_clear()
 : <a class="el" href="chirp__bsp_8h.html#af3885fb01d51aa432bcc6882e23ee0e5">chirp_bsp.h</a>
@@ -1379,41 +1351,8 @@ $(function() {
 <li>chbsp_int2_set()
 : <a class="el" href="chirp__bsp_8h.html#a791e8353135c33364ac0c366556487cf">chirp_bsp.h</a>
 </li>
-<li>chbsp_led_off()
-: <a class="el" href="chirp__bsp_8h.html#aa7762f24394d7a2ee8ad5d02dcd304d9">chirp_bsp.h</a>
-</li>
-<li>chbsp_led_on()
-: <a class="el" href="chirp__bsp_8h.html#ac45e3c1dbf3f63743dd4c1d5e36d407b">chirp_bsp.h</a>
-</li>
-<li>chbsp_led_toggle()
-: <a class="el" href="chirp__bsp_8h.html#affd32b5dd1f651a245e647a07cd44fe1">chirp_bsp.h</a>
-</li>
-<li>chbsp_periodic_timer_change_period()
-: <a class="el" href="chirp__bsp_8h.html#a4aefbf34b623300194f73235074df9c7">chirp_bsp.h</a>
-</li>
-<li>chbsp_periodic_timer_handler()
-: <a class="el" href="chirp__bsp_8h.html#abb4dac19012073822b3cf4b4242ca7ab">chirp_bsp.h</a>
-</li>
-<li>chbsp_periodic_timer_init()
-: <a class="el" href="chirp__bsp_8h.html#a6034ec7104cb46f2bf6fe4a040a902c2">chirp_bsp.h</a>
-</li>
-<li>chbsp_periodic_timer_irq_disable()
-: <a class="el" href="chirp__bsp_8h.html#ab5373b078a1dbc806daa0a6dadb5f5a1">chirp_bsp.h</a>
-</li>
-<li>chbsp_periodic_timer_irq_enable()
-: <a class="el" href="chirp__bsp_8h.html#a75738d9ed5fd587c672353979fa46bec">chirp_bsp.h</a>
-</li>
-<li>chbsp_periodic_timer_start()
-: <a class="el" href="chirp__bsp_8h.html#a3ee389e7c1a7c7c77e09c85ce600ca30">chirp_bsp.h</a>
-</li>
-<li>chbsp_periodic_timer_stop()
-: <a class="el" href="chirp__bsp_8h.html#a7b2b41daef03495c7d2a1201a5f1ea3b">chirp_bsp.h</a>
-</li>
 <li>chbsp_print_str()
-: <a class="el" href="chirp__bsp_8h.html#a1cc326c74bb68016105b2818dbeae703">chirp_bsp.h</a>
-</li>
-<li>chbsp_proc_sleep()
-: <a class="el" href="chirp__bsp_8h.html#ae8cd270d071afa8e5b9cb5c2ae3bca4b">chirp_bsp.h</a>
+: <a class="el" href="chirp__bsp_8h.html#a27bf426119068f11102922e3fef7c4c1">chirp_bsp.h</a>
 </li>
 <li>chbsp_program_disable()
 : <a class="el" href="chirp__bsp_8h.html#aded4375ab5363afea23e5c17318eadcb">chirp_bsp.h</a>
@@ -1452,7 +1391,7 @@ $(function() {
 : <a class="el" href="chirp__bsp_8h.html#aeff4fb5a3c83e2b42d9dc8fc38c9537e">chirp_bsp.h</a>
 </li>
 <li>chbsp_spi_write()
-: <a class="el" href="chirp__bsp_8h.html#a17dc270f914db4b270360ffc10cf2c37">chirp_bsp.h</a>
+: <a class="el" href="chirp__bsp_8h.html#ab9e71e305c7d891797d546021804ae38">chirp_bsp.h</a>
 </li>
 <li>chbsp_timestamp_ms()
 : <a class="el" href="chirp__bsp_8h.html#a8c69867ce273a2c423b846642bcb1479">chirp_bsp.h</a>
@@ -1460,6 +1399,10 @@ $(function() {
 <li>chdrv_algo_cfg_read()
 : <a class="el" href="ch__driver_8c.html#a29920c0933777700bce6f82ee6d72355">ch_driver.c</a>
 , <a class="el" href="ch__driver_8h.html#a29920c0933777700bce6f82ee6d72355">ch_driver.h</a>
+</li>
+<li>chdrv_algo_cfg_write()
+: <a class="el" href="ch__driver_8c.html#a513dc5c9c35f504e8f0a65ec91da6d1a">ch_driver.c</a>
+, <a class="el" href="ch__driver_8h.html#a513dc5c9c35f504e8f0a65ec91da6d1a">ch_driver.h</a>
 </li>
 <li>chdrv_algo_info_read()
 : <a class="el" href="ch__driver_8c.html#ad9311967cfdd38fce74a494f38266da7">ch_driver.c</a>
@@ -1488,8 +1431,8 @@ $(function() {
 , <a class="el" href="ch__driver_8h.html#ada09b53019dc72dce9c861a4d6d3c7a3">ch_driver.h</a>
 </li>
 <li>chdrv_burst_write()
-: <a class="el" href="ch__driver_8c.html#a2e2516fcfa225c8f677197defe53de97">ch_driver.c</a>
-, <a class="el" href="ch__driver_8h.html#af273037e1ae385b21913a48fd220300a">ch_driver.h</a>
+: <a class="el" href="ch__driver_8c.html#a58c368f5887213a9d9ba57864b642a68">ch_driver.c</a>
+, <a class="el" href="ch__driver_8h.html#adf7d461b257a90d3f05e68db1e2cbf36">ch_driver.h</a>
 </li>
 <li>chdrv_check_reset_state()
 : <a class="el" href="ch__driver_8c.html#aad22f6473bdb9dabc1b3baa65e820da8">ch_driver.c</a>
@@ -1520,13 +1463,6 @@ $(function() {
 <li>chdrv_detect_and_program()
 : <a class="el" href="ch__driver_8c.html#abee4264f20f394d9a6c68dfc0fa654c4">ch_driver.c</a>
 , <a class="el" href="ch__driver_8h.html#abee4264f20f394d9a6c68dfc0fa654c4">ch_driver.h</a>
-</li>
-<li>chdrv_discovery_hook_set()
-: <a class="el" href="ch__driver_8c.html#a10081eab807d88cab548e4352f4d421e">ch_driver.c</a>
-, <a class="el" href="ch__driver_8h.html#a10081eab807d88cab548e4352f4d421e">ch_driver.h</a>
-</li>
-<li>chdrv_discovery_hook_t
-: <a class="el" href="ch__driver_8h.html#a35bd02b54a99db0e210aa3a3d5909c41">ch_driver.h</a>
 </li>
 <li>CHDRV_EVENT_TIMEOUT_MS
 : <a class="el" href="ch__driver_8h.html#a19b2a185bec85a94cdd00f58ea1cc444">ch_driver.h</a>
@@ -1586,8 +1522,8 @@ $(function() {
 , <a class="el" href="ch__driver_8h.html#ac2965d93ed511809740890444c0d050c">ch_driver.h</a>
 </li>
 <li>chdrv_group_start()
-: <a class="el" href="ch__driver_8c.html#a63e3b09d53c3c46f7ab50673f610db01">ch_driver.c</a>
-, <a class="el" href="ch__driver_8h.html#a63e3b09d53c3c46f7ab50673f610db01">ch_driver.h</a>
+: <a class="el" href="ch__driver_8c.html#a84ebcc31b2f386dd673c1b4161830b67">ch_driver.c</a>
+, <a class="el" href="ch__driver_8h.html#a84ebcc31b2f386dd673c1b4161830b67">ch_driver.h</a>
 </li>
 <li>chdrv_group_start_nb()
 : <a class="el" href="ch__driver_8c.html#ad875c0fbd76673955c1932ed86e237bb">ch_driver.c</a>
@@ -1704,12 +1640,12 @@ $(function() {
 , <a class="el" href="ch__driver_8h.html#abbcc9cf511218786c38e470f324c8ea1">ch_driver.h</a>
 </li>
 <li>chdrv_prog_i2c_write()
-: <a class="el" href="ch__driver_8c.html#a0068ca8a0bcbb69aa77c0e85d632d3ac">ch_driver.c</a>
-, <a class="el" href="ch__driver_8h.html#a0068ca8a0bcbb69aa77c0e85d632d3ac">ch_driver.h</a>
+: <a class="el" href="ch__driver_8c.html#af2eb401431b1de7dd57f7943b055ae79">ch_driver.c</a>
+, <a class="el" href="ch__driver_8h.html#af2eb401431b1de7dd57f7943b055ae79">ch_driver.h</a>
 </li>
 <li>chdrv_prog_mem_write()
-: <a class="el" href="ch__driver_8c.html#ad55709b364e32125247c991244d670d6">ch_driver.c</a>
-, <a class="el" href="ch__driver_8h.html#ad55709b364e32125247c991244d670d6">ch_driver.h</a>
+: <a class="el" href="ch__driver_8c.html#a733216ad3603716b4fe86a3877e4ae48">ch_driver.c</a>
+, <a class="el" href="ch__driver_8h.html#a733216ad3603716b4fe86a3877e4ae48">ch_driver.h</a>
 </li>
 <li>chdrv_prog_ping()
 : <a class="el" href="ch__driver_8c.html#a405a865671417df936af2c6ba44337c3">ch_driver.c</a>

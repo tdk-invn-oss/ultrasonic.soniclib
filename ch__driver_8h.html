@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -176,10 +176,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a35bd02b54a99db0e210aa3a3d5909c41"><td class="memItemLeft" align="right" valign="top"><a id="a35bd02b54a99db0e210aa3a3d5909c41"></a>
-typedef uint8_t(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a35bd02b54a99db0e210aa3a3d5909c41">chdrv_discovery_hook_t</a>) (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="memdesc:a35bd02b54a99db0e210aa3a3d5909c41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hook routine pointer typedefs. <br /></td></tr>
-<tr class="separator:a35bd02b54a99db0e210aa3a3d5909c41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31c849c39e5739e7a12da398cf9c4466"><td class="memItemLeft" align="right" valign="top"><a id="a31c849c39e5739e7a12da398cf9c4466"></a>
 typedef struct <a class="el" href="structchdrv__queue.html">chdrv_queue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a31c849c39e5739e7a12da398cf9c4466">chdrv_queue_t</a></td></tr>
 <tr class="memdesc:a31c849c39e5739e7a12da398cf9c4466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue structure, for non-blocking access. <br /></td></tr>
@@ -194,6 +190,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a29920c0933777700bce6f82ee6d72355"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a29920c0933777700bce6f82ee6d72355">chdrv_algo_cfg_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, void *algo_cfg_ptr)</td></tr>
 <tr class="memdesc:a29920c0933777700bce6f82ee6d72355"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the algorithm configuration data from a sensor.  <a href="ch__driver_8h.html#a29920c0933777700bce6f82ee6d72355">More...</a><br /></td></tr>
 <tr class="separator:a29920c0933777700bce6f82ee6d72355"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a513dc5c9c35f504e8f0a65ec91da6d1a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a513dc5c9c35f504e8f0a65ec91da6d1a">chdrv_algo_cfg_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, const void *algo_cfg_ptr)</td></tr>
+<tr class="memdesc:a513dc5c9c35f504e8f0a65ec91da6d1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the algorithm configuration data to a sensor.  <a href="ch__driver_8h.html#a513dc5c9c35f504e8f0a65ec91da6d1a">More...</a><br /></td></tr>
+<tr class="separator:a513dc5c9c35f504e8f0a65ec91da6d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9311967cfdd38fce74a494f38266da7"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#ad9311967cfdd38fce74a494f38266da7">chdrv_algo_info_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structicu__algo__info.html">ICU_ALGO_SHASTA_INFO</a> *algo_info_ptr)</td></tr>
 <tr class="memdesc:ad9311967cfdd38fce74a494f38266da7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the algorithm information data from a sensor.  <a href="ch__driver_8h.html#ad9311967cfdd38fce74a494f38266da7">More...</a><br /></td></tr>
 <tr class="separator:ad9311967cfdd38fce74a494f38266da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,9 +208,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ada09b53019dc72dce9c861a4d6d3c7a3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#ada09b53019dc72dce9c861a4d6d3c7a3">chdrv_burst_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t len)</td></tr>
 <tr class="memdesc:ada09b53019dc72dce9c861a4d6d3c7a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read multiple bytes from a sensor application register location.  <a href="ch__driver_8h.html#ada09b53019dc72dce9c861a4d6d3c7a3">More...</a><br /></td></tr>
 <tr class="separator:ada09b53019dc72dce9c861a4d6d3c7a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af273037e1ae385b21913a48fd220300a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#af273037e1ae385b21913a48fd220300a">chdrv_burst_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes)</td></tr>
-<tr class="memdesc:af273037e1ae385b21913a48fd220300a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write multiple bytes to a sensor application register location.  <a href="ch__driver_8h.html#af273037e1ae385b21913a48fd220300a">More...</a><br /></td></tr>
-<tr class="separator:af273037e1ae385b21913a48fd220300a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf7d461b257a90d3f05e68db1e2cbf36"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#adf7d461b257a90d3f05e68db1e2cbf36">chdrv_burst_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t mem_addr, const uint8_t *data, uint16_t num_bytes)</td></tr>
+<tr class="memdesc:adf7d461b257a90d3f05e68db1e2cbf36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write multiple bytes to a sensor application register location.  <a href="ch__driver_8h.html#adf7d461b257a90d3f05e68db1e2cbf36">More...</a><br /></td></tr>
+<tr class="separator:adf7d461b257a90d3f05e68db1e2cbf36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29b2e6c2bf6c22421c45efc8d76cebf9"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a29b2e6c2bf6c22421c45efc8d76cebf9">chdrv_check_reset_state</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t *reset_state)</td></tr>
 <tr class="memdesc:a29b2e6c2bf6c22421c45efc8d76cebf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if sensor reset has occurred.  <a href="ch__driver_8h.html#a29b2e6c2bf6c22421c45efc8d76cebf9">More...</a><br /></td></tr>
 <tr class="separator:a29b2e6c2bf6c22421c45efc8d76cebf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -230,9 +229,6 @@ Functions</h2></td></tr>
 <tr class="memitem:abee4264f20f394d9a6c68dfc0fa654c4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#abee4264f20f394d9a6c68dfc0fa654c4">chdrv_detect_and_program</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:abee4264f20f394d9a6c68dfc0fa654c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detect, program, and start a sensor.  <a href="ch__driver_8h.html#abee4264f20f394d9a6c68dfc0fa654c4">More...</a><br /></td></tr>
 <tr class="separator:abee4264f20f394d9a6c68dfc0fa654c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10081eab807d88cab548e4352f4d421e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a10081eab807d88cab548e4352f4d421e">chdrv_discovery_hook_set</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, <a class="el" href="ch__driver_8h.html#a35bd02b54a99db0e210aa3a3d5909c41">chdrv_discovery_hook_t</a> hook_func_ptr)</td></tr>
-<tr class="memdesc:a10081eab807d88cab548e4352f4d421e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a hook routine to be called after device discovery.  <a href="ch__driver_8h.html#a10081eab807d88cab548e4352f4d421e">More...</a><br /></td></tr>
-<tr class="separator:a10081eab807d88cab548e4352f4d421e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4117080373fd81402ca3b88d21516bec"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a4117080373fd81402ca3b88d21516bec">chdrv_event_trigger</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t event)</td></tr>
 <tr class="memdesc:a4117080373fd81402ca3b88d21516bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trigger an event on a sensor and return immediately.  <a href="ch__driver_8h.html#a4117080373fd81402ca3b88d21516bec">More...</a><br /></td></tr>
 <tr class="separator:a4117080373fd81402ca3b88d21516bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -272,9 +268,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ac2965d93ed511809740890444c0d050c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#ac2965d93ed511809740890444c0d050c">chdrv_group_soft_reset</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr)</td></tr>
 <tr class="memdesc:ac2965d93ed511809740890444c0d050c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a soft reset on a group of sensors.  <a href="ch__driver_8h.html#ac2965d93ed511809740890444c0d050c">More...</a><br /></td></tr>
 <tr class="separator:ac2965d93ed511809740890444c0d050c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63e3b09d53c3c46f7ab50673f610db01"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a63e3b09d53c3c46f7ab50673f610db01">chdrv_group_start</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t restart)</td></tr>
-<tr class="memdesc:a63e3b09d53c3c46f7ab50673f610db01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initalize and start a group of sensors.  <a href="ch__driver_8h.html#a63e3b09d53c3c46f7ab50673f610db01">More...</a><br /></td></tr>
-<tr class="separator:a63e3b09d53c3c46f7ab50673f610db01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84ebcc31b2f386dd673c1b4161830b67"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a84ebcc31b2f386dd673c1b4161830b67">chdrv_group_start</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr)</td></tr>
+<tr class="memdesc:a84ebcc31b2f386dd673c1b4161830b67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize and start a group of sensors.  <a href="ch__driver_8h.html#a84ebcc31b2f386dd673c1b4161830b67">More...</a><br /></td></tr>
+<tr class="separator:a84ebcc31b2f386dd673c1b4161830b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad875c0fbd76673955c1932ed86e237bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#ad875c0fbd76673955c1932ed86e237bb">chdrv_group_start_nb</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr)</td></tr>
 <tr class="memdesc:ad875c0fbd76673955c1932ed86e237bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a non-blocking sensor readout.  <a href="ch__driver_8h.html#ad875c0fbd76673955c1932ed86e237bb">More...</a><br /></td></tr>
 <tr class="separator:ad875c0fbd76673955c1932ed86e237bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -341,12 +337,12 @@ Functions</h2></td></tr>
 <tr class="memitem:abbcc9cf511218786c38e470f324c8ea1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#abbcc9cf511218786c38e470f324c8ea1">chdrv_prog_i2c_read_nb</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t *message, uint16_t len)</td></tr>
 <tr class="memdesc:abbcc9cf511218786c38e470f324c8ea1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read bytes from a CHx01 device in programming mode, non-blocking.  <a href="ch__driver_8h.html#abbcc9cf511218786c38e470f324c8ea1">More...</a><br /></td></tr>
 <tr class="separator:abbcc9cf511218786c38e470f324c8ea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0068ca8a0bcbb69aa77c0e85d632d3ac"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a0068ca8a0bcbb69aa77c0e85d632d3ac">chdrv_prog_i2c_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t *message, uint16_t len)</td></tr>
-<tr class="memdesc:a0068ca8a0bcbb69aa77c0e85d632d3ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write bytes to a CHx01 device in programming mode.  <a href="ch__driver_8h.html#a0068ca8a0bcbb69aa77c0e85d632d3ac">More...</a><br /></td></tr>
-<tr class="separator:a0068ca8a0bcbb69aa77c0e85d632d3ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad55709b364e32125247c991244d670d6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#ad55709b364e32125247c991244d670d6">chdrv_prog_mem_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t addr, uint8_t *message, uint16_t nbytes)</td></tr>
-<tr class="memdesc:ad55709b364e32125247c991244d670d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to CHx01 sensor memory.  <a href="ch__driver_8h.html#ad55709b364e32125247c991244d670d6">More...</a><br /></td></tr>
-<tr class="separator:ad55709b364e32125247c991244d670d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2eb401431b1de7dd57f7943b055ae79"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#af2eb401431b1de7dd57f7943b055ae79">chdrv_prog_i2c_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, const uint8_t *message, uint16_t len)</td></tr>
+<tr class="memdesc:af2eb401431b1de7dd57f7943b055ae79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write bytes to a CHx01 device in programming mode.  <a href="ch__driver_8h.html#af2eb401431b1de7dd57f7943b055ae79">More...</a><br /></td></tr>
+<tr class="separator:af2eb401431b1de7dd57f7943b055ae79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a733216ad3603716b4fe86a3877e4ae48"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a733216ad3603716b4fe86a3877e4ae48">chdrv_prog_mem_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t addr, const uint8_t *message, uint16_t nbytes)</td></tr>
+<tr class="memdesc:a733216ad3603716b4fe86a3877e4ae48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to CHx01 sensor memory.  <a href="ch__driver_8h.html#a733216ad3603716b4fe86a3877e4ae48">More...</a><br /></td></tr>
+<tr class="separator:a733216ad3603716b4fe86a3877e4ae48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a405a865671417df936af2c6ba44337c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a405a865671417df936af2c6ba44337c3">chdrv_prog_ping</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a405a865671417df936af2c6ba44337c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detect a connected sensor.  <a href="ch__driver_8h.html#a405a865671417df936af2c6ba44337c3">More...</a><br /></td></tr>
 <tr class="separator:a405a865671417df936af2c6ba44337c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -699,7 +695,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Time to wait in <a class="el" href="ch__driver_8h.html#a63e3b09d53c3c46f7ab50673f610db01" title="Initalize and start a group of sensors.">chdrv_group_start()</a> for sensor \ initialization, in milliseconds. <br  />
+<p>Time to wait in <a class="el" href="ch__driver_8h.html#a84ebcc31b2f386dd673c1b4161830b67" title="Initialize and start a group of sensors.">chdrv_group_start()</a> for sensor \ initialization, in milliseconds. <br  />
  </p>
 
 </div>
@@ -909,6 +905,44 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a513dc5c9c35f504e8f0a65ec91da6d1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a513dc5c9c35f504e8f0a65ec91da6d1a">&#9670;&nbsp;</a></span>chdrv_algo_cfg_write()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t chdrv_algo_cfg_write </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>algo_cfg_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write the algorithm configuration data to a sensor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> config structure for a sensor</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, non-zero if failure detected</dd></dl>
+<p>This function write the algorithm configuration data for an algorithm that has been programmed into an ICU sensor. The format of the configuration data is defined by the specific algorithm being used. </p>
+
+</div>
+</div>
 <a id="ad9311967cfdd38fce74a494f38266da7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad9311967cfdd38fce74a494f38266da7">&#9670;&nbsp;</a></span>chdrv_algo_info_read()</h2>
 
@@ -971,7 +1005,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, non-zero if failure detected</dd></dl>
-<p>This function initializes a measurement algorithm that has already been programmed into an ICU sesnor. </p>
+<p>This function initializes a measurement algorithm that has already been programmed into an ICU sensor. </p>
 
 </div>
 </div>
@@ -1113,8 +1147,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af273037e1ae385b21913a48fd220300a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af273037e1ae385b21913a48fd220300a">&#9670;&nbsp;</a></span>chdrv_burst_write()</h2>
+<a id="adf7d461b257a90d3f05e68db1e2cbf36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf7d461b257a90d3f05e68db1e2cbf36">&#9670;&nbsp;</a></span>chdrv_burst_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1134,7 +1168,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>data_ptr</em>, </td>
         </tr>
         <tr>
@@ -1210,7 +1244,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero otherwise</dd></dl>
-<p>This function checks if an PUC (Power Up Clear) main reset event has occurred by checking the PUC_PND status bit in CPU_STAT debug register. The function updates the "<em>reset_state_ptr</em> is set to 1 if the sensor was reset, otherwise it is set to zero. Note this will continue to return a reset state as set until the PUC_PND bit is cleared by writing a 1 to it, which is done in chdrv_reset_and_run function. </p>
+<p>This function checks if an PUC (Power Up Clear) main reset event has occurred by checking the PUC_PND status bit in CPU_STAT debug register. The function updates the "<em>reset_state_ptr</em> is set to 1 if the sensor was reset, otherwise it is set to zero. Note this will continue to return a reset state as set until the PUC_PND bit is cleared by writing a 1 to it, which is done in reset_and_run function. </p>
 
 </div>
 </div>
@@ -1414,54 +1448,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a10081eab807d88cab548e4352f4d421e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10081eab807d88cab548e4352f4d421e">&#9670;&nbsp;</a></span>chdrv_discovery_hook_set()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chdrv_discovery_hook_set </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structch__group__t.html">ch_group_t</a> *&#160;</td>
-          <td class="paramname"><em>grp_ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="ch__driver_8h.html#a35bd02b54a99db0e210aa3a3d5909c41">chdrv_discovery_hook_t</a>&#160;</td>
-          <td class="paramname"><em>hook_func_ptr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Register a hook routine to be called after device discovery. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> config structure for a group of sensors </td></tr>
-    <tr><td class="paramname">hook_func_ptr</td><td>address of hook routine to be called</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>This function sets a pointer to a hook routine, which will be called from the Chirp driver when each device is discovered on the I2C bus, before the device is initialized.</p>
-<p>This function should be called between <em><a class="el" href="ch__api_8c.html#afb33f776f4a2d55c885023798402c2a5" title="Initialize a Chirp ultrasonic sensor descriptor structure.">ch_init()</a></em> and <em><a class="el" href="ch__api_8c.html#a3d1acc5372d38d7abd7028a5504e5634" title="Program and start a group of sensors.">ch_group_start()</a></em>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> config structure for a group of sensors </td></tr>
-    <tr><td class="paramname">hook_func_ptr</td><td>address of hook routine to be called</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>This function sets a pointer to a user supplied hook routine, which will be called from the Chirp driver when each device is discovered on the I2C bus, before the device is initialized.</p>
-<p>This function should be called between <em><a class="el" href="ch__api_8c.html#afb33f776f4a2d55c885023798402c2a5" title="Initialize a Chirp ultrasonic sensor descriptor structure.">ch_init()</a></em> and <em><a class="el" href="ch__api_8c.html#a3d1acc5372d38d7abd7028a5504e5634" title="Program and start a group of sensors.">ch_group_start()</a></em>. </p>
-
-</div>
-</div>
 <a id="a4117080373fd81402ca3b88d21516bec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4117080373fd81402ca3b88d21516bec">&#9670;&nbsp;</a></span>chdrv_event_trigger()</h2>
 
@@ -1604,7 +1590,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero otherwise</dd></dl>
 <p>This function queues an I2C/SPI transaction for an "external" device (i.e. not a Chirp sensor). It is used when the I2C/SPI bus is shared between the Chirp sensor(s) and other devices.</p>
-<p>The transaction is flagged for special handling when the I/O operation completes. Specifically, the <em><a class="el" href="chirp__bsp_8h.html#a3a3ecf5c737e49a39bbe34a7c9100158" title="Interrupt handler callout for external devices sharing the SPI/I2C bus.">chbsp_external_irq_handler()</a></em> will be called by the driver to allow the board support packate (BSP) to perform any necessary operations. </p>
+<p>The transaction is flagged for special handling when the I/O operation completes. Specifically, the <em><a class="el" href="chirp__bsp_8h.html#a3a3ecf5c737e49a39bbe34a7c9100158" title="Interrupt handler callout for external devices sharing the SPI/I2C bus.">chbsp_external_irq_handler()</a></em> will be called by the driver to allow the board support package (BSP) to perform any necessary operations. </p>
 
 </div>
 </div>
@@ -1681,7 +1667,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero otherwise</dd></dl>
 <p>This function performs a hardware reset on each device in a group of sensors. For CH101 and CH201 sensors, each device's RESET_N pin is asserted and then a soft reset is performed.</p>
-<p>ICU sensors do not have a hardare reset pin, so only a soft reset is performed. </p>
+<p>ICU sensors do not have a hardware reset pin, so only a soft reset is performed. </p>
 
 </div>
 </div>
@@ -1886,7 +1872,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if hardware initialization is successful, non-zero otherwise</dd></dl>
-<p>This function is called internally by <em><a class="el" href="ch__driver_8h.html#a63e3b09d53c3c46f7ab50673f610db01" title="Initalize and start a group of sensors.">chdrv_group_start()</a></em>.</p>
+<p>This function is called internally by <em><a class="el" href="ch__driver_8h.html#a84ebcc31b2f386dd673c1b4161830b67" title="Initialize and start a group of sensors.">chdrv_group_start()</a></em>.</p>
 <p>Initialize data structures and hardware for sensor interaction and reset sensors.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1896,7 +1882,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if hardware initialization is successful, non-zero otherwise</dd></dl>
-<p>This function is called internally by <em><a class="el" href="ch__driver_8h.html#a63e3b09d53c3c46f7ab50673f610db01" title="Initalize and start a group of sensors.">chdrv_group_start()</a></em>. </p>
+<p>This function is called internally by <em><a class="el" href="ch__driver_8h.html#a84ebcc31b2f386dd673c1b4161830b67" title="Initialize and start a group of sensors.">chdrv_group_start()</a></em>. </p>
 
 </div>
 </div>
@@ -2023,55 +2009,33 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a63e3b09d53c3c46f7ab50673f610db01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a63e3b09d53c3c46f7ab50673f610db01">&#9670;&nbsp;</a></span>chdrv_group_start()</h2>
+<a id="a84ebcc31b2f386dd673c1b4161830b67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84ebcc31b2f386dd673c1b4161830b67">&#9670;&nbsp;</a></span>chdrv_group_start()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int chdrv_group_start </td>
+          <td class="memname">uint8_t chdrv_group_start </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structch__group__t.html">ch_group_t</a> *&#160;</td>
-          <td class="paramname"><em>grp_ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>grp_ptr</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>restart</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initalize and start a group of sensors. </p>
+<p>Initialize and start a group of sensors. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> descriptor structure for a group of sensors </td></tr>
-    <tr><td class="paramname">restart</td><td>0 if normal startup, 1 if restarting (will not re-calibrate)</td></tr>
+    <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> descriptor structure for a group of sensors</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if device doesn't respond</dd></dl>
 <p>This function resets each sensor in programming mode, transfers the firmware image to the sensor's on-chip memory, and starts the sensor. For CH101 and CH201 sensors, the I2C address is changed from the default value.</p>
-<p>In a normal startup (when <em>restart</em> is zero), a timed pulse is sent on the INT line for real-time clock calibration. This may be over-ridden by specifying that default (factory) values should be used, or by supplying custom clock calibration values. Either of these options may be enabled by calling the <em>ch_set_clock_cal()</em> function before <a class="el" href="ch__api_8c.html#a3d1acc5372d38d7abd7028a5504e5634" title="Program and start a group of sensors.">ch_group_start()</a>.</p>
-<p>If <em>restart</em> is non-zero, the initialization assumes that the sensor has already been started (possibly using different sensor firmware). Various calibration values will be inherited and re-used from the previous startup.</p>
-<p>This function assumes firmware-specific initialization has already been performed for each <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor in the sensor group. (See <em><a class="el" href="ch__api_8c.html#afb33f776f4a2d55c885023798402c2a5" title="Initialize a Chirp ultrasonic sensor descriptor structure.">ch_init()</a></em>).</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> config structure for a group of sensors </td></tr>
-    <tr><td class="paramname">restart</td><td>0 = normal start, 1 = restart (no calibration)</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if device doesn't respond</dd></dl>
-<p>This function resets each sensor in programming mode, transfers the firmware image to the sensor's on-chip memory, changes the sensor's application I2C address from the default, then starts the sensor and sends a timed pulse on the INT line for real-time clock calibration.</p>
-<p>This function assumes firmware-specific initialization has already been performed for each a <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor for each sensor in the group. See <em><a class="el" href="ch__api_8c.html#afb33f776f4a2d55c885023798402c2a5" title="Initialize a Chirp ultrasonic sensor descriptor structure.">ch_init()</a></em>. </p>
+<p>In a normal startup, a timed pulse is sent on the INT line for real-time clock calibration. This may be over-ridden by specifying that default (factory) values should be used, or by supplying custom clock calibration values. Either of these options may be enabled by calling the <em>ch_set_clock_cal()</em> function before <a class="el" href="ch__api_8c.html#a3d1acc5372d38d7abd7028a5504e5634" title="Program and start a group of sensors.">ch_group_start()</a>.</p>
+<p>This function assumes firmware-specific initialization has already been performed for each <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor in the sensor group. (See <em><a class="el" href="ch__api_8c.html#afb33f776f4a2d55c885023798402c2a5" title="Initialize a Chirp ultrasonic sensor descriptor structure.">ch_init()</a></em>). </p>
 
 </div>
 </div>
@@ -2912,8 +2876,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0068ca8a0bcbb69aa77c0e85d632d3ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0068ca8a0bcbb69aa77c0e85d632d3ac">&#9670;&nbsp;</a></span>chdrv_prog_i2c_write()</h2>
+<a id="af2eb401431b1de7dd57f7943b055ae79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2eb401431b1de7dd57f7943b055ae79">&#9670;&nbsp;</a></span>chdrv_prog_i2c_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2927,7 +2891,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>message</em>, </td>
         </tr>
         <tr>
@@ -2969,8 +2933,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad55709b364e32125247c991244d670d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad55709b364e32125247c991244d670d6">&#9670;&nbsp;</a></span>chdrv_prog_mem_write()</h2>
+<a id="a733216ad3603716b4fe86a3877e4ae48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a733216ad3603716b4fe86a3877e4ae48">&#9670;&nbsp;</a></span>chdrv_prog_mem_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2990,7 +2954,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>message</em>, </td>
         </tr>
         <tr>

@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -74,6 +74,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -84,17 +85,31 @@ $(function() {
 
 <p>Internal definitions for the Chirp ICU General Purpose Transceiver (GPT) firmware.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="icu_8h_source.html">invn/soniclib/details/icu.h</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="icu_8h_source.html">invn/soniclib/details/icu.h</a>&gt;</code><br />
+<code>#include &lt;invn/icu_interface/ch-rangefinder/structs.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="ch__rangefinder__types_8h_source.html">invn/soniclib/ch_rangefinder_types.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
-<code>#include &lt;stdint.h&gt;</code><br />
 </div>
 <p><a href="icu__gpt_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structicu__gpt__algo__config__t.html">icu_gpt_algo_config_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Algorithm configuration.  <a href="structicu__gpt__algo__config__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:ad33892f484ea07f71071bae223731024"><td class="memItemLeft" align="right" valign="top"><a id="ad33892f484ea07f71071bae223731024"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CH_THRESH_LEVEL_HOLDOFF</b>&#160;&#160;&#160;(40000)</td></tr>
+<tr class="separator:ad33892f484ea07f71071bae223731024"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0106850680249b198e7555cc00c28c27"><td class="memItemLeft" align="right" valign="top"><a id="a0106850680249b198e7555cc00c28c27"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ICU_GPT_MAX_SAMPLES</b>&#160;&#160;&#160;(IQ_SAMPLES_MAX)</td></tr>
 <tr class="separator:a0106850680249b198e7555cc00c28c27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b9250beb7e164a3a0d7bfce3bdfe66c"><td class="memItemLeft" align="right" valign="top"><a id="a6b9250beb7e164a3a0d7bfce3bdfe66c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ICU_GPT_NUM_THRESHOLDS</b>&#160;&#160;&#160;(LEN_THRESH)</td></tr>
+<tr class="separator:a6b9250beb7e164a3a0d7bfce3bdfe66c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -107,9 +122,84 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>get_icu_gpt_fw_ra
 <tr class="memitem:a0798794eaad6e49dd408173386c70743"><td class="memItemLeft" align="right" valign="top"><a id="a0798794eaad6e49dd408173386c70743"></a>
 const unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><b>get_ram_icu_gpt_init_ptr</b> (void)</td></tr>
 <tr class="separator:a0798794eaad6e49dd408173386c70743"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3362b0abf3c1c0b4e60887580054072d"><td class="memItemLeft" align="right" valign="top"><a id="a3362b0abf3c1c0b4e60887580054072d"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>icu_gpt_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index)</td></tr>
-<tr class="separator:a3362b0abf3c1c0b4e60887580054072d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31939a4896b2265281448728ad1f2445"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a31939a4896b2265281448728ad1f2445">icu_gpt_algo_configure</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, const <a class="el" href="structicu__gpt__algo__config__t.html">icu_gpt_algo_config_t</a> *algo_config_ptr, const <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_ptr)</td></tr>
+<tr class="memdesc:a31939a4896b2265281448728ad1f2445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure GPT Algorithm.  <a href="icu__gpt_8h.html#a31939a4896b2265281448728ad1f2445">More...</a><br /></td></tr>
+<tr class="separator:a31939a4896b2265281448728ad1f2445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bb0c333907adbcc9c2648d1b89824a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a0bb0c333907adbcc9c2648d1b89824a3">icu_gpt_algo_get_iq_output</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
+<tr class="memdesc:a0bb0c333907adbcc9c2648d1b89824a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the I/Q data output format of GPT Algorithm.  <a href="icu__gpt_8h.html#a0bb0c333907adbcc9c2648d1b89824a3">More...</a><br /></td></tr>
+<tr class="separator:a0bb0c333907adbcc9c2648d1b89824a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeef5c60564e23354b65b4d5704031461"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#aeef5c60564e23354b65b4d5704031461">icu_gpt_algo_get_num_targets</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:aeef5c60564e23354b65b4d5704031461"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of targets detected in last measurement.  <a href="icu__gpt_8h.html#aeef5c60564e23354b65b4d5704031461">More...</a><br /></td></tr>
+<tr class="separator:aeef5c60564e23354b65b4d5704031461"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2eadb630d42492d3706aec227549eab0"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a2eadb630d42492d3706aec227549eab0">icu_gpt_algo_get_target_amplitude</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num)</td></tr>
+<tr class="memdesc:a2eadb630d42492d3706aec227549eab0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the amplitude for a specific target detected in last measurement.  <a href="icu__gpt_8h.html#a2eadb630d42492d3706aec227549eab0">More...</a><br /></td></tr>
+<tr class="separator:a2eadb630d42492d3706aec227549eab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73257bb62c70efac3081d00b04c97c94"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a73257bb62c70efac3081d00b04c97c94">icu_gpt_algo_get_target_range</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num, <a class="el" href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a> range_type)</td></tr>
+<tr class="memdesc:a73257bb62c70efac3081d00b04c97c94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the range to a specific target detected in last measurement.  <a href="icu__gpt_8h.html#a73257bb62c70efac3081d00b04c97c94">More...</a><br /></td></tr>
+<tr class="separator:a73257bb62c70efac3081d00b04c97c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afee077b44c6541d9f02f9c70a611809e"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#afee077b44c6541d9f02f9c70a611809e">icu_gpt_algo_get_target_tof_us</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num)</td></tr>
+<tr class="memdesc:afee077b44c6541d9f02f9c70a611809e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the measured time-of-flight for a specific target in microseconds.  <a href="icu__gpt_8h.html#afee077b44c6541d9f02f9c70a611809e">More...</a><br /></td></tr>
+<tr class="separator:afee077b44c6541d9f02f9c70a611809e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4cc3bf376dc93adc410f1a28a395bf3"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#af4cc3bf376dc93adc410f1a28a395bf3">icu_gpt_algo_init</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, InvnAlgoRangeFinderConfig *algo_cfg)</td></tr>
+<tr class="memdesc:af4cc3bf376dc93adc410f1a28a395bf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize GPT Algorithm.  <a href="icu__gpt_8h.html#af4cc3bf376dc93adc410f1a28a395bf3">More...</a><br /></td></tr>
+<tr class="separator:af4cc3bf376dc93adc410f1a28a395bf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72cfc1b34ea1b875b311d3cd01d83479"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a72cfc1b34ea1b875b311d3cd01d83479">icu_gpt_algo_is_target_in_ringdown</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:a72cfc1b34ea1b875b311d3cd01d83479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return if a target is detected near sensor (in the ringdown)  <a href="icu__gpt_8h.html#a72cfc1b34ea1b875b311d3cd01d83479">More...</a><br /></td></tr>
+<tr class="separator:a72cfc1b34ea1b875b311d3cd01d83479"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00171d37500762a36271771df4134efa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a00171d37500762a36271771df4134efa">icu_gpt_algo_reset</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
+<tr class="memdesc:a00171d37500762a36271771df4134efa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset GPT Algorithm configuration.  <a href="icu__gpt_8h.html#a00171d37500762a36271771df4134efa">More...</a><br /></td></tr>
+<tr class="separator:a00171d37500762a36271771df4134efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3a2e407a1d4b0d4d64e6809b0f6ea48"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#ae3a2e407a1d4b0d4d64e6809b0f6ea48">icu_gpt_algo_set_data_output</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, const <a class="el" href="structch__output__t.html">ch_output_t</a> *output_ptr)</td></tr>
+<tr class="memdesc:ae3a2e407a1d4b0d4d64e6809b0f6ea48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data output format and rate.  <a href="icu__gpt_8h.html#ae3a2e407a1d4b0d4d64e6809b0f6ea48">More...</a><br /></td></tr>
+<tr class="separator:ae3a2e407a1d4b0d4d64e6809b0f6ea48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c5aab1fa0d5565c2e09db8a84ad16ed"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a4c5aab1fa0d5565c2e09db8a84ad16ed">icu_gpt_algo_set_iq_output</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> output_format)</td></tr>
+<tr class="memdesc:a4c5aab1fa0d5565c2e09db8a84ad16ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the I/Q data output format of GPT Algorithm.  <a href="icu__gpt_8h.html#a4c5aab1fa0d5565c2e09db8a84ad16ed">More...</a><br /></td></tr>
+<tr class="separator:a4c5aab1fa0d5565c2e09db8a84ad16ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2098ace9d08c28e86a4a7927f0aa0ad1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a2098ace9d08c28e86a4a7927f0aa0ad1">icu_gpt_algo_update_odr</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> new_odr)</td></tr>
+<tr class="memdesc:a2098ace9d08c28e86a4a7927f0aa0ad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update algo ODR.  <a href="icu__gpt_8h.html#a2098ace9d08c28e86a4a7927f0aa0ad1">More...</a><br /></td></tr>
+<tr class="separator:a2098ace9d08c28e86a4a7927f0aa0ad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab587d5db2f266d67fa38a87e4f5be53c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#ab587d5db2f266d67fa38a87e4f5be53c">icu_gpt_display_algo_thresholds</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:ab587d5db2f266d67fa38a87e4f5be53c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display GPT thresholds for debug purpose.  <a href="icu__gpt_8h.html#ab587d5db2f266d67fa38a87e4f5be53c">More...</a><br /></td></tr>
+<tr class="separator:ab587d5db2f266d67fa38a87e4f5be53c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af18794349aa6ebc105f7e586788aba2c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#af18794349aa6ebc105f7e586788aba2c">icu_gpt_get_filter_update</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
+<tr class="memdesc:af18794349aa6ebc105f7e586788aba2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the filter update interval for a measurement.  <a href="icu__gpt_8h.html#af18794349aa6ebc105f7e586788aba2c">More...</a><br /></td></tr>
+<tr class="separator:af18794349aa6ebc105f7e586788aba2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab07b307cf32d848a1eef71454cadee1c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#ab07b307cf32d848a1eef71454cadee1c">icu_gpt_get_num_ranges</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
+<tr class="memdesc:ab07b307cf32d848a1eef71454cadee1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the max number of reported target ranges for a measurement.  <a href="icu__gpt_8h.html#ab07b307cf32d848a1eef71454cadee1c">More...</a><br /></td></tr>
+<tr class="separator:ab07b307cf32d848a1eef71454cadee1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6f6d6eb7974cb46d40bd057f4ae475d"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#ab6f6d6eb7974cb46d40bd057f4ae475d">icu_gpt_get_ringdown_cancel</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
+<tr class="memdesc:ab6f6d6eb7974cb46d40bd057f4ae475d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of ringdown cancellation samples for a measurement.  <a href="icu__gpt_8h.html#ab6f6d6eb7974cb46d40bd057f4ae475d">More...</a><br /></td></tr>
+<tr class="separator:ab6f6d6eb7974cb46d40bd057f4ae475d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66636ca1bdc87ccfd658df71c93f9b90"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a66636ca1bdc87ccfd658df71c93f9b90">icu_gpt_get_rx_holdoff</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
+<tr class="memdesc:a66636ca1bdc87ccfd658df71c93f9b90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the receive holdoff sample count for a specific measurement.  <a href="icu__gpt_8h.html#a66636ca1bdc87ccfd658df71c93f9b90">More...</a><br /></td></tr>
+<tr class="separator:a66636ca1bdc87ccfd658df71c93f9b90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45810b7cdb9d6a7121636bc5f433f59d"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a45810b7cdb9d6a7121636bc5f433f59d">icu_gpt_get_static_filter</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
+<tr class="memdesc:a45810b7cdb9d6a7121636bc5f433f59d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of static target filter samples for a measurement.  <a href="icu__gpt_8h.html#a45810b7cdb9d6a7121636bc5f433f59d">More...</a><br /></td></tr>
+<tr class="separator:a45810b7cdb9d6a7121636bc5f433f59d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72d278d9207e1b80a57ff13fff1a7f56"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a72d278d9207e1b80a57ff13fff1a7f56">icu_gpt_get_thresholds</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr)</td></tr>
+<tr class="memdesc:a72d278d9207e1b80a57ff13fff1a7f56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get detection thresholds for a specific measurement.  <a href="icu__gpt_8h.html#a72d278d9207e1b80a57ff13fff1a7f56">More...</a><br /></td></tr>
+<tr class="separator:a72d278d9207e1b80a57ff13fff1a7f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5d0691b6218b37a7b4a52672782f500"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#ad5d0691b6218b37a7b4a52672782f500">icu_gpt_init</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structfw__info__st.html">fw_info_t</a> **fw_info)</td></tr>
+<tr class="memdesc:ad5d0691b6218b37a7b4a52672782f500"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize GPT FW.  <a href="icu__gpt_8h.html#ad5d0691b6218b37a7b4a52672782f500">More...</a><br /></td></tr>
+<tr class="separator:ad5d0691b6218b37a7b4a52672782f500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3a17b6bd39153c3553e59bb5208cff7"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#af3a17b6bd39153c3553e59bb5208cff7">icu_gpt_set_filter_update</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t update_interval)</td></tr>
+<tr class="memdesc:af3a17b6bd39153c3553e59bb5208cff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the filter update interval for a measurement.  <a href="icu__gpt_8h.html#af3a17b6bd39153c3553e59bb5208cff7">More...</a><br /></td></tr>
+<tr class="separator:af3a17b6bd39153c3553e59bb5208cff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b2a02dbfccc298814670c12fe42394d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a9b2a02dbfccc298814670c12fe42394d">icu_gpt_set_num_ranges</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t num_ranges)</td></tr>
+<tr class="memdesc:a9b2a02dbfccc298814670c12fe42394d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the max number of reported target ranges for a measurement.  <a href="icu__gpt_8h.html#a9b2a02dbfccc298814670c12fe42394d">More...</a><br /></td></tr>
+<tr class="separator:a9b2a02dbfccc298814670c12fe42394d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9475454daa583c67c71a09fca187f2a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#ae9475454daa583c67c71a09fca187f2a">icu_gpt_set_ringdown_cancel</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples)</td></tr>
+<tr class="memdesc:ae9475454daa583c67c71a09fca187f2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the number of ringdown cancellation samples for a measurement.  <a href="icu__gpt_8h.html#ae9475454daa583c67c71a09fca187f2a">More...</a><br /></td></tr>
+<tr class="separator:ae9475454daa583c67c71a09fca187f2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2059cc8c8370a1f76cb145af09833756"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a2059cc8c8370a1f76cb145af09833756">icu_gpt_set_rx_holdoff</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples)</td></tr>
+<tr class="memdesc:a2059cc8c8370a1f76cb145af09833756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the receive holdoff sample count for a specific measurement.  <a href="icu__gpt_8h.html#a2059cc8c8370a1f76cb145af09833756">More...</a><br /></td></tr>
+<tr class="separator:a2059cc8c8370a1f76cb145af09833756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef0498122bbccfabc717964c02804638"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#aef0498122bbccfabc717964c02804638">icu_gpt_set_static_filter</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples)</td></tr>
+<tr class="memdesc:aef0498122bbccfabc717964c02804638"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the number of static target filter samples for a measurement.  <a href="icu__gpt_8h.html#aef0498122bbccfabc717964c02804638">More...</a><br /></td></tr>
+<tr class="separator:aef0498122bbccfabc717964c02804638"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b02c8f63577681d05651be8f3d231a2"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8h.html#a2b02c8f63577681d05651be8f3d231a2">icu_gpt_set_thresholds</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, const <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr)</td></tr>
+<tr class="memdesc:a2b02c8f63577681d05651be8f3d231a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set detection thresholds for a specific measurement.  <a href="icu__gpt_8h.html#a2b02c8f63577681d05651be8f3d231a2">More...</a><br /></td></tr>
+<tr class="separator:a2b02c8f63577681d05651be8f3d231a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -133,7 +223,1138 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>icu_gpt_versi
 <div class="textblock"><p>Internal definitions for the Chirp ICU General Purpose Transceiver (GPT) firmware. </p>
 <p>This file contains various definitions and values for use with the icu_gpt sensor firmware.</p>
 <p>You should not need to edit this file or call the driver functions directly. Doing so will reduce your ability to benefit from future enhancements and releases from Chirp. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a31939a4896b2265281448728ad1f2445"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31939a4896b2265281448728ad1f2445">&#9670;&nbsp;</a></span>icu_gpt_algo_configure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_algo_configure </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structicu__gpt__algo__config__t.html">icu_gpt_algo_config_t</a> *&#160;</td>
+          <td class="paramname"><em>algo_config_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *&#160;</td>
+          <td class="paramname"><em>lib_thresh_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Configure GPT Algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">meas_num</td><td>The measurement number </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">algo_config_ptr</td><td>Pointer to the configuration to apply to algorithm </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">lib_thresh_ptr</td><td>Pointer to detection threshold definitions</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This function initializes the measurement specified by <em>meas_num</em> with the specified configuration and detection thresholds.</p><ul>
+<li>- num_ranges - maximum number of separate target range values to report</li>
+<li>ringdown_cancel_samples - number of samples close to sensor to use ringdown cancellation filter</li>
+<li>static_filter_samples - number of samples close to sensor to have static target rejection (STR) filter</li>
+<li>iq_output_format - 0=normal (Q,I) pairs; 1=mag,threshold pairs, 2=mag,phase pairs</li>
+<li><p class="startli">filter_update_interval - how often to update the ringdown and STR filters</p>
+<p class="startli"><em>thresh_ptr</em> is a pointer to a structure containing the definitions of the detection thresholds that will be used to detect a target. (This same type of structure is used by <em><a class="el" href="ch__rangefinder_8c.html#a7e948bfbdc2cbca2f04bc97459541e5f" title="Set detection thresholds.">ch_set_thresholds()</a></em>.)</p>
+</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error </dd></dl>
+
+</div>
+</div>
+<a id="a0bb0c333907adbcc9c2648d1b89824a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bb0c333907adbcc9c2648d1b89824a3">&#9670;&nbsp;</a></span>icu_gpt_algo_get_iq_output()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> icu_gpt_algo_get_iq_output </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the I/Q data output format of GPT Algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">meas_num</td><td>The measurement number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>I/Q data output format</dd></dl>
+<p>This function returns the measurement I/Q data output format, as follows:</p><ul>
+<li>CH_OUTPUT_IQ (0) - Standard pairs of {Q,I} int16_t values</li>
+<li>CH_OUTPUT_AMP_THRESH (1) - Output amplitude + threshold uint16_t pair values</li>
+<li>CH_OUTPUT_AMP (2) - Output uint16_t amplitude values only </li>
+</ul>
+
+</div>
+</div>
+<a id="aeef5c60564e23354b65b4d5704031461"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeef5c60564e23354b65b4d5704031461">&#9670;&nbsp;</a></span>icu_gpt_algo_get_num_targets()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_algo_get_num_targets </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the number of targets detected in last measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>number of targets detected in last measurement</dd></dl>
+<p>This function returns the number of valid targets that were detected in the last measurement completed by the sensor. Data for each of these targets may then be read using <em><a class="el" href="ch__rangefinder_8c.html#a24683d6023095d66f876895e2cd01cd2" title="Get the range to a specific target detected in last measurement.">ch_get_target_range()</a></em> and <em><a class="el" href="ch__rangefinder_8c.html#a2ecb1677cd9f1a8d767c2715a133670e" title="Get the amplitude for a specific target detected in last measurement.">ch_get_target_amplitude()</a></em>.</p>
+<p>See also <em><a class="el" href="ch__rangefinder_8c.html#a24683d6023095d66f876895e2cd01cd2" title="Get the range to a specific target detected in last measurement.">ch_get_target_range()</a></em>, <em>ch_set_num_ranges()</em>. </p>
+
+</div>
+</div>
+<a id="a2eadb630d42492d3706aec227549eab0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2eadb630d42492d3706aec227549eab0">&#9670;&nbsp;</a></span>icu_gpt_algo_get_target_amplitude()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t icu_gpt_algo_get_target_amplitude </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>target_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the amplitude for a specific target detected in last measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">target_num</td><td>number of target to report</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>amplitude value (LSBs)</dd></dl>
+<p>This function reads the measurement data for a specific target and returns the measured amplitude value. The amplitude is representative of the incoming sound pressure. The value is expressed in internal sensor counts (LSBs) and is not calibrated to any standard units.</p>
+<p>The amplitude value is not updated if a measurement cycle resulted in <em>CH_NO_TARGET</em>, as returned by <em><a class="el" href="ch__rangefinder_8c.html#a24683d6023095d66f876895e2cd01cd2" title="Get the range to a specific target detected in last measurement.">ch_get_target_range()</a></em>.</p>
+<p>See also <em><a class="el" href="ch__rangefinder_8c.html#a24683d6023095d66f876895e2cd01cd2" title="Get the range to a specific target detected in last measurement.">ch_get_target_range()</a></em>, <em><a class="el" href="ch__api_8c.html#aa2ef517f154bb269d31fdf3f4e0cc7a2" title="Get the measured amplitude from a sensor.">ch_get_amplitude()</a></em>. </p>
+
+</div>
+</div>
+<a id="a73257bb62c70efac3081d00b04c97c94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73257bb62c70efac3081d00b04c97c94">&#9670;&nbsp;</a></span>icu_gpt_algo_get_target_range()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t icu_gpt_algo_get_target_range </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>target_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a>&#160;</td>
+          <td class="paramname"><em>range_type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the range to a specific target detected in last measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">target_num</td><td>number of target to report </td></tr>
+    <tr><td class="paramname">range_type</td><td>the range type to be reported (e.g. one-way vs. round-trip)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Range in millimeters times 32, or <em>CH_NO_TARGET</em> (0xFFFFFFFF) if no target was detected, or 0 if error</dd></dl>
+<p>This function reads the measurement data for a specific target and then computes the actual range. It should be called after the sensor has indicated that a measurement cycle is complete by generating a signal on the INT line. (Typically, this will be set up by an interrupt handler associated with that input line.)</p>
+<p><em>target_num</em> specifies the target whose range is to be calculated. The <em><a class="el" href="ch__rangefinder_8c.html#a0fef1804e3c80f73d9b4f9bf7b9ad685" title="Get the number of targets detected in last measurement.">ch_get_num_targets()</a></em> function may be used to determine the total number of valid targets detected by the measurement.</p>
+<p>The <em>range_type</em> parameter indicates whether the measurement is based on the one-way or round-trip distance to/from a target, or the direct distance between two sensors operating in pitch-catch mode. The possible values are:</p><ul>
+<li><em>CH_RANGE_ECHO_ONE_WAY</em> - gets full pulse/echo round-trip distance, then divides by 2</li>
+<li><em>CH_RANGE_ECHO_ROUND_TRIP</em> - full pulse/echo round-trip distance</li>
+<li><em>CH_RANGE_DIRECT</em> - for receiving sensor in pitch-catch mode (one-way)</li>
+</ul>
+<p>See also <em><a class="el" href="ch__rangefinder_8c.html#a2ecb1677cd9f1a8d767c2715a133670e" title="Get the amplitude for a specific target detected in last measurement.">ch_get_target_amplitude()</a></em>, <em><a class="el" href="ch__api_8c.html#a5cbb4847d39cc9418373b6d1ac8dadc6" title="Get the measured range from a sensor.">ch_get_range()</a></em>, <a class="el" href="ch__rangefinder_8c.html#a0fef1804e3c80f73d9b4f9bf7b9ad685" title="Get the number of targets detected in last measurement.">ch_get_num_targets()</a>. </p>
+
+</div>
+</div>
+<a id="afee077b44c6541d9f02f9c70a611809e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afee077b44c6541d9f02f9c70a611809e">&#9670;&nbsp;</a></span>icu_gpt_algo_get_target_tof_us()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t icu_gpt_algo_get_target_tof_us </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>target_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the measured time-of-flight for a specific target in microseconds. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">target_num</td><td>number of the detected target to be reported</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Time-of-flight in microseconds, or 0 if error</dd></dl>
+<p>This function reads the measurement result registers from the sensor and then computes the time-of-flight in microseconds. The time-of-flight is returned as a 32-bit integer.</p>
+<p>If the sensor did not successfully find the range of a target during the most recent measurement, the returned value will be <em>zero</em> (0). If an error occurs when getting or calculating the range, zero (0) will be returned.</p>
+<dl class="section note"><dt>Note</dt><dd>This function only reports the results from the most recently completed measurement cycle. It does not actually trigger a measurement. The time-of-flight that is reported is the total time measured by the sensor between transmission and reception. The value is always the full round-trip time-of-flight. </dd></dl>
+
+</div>
+</div>
+<a id="af4cc3bf376dc93adc410f1a28a395bf3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4cc3bf376dc93adc410f1a28a395bf3">&#9670;&nbsp;</a></span>icu_gpt_algo_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_algo_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InvnAlgoRangeFinderConfig *&#160;</td>
+          <td class="paramname"><em>algo_cfg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize GPT Algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">algo_cfg</td><td>Pointer to algorithm configuration instanciated in application</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error </dd></dl>
+
+</div>
+</div>
+<a id="a72cfc1b34ea1b875b311d3cd01d83479"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72cfc1b34ea1b875b311d3cd01d83479">&#9670;&nbsp;</a></span>icu_gpt_algo_is_target_in_ringdown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_algo_is_target_in_ringdown </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return if a target is detected near sensor (in the ringdown) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if a target is detected, else 0 </dd></dl>
+
+</div>
+</div>
+<a id="a00171d37500762a36271771df4134efa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00171d37500762a36271771df4134efa">&#9670;&nbsp;</a></span>icu_gpt_algo_reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void icu_gpt_algo_reset </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reset GPT Algorithm configuration. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">meas_num</td><td>The measurement number </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae3a2e407a1d4b0d4d64e6809b0f6ea48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3a2e407a1d4b0d4d64e6809b0f6ea48">&#9670;&nbsp;</a></span>icu_gpt_algo_set_data_output()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_algo_set_data_output </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structch__output__t.html">ch_output_t</a> *&#160;</td>
+          <td class="paramname"><em>output_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set data output format and rate. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">output_ptr</td><td>pointer to the data output type, including format and decimation factor</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This function sets both the data output format type and rate for sample data within a measurement. The values are passed in a <em><a class="el" href="structch__output__t.html" title="Data output structure.">ch_output_t</a></em> structure specified by <em>output_ptr</em>, which contains two fields, <em>output_type</em> and <em>decimation_factor</em>. The decimation factor is equivalent to the sample output data rate (ODR) of the sensor, expressed differently.</p>
+<p>The possible values for output_type are:</p><ul>
+<li>CH_OUTPUT_IQ - Standard pairs of {Q,I} int16_t values (<em><a class="el" href="structch__iq__sample__t.html" title="Sensor I/Q data value.">ch_iq_sample_t</a></em>)</li>
+<li>CH_OUTPUT_AMP_THRESH - Output amplitude + threshold uint16_t pair values (<em><a class="el" href="structch__amp__thresh__t.html" title="Sensor combined amplitude + detection threshold sample value.">ch_amp_thresh_t</a></em>)</li>
+<li>CH_OUTPUT_AMP - Output uint16_t amplitude values only</li>
+</ul>
+<p>The possible values for decimation_factor and the equivalent output rate (ODR) values are as follows:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Decimation Factor   </th><th class="markdownTableHeadNone">ODR Value   </th><th class="markdownTableHeadNone">Sample Rate vs. Default    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">CH_DECIMATION_NONE   </td><td class="markdownTableBodyNone">CH_ODR_FREQ_DIV_8 (CH_ODR_DEFAULT)   </td><td class="markdownTableBodyNone">default    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">CH_DECIMATION_0_25   </td><td class="markdownTableBodyNone">CH_ODR_FREQ_DIV_2   </td><td class="markdownTableBodyNone">4 x default    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">CH_DECIMATION_0_50   </td><td class="markdownTableBodyNone">CH_ODR_FREQ_DIV_4   </td><td class="markdownTableBodyNone">2 x default    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">CH_DECIMATION_2   </td><td class="markdownTableBodyNone">CH_ODR_FREQ_DIV_16   </td><td class="markdownTableBodyNone">1/2 default    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">CH_DECIMATION_3   </td><td class="markdownTableBodyNone"><em>no</em> <em>equivalent</em>   </td><td class="markdownTableBodyNone">1/3 default - only in special CHx01 f/w    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">CH_DECIMATION_4   </td><td class="markdownTableBodyNone">CH_ODR_FREQ_DIV_32   </td><td class="markdownTableBodyNone">1/4 default   </td></tr>
+</table>
+<p>Both measurements will be set to the specified output type. To change the output format for a single measurement, use <em><a class="el" href="ch__api_8c.html#a3fb6e60f175bbb08c87787c0ac680865" title="Set the I/Q data output format for a measurement.">ch_meas_set_iq_output()</a></em>. To change the output data rate for a single measurement, use <em><a class="el" href="ch__api_8c.html#adc5748ec903986b27b78f4a52b8c9e23" title="Set the output data rate for a measurement.">ch_meas_set_odr()</a></em>. </p>
+
+</div>
+</div>
+<a id="a4c5aab1fa0d5565c2e09db8a84ad16ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c5aab1fa0d5565c2e09db8a84ad16ed">&#9670;&nbsp;</a></span>icu_gpt_algo_set_iq_output()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_algo_set_iq_output </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a>&#160;</td>
+          <td class="paramname"><em>output_format</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the I/Q data output format of GPT Algorithm. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number </td></tr>
+    <tr><td class="paramname">output_format</td><td>I/Q output format 0=normal (Q,I) pairs; 1=amplitude,threshold pairs, 2=amplitude array</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function sets the measurement I/Q data output format. The data may be output in three different formats, based on the value of <em>output_format:</em> </p><ul>
+<li>CH_OUTPUT_IQ - Standard pairs of {Q,I} int16_t values</li>
+<li>CH_OUTPUT_AMP_THRESH - Output amplitude + threshold uint16_t pair values</li>
+<li>CH_OUTPUT_AMP - Output uint16_t amplitude values only </li>
+</ul>
+
+</div>
+</div>
+<a id="a2098ace9d08c28e86a4a7927f0aa0ad1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2098ace9d08c28e86a4a7927f0aa0ad1">&#9670;&nbsp;</a></span>icu_gpt_algo_update_odr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void icu_gpt_algo_update_odr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a>&#160;</td>
+          <td class="paramname"><em>new_odr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update algo ODR. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">meas_num</td><td>The measurement number </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">new_odr</td><td>The new odr</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Shall be called before ch_meas_set_odr because it relies on current ODR to update algorithm configuration </p>
+
+</div>
+</div>
+<a id="ab587d5db2f266d67fa38a87e4f5be53c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab587d5db2f266d67fa38a87e4f5be53c">&#9670;&nbsp;</a></span>icu_gpt_display_algo_thresholds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_display_algo_thresholds </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Display GPT thresholds for debug purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>RET_OK if print of thresholds succeeded </dd></dl>
+
+</div>
+</div>
+<a id="af18794349aa6ebc105f7e586788aba2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af18794349aa6ebc105f7e586788aba2c">&#9670;&nbsp;</a></span>icu_gpt_get_filter_update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_get_filter_update </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the filter update interval for a measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function returns the interval value for how often the ringdown cancellation and static target rejection (STR) filters are updated in the sensor. A value of 0 will update the filters during every measurement. A value of 1 will update every second measurement, a value of 2 will update every third measurement, etc.</p>
+<p>See also <em><a class="el" href="icu__gpt_8h.html#af3a17b6bd39153c3553e59bb5208cff7" title="Set the filter update interval for a measurement.">icu_gpt_set_filter_update()</a></em>. </p>
+
+</div>
+</div>
+<a id="ab07b307cf32d848a1eef71454cadee1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab07b307cf32d848a1eef71454cadee1c">&#9670;&nbsp;</a></span>icu_gpt_get_num_ranges()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_get_num_ranges </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the max number of reported target ranges for a measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>max number of target range values that will be reported</dd></dl>
+<p>This function returns the maximum number of separate target range values that the sensor will report in a single measurement. </p>
+
+</div>
+</div>
+<a id="ab6f6d6eb7974cb46d40bd057f4ae475d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6f6d6eb7974cb46d40bd057f4ae475d">&#9670;&nbsp;</a></span>icu_gpt_get_ringdown_cancel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t icu_gpt_get_ringdown_cancel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the number of ringdown cancellation samples for a measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>number of ringdown cancellation samples</dd></dl>
+<p>This function returns the number of samples in the specified measurement that will receive "ringdown
+cancellation" processing. These samples are always the first in the measurement (corresponding to targets closest to the sensor).</p>
+<p>See also <em><a class="el" href="icu__gpt_8h.html#ae9475454daa583c67c71a09fca187f2a" title="Set the number of ringdown cancellation samples for a measurement.">icu_gpt_set_ringdown_cancel()</a></em>. </p>
+
+</div>
+</div>
+<a id="a66636ca1bdc87ccfd658df71c93f9b90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66636ca1bdc87ccfd658df71c93f9b90">&#9670;&nbsp;</a></span>icu_gpt_get_rx_holdoff()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t icu_gpt_get_rx_holdoff </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the receive holdoff sample count for a specific measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>number of samples that are ignored at the beginning of each measurement</dd></dl>
+<p>This function gets the receive (rx) holdoff sample count for the specified measurement. The rx holdoff count is the number of samples at the beginning of a measurement that will be ignored for the purpose of detecting a target, as previously set by <em><a class="el" href="icu__gpt_8h.html#a2059cc8c8370a1f76cb145af09833756" title="Set the receive holdoff sample count for a specific measurement.">icu_gpt_set_rx_holdoff()</a></em>.</p>
+<p>To convert the returned sample count to a physical distance, use <em><a class="el" href="ch__api_8c.html#a290f3e5de2ee174e37ff4522df51d376" title="Convert sample count to millimeters for a sensor.">ch_samples_to_mm()</a></em>.</p>
+<p>The <em><a class="el" href="ch__rangefinder_8c.html#ab71d5ac02276e0d9b77549eb29195d6c" title="Get the receive holdoff sample count.">ch_get_rx_holdoff()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
+<p>See also <em><a class="el" href="icu__gpt_8h.html#a2059cc8c8370a1f76cb145af09833756" title="Set the receive holdoff sample count for a specific measurement.">icu_gpt_set_rx_holdoff()</a></em>. </p>
+
+</div>
+</div>
+<a id="a45810b7cdb9d6a7121636bc5f433f59d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45810b7cdb9d6a7121636bc5f433f59d">&#9670;&nbsp;</a></span>icu_gpt_get_static_filter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t icu_gpt_get_static_filter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the number of static target filter samples for a measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>number of samples to have STR filtering</dd></dl>
+<p>This function returns the number pf samples in the specified measurement that will have static target rejection (STR) filtering. STR filtering compares the active measurement with previously observed values and will only report a target detection when there has been noticeable change in the measured signal.</p>
+<p>The STR samples are always the first in the measurement (corresponding to targets closest to the sensor).</p>
+<p>The <em>ch_get_static_filter()</em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
+<p>See also <em><a class="el" href="icu__gpt_8h.html#aef0498122bbccfabc717964c02804638" title="Set the number of static target filter samples for a measurement.">icu_gpt_set_static_filter()</a></em>. </p>
+
+</div>
+</div>
+<a id="a72d278d9207e1b80a57ff13fff1a7f56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72d278d9207e1b80a57ff13fff1a7f56">&#9670;&nbsp;</a></span>icu_gpt_get_thresholds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_get_thresholds </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *&#160;</td>
+          <td class="paramname"><em>lib_thresh_buf_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get detection thresholds for a specific measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number </td></tr>
+    <tr><td class="paramname">thresh_ptr</td><td>pointer to <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure to receive threshold data</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function obtains the current detection threshold values for one of the two measurements, as specified by <em>meas_num</em>.</p>
+<p>The threshold values are returned in a <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure specified by <em>thresh_ptr</em>. The <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure holds an array of <a class="el" href="structch__thresh__t.html" title="Detection threshold value.">ch_thresh_t</a> structures, each of which contains a starting sample number and amplitude threshold value.</p>
+<p>The <em><a class="el" href="ch__rangefinder_8c.html#a9ea0971363f3a1c9fdc7e8f040489edd" title="Get detection thresholds.">ch_get_thresholds()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
+<dl class="section note"><dt>Note</dt><dd>This function is only available for ICU sensors. </dd></dl>
+
+</div>
+</div>
+<a id="ad5d0691b6218b37a7b4a52672782f500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5d0691b6218b37a7b4a52672782f500">&#9670;&nbsp;</a></span>icu_gpt_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structfw__info__st.html">fw_info_t</a> **&#160;</td>
+          <td class="paramname"><em>fw_info</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize GPT FW. </p>
+<p>This function shall not be directly called. It shall be passed in parameter of <em>ch_init</em> </p>
+
+</div>
+</div>
+<a id="af3a17b6bd39153c3553e59bb5208cff7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3a17b6bd39153c3553e59bb5208cff7">&#9670;&nbsp;</a></span>icu_gpt_set_filter_update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_set_filter_update </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>update_interval</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the filter update interval for a measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number </td></tr>
+    <tr><td class="paramname">update_interval</td><td>how often to update, 0 = every sample</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function specifies how often the ringdown cancellation and static target rejection (STR) filters are updated in the sensor. A value of 0 will update the filters during every measurement. A value of 1 will update every second measurement, a value of 2 will update every third measurement, etc.</p>
+<p>See also <em><a class="el" href="icu__gpt_8h.html#af18794349aa6ebc105f7e586788aba2c" title="Get the filter update interval for a measurement.">icu_gpt_get_filter_update()</a></em>. </p>
+
+</div>
+</div>
+<a id="a9b2a02dbfccc298814670c12fe42394d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b2a02dbfccc298814670c12fe42394d">&#9670;&nbsp;</a></span>icu_gpt_set_num_ranges()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_set_num_ranges </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>num_ranges</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the max number of reported target ranges for a measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number </td></tr>
+    <tr><td class="paramname">num_ranges</td><td>maximum number of target range values to report</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function sets the maximum number of separate target range values that the sensor will report in a single measurement.</p>
+<p>If <em>num_ranges</em> is set to 1, only a single target will be reported. Generally, this will be the closest target whose signal exceeds the detection threshold value for that part of the measurement. Other targets will not be reported.</p>
+<p>If <em>num_ranges</em> is greater than 1, if multiple targets have ultrasound signals that exceed the applicable threshold value, the sensor will report range (and amplitude) values for each.</p>
+<p>See also <em><a class="el" href="ch__rangefinder_8c.html#a24683d6023095d66f876895e2cd01cd2" title="Get the range to a specific target detected in last measurement.">ch_get_target_range()</a></em>, <em><a class="el" href="ch__rangefinder_8c.html#a2ecb1677cd9f1a8d767c2715a133670e" title="Get the amplitude for a specific target detected in last measurement.">ch_get_target_amplitude()</a></em>, <em><a class="el" href="icu__gpt_8h.html#ab07b307cf32d848a1eef71454cadee1c" title="Get the max number of reported target ranges for a measurement.">icu_gpt_get_num_ranges()</a></em>. </p>
+
+</div>
+</div>
+<a id="ae9475454daa583c67c71a09fca187f2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9475454daa583c67c71a09fca187f2a">&#9670;&nbsp;</a></span>icu_gpt_set_ringdown_cancel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_set_ringdown_cancel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>num_samples</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the number of ringdown cancellation samples for a measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number </td></tr>
+    <tr><td class="paramname">num_samples</td><td>number of samples (closest to sensor) to get ringdown cancellation</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function sets the number of samples in the specified measurement that will receive "ringdown
+cancellation" processing. These samples are always the first in the measurement (corresponding to targets closest to the sensor).</p>
+<p>Ringdown is the physical settling time of the ultrasound transducer after generating a transmit pulse. This settling causes a large false signal in the first receive samples after the transmit segment ends. Ringdown cancellation is a filtering technique to remove these ringdown artifacts. However, it can also affect the sensing ability at close range. The number of ringdown samples may be tuned to obtain the best performance in a specific application.</p>
+<p>If the ringdown cancel sample count is too low, it will result in false detections at very close indicated ranges.</p>
+<p>See also <em><a class="el" href="icu__gpt_8h.html#ab6f6d6eb7974cb46d40bd057f4ae475d" title="Get the number of ringdown cancellation samples for a measurement.">icu_gpt_get_ringdown_cancel()</a></em> </p>
+
+</div>
+</div>
+<a id="a2059cc8c8370a1f76cb145af09833756"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2059cc8c8370a1f76cb145af09833756">&#9670;&nbsp;</a></span>icu_gpt_set_rx_holdoff()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_set_rx_holdoff </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>num_samples</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the receive holdoff sample count for a specific measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number </td></tr>
+    <tr><td class="paramname">num_samples</td><td>number of samples to be ignored at the beginning of each measurement</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function sets the receive (rx) holdoff sample count for the specified measurement. <em>num_samples</em> specifies a number of samples at the beginning of a measurement that will be ignored for the purpose of detecting a target. (These samples correspond to the closest distances from the sensor.)</p>
+<p>To convert a physical distance into a sample count value to use here, use <em><a class="el" href="ch__api_8c.html#a4203c97c07e47db67bf2e1c1eb16b054" title="Convert millimeters to sample count for a specific measurement.">ch_meas_mm_to_samples()</a></em>.</p>
+<p>The <em><a class="el" href="ch__rangefinder_8c.html#a4d2f18445966ba0094e54bfdae39bc0a" title="Set the receive holdoff sample count.">ch_set_rx_holdoff()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
+<p>See also <em><a class="el" href="icu__gpt_8h.html#a66636ca1bdc87ccfd658df71c93f9b90" title="Get the receive holdoff sample count for a specific measurement.">icu_gpt_get_rx_holdoff()</a></em>. </p>
+
+</div>
+</div>
+<a id="aef0498122bbccfabc717964c02804638"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef0498122bbccfabc717964c02804638">&#9670;&nbsp;</a></span>icu_gpt_set_static_filter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_set_static_filter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>num_samples</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the number of static target filter samples for a measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number </td></tr>
+    <tr><td class="paramname">num_samples</td><td>number of samples (closest to sensor) to have STR filtering</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function sets the number pf samples in the specified measurement that will have static target rejection (STR) filtering. STR filtering compares the active measurement with previously observed values and will only report a target detection when there has been noticeable change in the measured signal.</p>
+<p>The STR samples are always the first in the measurement (corresponding to targets closest to the sensor).</p>
+<p>The <em><a class="el" href="ch__rangefinder_8c.html#ab7b5aecb6cfe54c6d2df428e26192d9a" title="Configure static target rejection.">ch_set_static_range()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
+<p>See also <em><a class="el" href="icu__gpt_8h.html#a45810b7cdb9d6a7121636bc5f433f59d" title="Get the number of static target filter samples for a measurement.">icu_gpt_get_static_filter()</a></em> </p>
+
+</div>
+</div>
+<a id="a2b02c8f63577681d05651be8f3d231a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b02c8f63577681d05651be8f3d231a2">&#9670;&nbsp;</a></span>icu_gpt_set_thresholds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t icu_gpt_set_thresholds </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>meas_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *&#160;</td>
+          <td class="paramname"><em>lib_thresh_buf_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set detection thresholds for a specific measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure </td></tr>
+    <tr><td class="paramname">meas_num</td><td>measurement number </td></tr>
+    <tr><td class="paramname">thresh_ptr</td><td>pointer to <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure containing threshold data</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function sets the detection threshold values for the measurement specified by <em>meas_num</em>, based on the values in the <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure specified by <em>thresh_ptr</em>. The <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure holds an array of <a class="el" href="structch__thresh__t.html" title="Detection threshold value.">ch_thresh_t</a> structures, each of which contains a starting sample number and amplitude threshold value.</p>
+<p>To use this function, first initialize the fields in the <a class="el" href="structch__thresh__t.html" title="Detection threshold value.">ch_thresh_t</a> structure with the sample/level pair of values for each threshold. The ICU sensor supports eight (8) separate thresholds. Each threshold has a maximum sample length of 255.</p>
+<p>It is not necessary to use the full set of thresholds, if the appliction and sensing environment do not require that many different levels. Unused thresholds should occupy the last <a class="el" href="structch__thresh__t.html" title="Detection threshold value.">ch_thresh_t</a> elements in the <a class="el" href="structch__thresholds__t.html" title="Multiple detection threshold structure.">ch_thresholds_t</a> structure and should have zero (0) for their starting sample number. These entries will be ignored, and the threshold specified in the final valid entry will apply to the rest of the measurement.</p>
+<p>The <em><a class="el" href="ch__rangefinder_8c.html#a7e948bfbdc2cbca2f04bc97459541e5f" title="Set detection thresholds.">ch_set_thresholds()</a></em> function performs the same operation for the default measurement (same as setting <em>meas_num</em> to CH_DEFAULT_MEAS_NUM).</p>
+<p>See also <em><a class="el" href="ch__rangefinder_8c.html#a7e948bfbdc2cbca2f04bc97459541e5f" title="Set detection thresholds.">ch_set_thresholds()</a></em>, <em><a class="el" href="icu__gpt_8h.html#a72d278d9207e1b80a57ff13fff1a7f56" title="Get detection thresholds for a specific measurement.">icu_gpt_get_thresholds()</a></em>.</p>
+<dl class="section note"><dt>Note</dt><dd>This function is only available for ICU sensors. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1

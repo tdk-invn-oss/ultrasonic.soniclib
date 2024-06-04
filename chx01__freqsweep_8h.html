@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -84,9 +84,10 @@ $(function() {
 
 <p>Internal definitions for the Chirp CHX01 Frequency Sweep sensor firmware.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
-<code>#include &lt;stddef.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;stddef.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="ch__rangefinder_8h_source.html">invn/soniclib/ch_rangefinder.h</a>&gt;</code><br />
 </div>
 <p><a href="chx01__freqsweep_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -227,9 +228,9 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>chx01_freqsweep_g
 <tr class="memitem:adf1bc9be260ca77fd4df15ad2de2c0b4"><td class="memItemLeft" align="right" valign="top"><a id="adf1bc9be260ca77fd4df15ad2de2c0b4"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>chx01_freqsweep_get_op_freq</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:adf1bc9be260ca77fd4df15ad2de2c0b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46ec5249ebed8a140882d89198cf154e"><td class="memItemLeft" align="right" valign="top"><a id="a46ec5249ebed8a140882d89198cf154e"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>chx01_freqsweep_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t i2c_addr, uint8_t io_index, uint8_t bus_index)</td></tr>
-<tr class="separator:a46ec5249ebed8a140882d89198cf154e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c0b1ee420678c3c0540befa003c5031"><td class="memItemLeft" align="right" valign="top"><a id="a4c0b1ee420678c3c0540befa003c5031"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>chx01_freqsweep_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structfw__info__st.html">fw_info_t</a> **fw_info)</td></tr>
+<tr class="separator:a4c0b1ee420678c3c0540befa003c5031"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c36970dd4ae0ef2e0861966744e9547"><td class="memItemLeft" align="right" valign="top"><a id="a4c36970dd4ae0ef2e0861966744e9547"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>chx01_freqsweep_prepare_pulse_timer</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:a4c36970dd4ae0ef2e0861966744e9547"><td class="memSeparator" colspan="2">&#160;</td></tr>

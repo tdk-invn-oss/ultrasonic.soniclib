@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -88,9 +88,6 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1af911fb2af6031340dc1ffd93449a57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a1af911fb2af6031340dc1ffd93449a57">chbsp_board_init</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr)</td></tr>
-<tr class="memdesc:a1af911fb2af6031340dc1ffd93449a57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main hardware initialization.  <a href="chirp__bsp_8h.html#a1af911fb2af6031340dc1ffd93449a57">More...</a><br /></td></tr>
-<tr class="separator:a1af911fb2af6031340dc1ffd93449a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6906af86783768f5f091d0858ef7462"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#ab6906af86783768f5f091d0858ef7462">chbsp_debug_off</a> (uint8_t dbg_pin_num)</td></tr>
 <tr class="memdesc:ab6906af86783768f5f091d0858ef7462"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn off a debug indicator pin.  <a href="chirp__bsp_8h.html#ab6906af86783768f5f091d0858ef7462">More...</a><br /></td></tr>
 <tr class="separator:ab6906af86783768f5f091d0858ef7462"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,9 +169,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ab86eef3f74f74eb5ac347eccd562be99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#ab86eef3f74f74eb5ac347eccd562be99">chbsp_i2c_reset</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:ab86eef3f74f74eb5ac347eccd562be99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset I2C bus associated with device.  <a href="chirp__bsp_8h.html#ab86eef3f74f74eb5ac347eccd562be99">More...</a><br /></td></tr>
 <tr class="separator:ab86eef3f74f74eb5ac347eccd562be99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e9cea84db78f3b5ce517ba1e19011e6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a4e9cea84db78f3b5ce517ba1e19011e6">chbsp_i2c_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t *data, uint16_t num_bytes)</td></tr>
-<tr class="memdesc:a4e9cea84db78f3b5ce517ba1e19011e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write bytes to an I2C slave.  <a href="chirp__bsp_8h.html#a4e9cea84db78f3b5ce517ba1e19011e6">More...</a><br /></td></tr>
-<tr class="separator:a4e9cea84db78f3b5ce517ba1e19011e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ad104074a6edb4b68b01b5e0843f5a6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a9ad104074a6edb4b68b01b5e0843f5a6">chbsp_i2c_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, const uint8_t *data, uint16_t num_bytes)</td></tr>
+<tr class="memdesc:a9ad104074a6edb4b68b01b5e0843f5a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write bytes to an I2C slave.  <a href="chirp__bsp_8h.html#a9ad104074a6edb4b68b01b5e0843f5a6">More...</a><br /></td></tr>
+<tr class="separator:a9ad104074a6edb4b68b01b5e0843f5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3885fb01d51aa432bcc6882e23ee0e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#af3885fb01d51aa432bcc6882e23ee0e5">chbsp_int1_clear</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:af3885fb01d51aa432bcc6882e23ee0e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the INT1 pin low for one sensor.  <a href="chirp__bsp_8h.html#af3885fb01d51aa432bcc6882e23ee0e5">More...</a><br /></td></tr>
 <tr class="separator:af3885fb01d51aa432bcc6882e23ee0e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -199,42 +196,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a791e8353135c33364ac0c366556487cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a791e8353135c33364ac0c366556487cf">chbsp_int2_set</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a791e8353135c33364ac0c366556487cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the INT2 pin high for one sensor.  <a href="chirp__bsp_8h.html#a791e8353135c33364ac0c366556487cf">More...</a><br /></td></tr>
 <tr class="separator:a791e8353135c33364ac0c366556487cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7762f24394d7a2ee8ad5d02dcd304d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#aa7762f24394d7a2ee8ad5d02dcd304d9">chbsp_led_off</a> (uint8_t led_num)</td></tr>
-<tr class="memdesc:aa7762f24394d7a2ee8ad5d02dcd304d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn off an LED on the board.  <a href="chirp__bsp_8h.html#aa7762f24394d7a2ee8ad5d02dcd304d9">More...</a><br /></td></tr>
-<tr class="separator:aa7762f24394d7a2ee8ad5d02dcd304d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac45e3c1dbf3f63743dd4c1d5e36d407b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#ac45e3c1dbf3f63743dd4c1d5e36d407b">chbsp_led_on</a> (uint8_t led_num)</td></tr>
-<tr class="memdesc:ac45e3c1dbf3f63743dd4c1d5e36d407b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn on an LED on the board.  <a href="chirp__bsp_8h.html#ac45e3c1dbf3f63743dd4c1d5e36d407b">More...</a><br /></td></tr>
-<tr class="separator:ac45e3c1dbf3f63743dd4c1d5e36d407b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affd32b5dd1f651a245e647a07cd44fe1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#affd32b5dd1f651a245e647a07cd44fe1">chbsp_led_toggle</a> (uint8_t led_num)</td></tr>
-<tr class="memdesc:affd32b5dd1f651a245e647a07cd44fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle an LED on the board.  <a href="chirp__bsp_8h.html#affd32b5dd1f651a245e647a07cd44fe1">More...</a><br /></td></tr>
-<tr class="separator:affd32b5dd1f651a245e647a07cd44fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4aefbf34b623300194f73235074df9c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a4aefbf34b623300194f73235074df9c7">chbsp_periodic_timer_change_period</a> (uint32_t new_period_us)</td></tr>
-<tr class="memdesc:a4aefbf34b623300194f73235074df9c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the period for interrupts.  <a href="chirp__bsp_8h.html#a4aefbf34b623300194f73235074df9c7">More...</a><br /></td></tr>
-<tr class="separator:a4aefbf34b623300194f73235074df9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb4dac19012073822b3cf4b4242ca7ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#abb4dac19012073822b3cf4b4242ca7ab">chbsp_periodic_timer_handler</a> (void)</td></tr>
-<tr class="memdesc:abb4dac19012073822b3cf4b4242ca7ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Periodic timer handler.  <a href="chirp__bsp_8h.html#abb4dac19012073822b3cf4b4242ca7ab">More...</a><br /></td></tr>
-<tr class="separator:abb4dac19012073822b3cf4b4242ca7ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6034ec7104cb46f2bf6fe4a040a902c2"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a6034ec7104cb46f2bf6fe4a040a902c2">chbsp_periodic_timer_init</a> (uint16_t interval_ms, <a class="el" href="soniclib_8h.html#aa0e5a58672f5728ead1a7b43ed248841">ch_timer_callback_t</a> callback_func_ptr)</td></tr>
-<tr class="memdesc:a6034ec7104cb46f2bf6fe4a040a902c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize periodic timer.  <a href="chirp__bsp_8h.html#a6034ec7104cb46f2bf6fe4a040a902c2">More...</a><br /></td></tr>
-<tr class="separator:a6034ec7104cb46f2bf6fe4a040a902c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5373b078a1dbc806daa0a6dadb5f5a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#ab5373b078a1dbc806daa0a6dadb5f5a1">chbsp_periodic_timer_irq_disable</a> (void)</td></tr>
-<tr class="memdesc:ab5373b078a1dbc806daa0a6dadb5f5a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable periodic timer interrupt.  <a href="chirp__bsp_8h.html#ab5373b078a1dbc806daa0a6dadb5f5a1">More...</a><br /></td></tr>
-<tr class="separator:ab5373b078a1dbc806daa0a6dadb5f5a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75738d9ed5fd587c672353979fa46bec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a75738d9ed5fd587c672353979fa46bec">chbsp_periodic_timer_irq_enable</a> (void)</td></tr>
-<tr class="memdesc:a75738d9ed5fd587c672353979fa46bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable periodic timer interrupt.  <a href="chirp__bsp_8h.html#a75738d9ed5fd587c672353979fa46bec">More...</a><br /></td></tr>
-<tr class="separator:a75738d9ed5fd587c672353979fa46bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ee389e7c1a7c7c77e09c85ce600ca30"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a3ee389e7c1a7c7c77e09c85ce600ca30">chbsp_periodic_timer_start</a> (void)</td></tr>
-<tr class="memdesc:a3ee389e7c1a7c7c77e09c85ce600ca30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start periodic timer.  <a href="chirp__bsp_8h.html#a3ee389e7c1a7c7c77e09c85ce600ca30">More...</a><br /></td></tr>
-<tr class="separator:a3ee389e7c1a7c7c77e09c85ce600ca30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b2b41daef03495c7d2a1201a5f1ea3b"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a7b2b41daef03495c7d2a1201a5f1ea3b">chbsp_periodic_timer_stop</a> (void)</td></tr>
-<tr class="memdesc:a7b2b41daef03495c7d2a1201a5f1ea3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop periodic timer.  <a href="chirp__bsp_8h.html#a7b2b41daef03495c7d2a1201a5f1ea3b">More...</a><br /></td></tr>
-<tr class="separator:a7b2b41daef03495c7d2a1201a5f1ea3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cc326c74bb68016105b2818dbeae703"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a1cc326c74bb68016105b2818dbeae703">chbsp_print_str</a> (char *str)</td></tr>
-<tr class="memdesc:a1cc326c74bb68016105b2818dbeae703"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output a text string via serial interface.  <a href="chirp__bsp_8h.html#a1cc326c74bb68016105b2818dbeae703">More...</a><br /></td></tr>
-<tr class="separator:a1cc326c74bb68016105b2818dbeae703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8cd270d071afa8e5b9cb5c2ae3bca4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#ae8cd270d071afa8e5b9cb5c2ae3bca4b">chbsp_proc_sleep</a> (void)</td></tr>
-<tr class="memdesc:ae8cd270d071afa8e5b9cb5c2ae3bca4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Put the processor into low-power sleep state.  <a href="chirp__bsp_8h.html#ae8cd270d071afa8e5b9cb5c2ae3bca4b">More...</a><br /></td></tr>
-<tr class="separator:ae8cd270d071afa8e5b9cb5c2ae3bca4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27bf426119068f11102922e3fef7c4c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a27bf426119068f11102922e3fef7c4c1">chbsp_print_str</a> (const char *str)</td></tr>
+<tr class="memdesc:a27bf426119068f11102922e3fef7c4c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output a text string via serial interface.  <a href="chirp__bsp_8h.html#a27bf426119068f11102922e3fef7c4c1">More...</a><br /></td></tr>
+<tr class="separator:a27bf426119068f11102922e3fef7c4c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aded4375ab5363afea23e5c17318eadcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#aded4375ab5363afea23e5c17318eadcb">chbsp_program_disable</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:aded4375ab5363afea23e5c17318eadcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deassert the PROG pin.  <a href="chirp__bsp_8h.html#aded4375ab5363afea23e5c17318eadcb">More...</a><br /></td></tr>
 <tr class="separator:aded4375ab5363afea23e5c17318eadcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -271,9 +235,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aeff4fb5a3c83e2b42d9dc8fc38c9537e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#aeff4fb5a3c83e2b42d9dc8fc38c9537e">chbsp_spi_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t *data, uint16_t num_bytes)</td></tr>
 <tr class="memdesc:aeff4fb5a3c83e2b42d9dc8fc38c9537e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read bytes from an SPI slave.  <a href="chirp__bsp_8h.html#aeff4fb5a3c83e2b42d9dc8fc38c9537e">More...</a><br /></td></tr>
 <tr class="separator:aeff4fb5a3c83e2b42d9dc8fc38c9537e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17dc270f914db4b270360ffc10cf2c37"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a17dc270f914db4b270360ffc10cf2c37">chbsp_spi_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t *data, uint16_t num_bytes)</td></tr>
-<tr class="memdesc:a17dc270f914db4b270360ffc10cf2c37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write bytes to an SPI slave.  <a href="chirp__bsp_8h.html#a17dc270f914db4b270360ffc10cf2c37">More...</a><br /></td></tr>
-<tr class="separator:a17dc270f914db4b270360ffc10cf2c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9e71e305c7d891797d546021804ae38"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#ab9e71e305c7d891797d546021804ae38">chbsp_spi_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, const uint8_t *data, uint16_t num_bytes)</td></tr>
+<tr class="memdesc:ab9e71e305c7d891797d546021804ae38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write bytes to an SPI slave.  <a href="chirp__bsp_8h.html#ab9e71e305c7d891797d546021804ae38">More...</a><br /></td></tr>
+<tr class="separator:ab9e71e305c7d891797d546021804ae38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c69867ce273a2c423b846642bcb1479"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a8c69867ce273a2c423b846642bcb1479">chbsp_timestamp_ms</a> (void)</td></tr>
 <tr class="memdesc:a8c69867ce273a2c423b846642bcb1479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a free-running counter value in milliseconds.  <a href="chirp__bsp_8h.html#a8c69867ce273a2c423b846642bcb1479">More...</a><br /></td></tr>
 <tr class="separator:a8c69867ce273a2c423b846642bcb1479"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -340,76 +304,6 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
 </pre><p> The <em>dev_num</em> value for each device is specified by the user application as a parameter to <em><a class="el" href="ch__api_8c.html#afb33f776f4a2d55c885023798402c2a5" title="Initialize a Chirp ultrasonic sensor descriptor structure.">ch_init()</a></em>.</p>
 <dl class="section note"><dt>Note</dt><dd>Example board support packages that implement the <a class="el" href="chirp__bsp_8h.html" title="User-supplied board support package functions to interface Chirp SonicLib to a specific hardware plat...">chirp_bsp.h</a> functions are available from Chirp Microsystems for specific platforms. Contact Chirp for more information. </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a1af911fb2af6031340dc1ffd93449a57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1af911fb2af6031340dc1ffd93449a57">&#9670;&nbsp;</a></span>chbsp_board_init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_board_init </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structch__group__t.html">ch_group_t</a> *&#160;</td>
-          <td class="paramname"><em>grp_ptr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Main hardware initialization. </p>
-<p>This function executes the required hardware initialization sequence for the board being used. This includes clock, memory, and processor setup as well as any special handling that is needed. This function is called at the beginning of an application, as the first operation.</p>
-<p>Along with the actual hardware initialization, this function must also initialize the following fields within the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> sensor group descriptor:</p><ul>
-<li><b>num_ports</b> = number of sensor ports (possible connections) on the board. This is usually the same as <em>CHIRP_MAX_DEVICES</em> in <b><a class="el" href="chirp__board__config_8h_source.html">chirp_board_config.h</a></b>.</li>
-<li><b>num_buses</b> = number of I/O buses on the board, usually the same as <em>CHIRP_NUM_BUSES</em> in <b><a class="el" href="chirp__board__config_8h_source.html">chirp_board_config.h</a></b>.</li>
-<li><b>rtc_cal_pulse_ms</b> = length (duration) of the "pulse" sent on the INT line to each sensor during calibration of the real-time clock. For ICU sensors, there are actually two low pulses, separated by this interval. For CH101/CH201 sensors, there is a single high pulse with this duration. A typical value of this field is <b>100ms</b>, but it can be adjusted to suit your system contraints.</li>
-</ul>
-<h4>Discovering If a Sensor Is Present</h4>
-<p>Often, during initialization the BSP needs to determine which sensor ports (possible connections) actually have a sensor attached. Here is a short sequence you can use to confirm if a Chirp sensor is alive and communicating by reading two signature byte values from the device using SPI/I2C.</p>
-<h5>ICU Sensors</h5>
-<p>ICU sensors (based on the Shasta architecture) contain a multi-byte "CPU ID" value that may be read over SPI. The two most signficant bytes will always contain a standard value that can be read to confirm that an ICU sensor is present.</p>
-<ul>
-<li>Using SPI, read two bytes from debug register <em>SHASTA_DBG_REG_CPU_ID_HI</em> (0x0001): <pre class="fragment">  uint16_t command = (SPI_CMD_DBG_REG_READ | SHASTA_DBG_REG_CPU_ID_HI);
-  uint8_t  cmd_buf[3];
-
-  cmd_buf[0] = (command &amp; 0x00FF);            // LSB
-  cmd_buf[1] = ((command &amp; 0xFF00) &gt;&gt; 8);     // MSB
-  cmd_buf[2] = 0;                             // required dummy byte
-
-  // *** Assert SPI chip select for device
-
-  // *** Write 3 cmd_buf bytes to device via spi
-
-  // *** Read 2 bytes from device
-
-  // *** De-assert SPI chip select for device
-</pre></li>
-<li>If an ICU sensor is present, the read value will be <em>SHASTA_CPU_ID_HI_VALUE</em> (0x2041).</li>
-</ul>
-<h5>CH101 &amp; CH201 Sensors</h5>
-<p>This sequence applies to CH101 and CH201 devices using an I2C interface.</p>
-<p>A couple key points:</p><ul>
-<li>The initial I2C address for all CH101 and CH201 sensors is <em>CH_I2C_ADDR_PROG</em> (0x45). This address is used during initialization and programming. Once the device is programmed, a different I2C address is assigned for normal operation.</li>
-<li>A device will only respond to this programming address (0x45) if its PROG line is asserted (active high).</li>
-</ul>
-<p>So, the overall sequence should be:</p><ol type="1">
-<li>Power on board and device, initialize I2C bus.</li>
-<li>Assert the PROG line for the sensor port to be tested (active high).</li>
-<li>Perform a two-byte I2C register read from the device from this location:<ul>
-<li>I2C address = <em>CH_I2C_ADDR_PROG</em> (0x45)</li>
-<li>Register address/offset = 0x00</li>
-</ul>
-</li>
-<li>Check the byte values that were read from the device. If a Chirp sensor is present, the returned bytes should be:<ul>
-<li><em>CH_SIG_BYTE_0</em> (hex value <b>0x0A</b>)</li>
-<li><em>CH_SIG_BYTE_1</em> (hex value <b>0x02</b>)</li>
-</ul>
-</li>
-<li>De-assert the PROG line for the sensor port.</li>
-</ol>
-<p>This function is REQUIRED. </p>
-
-</div>
-</div>
 <a id="ab6906af86783768f5f091d0858ef7462"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab6906af86783768f5f091d0858ef7462">&#9670;&nbsp;</a></span>chbsp_debug_off()</h2>
 
@@ -435,7 +329,7 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
 </dl>
 <p>This function should drive the the specified debug indicator pin low. The <em>dbg_pin_num</em> parameter is an index value that specifies which debug pin should be controlled.</p>
 <p>This function is OPTIONAL.</p>
-<dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. The indicator pins may be any convenient GPIO signals on the host system. They are only used to provide a detectable indication of the program execution for debugging. If used, the debug pin(s) must be initialized during <em><a class="el" href="chirp__bsp_8h.html#a1af911fb2af6031340dc1ffd93449a57" title="Main hardware initialization.">chbsp_board_init()</a></em>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. The indicator pins may be any convenient GPIO signals on the host system. They are only used to provide a detectable indication of the program execution for debugging. If used, the debug pin(s) must be initialized during board init. </dd></dl>
 
 </div>
 </div>
@@ -464,7 +358,7 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
 </dl>
 <p>This function should drive the specified debug indicator pin high. The <em>dbg_pin_num</em> parameter is an index value that specifies which debug pin should be controlled.</p>
 <p>This function is OPTIONAL.</p>
-<dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. The indicator pins may be any convenient GPIO signals on the host system. They are only used to provide a detectable indication of the program execution for debugging. If used, the debug pin(s) must be initialized during <em><a class="el" href="chirp__bsp_8h.html#a1af911fb2af6031340dc1ffd93449a57" title="Main hardware initialization.">chbsp_board_init()</a></em>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. The indicator pins may be any convenient GPIO signals on the host system. They are only used to provide a detectable indication of the program execution for debugging. If used, the debug pin(s) must be initialized during board init. </dd></dl>
 
 </div>
 </div>
@@ -493,7 +387,7 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
 </dl>
 <p>This function should change the state (high/low) of the specified debug indicator pin. The <em>dbg_pin_num</em> parameter is an index value that specifies which debug pin should be controlled.</p>
 <p>This function is OPTIONAL.</p>
-<dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. The indicator pins may be any convenient GPIO signals on the host system. They are only used to provide a detectable indication of the program execution for debugging. If used, the debug pin(s) must be initialized during <em><a class="el" href="chirp__bsp_8h.html#a1af911fb2af6031340dc1ffd93449a57" title="Main hardware initialization.">chbsp_board_init()</a></em>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. The indicator pins may be any convenient GPIO signals on the host system. They are only used to provide a detectable indication of the program execution for debugging. If used, the debug pin(s) must be initialized during board init. </dd></dl>
 
 </div>
 </div>
@@ -994,7 +888,7 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
 
 <p>Initialize the host's I2C hardware. </p>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 on error</dd></dl>
-<p>This function should perform general I2C initialization on the host system. This includes both hardware initialization and setting up any necessary software structures. Upon successful return from this routine, the system should be ready to perform I/O operations such as <em><a class="el" href="chirp__bsp_8h.html#abd70fba292977f3d5b3330fe0b8701f2" title="Read bytes from an I2C slave.">chbsp_i2c_read()</a></em> and <em><a class="el" href="chirp__bsp_8h.html#a4e9cea84db78f3b5ce517ba1e19011e6" title="Write bytes to an I2C slave.">chbsp_i2c_write()</a></em>.</p>
+<p>This function should perform general I2C initialization on the host system. This includes both hardware initialization and setting up any necessary software structures. Upon successful return from this routine, the system should be ready to perform I/O operations such as <em><a class="el" href="chirp__bsp_8h.html#abd70fba292977f3d5b3330fe0b8701f2" title="Read bytes from an I2C slave.">chbsp_i2c_read()</a></em> and <em><a class="el" href="chirp__bsp_8h.html#a9ad104074a6edb4b68b01b5e0843f5a6" title="Write bytes to an I2C slave.">chbsp_i2c_write()</a></em>.</p>
 <p>This function is REQUIRED for CH101 and CH201 sensors. It is not used for ICU sensors. </p>
 
 </div>
@@ -1373,8 +1267,8 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
 
 </div>
 </div>
-<a id="a4e9cea84db78f3b5ce517ba1e19011e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e9cea84db78f3b5ce517ba1e19011e6">&#9670;&nbsp;</a></span>chbsp_i2c_write()</h2>
+<a id="a9ad104074a6edb4b68b01b5e0843f5a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ad104074a6edb4b68b01b5e0843f5a6">&#9670;&nbsp;</a></span>chbsp_i2c_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1388,7 +1282,7 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
@@ -1648,270 +1542,8 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
 
 </div>
 </div>
-<a id="aa7762f24394d7a2ee8ad5d02dcd304d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7762f24394d7a2ee8ad5d02dcd304d9">&#9670;&nbsp;</a></span>chbsp_led_off()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_led_off </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>led_num</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Turn off an LED on the board. </p>
-<p>This function turns off an LED on the board. The implementation of this function is flexible to allow for different numbers and arrangements of LEDs.</p>
-<p>The <em>led_num</em> parameter specifies which LED on the board should be turned off.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This function is not called by SonicLib functions, so it is not required. However, it is used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="ac45e3c1dbf3f63743dd4c1d5e36d407b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac45e3c1dbf3f63743dd4c1d5e36d407b">&#9670;&nbsp;</a></span>chbsp_led_on()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_led_on </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>led_num</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Turn on an LED on the board. </p>
-<p>This function turns on an LED on the board. The implementation of this function is flexible to allow for different numbers and arrangements of LEDs.</p>
-<p>The <em>led_num</em> parameter specifies which LED on the board should be turned on.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This function is not called by SonicLib functions, so it is not required. However, it is used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="affd32b5dd1f651a245e647a07cd44fe1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#affd32b5dd1f651a245e647a07cd44fe1">&#9670;&nbsp;</a></span>chbsp_led_toggle()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_led_toggle </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>led_num</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Toggle an LED on the board. </p>
-<p>This function toggles an LED on the board. It changes the on/off state from whatever it currently is. The implementation of this function is flexible to allow for different arrangements of LEDs.</p>
-<p>The <em>led_num</em> parameter specifies which LED on the board should be toggled.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This function is not called by SonicLib functions, so it is not required. However, it is used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="a4aefbf34b623300194f73235074df9c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4aefbf34b623300194f73235074df9c7">&#9670;&nbsp;</a></span>chbsp_periodic_timer_change_period()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_periodic_timer_change_period </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>new_period_us</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Change the period for interrupts. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">new_period_us</td><td>the new timer interval, in microseconds</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>This function changes the period of the periodic timer.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This and other periodic timer functions are not called by SonicLib functions, so are not required. However, they are used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="abb4dac19012073822b3cf4b4242ca7ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb4dac19012073822b3cf4b4242ca7ab">&#9670;&nbsp;</a></span>chbsp_periodic_timer_handler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_periodic_timer_handler </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Periodic timer handler. </p>
-<dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if error</dd></dl>
-<p>This function handles the expiration of the periodic timer, re-arms it and any associated interrupts for the next interval, and calls the callback routine that was registered using <em><a class="el" href="chirp__bsp_8h.html#a6034ec7104cb46f2bf6fe4a040a902c2" title="Initialize periodic timer.">chbsp_periodic_timer_init()</a></em>.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This and other periodic timer functions are not called by SonicLib functions, so are not required. However, they are used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="a6034ec7104cb46f2bf6fe4a040a902c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6034ec7104cb46f2bf6fe4a040a902c2">&#9670;&nbsp;</a></span>chbsp_periodic_timer_init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t chbsp_periodic_timer_init </td>
-          <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>interval_ms</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="soniclib_8h.html#aa0e5a58672f5728ead1a7b43ed248841">ch_timer_callback_t</a>&#160;</td>
-          <td class="paramname"><em>callback_func_ptr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initialize periodic timer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interval_ms</td><td>timer interval, in milliseconds </td></tr>
-    <tr><td class="paramname">callback_func_ptr</td><td>address of routine to be called every time the timer expires</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if error</dd></dl>
-<p>This function initializes a periodic timer on the board. The timer should be programmed to generate an interrupt after every <em>interval_ms</em> milliseconds.</p>
-<p>The <em>callback_func_ptr</em> parameter specifies a callback routine that will be called when the timer expires (and interrupt occurs). The timer interrupt handler function within the board support package should call this function.</p>
-<p>The period timer is often used to trigger sensor measurement cycles by having the application's callback function call <em><a class="el" href="ch__api_8c.html#ade5083e622e8cc3852a4193f6d8dce9c" title="Trigger a measurement on one sensor.">ch_trigger()</a></em> or <em><a class="el" href="ch__api_8c.html#aa4e917eea19df611680dc97e2401db3a" title="Trigger a measurement on a group of sensors.">ch_group_trigger()</a></em>.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This and other periodic timer functions are not called by SonicLib functions, so are not required. However, they are used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="ab5373b078a1dbc806daa0a6dadb5f5a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5373b078a1dbc806daa0a6dadb5f5a1">&#9670;&nbsp;</a></span>chbsp_periodic_timer_irq_disable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_periodic_timer_irq_disable </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Disable periodic timer interrupt. </p>
-<p>This function enables the interrupt associated with the periodic timer initialized by <em><a class="el" href="chirp__bsp_8h.html#a6034ec7104cb46f2bf6fe4a040a902c2" title="Initialize periodic timer.">chbsp_periodic_timer_init()</a></em>.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This and other periodic timer functions are not called by SonicLib functions, so are not required. However, they are used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="a75738d9ed5fd587c672353979fa46bec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75738d9ed5fd587c672353979fa46bec">&#9670;&nbsp;</a></span>chbsp_periodic_timer_irq_enable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_periodic_timer_irq_enable </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable periodic timer interrupt. </p>
-<p>This function enables the interrupt associated with the periodic timer initialized by <em><a class="el" href="chirp__bsp_8h.html#a6034ec7104cb46f2bf6fe4a040a902c2" title="Initialize periodic timer.">chbsp_periodic_timer_init()</a></em>.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This and other periodic timer functions are not called by SonicLib functions, so are not required. However, they are used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="a3ee389e7c1a7c7c77e09c85ce600ca30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ee389e7c1a7c7c77e09c85ce600ca30">&#9670;&nbsp;</a></span>chbsp_periodic_timer_start()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t chbsp_periodic_timer_start </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Start periodic timer. </p>
-<dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if error</dd></dl>
-<p>This function starts the periodic timer initialized by <em><a class="el" href="chirp__bsp_8h.html#a6034ec7104cb46f2bf6fe4a040a902c2" title="Initialize periodic timer.">chbsp_periodic_timer_init()</a></em>.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This and other periodic timer functions are not called by SonicLib functions, so are not required. However, they are used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="a7b2b41daef03495c7d2a1201a5f1ea3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b2b41daef03495c7d2a1201a5f1ea3b">&#9670;&nbsp;</a></span>chbsp_periodic_timer_stop()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t chbsp_periodic_timer_stop </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Stop periodic timer. </p>
-<dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if error</dd></dl>
-<p>This function stops the periodic timer initialized by <em><a class="el" href="chirp__bsp_8h.html#a6034ec7104cb46f2bf6fe4a040a902c2" title="Initialize periodic timer.">chbsp_periodic_timer_init()</a></em>.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This and other periodic timer functions are not called by SonicLib functions, so are not required. However, they are used in examples and other applications from Chirp. </dd></dl>
-
-</div>
-</div>
-<a id="a1cc326c74bb68016105b2818dbeae703"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cc326c74bb68016105b2818dbeae703">&#9670;&nbsp;</a></span>chbsp_print_str()</h2>
+<a id="a27bf426119068f11102922e3fef7c4c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27bf426119068f11102922e3fef7c4c1">&#9670;&nbsp;</a></span>chbsp_print_str()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1919,7 +1551,7 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
         <tr>
           <td class="memname">void chbsp_print_str </td>
           <td>(</td>
-          <td class="paramtype">char *&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>str</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1934,31 +1566,8 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
   </dd>
 </dl>
 <p>This function should print debug information to the console. The user can implement this function to print characters over a serial port, for example.</p>
-<p>In the Chirp SonicLib sensor driver, debug message output may be enabled by defining <em>CHDRV_DEBUG</em> and/or <em>CHDRV_DEBUG_VERBOSE</em>.</p>
+<p>In the Chirp SonicLib sensor driver, debug message output may be enabled by defining <em>CH_LOG_MODULE_LEVEL</em>.</p>
 <dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. </dd></dl>
-
-</div>
-</div>
-<a id="ae8cd270d071afa8e5b9cb5c2ae3bca4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8cd270d071afa8e5b9cb5c2ae3bca4b">&#9670;&nbsp;</a></span>chbsp_proc_sleep()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chbsp_proc_sleep </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Put the processor into low-power sleep state. </p>
-<p>This function puts the host processor (MCU) into a low-power sleep mode, to conserve energy. The sleep state should be selected such that interrupts associated with the SPI/I2C external GPIO pins, and the periodic timer (if used) are able to wake up the device.</p>
-<p>This function is RECOMMENDED.</p>
-<dl class="section note"><dt>Note</dt><dd>RECOMMENDED - This function is not called by SonicLib functions, so it is not required. However, it is used in examples and other applications from Chirp. </dd></dl>
 
 </div>
 </div>
@@ -2335,8 +1944,8 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
 
 </div>
 </div>
-<a id="a17dc270f914db4b270360ffc10cf2c37"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17dc270f914db4b270360ffc10cf2c37">&#9670;&nbsp;</a></span>chbsp_spi_write()</h2>
+<a id="ab9e71e305c7d891797d546021804ae38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9e71e305c7d891797d546021804ae38">&#9670;&nbsp;</a></span>chbsp_spi_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2350,7 +1959,7 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
@@ -2401,7 +2010,6 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
 <p>Return a free-running counter value in milliseconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>a 32-bit free-running counter value in milliseconds</dd></dl>
 <p>This function should use a running timer to provide an updated timestamp, in milliseconds, when called.</p>
-<p>If <em>CHDRV_DEBUG</em> is defined, this function is used too by the SonicLib driver to calculate elapsed times for various operations.</p>
 <p>This function is REQUIRED for ICU and CH101/CH201 sensors. </p>
 
 </div>

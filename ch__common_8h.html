@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -86,6 +86,8 @@ $(function() {
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="ch101_8h_source.html">invn/soniclib/sensor_fw/ch101/ch101.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="ch201_8h_source.html">invn/soniclib/sensor_fw/ch201/ch201.h</a>&gt;</code><br />
 </div>
 <p><a href="ch__common_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -97,9 +99,6 @@ Macros</h2></td></tr>
 <tr class="memitem:a55b84df3959fded5f66dd50e5300aecc"><td class="memItemLeft" align="right" valign="top"><a id="a55b84df3959fded5f66dd50e5300aecc"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CH101_COMMON_I2CREGS_OFFSET</b>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a55b84df3959fded5f66dd50e5300aecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5235e7232df3fb2dd85828d1eb53d37d"><td class="memItemLeft" align="right" valign="top"><a id="a5235e7232df3fb2dd85828d1eb53d37d"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>CH101_COMMON_NUM_THRESHOLDS</b>&#160;&#160;&#160;(6)</td></tr>
-<tr class="separator:a5235e7232df3fb2dd85828d1eb53d37d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6273c18b9c1997be772ebfd2bfe12f5"><td class="memItemLeft" align="right" valign="top"><a id="ad6273c18b9c1997be772ebfd2bfe12f5"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CH101_COMMON_READY_FREQ_LOCKED</b>&#160;&#160;&#160;(0x02)</td></tr>
 <tr class="separator:ad6273c18b9c1997be772ebfd2bfe12f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,9 +246,6 @@ Macros</h2></td></tr>
 <tr class="memitem:a1c5e5675db323c01ac11638d86930472"><td class="memItemLeft" align="right" valign="top"><a id="a1c5e5675db323c01ac11638d86930472"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CHX01_COMMON_CAL_TRIG_USE_BUS</b>&#160;&#160;&#160;(0x80)</td></tr>
 <tr class="separator:a1c5e5675db323c01ac11638d86930472"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d6c86e1aa0a0aaec71df0404574cd4b"><td class="memItemLeft" align="right" valign="top"><a id="a8d6c86e1aa0a0aaec71df0404574cd4b"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>CHX01_COMMON_NUM_THRESHOLDS</b>&#160;&#160;&#160;(6)</td></tr>
-<tr class="separator:a8d6c86e1aa0a0aaec71df0404574cd4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1f042af9e30cabeb3bfe367cb737efe"><td class="memItemLeft" align="right" valign="top"><a id="ab1f042af9e30cabeb3bfe367cb737efe"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CHX01_DATA_MEM_ADDR</b>&#160;&#160;&#160;CH101_DATA_MEM_ADDR</td></tr>
 <tr class="separator:ab1f042af9e30cabeb3bfe367cb737efe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -334,9 +330,6 @@ Macros</h2></td></tr>
 <tr class="memitem:a539a1854070932ec44e98c80f758ea57"><td class="memItemLeft" align="right" valign="top"><a id="a539a1854070932ec44e98c80f758ea57"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CHX01_SCALEFACTOR_INDEX</b>&#160;&#160;&#160;4</td></tr>
 <tr class="separator:a539a1854070932ec44e98c80f758ea57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8917879ef6adec41e0a253162cb7f57a"><td class="memItemLeft" align="right" valign="top"><a id="a8917879ef6adec41e0a253162cb7f57a"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ICU_COMMON_NUM_THRESHOLDS</b>&#160;&#160;&#160;(0)</td></tr>
-<tr class="separator:a8917879ef6adec41e0a253162cb7f57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0501e82515b2bdf36453c4cc80f5e0cc"><td class="memItemLeft" align="right" valign="top"><a id="a0501e82515b2bdf36453c4cc80f5e0cc"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>NSEC_PER_SEC</b>&#160;&#160;&#160;(1000000000U)</td></tr>
 <tr class="separator:a0501e82515b2bdf36453c4cc80f5e0cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -373,9 +366,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_algo
 <tr class="memitem:a65046a9ae02bb89ea1d0e0238f76532f"><td class="memItemLeft" align="right" valign="top"><a id="a65046a9ae02bb89ea1d0e0238f76532f"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_amp_thresh_data</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__amp__thresh__t.html">ch_amp_thresh_t</a> *buf_ptr, uint16_t start_sample, uint16_t num_samples, <a class="el" href="soniclib_8h.html#a66b7f8516a2c66f0ccc72704f7d5d94a">ch_io_mode_t</a> mode)</td></tr>
 <tr class="separator:a65046a9ae02bb89ea1d0e0238f76532f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa02b9ee6b13c1b2386e2e8477c1259a2"><td class="memItemLeft" align="right" valign="top"><a id="aa02b9ee6b13c1b2386e2e8477c1259a2"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_amplitude</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="separator:aa02b9ee6b13c1b2386e2e8477c1259a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3aa8c0a32289157c995ff6fc6bedfdb3"><td class="memItemLeft" align="right" valign="top"><a id="a3aa8c0a32289157c995ff6fc6bedfdb3"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_amplitude_avg</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:a3aa8c0a32289157c995ff6fc6bedfdb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -406,42 +396,15 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_num
 <tr class="memitem:af9a85791e23dd451530c4a430c076fb8"><td class="memItemLeft" align="right" valign="top"><a id="af9a85791e23dd451530c4a430c076fb8"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_num_samples</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:af9a85791e23dd451530c4a430c076fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43dc5e55104eade1711c96f1a5547b70"><td class="memItemLeft" align="right" valign="top"><a id="a43dc5e55104eade1711c96f1a5547b70"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_num_targets</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="separator:a43dc5e55104eade1711c96f1a5547b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69bc569d4640ca8046281c6b6318be59"><td class="memItemLeft" align="right" valign="top"><a id="a69bc569d4640ca8046281c6b6318be59"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_op_freq</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:a69bc569d4640ca8046281c6b6318be59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9018bafd465e3a91595eec9641469194"><td class="memItemLeft" align="right" valign="top"><a id="a9018bafd465e3a91595eec9641469194"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_range</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a> range_type)</td></tr>
-<tr class="separator:a9018bafd465e3a91595eec9641469194"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8c5142371ad8140ae7180937a59c302"><td class="memItemLeft" align="right" valign="top"><a id="ad8c5142371ad8140ae7180937a59c302"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_rx_holdoff</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="separator:ad8c5142371ad8140ae7180937a59c302"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa91ae144b7702a8b5741b5748d00cd5f"><td class="memItemLeft" align="right" valign="top"><a id="aa91ae144b7702a8b5741b5748d00cd5f"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_rx_low_gain</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:aa91ae144b7702a8b5741b5748d00cd5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcb9bee7aa096da138210175481d444e"><td class="memItemLeft" align="right" valign="top"><a id="adcb9bee7aa096da138210175481d444e"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_target_amplitude</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num)</td></tr>
-<tr class="separator:adcb9bee7aa096da138210175481d444e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addb72a1a6d44a24ad3d77de8c82a82d5"><td class="memItemLeft" align="right" valign="top"><a id="addb72a1a6d44a24ad3d77de8c82a82d5"></a>
 <a class="el" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_target_interrupt</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:addb72a1a6d44a24ad3d77de8c82a82d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9d0eda990699f904d43b59ba4446080"><td class="memItemLeft" align="right" valign="top"><a id="ad9d0eda990699f904d43b59ba4446080"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_target_range</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num, <a class="el" href="soniclib_8h.html#a1b137d77afad79d536e322eacdfebd0c">ch_range_t</a> range_type)</td></tr>
-<tr class="separator:ad9d0eda990699f904d43b59ba4446080"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace30fee85feb6627465586848e1b04c9"><td class="memItemLeft" align="right" valign="top"><a id="ace30fee85feb6627465586848e1b04c9"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_target_tof_us</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t target_num)</td></tr>
-<tr class="separator:ace30fee85feb6627465586848e1b04c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad97f5f31d4ca2c3a25dc148e2e2d01fa"><td class="memItemLeft" align="right" valign="top"><a id="ad97f5f31d4ca2c3a25dc148e2e2d01fa"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_thresholds</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *thresh_buf_ptr)</td></tr>
-<tr class="separator:ad97f5f31d4ca2c3a25dc148e2e2d01fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2db67ca7c37d7bca4194e9cc332a5e6a"><td class="memItemLeft" align="right" valign="top"><a id="a2db67ca7c37d7bca4194e9cc332a5e6a"></a>
-<a class="el" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_time_plan</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="separator:a2db67ca7c37d7bca4194e9cc332a5e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f1dd82ac56e0b9a143b8f257b1ba450"><td class="memItemLeft" align="right" valign="top"><a id="a3f1dd82ac56e0b9a143b8f257b1ba450"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_tof_us</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="separator:a3f1dd82ac56e0b9a143b8f257b1ba450"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97424ae1b5e54ee30d40ffe9357bdea7"><td class="memItemLeft" align="right" valign="top"><a id="a97424ae1b5e54ee30d40ffe9357bdea7"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_get_tx_length</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:a97424ae1b5e54ee30d40ffe9357bdea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -452,7 +415,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_group_se
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_group_start</b> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr)</td></tr>
 <tr class="separator:a665e51a44a0591a3740d4877618ff94a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c823d728a261a2ead35e804a725ef08"><td class="memItemLeft" align="right" valign="top"><a id="a1c823d728a261a2ead35e804a725ef08"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num, <a class="el" href="soniclib_8h.html#a1318c8ebfcd0a9c5f0d9acda119188d5">ch_fw_init_func_t</a> fw_init_func)</td></tr>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num, <a class="el" href="soniclib_8h.html#a6c5f9dbeb75e38d6e3b81540a35b7fe0">ch_fw_init_func_t</a> fw_init_func)</td></tr>
 <tr class="separator:a1c823d728a261a2ead35e804a725ef08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0ae6a98e307f93235fe6440f2e81958"><td class="memItemLeft" align="right" valign="top"><a id="ab0ae6a98e307f93235fe6440f2e81958"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_init_algo</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
@@ -472,9 +435,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_add
 <tr class="memitem:a084e4a8eb2e9d3395aa0af20100940b5"><td class="memItemLeft" align="right" valign="top"><a id="a084e4a8eb2e9d3395aa0af20100940b5"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_add_segment_tx</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_cycles, uint8_t pulse_width, uint8_t phase, uint8_t int_enable)</td></tr>
 <tr class="separator:a084e4a8eb2e9d3395aa0af20100940b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12587da6400b522cb5bc456cd68eda9b"><td class="memItemLeft" align="right" valign="top"><a id="a12587da6400b522cb5bc456cd68eda9b"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_filter_update</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
-<tr class="separator:a12587da6400b522cb5bc456cd68eda9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1158ab57339a1d1a631b6a0e82f0553b"><td class="memItemLeft" align="right" valign="top"><a id="a1158ab57339a1d1a631b6a0e82f0553b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_info</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="structch__meas__info__t.html">ch_meas_info_t</a> *info_ptr)</td></tr>
 <tr class="separator:a1158ab57339a1d1a631b6a0e82f0553b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -487,15 +447,9 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_ge
 <tr class="memitem:af737cd381c62630d98110ad218a55bde"><td class="memItemLeft" align="right" valign="top"><a id="af737cd381c62630d98110ad218a55bde"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_interval_us</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
 <tr class="separator:af737cd381c62630d98110ad218a55bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe1568d991441d7a1b665a2e7946262e"><td class="memItemLeft" align="right" valign="top"><a id="afe1568d991441d7a1b665a2e7946262e"></a>
-<a class="el" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_iq_output</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
-<tr class="separator:afe1568d991441d7a1b665a2e7946262e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abaa91f8d7c0eaf746d2d436fcd88d3c6"><td class="memItemLeft" align="right" valign="top"><a id="abaa91f8d7c0eaf746d2d436fcd88d3c6"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_last_num</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:abaa91f8d7c0eaf746d2d436fcd88d3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0cd1fab4a0033f64c9ebe273b47e13e"><td class="memItemLeft" align="right" valign="top"><a id="ac0cd1fab4a0033f64c9ebe273b47e13e"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_num_ranges</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
-<tr class="separator:ac0cd1fab4a0033f64c9ebe273b47e13e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb07f85b3fe6efe06fd7a44f13e76227"><td class="memItemLeft" align="right" valign="top"><a id="adb07f85b3fe6efe06fd7a44f13e76227"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_num_samples</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
 <tr class="separator:adb07f85b3fe6efe06fd7a44f13e76227"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -505,27 +459,15 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_ge
 <tr class="memitem:afe575e6cbc87fdcd0a04f9fed2962777"><td class="memItemLeft" align="right" valign="top"><a id="afe575e6cbc87fdcd0a04f9fed2962777"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_queue_info</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__meas__queue__info__t.html">ch_meas_queue_info_t</a> *info_ptr)</td></tr>
 <tr class="separator:afe575e6cbc87fdcd0a04f9fed2962777"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6208c5aad854b448037b8e1e3288bc2d"><td class="memItemLeft" align="right" valign="top"><a id="a6208c5aad854b448037b8e1e3288bc2d"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_ringdown_cancel</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
-<tr class="separator:a6208c5aad854b448037b8e1e3288bc2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6afd43e8ea8e9bdb481d1ed056b584b4"><td class="memItemLeft" align="right" valign="top"><a id="a6afd43e8ea8e9bdb481d1ed056b584b4"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_rx_holdoff</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
-<tr class="separator:a6afd43e8ea8e9bdb481d1ed056b584b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2145d54207b43280d745bc8a5686ebba"><td class="memItemLeft" align="right" valign="top"><a id="a2145d54207b43280d745bc8a5686ebba"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_seg_info</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t seg_num, <a class="el" href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a> *info_ptr)</td></tr>
 <tr class="separator:a2145d54207b43280d745bc8a5686ebba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57ba9ecb681c4c548f72d719c70819a9"><td class="memItemLeft" align="right" valign="top"><a id="a57ba9ecb681c4c548f72d719c70819a9"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_static_filter</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
-<tr class="separator:a57ba9ecb681c4c548f72d719c70819a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad909a7783c592c7350138e34557664c4"><td class="memItemLeft" align="right" valign="top"><a id="ad909a7783c592c7350138e34557664c4"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_get_thresholds</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr)</td></tr>
-<tr class="separator:ad909a7783c592c7350138e34557664c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e580c205e8829b209b7edd0914a96e"><td class="memItemLeft" align="right" valign="top"><a id="a57e580c205e8829b209b7edd0914a96e"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_import</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr)</td></tr>
 <tr class="separator:a57e580c205e8829b209b7edd0914a96e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3350c1dae2ac4142f7c9ad57a4f3513"><td class="memItemLeft" align="right" valign="top"><a id="aa3350c1dae2ac4142f7c9ad57a4f3513"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="structch__meas__config__t.html">ch_meas_config_t</a> *meas_config_ptr, <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *thresh_ptr)</td></tr>
-<tr class="separator:aa3350c1dae2ac4142f7c9ad57a4f3513"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adeeaa60809c01401d473b83f01df4ea8"><td class="memItemLeft" align="right" valign="top"><a id="adeeaa60809c01401d473b83f01df4ea8"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, const <a class="el" href="structch__meas__config__t.html">ch_meas_config_t</a> *meas_config_ptr)</td></tr>
+<tr class="separator:adeeaa60809c01401d473b83f01df4ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8b0d75b5eadc8ecc8d5d3f33f7429a9"><td class="memItemLeft" align="right" valign="top"><a id="af8b0d75b5eadc8ecc8d5d3f33f7429a9"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_init_queue</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:af8b0d75b5eadc8ecc8d5d3f33f7429a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -538,21 +480,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_init_s
 <tr class="memitem:abd7a8a5fb2bcc4d15906348f41161682"><td class="memItemLeft" align="right" valign="top"><a id="abd7a8a5fb2bcc4d15906348f41161682"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_init_segment_tx</b> (<a class="el" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_cycles, uint8_t pulse_width, uint8_t phase, uint8_t int_enable)</td></tr>
 <tr class="separator:abd7a8a5fb2bcc4d15906348f41161682"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8682c39d0ba103784ebb5b0aeeb85965"><td class="memItemLeft" align="right" valign="top"><a id="a8682c39d0ba103784ebb5b0aeeb85965"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_insert_instruction</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, const <a class="el" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *const inst_ptr, uint8_t inst_num_to_insert)</td></tr>
+<tr class="separator:a8682c39d0ba103784ebb5b0aeeb85965"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd21b9faf8914febb38a877eadb61d7b"><td class="memItemLeft" align="right" valign="top"><a id="abd21b9faf8914febb38a877eadb61d7b"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_mm_to_samples</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_mm)</td></tr>
 <tr class="separator:abd21b9faf8914febb38a877eadb61d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3d647917ff0411571efcab1ab547461"><td class="memItemLeft" align="right" valign="top"><a id="aa3d647917ff0411571efcab1ab547461"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_optimize</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr)</td></tr>
 <tr class="separator:aa3d647917ff0411571efcab1ab547461"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f5df6d803be8b8a490e213b4bce4896"><td class="memItemLeft" align="right" valign="top"><a id="a1f5df6d803be8b8a490e213b4bce4896"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_remove_instruction</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t inst_num_to_remove)</td></tr>
+<tr class="separator:a1f5df6d803be8b8a490e213b4bce4896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a993cc90a33b3f972b3938fc7fb6caaf8"><td class="memItemLeft" align="right" valign="top"><a id="a993cc90a33b3f972b3938fc7fb6caaf8"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_reset</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
 <tr class="separator:a993cc90a33b3f972b3938fc7fb6caaf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c8ba3976d92f412d29862b1cbb77f23"><td class="memItemLeft" align="right" valign="top"><a id="a1c8ba3976d92f412d29862b1cbb77f23"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_samples_to_mm</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples)</td></tr>
 <tr class="separator:a1c8ba3976d92f412d29862b1cbb77f23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe0b2ea98c3d068cf61b2f5d0461cb0d"><td class="memItemLeft" align="right" valign="top"><a id="afe0b2ea98c3d068cf61b2f5d0461cb0d"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_filter_update</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t update_interval)</td></tr>
-<tr class="separator:afe0b2ea98c3d068cf61b2f5d0461cb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a112abd444f980dc65c9449c5b4bec745"><td class="memItemLeft" align="right" valign="top"><a id="a112abd444f980dc65c9449c5b4bec745"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_interval</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t interval_ms)</td></tr>
 <tr class="separator:a112abd444f980dc65c9449c5b4bec745"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -562,33 +507,15 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set
 <tr class="memitem:ab2c470544dd7eabbaa4e3802fc39e2b6"><td class="memItemLeft" align="right" valign="top"><a id="ab2c470544dd7eabbaa4e3802fc39e2b6"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_interval_us</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t interval_us)</td></tr>
 <tr class="separator:ab2c470544dd7eabbaa4e3802fc39e2b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace0782b9b6d098e1ef1b944d9ad87b86"><td class="memItemLeft" align="right" valign="top"><a id="ace0782b9b6d098e1ef1b944d9ad87b86"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_iq_output</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> output_format)</td></tr>
-<tr class="separator:ace0782b9b6d098e1ef1b944d9ad87b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6624d5050107f6ef9ed7ec49abc42b8b"><td class="memItemLeft" align="right" valign="top"><a id="a6624d5050107f6ef9ed7ec49abc42b8b"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_max_range</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t max_range_mm)</td></tr>
 <tr class="separator:a6624d5050107f6ef9ed7ec49abc42b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b6033bf9ecd63d92ec3ae544d7d4340"><td class="memItemLeft" align="right" valign="top"><a id="a3b6033bf9ecd63d92ec3ae544d7d4340"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_num_ranges</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t num_ranges)</td></tr>
-<tr class="separator:a3b6033bf9ecd63d92ec3ae544d7d4340"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaaecddfe2c758feb6ccaa65155e261b"><td class="memItemLeft" align="right" valign="top"><a id="aeaaecddfe2c758feb6ccaa65155e261b"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_num_samples</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples)</td></tr>
 <tr class="separator:aeaaecddfe2c758feb6ccaa65155e261b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a356c6739a91097711ccd5693b6c0e94f"><td class="memItemLeft" align="right" valign="top"><a id="a356c6739a91097711ccd5693b6c0e94f"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_odr</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr)</td></tr>
 <tr class="separator:a356c6739a91097711ccd5693b6c0e94f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30ff8a0862ff875bc34187146d109b95"><td class="memItemLeft" align="right" valign="top"><a id="a30ff8a0862ff875bc34187146d109b95"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_ringdown_cancel</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples)</td></tr>
-<tr class="separator:a30ff8a0862ff875bc34187146d109b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0919d9869769645694261fdfeb514853"><td class="memItemLeft" align="right" valign="top"><a id="a0919d9869769645694261fdfeb514853"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_rx_holdoff</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples)</td></tr>
-<tr class="separator:a0919d9869769645694261fdfeb514853"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed2021a7f25c791adedf5e00163eeca7"><td class="memItemLeft" align="right" valign="top"><a id="aed2021a7f25c791adedf5e00163eeca7"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_static_filter</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples)</td></tr>
-<tr class="separator:aed2021a7f25c791adedf5e00163eeca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1b7d3cadf0412616e839c04fad0c595"><td class="memItemLeft" align="right" valign="top"><a id="af1b7d3cadf0412616e839c04fad0c595"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_set_thresholds</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *lib_thresh_buf_ptr)</td></tr>
-<tr class="separator:af1b7d3cadf0412616e839c04fad0c595"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ec87b2f3d09c1e08c389feafae0ae38"><td class="memItemLeft" align="right" valign="top"><a id="a3ec87b2f3d09c1e08c389feafae0ae38"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_meas_standby</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
 <tr class="separator:a3ec87b2f3d09c1e08c389feafae0ae38"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -619,12 +546,12 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_samples
 <tr class="memitem:af1b826d69e45c5e3a86d58c53a9685cf"><td class="memItemLeft" align="right" valign="top"><a id="af1b826d69e45c5e3a86d58c53a9685cf"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_samples_to_mm</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_samples)</td></tr>
 <tr class="separator:af1b826d69e45c5e3a86d58c53a9685cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01453fb54de5cf84afdfa465724b8eef"><td class="memItemLeft" align="right" valign="top"><a id="a01453fb54de5cf84afdfa465724b8eef"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_algo_config</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, const void *algo_cfg_ptr)</td></tr>
+<tr class="separator:a01453fb54de5cf84afdfa465724b8eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee7f1f2520c788b8267c95d06ad207cc"><td class="memItemLeft" align="right" valign="top"><a id="aee7f1f2520c788b8267c95d06ad207cc"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_cal_result</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__cal__result__t.html">ch_cal_result_t</a> *cal_ptr)</td></tr>
 <tr class="separator:aee7f1f2520c788b8267c95d06ad207cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbf187bc72a9433b94e99dbda9a01045"><td class="memItemLeft" align="right" valign="top"><a id="adbf187bc72a9433b94e99dbda9a01045"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_data_output</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__output__t.html">ch_output_t</a> *output_ptr)</td></tr>
-<tr class="separator:adbf187bc72a9433b94e99dbda9a01045"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5044200b8aa3345d92adfca4579253b"><td class="memItemLeft" align="right" valign="top"><a id="ae5044200b8aa3345d92adfca4579253b"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_freerun_interval</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t interval_ms)</td></tr>
 <tr class="separator:ae5044200b8aa3345d92adfca4579253b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -634,12 +561,15 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_free
 <tr class="memitem:aae78dc1ad42f9744fa4392fd2f4a4096"><td class="memItemLeft" align="right" valign="top"><a id="aae78dc1ad42f9744fa4392fd2f4a4096"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_freerun_interval_us</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t interval_us)</td></tr>
 <tr class="separator:aae78dc1ad42f9744fa4392fd2f4a4096"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19a40acd44e2388d65a643ecf8eee06d"><td class="memItemLeft" align="right" valign="top"><a id="a19a40acd44e2388d65a643ecf8eee06d"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_freerun_time_hop</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, bool enable)</td></tr>
-<tr class="separator:a19a40acd44e2388d65a643ecf8eee06d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ee8771e9891621e13863dfb68bd478a"><td class="memItemLeft" align="right" valign="top"><a id="a1ee8771e9891621e13863dfb68bd478a"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_freerun_time_hop</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, bool enable)</td></tr>
+<tr class="separator:a1ee8771e9891621e13863dfb68bd478a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92bc89ff1d29bf49d35f17303b2c0479"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__common_8h.html#a92bc89ff1d29bf49d35f17303b2c0479">ch_common_set_frequency</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t target_freq_hz)</td></tr>
 <tr class="memdesc:a92bc89ff1d29bf49d35f17303b2c0479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the closest available operating frequency to a desired operating frequency.  <a href="ch__common_8h.html#a92bc89ff1d29bf49d35f17303b2c0479">More...</a><br /></td></tr>
 <tr class="separator:a92bc89ff1d29bf49d35f17303b2c0479"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17046f4db317fff9944fa160d58a47ad"><td class="memItemLeft" align="right" valign="top"><a id="a17046f4db317fff9944fa160d58a47ad"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_init_firmware</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#a6c5f9dbeb75e38d6e3b81540a35b7fe0">ch_fw_init_func_t</a> fw_init_func)</td></tr>
+<tr class="separator:a17046f4db317fff9944fa160d58a47ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cbadfe33208bd109f811859c79e110a"><td class="memItemLeft" align="right" valign="top"><a id="a3cbadfe33208bd109f811859c79e110a"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_interrupt_drive</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">ch_interrupt_drive_t</a> drive)</td></tr>
 <tr class="separator:a3cbadfe33208bd109f811859c79e110a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -661,9 +591,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_pmut
 <tr class="memitem:adcde29b82dfc5838a354f168e72a417f"><td class="memItemLeft" align="right" valign="top"><a id="adcde29b82dfc5838a354f168e72a417f"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_rtc</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#a95396c4034eb6e41fffcfa7d9dbcd830">ch_rtc_src_t</a> rtc_source, uint16_t rtc_freq)</td></tr>
 <tr class="separator:adcde29b82dfc5838a354f168e72a417f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1c82a647624bd6c8805d2d031b1a7b5"><td class="memItemLeft" align="right" valign="top"><a id="ae1c82a647624bd6c8805d2d031b1a7b5"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_rx_holdoff</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t rx_holdoff)</td></tr>
-<tr class="separator:ae1c82a647624bd6c8805d2d031b1a7b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afae2abdd1f4516beea7cc7ed2605daa1"><td class="memItemLeft" align="right" valign="top"><a id="afae2abdd1f4516beea7cc7ed2605daa1"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_rx_low_gain</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_samples)</td></tr>
 <tr class="separator:afae2abdd1f4516beea7cc7ed2605daa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -673,18 +600,9 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_samp
 <tr class="memitem:aadeefcb3983f1c4f77ebefc853713a12"><td class="memItemLeft" align="right" valign="top"><a id="aadeefcb3983f1c4f77ebefc853713a12"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_sample_window</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t start_sample, uint16_t end_sample)</td></tr>
 <tr class="separator:aadeefcb3983f1c4f77ebefc853713a12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f6f18c96fb77db34b0eddd2945b4ff1"><td class="memItemLeft" align="right" valign="top"><a id="a9f6f18c96fb77db34b0eddd2945b4ff1"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_static_range</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t samples)</td></tr>
-<tr class="separator:a9f6f18c96fb77db34b0eddd2945b4ff1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a086b9b763784fce3165a103a29dc270b"><td class="memItemLeft" align="right" valign="top"><a id="a086b9b763784fce3165a103a29dc270b"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_target_interrupt</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">ch_tgt_int_filter_t</a> tgt_filter_mode)</td></tr>
 <tr class="separator:a086b9b763784fce3165a103a29dc270b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75a92a253f8751b58ce1d4c751b7552f"><td class="memItemLeft" align="right" valign="top"><a id="a75a92a253f8751b58ce1d4c751b7552f"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_thresholds</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__thresholds__t.html">ch_thresholds_t</a> *thresholds_ptr)</td></tr>
-<tr class="separator:a75a92a253f8751b58ce1d4c751b7552f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59a46b6d9db055d8b6ff4cf152e39c14"><td class="memItemLeft" align="right" valign="top"><a id="a59a46b6d9db055d8b6ff4cf152e39c14"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_time_plan</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="soniclib_8h.html#a23d84a030c9fc403cb538f5d0c3f3a52">ch_time_plan_t</a> time_plan)</td></tr>
-<tr class="separator:a59a46b6d9db055d8b6ff4cf152e39c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a427969a07cb43fb463256178cc8e88c1"><td class="memItemLeft" align="right" valign="top"><a id="a427969a07cb43fb463256178cc8e88c1"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_set_tx_length</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_cycles)</td></tr>
 <tr class="separator:a427969a07cb43fb463256178cc8e88c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -700,15 +618,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_store_pt_re
 <tr class="memitem:a4db051c6bf0326e0aaf5febcd4d2f742"><td class="memItemLeft" align="right" valign="top"><a id="a4db051c6bf0326e0aaf5febcd4d2f742"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_store_scale_factor</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:a4db051c6bf0326e0aaf5febcd4d2f742"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20312e15529f8f0f38ef6715defdd48e"><td class="memItemLeft" align="right" valign="top"><a id="a20312e15529f8f0f38ef6715defdd48e"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_ticks_to_usec</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_rtc_periods)</td></tr>
-<tr class="separator:a20312e15529f8f0f38ef6715defdd48e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41dc046e0752e8d1f5cd9cdc2e9c0acf"><td class="memItemLeft" align="right" valign="top"><a id="a41dc046e0752e8d1f5cd9cdc2e9c0acf"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_ticks_to_usec</b> (const <a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_rtc_periods)</td></tr>
+<tr class="separator:a41dc046e0752e8d1f5cd9cdc2e9c0acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb5942e1f4919895552a99348879fd81"><td class="memItemLeft" align="right" valign="top"><a id="adb5942e1f4919895552a99348879fd81"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_usec_to_cycles</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_usec)</td></tr>
 <tr class="separator:adb5942e1f4919895552a99348879fd81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a306c7d55810d7123f4818b3637baf7a3"><td class="memItemLeft" align="right" valign="top"><a id="a306c7d55810d7123f4818b3637baf7a3"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_usec_to_ticks</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_usec)</td></tr>
-<tr class="separator:a306c7d55810d7123f4818b3637baf7a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a4eca28d192eecd3f558227203180fe"><td class="memItemLeft" align="right" valign="top"><a id="a3a4eca28d192eecd3f558227203180fe"></a>
+uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_usec_to_ticks</b> (const <a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_usec)</td></tr>
+<tr class="separator:a3a4eca28d192eecd3f558227203180fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0192aad9b7fe004cb1693b18efee00f8"><td class="memItemLeft" align="right" valign="top"><a id="a0192aad9b7fe004cb1693b18efee00f8"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_watchdog_disable</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:a0192aad9b7fe004cb1693b18efee00f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -785,7 +703,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch_common_watchdog
 
 <p>Read configuration settings associated with the last measurement. </p>
 <p>This function may be called to read measurement config from the sensor. It reads the ODR, IQ format, number of IQ bytes, and the last measurement config index from the sensor and sets it into the corresponding fields of dev_ptr.</p>
-<p>This function is already called from ch_common_get_target_range, which requires the ODR to convert the range from raw counts to millimeters. You may need to manually call this function when implementing your own methods that fetch and post-process data from the sensor.</p>
+<p>This function is already called from ch_rangefinder_get_target_range, which requires the ODR to convert the range from raw counts to millimeters. You may need to manually call this function when implementing your own methods that fetch and post-process data from the sensor.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dev_ptr</td><td>The device pointer. Will be modifed with measurement config read from sensor.</td></tr>

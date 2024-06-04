@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">3.32.6</span>
+   &#160;<span id="projectnumber">4.2.0</span>
    </div>
   </td>
  </tr>
@@ -82,20 +82,190 @@ $(function() {
 
 <p>Chirp CH101 General Purpose Rangefinding firmware interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
-<code>#include &quot;<a class="el" href="ch101__gpr_8h_source.html">ch101_gpr.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="ch101__gpr_8h_source.html">ch101_gpr.h</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="ch__common_8h_source.html">invn/soniclib/details/ch_common.h</a>&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a72d25d316c2b68faa492641b03a2dd4a"><td class="memItemLeft" align="right" valign="top"><a id="a72d25d316c2b68faa492641b03a2dd4a"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch101_gpr_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t i2c_addr, uint8_t io_index, uint8_t bus_index)</td></tr>
-<tr class="separator:a72d25d316c2b68faa492641b03a2dd4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c37a7d9c85abf7b09b4722aca6987ef"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch101__gpr_8c.html#a4c37a7d9c85abf7b09b4722aca6987ef">ch101_gpr_get_in_ringdown_idx</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:a4c37a7d9c85abf7b09b4722aca6987ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the sample index that defines the "in ringdown" region.  <a href="ch101__gpr_8c.html#a4c37a7d9c85abf7b09b4722aca6987ef">More...</a><br /></td></tr>
+<tr class="separator:a4c37a7d9c85abf7b09b4722aca6987ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae224ad50ac01bdcdb17c56795eff4a9b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch101__gpr_8c.html#ae224ad50ac01bdcdb17c56795eff4a9b">ch101_gpr_get_in_ringdown_ths</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:ae224ad50ac01bdcdb17c56795eff4a9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the amplitude threshold for "in ringdown" detection.  <a href="ch101__gpr_8c.html#ae224ad50ac01bdcdb17c56795eff4a9b">More...</a><br /></td></tr>
+<tr class="separator:ae224ad50ac01bdcdb17c56795eff4a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb9bd002e3b367cf2651b9fe0d9d6206"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch101__gpr_8c.html#afb9bd002e3b367cf2651b9fe0d9d6206">ch101_gpr_get_target_in_ringdown</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:afb9bd002e3b367cf2651b9fe0d9d6206"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the target "in ringdown" status.  <a href="ch101__gpr_8c.html#afb9bd002e3b367cf2651b9fe0d9d6206">More...</a><br /></td></tr>
+<tr class="separator:afb9bd002e3b367cf2651b9fe0d9d6206"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0f8b8b23bba1da2dc5d62606e83dba3"><td class="memItemLeft" align="right" valign="top"><a id="ab0f8b8b23bba1da2dc5d62606e83dba3"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>ch101_gpr_init</b> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structfw__info__st.html">fw_info_t</a> **fw_info)</td></tr>
+<tr class="separator:ab0f8b8b23bba1da2dc5d62606e83dba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4608ff0ac90727baa329eb155e9c26c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch101__gpr_8c.html#ae4608ff0ac90727baa329eb155e9c26c">ch101_gpr_set_in_ringdown_idx</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t in_ringdown_idx)</td></tr>
+<tr class="memdesc:ae4608ff0ac90727baa329eb155e9c26c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the sample index for "in ringdown" status.  <a href="ch101__gpr_8c.html#ae4608ff0ac90727baa329eb155e9c26c">More...</a><br /></td></tr>
+<tr class="separator:ae4608ff0ac90727baa329eb155e9c26c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeee2aaec82587779682f0f4a1d273887"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch101__gpr_8c.html#aeee2aaec82587779682f0f4a1d273887">ch101_gpr_set_in_ringdown_ths</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t in_ringdown_ths)</td></tr>
+<tr class="memdesc:aeee2aaec82587779682f0f4a1d273887"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the amplitude threshold "in ringdown" status.  <a href="ch101__gpr_8c.html#aeee2aaec82587779682f0f4a1d273887">More...</a><br /></td></tr>
+<tr class="separator:aeee2aaec82587779682f0f4a1d273887"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Chirp CH101 General Purpose Rangefinding firmware interface. </p>
 <p>This file contains function definitions to interface a specific sensor firmware package to SonicLib, including the main initialization routine for the firmware. That routine initializes various fields within the <em><a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a></em> device descriptor and specifies the proper functions to implement SonicLib API calls. Those may either be common implementations or firmware-specific routines located in this file. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a4c37a7d9c85abf7b09b4722aca6987ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c37a7d9c85abf7b09b4722aca6987ef">&#9670;&nbsp;</a></span>ch101_gpr_get_in_ringdown_idx()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch101_gpr_get_in_ringdown_idx </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the sample index that defines the "in ringdown" region. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the sample index that defines the "in ringdown" region. If the range is under this value, the <a class="el" href="ch101__gpr_8h.html#afb9bd002e3b367cf2651b9fe0d9d6206" title="Get the target &quot;in ringdown&quot; status.">ch101_gpr_get_target_in_ringdown()</a> function will return 1, otherwise 0.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This is a beta function and might move or change name in a future release. </dd></dl>
+
+</div>
+</div>
+<a id="ae224ad50ac01bdcdb17c56795eff4a9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae224ad50ac01bdcdb17c56795eff4a9b">&#9670;&nbsp;</a></span>ch101_gpr_get_in_ringdown_ths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t ch101_gpr_get_in_ringdown_ths </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the amplitude threshold for "in ringdown" detection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the threshold in LSB applied to the second peak of the ringdown (sample 15) to recognize if a target is in the ringdown region </dd></dl>
+
+</div>
+</div>
+<a id="afb9bd002e3b367cf2651b9fe0d9d6206"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb9bd002e3b367cf2651b9fe0d9d6206">&#9670;&nbsp;</a></span>ch101_gpr_get_target_in_ringdown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch101_gpr_get_target_in_ringdown </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the target "in ringdown" status. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if the target is absent or far away from the ringdown, 1 when the range is less than about 130mm (default and programmable using in_ringdown_idx parameter) on CH101 and less than about 200mm on CH201</dd></dl>
+<p>For both sensors, when <a class="el" href="ch101__gpr_8h.html#afb9bd002e3b367cf2651b9fe0d9d6206" title="Get the target &quot;in ringdown&quot; status.">ch101_gpr_get_target_in_ringdown()</a> goes from 0-&gt;1, it will remain at 1 for at least 4 measurements, to prevent glitches. When the target leaves the ringdown region there will be a 4 sample latency before <a class="el" href="ch101__gpr_8h.html#afb9bd002e3b367cf2651b9fe0d9d6206" title="Get the target &quot;in ringdown&quot; status.">ch101_gpr_get_target_in_ringdown()</a> returns 0. </p>
+
+</div>
+</div>
+<a id="ae4608ff0ac90727baa329eb155e9c26c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4608ff0ac90727baa329eb155e9c26c">&#9670;&nbsp;</a></span>ch101_gpr_set_in_ringdown_idx()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ch101_gpr_set_in_ringdown_idx </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>in_ringdown_idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the sample index for "in ringdown" status. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure in_ringdown_idx the sample index that defines the "in ringdown" region. Default value is 17 samples equals at about 130mm. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aeee2aaec82587779682f0f4a1d273887"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeee2aaec82587779682f0f4a1d273887">&#9670;&nbsp;</a></span>ch101_gpr_set_in_ringdown_ths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ch101_gpr_set_in_ringdown_ths </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>in_ringdown_ths</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the amplitude threshold "in ringdown" status. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure in_ringdown_ths the threshold in LSB applied to the second peak of the ringdown (sample 15) to recognize if a target is in the ringdown region. Default value is 3000 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
