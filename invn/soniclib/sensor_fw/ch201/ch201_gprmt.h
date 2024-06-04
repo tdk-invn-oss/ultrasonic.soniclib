@@ -23,9 +23,14 @@
 #ifndef CH201_GPRMT_H_
 #define CH201_GPRMT_H_
 
-#include "ch201.h"
-#include <invn/soniclib/soniclib.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
+#include "ch201.h"
+#include <invn/soniclib/ch_rangefinder.h>
+#include <invn/soniclib/soniclib.h>
 
 /* GPR with multi thresholds firmware registers */
 #define CH201_GPRMT_REG_OPMODE         0x01
@@ -63,6 +68,10 @@ uint16_t get_ch201_gprmt_fw_ram_init_size(void);
 
 const unsigned char *get_ram_ch201_gprmt_init_ptr(void);
 
-uint8_t ch201_gprmt_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t dev_num, uint8_t bus_index);
+uint8_t ch201_gprmt_init(ch_dev_t *dev_ptr, fw_info_t **fw_info);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

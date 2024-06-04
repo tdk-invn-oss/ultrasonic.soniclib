@@ -20,13 +20,22 @@
 
  */
 
+#define CH_LOG_MODULE_NAME "CH_COMMON"
+#include <invn/soniclib/ch_log.h>
+
 #include <invn/soniclib/soniclib.h>
-#include <invn/soniclib/details/ch_common.h>
 #include <invn/soniclib/chirp_bsp.h>
+#include <invn/soniclib/details/ch_common.h>
+#include <invn/soniclib/details/ch_helper.h>
 #include <invn/soniclib/details/ch_math_utils.h>
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 #include <invn/icu_interface/shasta_pmut_cmds.h>
+#include <invn/soniclib/details/ch_asic_shasta.h>
+#endif
+
+#ifdef INCLUDE_WHITNEY_SUPPORT
+#include <invn/soniclib/details/ch_asic_whitney.h>
 #endif
 
 /* Local definitions */
@@ -41,128 +50,109 @@
 #endif
 #endif
 
-/* Forward references */
-#ifdef INCLUDE_SHASTA_SUPPORT
-#define ICU_DEVICES_NUM (3)
-#define ODR_VALUES_NUM  (5)
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-static void thresh_lib_to_sensor(ch_dev_t *dev_ptr, ch_thresholds_t *lib_thresh_ptr, thresholds_t *sens_thresh_ptr);
-static void thresh_sensor_to_lib(ch_dev_t *dev_ptr, thresholds_t *sens_thresh_ptr, ch_thresholds_t *lib_thresh_ptr);
-static uint8_t read_target_list(ch_dev_t *dev_ptr);
-#endif  // INCLUDE_ALGO_RANGEFINDER
-#endif  // INCLUDE_SHASTA_SUPPORT
-
 static inline bool is_time_hopping_enabled(uint16_t meas_period);
 static uint16_t get_rtc_measure_period(uint16_t raw_meas_period);
 static uint16_t update_rtc_measure_period(uint16_t prev_meas_period, uint16_t new_meas_period);
-static uint8_t set_interval_ticks(ch_dev_t *dev_ptr, uint32_t rtc_ticks);
+static uint8_t set_interval_ticks(ch_dev_t *dev_ptr, uint32_t rtc_ticks, uint8_t meas_num);
 static uint8_t get_sample_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint16_t start_sample, uint16_t num_samples,
                                ch_io_mode_t mode, uint8_t sample_size_in_byte);
-
-/* Local variables */
-#ifdef INCLUDE_SHASTA_SUPPORT
-#ifdef INCLUDE_ALGO_RANGEFINDER
-static ch_thresholds_t default_thresholds = {  // default thresholds for ICU-x0201
-		.threshold = {
-				{0, 800},  /* threshold 0 */
-				{20, 400}, /* threshold 1 */
-				{37, 200}, /* threshold 2 */
-				{50, 100}, /* threshold 3 */
-				{80, 70},  /* threshold 4 */
-				{120, 50}, /* threshold 5 */
-				{0, 0},    /* threshold 6 */
-				{0, 0},    /* threshold 7 */
-		}};
-#endif  // INCLUDE_ALGO_RANGEFINDER
-#endif  // INCLUDE_SHASTA_SUPPORT
+#ifdef INCLUDE_WHITNEY_SUPPORT
+static inline uint8_t get_tof_sf_reg_addr(const ch_dev_t *dev_ptr);
+#endif
 
 /* Functions */
 
 uint8_t ch_common_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, ch_fw_init_func_t fw_init_func) {
-
-	uint8_t ret_val = RET_ERR;
-
-	ch_i2c_info_t i2c_info;
+	uint8_t ret_val;
 
 #ifdef INCLUDE_WHITNEY_SUPPORT
+	ch_i2c_info_t i2c_info;
 	/* Get I2C parameters from BSP */
 	ret_val = chbsp_i2c_get_info(grp_ptr, dev_num, &i2c_info);
-#else
-	i2c_info.address   = 0;  // these values are unused for ICU-x0201
-	i2c_info.bus_num   = 0;
-	i2c_info.drv_flags = 0;
-	ret_val            = RET_OK;
-#endif
-
 	if (ret_val == RET_OK) {
 		/* Save special handling flags for Chirp driver */
 		grp_ptr->i2c_drv_flags = i2c_info.drv_flags;
-
 		/* Call asic f/w init function passed in as parameter */
-		ret_val = (*fw_init_func)(dev_ptr, grp_ptr, i2c_info.address, dev_num, i2c_info.bus_num);
+		ret_val = (*fw_init_func)(dev_ptr, &dev_ptr->main_fw_info);
 	}
+#else
+	dev_ptr->main_fw_init_done = 0;
+	/* Call asic f/w init function passed in as parameter */
+	ret_val = (*fw_init_func)(dev_ptr, &dev_ptr->main_fw_info);
+#endif
 
 	if (ret_val == RET_OK) {
 		/* Init device and group descriptor linkage */
-		dev_ptr->group           = grp_ptr;       // set parent group pointer
-		grp_ptr->device[dev_num] = dev_ptr;       // add device to parent group
-		dev_ptr->fw_init_func    = fw_init_func;  // store which f/w init was used
+		dev_ptr->io_index        = dev_num;
+		dev_ptr->group           = grp_ptr;  // set parent group pointer
+		grp_ptr->device[dev_num] = dev_ptr;  // add device to parent group
+#ifdef INCLUDE_WHITNEY_SUPPORT
+		dev_ptr->app_i2c_address = i2c_info.address;
+		dev_ptr->bus_index       = i2c_info.bus_num;
+#endif
+		if (dev_ptr->main_fw_info->fw_includes_sensor_init) {
+			dev_ptr->current_fw = dev_ptr->main_fw_info;
+		} else {
+			dev_ptr->current_fw = NULL;
+		}
+#ifdef INCLUDE_SHASTA_SUPPORT
+		/* By default there is no dedicated init fw */
+		dev_ptr->init_fw_info = NULL;
+#endif
 
 		/* Mark this group as pending initialization via ch_group_start() */
 		grp_ptr->status = CH_GROUP_STAT_INIT_PENDING;
 	}
 
+	return ret_val;
+}
+
 #ifdef INCLUDE_SHASTA_SUPPORT
-	if (ret_val == RET_OK) {
-		/* Check if f/w requires separate initialization */
-		if (dev_ptr->restart_only && !(dev_ptr->restart_pending)) {
+uint8_t ch_common_set_init_firmware(ch_dev_t *dev_ptr, ch_fw_init_func_t fw_init_func) {
+	uint8_t ret_val = RET_ERR;
 
-			/* Set up to use separate init f/w */
-#if (defined(CHIRP_NO_INIT_FW) && (CHIRP_NO_INIT_FW != 0))
-			ret_val = RET_ERR;  // no init f/w present
-#else
-
-			dev_ptr->fw_reinit_func = fw_init_func;            // save original init routine to call again later
-#if (defined(CHIRP_NO_TX_OPTIMIZATION) && (CHIRP_NO_TX_OPTIMIZATION != 0))
-			dev_ptr->fw_init_func   = CH_INIT_ONLY_INIT_FUNC;  // init f/w with no optimization support
-#else
-			dev_ptr->fw_init_func = CH_INIT_AND_OPT_INIT_FUNC;  // init f/w with optimization support
-#endif
-			ret_val                 = (dev_ptr->fw_init_func)(dev_ptr, grp_ptr, 0, dev_num, 0);  // call init func
-			if (ret_val == RET_OK) {
-				dev_ptr->restart_pending = 1;
-			}
-#endif  //  CHIRP_NO_INIT_FW
-		}
+	ret_val = (fw_init_func)(dev_ptr, &dev_ptr->init_fw_info);
+	if (ret_val == RET_ERR || !dev_ptr->init_fw_info->fw_includes_sensor_init) {
+		/* Issue getting init firmware info or the firmware used for init doesn't handle sensor init */
+		ret_val = RET_ERR;
+	} else if (!dev_ptr->main_fw_info->fw_includes_sensor_init) {
+		/* Set init firmware as current firmware only if main firmware doesn't handle init */
+		dev_ptr->main_fw_init_done = 0;
+		dev_ptr->current_fw        = dev_ptr->init_fw_info;
 	}
-#endif  // INCLUDE_SHASTA_SUPPORT
 
 	return ret_val;
 }
+#endif
 
 uint8_t ch_common_group_start(ch_group_t *grp_ptr) {
 	uint8_t err = 0;
 
-	err = chdrv_group_start(grp_ptr, 0);
-
+	err = chdrv_group_start(grp_ptr);
+	if (!err) {
 #ifdef INCLUDE_SHASTA_SUPPORT
-	for (int dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
-		ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
+		for (int dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
+			ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 
-		/* Check if restart is pending */
-		if (dev_ptr->sensor_connected && dev_ptr->restart_pending) {
-			/* Call saved init function (again) for f/w that will execute */
-			err |= ch_init(dev_ptr, grp_ptr, dev_num, dev_ptr->fw_reinit_func);
-
-			/* Restart */
-			if (!err) {
-				err = chdrv_restart(dev_ptr);
+			if (!dev_ptr->sensor_connected) {
+				continue;
 			}
-			dev_ptr->restart_pending = 0;
+			if (dev_ptr->main_fw_info->fw_includes_sensor_init) {
+				dev_ptr->main_fw_init_done = 1;
+				/* Check if restart is pending */
+			} else if (!dev_ptr->main_fw_init_done) {
+				/* Restart */
+				if (!err) {
+					dev_ptr->current_fw = dev_ptr->main_fw_info;
+					err                 = chdrv_restart(dev_ptr);
+				}
+				if (!err) {
+					dev_ptr->main_fw_init_done = 1;
+				}
+			}
 		}
-	}
 #endif
+	}
 
 	if (!err) {
 		grp_ptr->status = CH_GROUP_STAT_INIT_OK;
@@ -270,15 +260,15 @@ uint8_t ch_common_set_mode(ch_dev_t *dev_ptr, ch_mode_t mode) {
 
 uint8_t ch_common_fw_load(ch_dev_t *dev_ptr) {
 	uint8_t ch_err         = 0;
-	uint16_t prog_mem_addr = 0;                            // current destination address in sensor mem
-	uint8_t *src_addr      = (uint8_t *)dev_ptr->fw_text;  // firmware image text to load
+	uint16_t prog_mem_addr = 0;                                        // current destination address in sensor mem
+	uint8_t *src_addr      = (uint8_t *)dev_ptr->current_fw->fw_text;  // firmware image text to load
 	uint16_t fw_size       = 0;
 	uint16_t num_xfers;
 	uint16_t xfer_num      = 0;
 	uint16_t bytes_left    = 0;
 	uint16_t max_xfer_size = 0;  // max number of bytes per write transfer to sensor
 
-	fw_size = dev_ptr->fw_text_size;
+	fw_size = dev_ptr->current_fw->fw_text_size;
 
 	if (dev_ptr->asic_gen == CH_ASIC_GEN_1_WHITNEY) {
 #ifdef INCLUDE_WHITNEY_SUPPORT
@@ -333,18 +323,20 @@ uint8_t ch_common_fw_load(ch_dev_t *dev_ptr) {
 	}
 
 	/* Write separate interrupt vectors (last bytes in prog mem) */
-	if (!ch_err && (dev_ptr->fw_vec != NULL) && (dev_ptr->fw_vec_size != 0)) {
-		src_addr             = (uint8_t *)dev_ptr->fw_vec;  // firmware image vectors to load
-		uint16_t xfer_nbytes = dev_ptr->fw_vec_size;        // fit in single transfer
+	if (!ch_err && (dev_ptr->current_fw->fw_vec != NULL) && (dev_ptr->current_fw->fw_vec_size != 0)) {
+		src_addr             = (uint8_t *)dev_ptr->current_fw->fw_vec;  // firmware image vectors to load
+		uint16_t xfer_nbytes = dev_ptr->current_fw->fw_vec_size;        // fit in single transfer
 
 		if (dev_ptr->asic_gen == CH_ASIC_GEN_1_WHITNEY) {
 #ifdef INCLUDE_WHITNEY_SUPPORT
-			prog_mem_addr = CHX01_PROG_MEM_ADDR + CHX01_PROG_MEM_SIZE - dev_ptr->fw_vec_size;
+			prog_mem_addr = CHX01_PROG_MEM_ADDR + CHX01_PROG_MEM_SIZE - dev_ptr->current_fw->fw_vec_size;
 			ch_err        = chdrv_prog_mem_write(dev_ptr, prog_mem_addr, src_addr, xfer_nbytes);
 #endif
 		} else if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
-			prog_mem_addr = ICU_PROG_MEM_ADDR + ICU_PROG_MEM_SIZE - dev_ptr->fw_vec_size;
+#ifdef INCLUDE_SHASTA_SUPPORT
+			prog_mem_addr = ICU_PROG_MEM_ADDR + ICU_PROG_MEM_SIZE - dev_ptr->current_fw->fw_vec_size;
 			ch_err        = chdrv_burst_write(dev_ptr, prog_mem_addr, src_addr, xfer_nbytes);
+#endif
 		}
 	}
 	return ch_err;
@@ -361,7 +353,7 @@ uint8_t ch_common_set_freerun_interval(ch_dev_t *dev_ptr, uint16_t interval_ms) 
 	if ((interval_ms != 0) && dev_ptr->sensor_connected) {
 		uint32_t rtc_ticks = dev_ptr->rtc_cal_result * interval_ms / dev_ptr->group->rtc_cal_pulse_ms;
 
-		ret_val = set_interval_ticks(dev_ptr, rtc_ticks);
+		ret_val = set_interval_ticks(dev_ptr, rtc_ticks, CH_DEFAULT_MEAS_NUM);
 	}
 	if (ret_val == 0) {
 		dev_ptr->freerun_intvl_us = (interval_ms * 1000);
@@ -375,7 +367,7 @@ uint8_t ch_common_set_freerun_interval_us(ch_dev_t *dev_ptr, uint32_t interval_u
 	if ((interval_us != 0) && dev_ptr->sensor_connected) {
 		uint32_t rtc_ticks = dev_ptr->rtc_cal_result * interval_us / (dev_ptr->group->rtc_cal_pulse_ms * 1000);
 
-		ret_val = set_interval_ticks(dev_ptr, rtc_ticks);
+		ret_val = set_interval_ticks(dev_ptr, rtc_ticks, CH_DEFAULT_MEAS_NUM);
 	}
 	if (ret_val == 0) {
 		dev_ptr->freerun_intvl_us = interval_us;
@@ -387,7 +379,7 @@ uint8_t ch_common_set_freerun_interval_ticks(ch_dev_t *dev_ptr, uint32_t interva
 	uint8_t ret_val = 1;  // default = error
 
 	if ((interval_ticks != 0) && dev_ptr->sensor_connected) {
-		ret_val = set_interval_ticks(dev_ptr, interval_ticks);
+		ret_val = set_interval_ticks(dev_ptr, interval_ticks, CH_DEFAULT_MEAS_NUM);
 	}
 	if (ret_val == 0) {
 		dev_ptr->freerun_intvl_us = ch_common_ticks_to_usec(dev_ptr, interval_ticks);
@@ -395,17 +387,19 @@ uint8_t ch_common_set_freerun_interval_ticks(ch_dev_t *dev_ptr, uint32_t interva
 	return ret_val;
 }
 
-uint8_t ch_common_set_freerun_time_hop(ch_dev_t *dev_ptr, bool enable) {
+uint8_t ch_common_set_freerun_time_hop(ch_dev_t *dev_ptr, uint8_t meas_num, bool enable) {
 	uint8_t ret_val = 1; /* default = error */
 
 	uint16_t time_hop_mask = enable ? 0x0000 : MEAS_PERIOD_TIME_HOP_MASK;
 #ifdef INCLUDE_SHASTA_SUPPORT
-	measurement_t *meas_ptr = (measurement_t *)&(dev_ptr->meas_queue.meas[CH_DEFAULT_MEAS_NUM]);
+	measurement_t *meas_ptr = (measurement_t *)&(dev_ptr->meas_queue.meas[meas_num]);
 
 	meas_ptr->meas_period = get_rtc_measure_period(meas_ptr->meas_period) | time_hop_mask;
 	ret_val               = ch_meas_write_config(dev_ptr);
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
+	(void)meas_num;
+
 	uint8_t tick_interval_reg;
 	uint16_t tick_interval;
 
@@ -451,62 +445,63 @@ static uint16_t update_rtc_measure_period(uint16_t prev_meas_period, uint16_t ne
 	return meas_period;
 }
 
-static uint8_t set_interval_ticks(ch_dev_t *dev_ptr, uint32_t rtc_ticks) {
-	uint8_t ret_val = 1;  // default = error
+static uint8_t set_interval_ticks(ch_dev_t *dev_ptr, uint32_t rtc_ticks, uint8_t meas_num) {
 
-	if (rtc_ticks != 0) {
+	if (rtc_ticks == 0)
+		return 1;
 
 #ifdef INCLUDE_SHASTA_SUPPORT
-		ret_val = ch_common_meas_set_interval_ticks(dev_ptr, CH_DEFAULT_MEAS_NUM, rtc_ticks);
+	return ch_common_meas_set_interval_ticks(dev_ptr, meas_num, rtc_ticks);
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-		uint32_t period;
-		uint8_t period_reg;
-		uint8_t tick_interval_reg;
-		uint16_t max_tick_interval;
-		uint16_t current_tick_interval;
+	(void)meas_num;
 
-		if (dev_ptr->part_number == CH101_PART_NUMBER) {
-			period_reg        = CH101_COMMON_REG_PERIOD;
-			tick_interval_reg = CH101_COMMON_REG_TICK_INTERVAL;
-			max_tick_interval = CH101_MAX_TICK_INTERVAL;
-		} else {
-			period_reg        = CH201_COMMON_REG_PERIOD;
-			tick_interval_reg = CH201_COMMON_REG_TICK_INTERVAL;
-			max_tick_interval = CH201_MAX_TICK_INTERVAL;
-		}
+	uint32_t period;
+	uint8_t period_reg;
+	uint8_t tick_interval_reg;
+	uint8_t ret_val;
+	uint16_t max_tick_interval;
+	uint16_t current_tick_interval;
 
-		period = (rtc_ticks / 2048) + 1;  // TODO need define
-		if (period <= UINT8_MAX) {        /* check if result fits in register */
-			uint32_t tick_interval;
-
-			if (period != 0) {
-				tick_interval = rtc_ticks / period;
-
-				while (tick_interval > max_tick_interval) {  // enforce max interval
-					tick_interval >>= 1;
-					period        <<= 1;
-				}
-			} else {
-				tick_interval = max_tick_interval;
-			}
-
-			/* Read existing tick interval to get time hopping flag */
-			ret_val = chdrv_read_word(dev_ptr, tick_interval_reg, &current_tick_interval);
-			if (!ret_val) {
-				tick_interval = update_rtc_measure_period(current_tick_interval, tick_interval);
-#ifdef CHDRV_DEBUG
-				char cbuf[80];
-				snprintf(cbuf, sizeof(cbuf), "Set period=%lu, tick_interval=%lu\n", period, tick_interval);
-				chbsp_print_str(cbuf);
-#endif
-				ret_val  = chdrv_write_byte(dev_ptr, period_reg, (uint8_t)period);
-				ret_val |= chdrv_write_word(dev_ptr, tick_interval_reg, (uint16_t)tick_interval);
-			}
-		}
-#endif  // INCLUDE_SHASTA_SUPPORT
+	if (dev_ptr->part_number == CH101_PART_NUMBER) {
+		period_reg        = CH101_COMMON_REG_PERIOD;
+		tick_interval_reg = CH101_COMMON_REG_TICK_INTERVAL;
+		max_tick_interval = CH101_MAX_TICK_INTERVAL;
+	} else {
+		period_reg        = CH201_COMMON_REG_PERIOD;
+		tick_interval_reg = CH201_COMMON_REG_TICK_INTERVAL;
+		max_tick_interval = CH201_MAX_TICK_INTERVAL;
 	}
 
+	period = (rtc_ticks / 2048) + 1;  // TODO need define
+	if (period <= UINT8_MAX) {        /* check if result fits in register */
+		uint32_t tick_interval;
+
+		if (period != 0) {
+			tick_interval = rtc_ticks / period;
+
+			while (tick_interval > max_tick_interval) {  // enforce max interval
+				tick_interval >>= 1;
+				period        <<= 1;
+			}
+		} else {
+			tick_interval = max_tick_interval;
+		}
+
+		/* Read existing tick interval to get time hopping flag */
+		ret_val = chdrv_read_word(dev_ptr, tick_interval_reg, &current_tick_interval);
+		if (!ret_val) {
+			tick_interval = update_rtc_measure_period(current_tick_interval, tick_interval);
+
+			CH_LOG_INFO("Set period=%lu, tick_interval=%lu", period, tick_interval);
+
+			ret_val  = chdrv_write_byte(dev_ptr, period_reg, (uint8_t)period);
+			ret_val |= chdrv_write_word(dev_ptr, tick_interval_reg, (uint16_t)tick_interval);
+		}
+	} else {
+		ret_val = 1;
+	}
 	return ret_val;
+#endif  // INCLUDE_SHASTA_SUPPORT
 }
 
 // Note: uses actual num_samples, even for CH201
@@ -517,7 +512,7 @@ uint8_t ch_common_set_num_samples(ch_dev_t *dev_ptr, uint16_t num_samples) {
 	ret_val = ch_common_meas_set_num_samples(dev_ptr, CH_DEFAULT_MEAS_NUM, num_samples);
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	if (!dev_ptr->sensor_connected || num_samples > dev_ptr->max_samples) {
+	if (!dev_ptr->sensor_connected || num_samples > dev_ptr->current_fw->max_samples) {
 		return 1;
 	}
 
@@ -580,29 +575,23 @@ uint8_t ch_common_set_max_range(ch_dev_t *dev_ptr, uint16_t max_range_mm) {
 	ret_val = (!dev_ptr->sensor_connected);
 
 	if (!ret_val) {
-		num_samples = dev_ptr->api_funcs.mm_to_samples(dev_ptr, max_range_mm);
+		num_samples = ch_common_mm_to_samples(dev_ptr, max_range_mm);
 
-		if (num_samples > dev_ptr->max_samples) {
-			num_samples        = dev_ptr->max_samples;
-			dev_ptr->max_range = ch_samples_to_mm(dev_ptr, num_samples);  // store reduced max range
+		if (num_samples > dev_ptr->current_fw->max_samples) {
+			num_samples        = dev_ptr->current_fw->max_samples;
+			dev_ptr->max_range = ch_common_samples_to_mm(dev_ptr, num_samples);  // store reduced max range
 		} else {
 			dev_ptr->max_range = max_range_mm;  // store user-specified max range
 		}
 
-#ifdef CHDRV_DEBUG
-		char cbuf[80];
-		snprintf(cbuf, sizeof(cbuf), "num_samples=%lu\n", num_samples);
-		chbsp_print_str(cbuf);
-#endif
+		CH_LOG_DEBUG("num_samples=%lu", num_samples);
 	}
 
 	if (!ret_val) {
 		ret_val = ch_set_num_samples(dev_ptr, num_samples);
 	}
 
-#ifdef CHDRV_DEBUG
-	printf("Set samples: ret_val: %u  dev_ptr->num_rx_samples: %u\n", ret_val, dev_ptr->num_rx_samples);
-#endif
+	CH_LOG_INFO("Set samples: ret_val: %u  dev_ptr->num_rx_samples: %u", ret_val, dev_ptr->num_rx_samples);
 
 #endif  // INCLUDE_SHASTA_SUPPORT
 	return ret_val;
@@ -618,7 +607,7 @@ uint16_t ch_common_mm_to_samples(ch_dev_t *dev_ptr, uint16_t num_mm) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 	ch_odr_t odr = (ch_odr_t)dev_ptr->meas_queue.meas[CH_DEFAULT_MEAS_NUM].odr;
 #else
-	oversample = dev_ptr->oversample;  // set during f/w init
+	oversample = dev_ptr->current_fw->oversample;  // set during f/w init
 #endif
 
 	err = (!dev_ptr) || (!dev_ptr->sensor_connected);
@@ -640,7 +629,7 @@ uint16_t ch_common_mm_to_samples(ch_dev_t *dev_ptr, uint16_t num_mm) {
 		scale_factor = (uint32_t)dev_ptr->pmut_clock_fcount;
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
 		if (dev_ptr->tof_scale_factor == 0) {
-			dev_ptr->store_scalefactor(dev_ptr);
+			dev_ptr->current_fw->calib_funcs->store_scalefactor(dev_ptr);
 		}
 		scale_factor = (uint32_t)dev_ptr->tof_scale_factor;
 #endif
@@ -684,68 +673,10 @@ uint16_t ch_common_samples_to_mm(ch_dev_t *dev_ptr, uint16_t num_samples) {
 	}
 
 	/* Adjust for oversampling, if used */
-	num_mm >>= dev_ptr->oversample;
+	num_mm                >>= dev_ptr->current_fw->oversample;
 #endif
 
 	return (uint16_t)num_mm;
-}
-
-uint8_t ch_common_set_static_range(ch_dev_t *dev_ptr, uint16_t num_samples) {
-	uint8_t ret_val = 1;  // default is error return
-
-#if defined(INCLUDE_ALGO_RANGEFINDER)
-	if (dev_ptr->part_number == CH101_PART_NUMBER) {
-#ifdef INCLUDE_WHITNEY_SUPPORT
-		if (dev_ptr->sensor_connected) {
-			ret_val = chdrv_write_byte(dev_ptr, CH101_COMMON_REG_STAT_RANGE, num_samples);
-
-			if (!ret_val) {
-				ret_val = chdrv_write_byte(dev_ptr, CH101_COMMON_REG_STAT_COEFF, CH101_COMMON_STAT_COEFF_DEFAULT);
-			}
-
-			if (!ret_val) {
-				dev_ptr->static_range = num_samples;
-			}
-		}
-#else
-		(void)num_samples;
-#endif
-	} else if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
-#ifdef INCLUDE_SHASTA_SUPPORT
-		ret_val = ch_common_meas_set_static_filter(dev_ptr, CH_DEFAULT_MEAS_NUM, num_samples);
-#else
-		(void)num_samples;
-#endif  // INCLUDE_SHASTA_SUPPORT
-	}
-
-#else
-	(void)dev_ptr;
-	(void)num_samples;
-#endif  // INCLUDE_ALGO_RANGEFINDER
-
-	return ret_val;
-}
-
-uint8_t ch_common_get_num_targets(ch_dev_t *dev_ptr) {
-	uint8_t num_valid_targets = 0;
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	uint16_t num_targets_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_algo_out_addr)->tL.num_valid_targets);
-
-	chdrv_read_byte(dev_ptr, num_targets_addr, &num_valid_targets);
-#else
-	(void)dev_ptr;  // requires rangefinder support
-#endif
-
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-	uint32_t range = ch_common_get_range(dev_ptr, CH_RANGE_ECHO_ONE_WAY);
-	if (range != CH_NO_TARGET) {
-		num_valid_targets = 1;  // CHx01 only detects single target
-	}
-#endif  // INCLUDE_SHASTA_SUPPORT
-
-	return num_valid_targets;
 }
 
 uint32_t ch_common_range_lsb_to_mm(const ch_dev_t *dev_ptr, uint32_t time_of_flight, ch_range_t range_type) {
@@ -756,21 +687,21 @@ uint32_t ch_common_range_lsb_to_mm(const ch_dev_t *dev_ptr, uint32_t time_of_fli
 	uint32_t rtc_cal_pulse_ms = (uint32_t)dev_ptr->group->rtc_cal_pulse_ms;
 
 	uint32_t num = (CH_SPEEDOFSOUND_MPS * ((rtc_cal_pulse_ms * time_of_flight * (uint32_t)dev_ptr->fcount_cycles) >>
-	                                       (2 + odr))  // bitshift down by 10 to handle overflo;
+	                                       (2 + odr))  // bitshift down by 10 to handle overflow;
 	);
 	// this one can't overflow, bitshift down by 10 to match num
 	uint32_t den = ((uint32_t)dev_ptr->rtc_cal_result * (uint32_t)dev_ptr->pmut_clock_fcount) >> 11;
 
 	range = (num / den);
-#ifdef CHDRV_DEBUG  // formula debug
-	printf("num = (%u * ((%lu * %lu * %lu) >> (2 + %lu)))) = %lu\n", CH_SPEEDOFSOUND_MPS, rtc_cal_pulse_ms,
-	       time_of_flight, (uint32_t)dev_ptr->fcount_cycles, odr, num);
-	printf("den = ((%u * %u) >> 11) = %lu\n", dev_ptr->rtc_cal_result, dev_ptr->pmut_clock_fcount, den);
-	printf("range = %lu   num = %lu   den = %lu\n", range, num, den);
-#endif
+
+	// formula debug
+	CH_LOG_DEBUG("num = (%u * ((%lu * %lu * %lu) >> (2 + %lu)))) = %lu", CH_SPEEDOFSOUND_MPS, rtc_cal_pulse_ms,
+	             time_of_flight, (uint32_t)dev_ptr->fcount_cycles, odr, num);
+	CH_LOG_DEBUG("den = ((%u * %u) >> 11) = %lu", dev_ptr->rtc_cal_result, dev_ptr->pmut_clock_fcount, den);
+	CH_LOG_DEBUG("range = %lu   num = %lu   den = %lu", range, num, den);
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	uint16_t scale_factor = dev_ptr->tof_scale_factor;
+	uint16_t scale_factor   = dev_ptr->tof_scale_factor;
 
 	if (scale_factor != 0) {
 		uint32_t num = (CH_SPEEDOFSOUND_MPS * dev_ptr->group->rtc_cal_pulse_ms * (uint32_t)time_of_flight);
@@ -780,16 +711,17 @@ uint32_t ch_common_range_lsb_to_mm(const ch_dev_t *dev_ptr, uint32_t time_of_fli
 			range *= 2;
 		}
 		// Adjust for oversampling, if used
-		range >>= dev_ptr->oversample;
+		range >>= dev_ptr->current_fw->oversample;
 	}
 #endif  // INCLUDE_SHASTA_SUPPORT
 
 	// If rx-only node, adjust for pre-trigger time included in ToF
 	if (dev_ptr->mode == CH_MODE_TRIGGERED_RX_ONLY) {
 		uint32_t pretrig_adj = (CH_SPEEDOFSOUND_MPS * dev_ptr->group->pretrig_delay_us * 32) / 1000;
-#ifdef CHDRV_DEBUG  // formula debug
-		printf("pre-trig adjust = %lu:  range before = %lu  ", pretrig_adj, range);
-#endif
+
+		// formula debug
+		CH_LOG_DEBUG_START("pre-trig adjust = %lu:  range before = %lu  ", pretrig_adj, range);
+
 		if (range > pretrig_adj) {
 			// subtract adjustment from calculated range
 			range -= pretrig_adj;
@@ -797,222 +729,16 @@ uint32_t ch_common_range_lsb_to_mm(const ch_dev_t *dev_ptr, uint32_t time_of_fli
 			// underflow - range is very close to zero, use minimum value
 			range = CH_MIN_RANGE_VAL;
 		}
-#ifdef CHDRV_DEBUG  // formula debug
-		printf("after = %lu\n", range);
-#endif
+
+		// formula debug
+		CH_LOG_DEBUG_MSG("after = %lu", range);
+		CH_LOG_DEBUG_END();
 	}
 
 	if ((range_type == CH_RANGE_ECHO_ONE_WAY) && (range >= (CH_MIN_RANGE_VAL * 2))) {
 		range /= 2;  // convert round-trip to one-way
 	}
 	return range;
-}
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-static uint8_t get_n_delay_cic(const ch_dev_t *dev_ptr, int8_t *n_delay_cic) {
-	// table below obtained experimentally. tuned to minimize offset across
-	// parts and cic_odr settings.
-	static const int8_t num_delay_cic[ICU_DEVICES_NUM][ODR_VALUES_NUM] = {
-			/* ODR : 2, 3, 4, 5, 6  */
-
-			{4, 4, 5, 6, 6},  // Tahoe   ICU10201
-			{3, 3, 4, 5, 6},  // Sierra  ICU20201
-			{3, 3, 3, 4, 5}   // Trinity ICU30201
-
-	};
-	uint8_t odr_out = dev_ptr->odr_out;
-	if ((odr_out < CH_ODR_FREQ_DIV_32) || (odr_out > CH_ODR_FREQ_DIV_2)) {
-		return RET_ERR;  // Error: Invalid ODR.
-	}
-	uint8_t part_idx = 0;  // Part type index for num_delay_cic array.
-	switch (dev_ptr->part_number) {
-	case ICU10201_PART_NUMBER: {
-		part_idx = 0;
-		break;
-	}
-	case ICU20201_PART_NUMBER: {
-		part_idx = 1;
-		break;
-	}
-	case ICU30201_PART_NUMBER: {
-		part_idx = 2;
-		break;
-	}
-	default: {
-		part_idx = 1;  // Assume ICU-20201
-		break;
-	}
-	}
-#ifdef CHDRV_DEBUG
-	printf(" ODR = %d, PNum: %d, PIdx: %d, OIdx: %d, cic_delay: %d ", odr_out, dev_ptr->part_number, part_idx,
-	       odr_out - 2, (uint8_t)num_delay_cic[part_idx][odr_out - 2]);
-#endif
-	*n_delay_cic = num_delay_cic[part_idx][odr_out - CH_ODR_FREQ_DIV_32];
-	return RET_OK;
-}
-
-static uint8_t get_tof_offset_lsb(const ch_dev_t *dev_ptr, int32_t *tof_offset_lsb) {
-	int32_t pre_rx_ticks;
-	*tof_offset_lsb = 0;
-
-	uint8_t odr_out = dev_ptr->odr_out;
-	// Compensate for offset error due to pre-rx transmit/count delay and CIC filter delay
-	uint32_t pre_rx_cycles = dev_ptr->meas_pre_rx_cycles[dev_ptr->last_measurement];
-
-	if (odr_out > CH_ODR_FREQ_DIV_8) {
-		pre_rx_ticks = pre_rx_cycles << (odr_out - CH_ODR_FREQ_DIV_8);
-	} else if (odr_out < CH_ODR_FREQ_DIV_8) {
-		pre_rx_ticks = pre_rx_cycles >> (CH_ODR_FREQ_DIV_8 - odr_out);
-	} else {
-		pre_rx_ticks = pre_rx_cycles;
-	}
-	int8_t n_delay_cic;
-	if (get_n_delay_cic(dev_ptr, &n_delay_cic) != RET_OK) {
-		return RET_ERR;  // Indicates invalid ODR
-	}
-	*tof_offset_lsb = (n_delay_cic << 7) - pre_rx_ticks;
-	return RET_OK;
-}
-#endif
-
-uint32_t ch_common_get_target_range(ch_dev_t *dev_ptr, uint8_t target_num, ch_range_t range_type) {
-	uint32_t range          = CH_NO_TARGET;
-	uint32_t time_of_flight = 0;
-	int err;
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-	target_list_t *tgt_list_ptr = (target_list_t *)&(dev_ptr->algo_out.tL);
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-	uint8_t tof_reg;
-
-	(void)target_num; /* parameter not used with whitney */
-#endif
-
-	if (dev_ptr->sensor_connected) {
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-		/* Get current target list from sensor */
-		err = read_target_list(dev_ptr);
-#ifdef CHDRV_DEBUG
-		uint8_t meas_num      = dev_ptr->last_measurement;
-		uint16_t num_iq_bytes = dev_ptr->num_iq_bytes;
-		printf("meas_num=%d num_iq_bytes=%d\n", meas_num, num_iq_bytes);
-#endif
-
-		if (tgt_list_ptr->num_valid_targets == 0) {
-			/* No target detected */
-			err = 1;
-		}
-
-		if (!err) {
-			/* Report specified target from list */
-			time_of_flight = (uint32_t)tgt_list_ptr->targets[target_num].range;
-
-#ifdef CHDRV_DEBUG
-			uint8_t num_valid_targets = tgt_list_ptr->num_valid_targets;
-			uint8_t odr_out_          = dev_ptr->odr_out;
-			uint16_t raw_range        = tgt_list_ptr->targets[0].range;
-			uint16_t amplitude        = tgt_list_ptr->targets[0].amplitude;
-			printf("target list:  num_valid_targets=%d  odr_out=%d  range[0]=%d  amp[0]=%d\n\r", num_valid_targets,
-			       odr_out_, raw_range, amplitude);
-#endif
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-			int32_t tof_offset_lsb;
-			if (get_tof_offset_lsb(dev_ptr, &tof_offset_lsb) != RET_OK) {
-				// error means bad ODR. better to make it fail obviously here than silently continue without
-				// the compensation
-				return CH_NO_TARGET;
-			}
-
-			time_of_flight -= tof_offset_lsb;
-#endif
-
-#ifdef CHDRV_DEBUG
-			printf("adjusted time_of_flight = %lu\n", time_of_flight);
-#endif
-			range = ch_common_range_lsb_to_mm(dev_ptr, time_of_flight, range_type);
-		}
-
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-		if (dev_ptr->max_num_thresholds == CHX01_COMMON_NUM_THRESHOLDS) {
-			tof_reg = CHX01_GPRMT_REG_TOF;
-		} else {
-			tof_reg = CH101_COMMON_REG_TOF;
-		}
-
-		uint16_t time_of_flight_16bit;
-		err            = chdrv_read_word(dev_ptr, tof_reg, &time_of_flight_16bit);
-		time_of_flight = (uint32_t)time_of_flight_16bit;
-
-		if (!err && (time_of_flight != UINT16_MAX)) {  // If object detected
-
-			if (dev_ptr->tof_scale_factor == 0) {
-				dev_ptr->store_scalefactor(dev_ptr);
-			}
-			range = ch_common_range_lsb_to_mm(dev_ptr, time_of_flight, range_type);
-		}
-#endif  // INCLUDE_SHASTA_SUPPORT
-	}
-	return range;
-}
-#endif  // INCLUDE_ALGO_RANGEFINDER
-
-uint32_t ch_common_get_range(ch_dev_t *dev_ptr, ch_range_t range_type) {
-	uint32_t range = 0;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	range = ch_common_get_target_range(dev_ptr, CH_DEFAULT_TARGET_NUM, range_type);
-#else
-	(void)dev_ptr;
-	(void)range_type;
-#endif
-
-	return range;
-}
-
-uint16_t ch_common_get_target_amplitude(ch_dev_t *dev_ptr, uint8_t target_num) {
-	uint16_t amplitude = 0;
-	(void)target_num;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	uint16_t amplitude_reg = 0;
-
-	if (dev_ptr->sensor_connected) {
-		if (dev_ptr->asic_gen == CH_ASIC_GEN_1_WHITNEY) {
-#ifdef INCLUDE_WHITNEY_SUPPORT
-			if (dev_ptr->max_num_thresholds == CHX01_COMMON_NUM_THRESHOLDS) {
-				amplitude_reg = CHX01_GPRMT_REG_AMPLITUDE;
-			} else {
-				amplitude_reg = CH101_COMMON_REG_AMPLITUDE;
-			}
-#endif
-		} else if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
-#ifdef INCLUDE_SHASTA_SUPPORT
-			amplitude_reg = (uint16_t)(uintptr_t) & ((dev_ptr->sens_algo_out_addr)->tL.targets[target_num].amplitude);
-#endif  // INCLUDE_SHASTA_SUPPORT
-		}
-
-		if (amplitude_reg != 0) {
-			chdrv_read_word(dev_ptr, amplitude_reg, &amplitude);
-		}
-	}
-
-#else   // INCLUDE_ALGO_RANGEFINDER
-	(void)dev_ptr;
-#endif  // INCLUDE_ALGO_RANGEFINDER
-
-	return amplitude;
-}
-
-uint16_t ch_common_get_amplitude(ch_dev_t *dev_ptr) {
-	uint16_t amplitude;
-
-	amplitude = ch_common_get_target_amplitude(dev_ptr, CH_DEFAULT_TARGET_NUM);
-
-	return amplitude;
 }
 
 uint16_t ch_common_get_num_output_samples(ch_dev_t *dev_ptr) {
@@ -1050,7 +776,7 @@ uint8_t ch_common_get_locked_state(ch_dev_t *dev_ptr) {
 	uint8_t ret_val = 0;
 #ifdef INCLUDE_WHITNEY_SUPPORT
 	uint8_t ready_reg;
-	uint8_t lock_mask = dev_ptr->freqLockValue;
+	uint8_t lock_mask = dev_ptr->current_fw->freqLockValue;
 
 	if (dev_ptr->part_number == CH101_PART_NUMBER) {
 		ready_reg = CH101_COMMON_REG_READY;
@@ -1165,11 +891,10 @@ static uint32_t measure_pmut_frequency(ch_dev_t *dev_ptr) {
 	reg_addr = (uint16_t)(uintptr_t) & (clock_ctrl_ptr->fcount_cycles);  // fcount cycles
 	chdrv_write_word(dev_ptr, reg_addr, dev_ptr->fcount_cycles);
 	err = chdrv_event_trigger_and_wait(dev_ptr, EVENT_MUT_FCOUNT);  // start PMUT freq count
-#ifdef CHDRV_DEBUG
+
 	if (err) {
-		printf("measure_pmut_frequency:  error waiting for EVENT_MUT_FCOUNT\n");
+		CH_LOG_ERR("Error waiting for EVENT_MUT_FCOUNT");
 	}
-#endif
 
 	if (!err) {
 		/* read result */
@@ -1189,9 +914,7 @@ static uint32_t measure_pmut_frequency(ch_dev_t *dev_ptr) {
 		dev_ptr->pmut_clock_fcount = raw_pmut_count;
 	}
 
-#ifdef CHDRV_DEBUG
-	printf("measure_pmut_frequency:  raw_pmut_count = %u pmut_freq = %lu Hz\n", raw_pmut_count, pmut_freq);
-#endif
+	CH_LOG_INFO("raw_pmut_count = %u pmut_freq = %lu Hz", raw_pmut_count, pmut_freq);
 
 	return pmut_freq;
 }
@@ -1202,11 +925,8 @@ void ch_common_store_op_freq(ch_dev_t *dev_ptr) {
 	uint32_t pmut_freq;
 	uint32_t cpu_freq;
 
-#ifdef CHDRV_DEBUG
-	printf("\n\r");
-	printf("ch_common_store_op_freq:  dev_ptr->fcount_cycles = %u\n", dev_ptr->fcount_cycles);
-	printf("ch_common_store_op_freq:  dev_ptr->rtc_frequency = %u Hz\n", dev_ptr->rtc_frequency);
-#endif
+	CH_LOG_DEBUG("dev_ptr->fcount_cycles = %u", dev_ptr->fcount_cycles);
+	CH_LOG_DEBUG("dev_ptr->rtc_frequency = %u Hz", dev_ptr->rtc_frequency);
 
 	/* Run BIST on sensor */
 	chdrv_run_bist(dev_ptr);
@@ -1229,13 +949,8 @@ void ch_common_store_op_freq(ch_dev_t *dev_ptr) {
 	uint32_t den;
 	uint32_t op_freq;
 
-	if (dev_ptr->max_num_thresholds == CHX01_COMMON_NUM_THRESHOLDS) {
-		tof_sf_reg = CHX01_GPRMT_REG_TOF_SF;
-	} else {
-		tof_sf_reg = CH101_COMMON_REG_TOF_SF;
-	}
-
-	freq_counter_cycles = dev_ptr->freqCounterCycles;
+	tof_sf_reg          = get_tof_sf_reg_addr(dev_ptr);
+	freq_counter_cycles = dev_ptr->current_fw->freqCounterCycles;
 
 	chdrv_read_word(dev_ptr, tof_sf_reg, &raw_freq);
 
@@ -1281,9 +996,8 @@ void ch_common_store_bandwidth(ch_dev_t *dev_ptr) {
 		dev_ptr->bandwidth = (uint16_t)FIXED2INT(bandwidth);
 	} else {
 		dev_ptr->bandwidth = 0;
-#ifdef CHDRV_DEBUG
-		printf("Error reading BIST IQ data : %u\r\n", err);
-#endif
+
+		CH_LOG_ERR("Error reading BIST IQ data : %u", err);
 	}
 }
 
@@ -1293,11 +1007,7 @@ void ch_common_store_scale_factor(ch_dev_t *dev_ptr) {
 	uint8_t tof_sf_reg;
 	uint16_t tof_scale_factor;
 
-	if (dev_ptr->max_num_thresholds == CHX01_COMMON_NUM_THRESHOLDS) {
-		tof_sf_reg = CHX01_GPRMT_REG_TOF_SF;
-	} else {
-		tof_sf_reg = CH101_COMMON_REG_TOF_SF;
-	}
+	tof_sf_reg = get_tof_sf_reg_addr(dev_ptr);
 
 	err = chdrv_read_word(dev_ptr, tof_sf_reg, &tof_scale_factor);
 	if (!err) {
@@ -1310,183 +1020,6 @@ void ch_common_store_scale_factor(ch_dev_t *dev_ptr) {
 #endif
 }
 
-uint8_t ch_common_set_thresholds(ch_dev_t *dev_ptr, ch_thresholds_t *lib_thresh_buf_ptr) {
-	uint8_t ret_val = RET_OK;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	if (dev_ptr->sensor_connected) {
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-		if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
-			ret_val = ch_common_meas_set_thresholds(dev_ptr, CH_DEFAULT_MEAS_NUM, lib_thresh_buf_ptr);
-		}
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-		uint8_t thresh_level_reg;  // threshold level reg (first in array)
-		if (dev_ptr->asic_gen == CH_ASIC_GEN_1_WHITNEY) {
-			if (dev_ptr->max_num_thresholds == CHX01_COMMON_NUM_THRESHOLDS) {
-				thresh_level_reg = CHX01_GPRMT_REG_THRESHOLDS;
-			} else {
-				return ret_val;  // Not supported
-			}
-		}
-		uint16_t start_sample = 0;
-		if (ret_val == RET_OK) {
-			for (uint8_t thresh_num = 0; thresh_num < dev_ptr->max_num_thresholds; thresh_num++) {
-				uint8_t thresh_len_reg = 0;  // offset of register for this threshold's length
-				uint8_t thresh_len;
-				uint16_t thresh_level;
-
-				if (thresh_num < (dev_ptr->max_num_thresholds - 1)) {
-					uint16_t next_start_sample = lib_thresh_buf_ptr->threshold[thresh_num + 1].start_sample;
-
-					thresh_len   = (next_start_sample - start_sample);
-					start_sample = next_start_sample;
-				} else {
-					thresh_len = 0;
-				}
-
-				if (thresh_num == 0) {
-					thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_0;
-				} else if (thresh_num == 1) {
-					thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_1;
-				} else if (thresh_num == 2) {
-					thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_2;
-				} else if (thresh_num == 3) {
-					thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_3;
-				} else if (thresh_num == 4) {
-					thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_4;
-				} else if (thresh_num == 5) {
-					thresh_len_reg = 0;  // last threshold does not have length field - assumed to extend to end of data
-				}
-
-				if (thresh_len_reg != 0) {
-					ret_val = chdrv_write_byte(dev_ptr, thresh_len_reg,
-					                           thresh_len);  // set length (if any) for this threshold
-				}
-
-				// write level to this threshold's entry in register array
-				thresh_level = lib_thresh_buf_ptr->threshold[thresh_num].level;
-				ret_val |=
-						chdrv_write_word(dev_ptr, (thresh_level_reg + (thresh_num * sizeof(uint16_t))), thresh_level);
-
-			}  // end 	for (thresh_num < max_num_thresholds)
-		}
-
-#endif  // INCLUDE_SHASTA_SUPPORT
-
-	}  // end 	if (dev_ptr->sensor_connected)
-
-#else   // INCLUDE_ALGO_RANGEFINDER not defined
-	(void)dev_ptr;
-	(void)lib_thresh_buf_ptr;
-#endif  // INCLUDE_ALGO_RANGEFINDER
-
-	return ret_val;
-}
-
-uint8_t ch_common_get_thresholds(ch_dev_t *dev_ptr, ch_thresholds_t *lib_thresh_buf_ptr) {
-	uint8_t ret_val = 1;  // default = error return
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	if (dev_ptr->sensor_connected && (lib_thresh_buf_ptr != NULL)) {
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-		ret_val = ch_common_meas_get_thresholds(dev_ptr, CH_DEFAULT_MEAS_NUM, lib_thresh_buf_ptr);
-
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-		uint8_t thresh_len_reg = 0;  // offset of register for this threshold's length
-		uint8_t thresh_level_reg;    // threshold level reg (first in array)
-		uint8_t thresh_num;
-		uint8_t thresh_len    = 0;  // number of samples described by each threshold
-		uint16_t start_sample = 0;  // calculated start sample for each threshold
-
-		if (dev_ptr->max_num_thresholds == CHX01_COMMON_NUM_THRESHOLDS) {
-			thresh_level_reg = CHX01_GPRMT_REG_THRESHOLDS;
-		} else {
-			return ret_val;  // Not supported
-		}
-
-		for (thresh_num = 0; thresh_num < dev_ptr->max_num_thresholds; thresh_num++) {
-
-			if (thresh_num == 0) {
-				thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_0;
-			} else if (thresh_num == 1) {
-				thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_1;
-			} else if (thresh_num == 2) {
-				thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_2;
-			} else if (thresh_num == 3) {
-				thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_3;
-			} else if (thresh_num == 4) {
-				thresh_len_reg = CHX01_GPRMT_REG_THRESH_LEN_4;
-			} else if (thresh_num == 5) {
-				thresh_len_reg = 0;  // last threshold does not have length field - assumed to extend to end of data
-			}
-
-			if (thresh_len_reg != 0) {
-				// read the length field register for this threshold
-				chdrv_read_byte(dev_ptr, thresh_len_reg, &thresh_len);
-			} else {
-				thresh_len = 0;
-			}
-
-			lib_thresh_buf_ptr->threshold[thresh_num].start_sample = start_sample;
-			start_sample += thresh_len;  // increment start sample for next threshold
-
-			// get level from this threshold's entry in register array
-			chdrv_read_word(dev_ptr, (thresh_level_reg + (thresh_num * sizeof(uint16_t))),
-			                &(lib_thresh_buf_ptr->threshold[thresh_num].level));
-		}
-		ret_val = 0;  // return OK
-#endif  // INCLUDE_SHASTA_SUPPORT
-	}   // end if (dev_ptr->sensor_connected && (lib_thresh_buf_ptr != NULL))
-#else
-	(void)dev_ptr;
-	(void)lib_thresh_buf_ptr;
-#endif  // INCLUDE_ALGO_RANGEFINDER
-
-	return ret_val;
-}
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-#ifdef INCLUDE_ALGO_RANGEFINDER
-
-static void thresh_lib_to_sensor(ch_dev_t *dev_ptr, ch_thresholds_t *lib_thresh_ptr, thresholds_t *sens_thresh_ptr) {
-	uint8_t thresh_num;
-	uint8_t max_num_thresholds = CH_NUM_THRESHOLDS;
-
-	for (thresh_num = 0; thresh_num < max_num_thresholds; thresh_num++) {
-
-		sens_thresh_ptr->threshold[thresh_num] = lib_thresh_ptr->threshold[thresh_num].level;
-
-		if (thresh_num == (max_num_thresholds - 1)) {
-			sens_thresh_ptr->stop_index[thresh_num] = dev_ptr->max_samples;
-		} else {
-			sens_thresh_ptr->stop_index[thresh_num] = lib_thresh_ptr->threshold[thresh_num + 1].start_sample;
-		}
-	}
-}
-
-static void thresh_sensor_to_lib(ch_dev_t *dev_ptr, thresholds_t *sens_thresh_ptr, ch_thresholds_t *lib_thresh_ptr) {
-	uint8_t thresh_num;
-	uint16_t start_sample;
-	uint8_t max_num_thresholds = CH_NUM_THRESHOLDS;
-	(void)dev_ptr;
-
-	for (thresh_num = 0; thresh_num < max_num_thresholds; thresh_num++) {
-
-		if (thresh_num == 0) {
-			start_sample = 0;
-		} else {
-			start_sample = sens_thresh_ptr->stop_index[thresh_num - 1];
-		}
-
-		lib_thresh_ptr->threshold[thresh_num].start_sample = start_sample;
-
-		lib_thresh_ptr->threshold[thresh_num].level = sens_thresh_ptr->threshold[thresh_num];
-	}
-}
-#endif  // INCLUDE_ALGO_RANGEFINDER
-#endif  // INCLUDE_SHASTA_SUPPORT
-
 static uint8_t get_sample_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint16_t start_sample, uint16_t num_samples,
                                ch_io_mode_t mode, uint8_t sample_size_in_bytes) {
 
@@ -1495,7 +1028,7 @@ static uint8_t get_sample_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint1
 	ch_group_t *grp_ptr = dev_ptr->group;
 	int err             = 0;
 
-	if ((num_samples == 0) || ((start_sample + num_samples) > dev_ptr->max_samples)) {
+	if ((num_samples == 0) || ((start_sample + num_samples) > dev_ptr->current_fw->max_samples)) {
 		return 1;
 	}
 
@@ -1506,7 +1039,7 @@ static uint8_t get_sample_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint1
 	if (is_continuous && last_meas == 1) {
 		// start from middle of buffer in continuous mode when reading the
 		// result of meas 1. Mult by 4 to convert to bytes then divide by 2
-		iq_data_addr += (dev_ptr->max_samples << 2) >> 1;
+		iq_data_addr += (dev_ptr->current_fw->max_samples << 2) >> 1;
 	}
 	iq_data_addr += (start_sample * sample_size_in_bytes);  // add sample offset
 
@@ -1520,7 +1053,7 @@ static uint8_t get_sample_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint1
 	}
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	uint8_t use_prog_read = 0;                              // default = do not use low-level programming interface
+	uint8_t use_prog_read     = 0;                          // default = do not use low-level programming interface
 
 #ifndef USE_STD_I2C_FOR_IQ
 	if (grp_ptr->num_connected[dev_ptr->bus_index] == 1) {  // if only one device on this bus
@@ -1528,10 +1061,10 @@ static uint8_t get_sample_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint1
 	}
 #endif
 
-	if (dev_ptr->max_num_thresholds == CHX01_COMMON_NUM_THRESHOLDS) {
-		iq_data_addr = CHX01_GPRMT_REG_DATA;
-	} else {
+	if (dev_ptr->current_fw->max_num_thresholds == 0) {
 		iq_data_addr = CH101_COMMON_REG_DATA;
+	} else {
+		iq_data_addr = CHX01_GPRMT_REG_DATA;
 	}
 
 	iq_data_addr += (start_sample * sample_size_in_bytes);
@@ -1692,7 +1225,7 @@ uint8_t ch_common_get_amplitude_data(ch_dev_t *dev_ptr, uint16_t *buf_ptr, uint1
 	uint8_t chunks_left       = (num_samples + CH_IQ_SAMPLES_PER_READ - 1) / CH_IQ_SAMPLES_PER_READ;
 
 	/* Validate mode (only blocking mode is supported) and sample count/offset */
-	if ((mode != CH_IO_MODE_BLOCK) || (start_sample + num_samples > dev_ptr->max_samples)) {
+	if ((mode != CH_IO_MODE_BLOCK) || (start_sample + num_samples > dev_ptr->current_fw->max_samples)) {
 		error = 1;
 	}
 
@@ -1746,111 +1279,6 @@ uint8_t ch_common_get_amp_thresh_data(ch_dev_t *dev_ptr, ch_amp_thresh_t *buf_pt
 	return error;
 }
 
-uint8_t ch_common_set_time_plan(ch_dev_t *dev_ptr, ch_time_plan_t time_plan) {
-	uint8_t ret_val = 1;  // default return is error
-
-#ifdef INCLUDE_WHITNEY_SUPPORT
-	if (dev_ptr->part_number == CH101_PART_NUMBER) {  // CH-101 only - SonicSync unsupported in CH-201
-		uint8_t time_plan_reg = CH101_COMMON_REG_TIME_PLAN;
-
-		if (dev_ptr->sensor_connected) {
-			chdrv_write_byte(dev_ptr, time_plan_reg, time_plan);
-			ret_val = 0;
-		}
-	}
-#else
-	(void)dev_ptr;
-	(void)time_plan;
-#endif
-
-	return ret_val;  // error - SonicSync unsupported in CH-201
-}
-
-ch_time_plan_t ch_common_get_time_plan(ch_dev_t *dev_ptr) {
-	uint8_t time_plan = CH_TIME_PLAN_NONE;
-
-#ifdef INCLUDE_WHITNEY_SUPPORT
-	if (dev_ptr->part_number == CH101_PART_NUMBER) {  // CH-101 only - SonicSync unsupported in CH-201
-		uint8_t time_plan_reg = CH101_COMMON_REG_TIME_PLAN;
-
-		if (dev_ptr->sensor_connected) {
-			chdrv_read_byte(dev_ptr, time_plan_reg, &time_plan);
-		}
-	}
-#else
-	(void)dev_ptr;
-#endif
-
-	return (ch_time_plan_t)time_plan;
-}
-
-uint8_t ch_common_set_rx_holdoff(ch_dev_t *dev_ptr, uint16_t num_samples) {
-	uint8_t ret_val = RET_OK;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-#ifdef INCLUDE_SHASTA_SUPPORT
-	ret_val = ch_common_meas_set_rx_holdoff(dev_ptr, CH_DEFAULT_MEAS_NUM, num_samples);
-
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-	uint8_t rx_holdoff_reg;
-	uint16_t reg_value;
-
-	if (dev_ptr->part_number == CH101_PART_NUMBER) {
-		rx_holdoff_reg = CH101_COMMON_REG_RX_HOLDOFF;
-		reg_value      = num_samples;
-	} else {
-		rx_holdoff_reg = CH201_COMMON_REG_RX_HOLDOFF;
-		reg_value      = (num_samples / 2);  // CH201 value is 1/2 actual sample count
-	}
-
-	if (dev_ptr->sensor_connected) {
-		ret_val |= chdrv_write_byte(dev_ptr, rx_holdoff_reg, (uint8_t)reg_value);
-	}
-#endif  // INCLUDE_SHASTA_SUPPORT
-
-#else
-	(void)dev_ptr;
-	(void)num_samples;
-#endif  // INCLUDE_ALGO_RANGEFINDER
-
-	return ret_val;
-}
-
-uint16_t ch_common_get_rx_holdoff(ch_dev_t *dev_ptr) {
-	uint16_t rx_holdoff = 0;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-#if defined(INCLUDE_SHASTA_SUPPORT)
-
-	rx_holdoff = ch_common_meas_get_rx_holdoff(dev_ptr, CH_DEFAULT_MEAS_NUM);
-
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-	uint8_t rx_holdoff_reg;
-	uint8_t reg_val;
-
-	if (dev_ptr->sensor_connected) {
-		if (dev_ptr->part_number == CH101_PART_NUMBER) {
-			rx_holdoff_reg = CH101_COMMON_REG_RX_HOLDOFF;
-		} else {
-			rx_holdoff_reg = CH201_COMMON_REG_RX_HOLDOFF;
-		}
-		chdrv_read_byte(dev_ptr, rx_holdoff_reg, &reg_val);
-
-		rx_holdoff = (uint16_t)reg_val;
-
-		if (dev_ptr->part_number == CH201_PART_NUMBER) {
-			rx_holdoff *= 2; /* CH201 reports 1/2 actual sample count */
-		}
-	}
-#endif /* INCLUDE_SHASTA_SUPPORT */
-
-#else
-	(void)dev_ptr;
-#endif  // INCLUDE_ALGO_RANGEFINDER
-
-	return rx_holdoff;
-}
-
 uint8_t ch_common_set_rx_low_gain(ch_dev_t *dev_ptr, uint16_t num_samples) {
 	uint8_t ret_val = 1;
 
@@ -1899,9 +1327,8 @@ uint16_t ch_common_get_rx_low_gain(ch_dev_t *dev_ptr) {
 uint8_t ch_common_set_tx_length(ch_dev_t *dev_ptr, uint16_t num_cycles) {
 	uint8_t ret_val = 0;
 
-#ifdef CHDRV_DEBUG
-	printf("ch_common_set_tx_length: num_cycles=%d\n", num_cycles);
-#endif  // CHDRV_DEBUG
+	CH_LOG_INFO("num_cycles=%d", num_cycles);
+
 	if (dev_ptr->asic_gen == CH_ASIC_GEN_1_WHITNEY) {
 #ifdef INCLUDE_WHITNEY_SUPPORT
 		if (dev_ptr->part_number == CH101_PART_NUMBER) {
@@ -2041,7 +1468,7 @@ uint8_t ch_common_check_program(ch_dev_t *dev_ptr) {
 	uint8_t rx_buf[CH_PROG_XFER_SIZE];
 	uint8_t err = 0;
 
-	num_bytes     = dev_ptr->fw_text_size;
+	num_bytes     = dev_ptr->current_fw->fw_text_size;
 	num_transfers = (num_bytes + (CH_PROG_XFER_SIZE - 1)) / CH_PROG_XFER_SIZE;
 	bytes_left    = num_bytes;
 
@@ -2077,7 +1504,7 @@ uint8_t ch_common_check_program(ch_dev_t *dev_ptr) {
 		/* Compare read bytes with original firmware image */
 		if (!err) {
 			for (uint16_t idx = 0; idx < bytes_to_read; idx++) {
-				uint8_t *fw_ptr = ((uint8_t *)(dev_ptr->fw_text) + (xfer_num * CH_PROG_XFER_SIZE));
+				uint8_t *fw_ptr = ((uint8_t *)(dev_ptr->current_fw->fw_text) + (xfer_num * CH_PROG_XFER_SIZE));
 
 				if (rx_buf[idx] != fw_ptr[idx]) {
 					err = 1;
@@ -2115,13 +1542,22 @@ static uint32_t set_new_dco_code(ch_dev_t *dev_ptr, uint16_t dcocode) {
 	chdrv_write_word(dev_ptr, CH101_COMMON_REG_DCO_PERIOD, dcocode);
 	chdrv_wait_for_lock(dev_ptr, CHDRV_FREQLOCK_TIMEOUT_MS);
 	ch_common_set_mode(dev_ptr, CH_MODE_TRIGGERED_TX_RX);
-	dev_ptr->store_op_freq(dev_ptr);
+	dev_ptr->current_fw->calib_funcs->store_op_freq(dev_ptr);
 
 	if (dev_ptr->op_frequency == 0) {  // catch possible error where op_frequency is zero, causing divide by zero error
 		dev_ptr->op_frequency = PMUT_FREQUENCY_ERROR_CODE;
 	}
 	return dev_ptr->op_frequency;
 }
+
+static inline uint8_t get_tof_sf_reg_addr(const ch_dev_t *dev_ptr) {
+	if (dev_ptr->current_fw->max_num_thresholds == 0) {
+		return CH101_COMMON_REG_TOF_SF;
+	} else {
+		return CHX01_GPRMT_REG_TOF_SF;
+	}
+}
+
 #endif  // INCLUDE_WHITNEY_SUPPORT
 
 #ifdef INCLUDE_SHASTA_SUPPORT
@@ -2208,13 +1644,11 @@ static uint32_t interpolate_dco_code(ch_dev_t *dev_ptr, uint32_t target_period_n
 		freq_trim_est = SCM_PMUT_CLK_FREQ_TRIM_BM;
 	}
 	freq = set_new_pmut_code(dev_ptr, (uint16_t)freq_trim_est, bias_trim);
-#ifdef CHDRV_DEBUG
-	char cbuf[80];
-	snprintf(cbuf, sizeof(cbuf), "# %u, est=%u, dco0=%lu, dco1=%lu, dtarg=%lu, freq=%lu, ftarg= %lu\n",
-	         dev_ptr->io_index, (uint16_t)freq_trim_est, dco_period_ns[0], dco_period_ns[1], target_period_ns, freq,
-	         NSEC_PER_SEC / target_period_ns);
-	chbsp_print_str(cbuf);
-#endif
+
+	CH_LOG_INFO("# %u, est=%u, dco0=%lu, dco1=%lu, dtarg=%lu, freq=%lu, ftarg= %lu", dev_ptr->io_index,
+	            (uint16_t)freq_trim_est, dco_period_ns[0], dco_period_ns[1], target_period_ns, freq,
+	            NSEC_PER_SEC / target_period_ns);
+
 	*freq_trim_out = (uint16_t)freq_trim_est;
 
 	return freq;
@@ -2257,21 +1691,16 @@ static uint32_t find_closest_frequency(ch_dev_t *dev_ptr, uint16_t freq_trim_gue
 		if (min_frequency_err_hz > abs((int32_t)freq - (int32_t)target_freq_hz)) {
 			min_frequency_err_hz = abs((int32_t)freq - (int32_t)target_freq_hz);
 			idx_min_error        = i;
-#ifdef CHDRV_DEBUG
 
-			printf("# *");
-#endif
+			CH_LOG_DEBUG("# *");
 		}
-#ifdef CHDRV_DEBUG
-		char cbuf[80];
-		snprintf(cbuf, sizeof(cbuf), "# dcoest=%u, freq=%lu\n", (uint16_t)((int16_t)freq_trim_guess + i), freq);
-		chbsp_print_str(cbuf);
-#endif
+		CH_LOG_DEBUG("# dcoest=%u, freq=%lu", (uint16_t)((int16_t)freq_trim_guess + i), freq);
 	}
 	freq_trim_guess = (uint16_t)((int16_t)freq_trim_guess + idx_min_error);
 	freq            = set_new_pmut_code(dev_ptr, freq_trim_guess, bias_trim);
 	return freq;
 }
+
 #endif
 
 /*!
@@ -2323,43 +1752,33 @@ uint8_t ch_common_set_frequency(ch_dev_t *dev_ptr, uint32_t request_op_freq_hz) 
 		} else {
 			return ret_val;
 		}
-#ifdef CHDRV_DEBUG
-		char cbuf[80];
-		snprintf(cbuf, sizeof(cbuf), "# Port %u, dco0=%lu, dco1=%lu, dco_code_estimate=%u, freq=%lu, targ= %lu\n",
-		         dev_ptr->io_index, pmut_clk_period_ns[0], pmut_clk_period_ns[1], dco_code_estimate, freq,
-		         target_freq_hz);
-		chbsp_print_str(cbuf);
-#endif
+
+		CH_LOG_DEBUG("# Port %u, dco0=%lu, dco1=%lu, dco_code_estimate=%u, freq=%lu, targ= %lu", dev_ptr->io_index,
+		             pmut_clk_period_ns[0], pmut_clk_period_ns[1], dco_code_estimate, freq, target_freq_hz);
+
 		min_frequency_err_hz   = abs((int32_t)freq - (int32_t)target_freq_hz);
 		uint32_t idx_min_error = 0;
 		// if the error is too high, search around the estimate for the best code
 		if (min_frequency_err_hz > CH101_DCO_SEARCH_THRESHOLD) {
-#ifdef CHDRV_DEBUG
-			snprintf(cbuf, sizeof(cbuf), "# Frequency error above %dHz, searching for better match to %luHz\n",
-			         CH101_DCO_SEARCH_THRESHOLD, target_freq_hz);
-			chbsp_print_str(cbuf);
-#endif
+
+			CH_LOG_INFO("# Frequency error above %dHz, searching for better match to %luHz", CH101_DCO_SEARCH_THRESHOLD,
+			            target_freq_hz);
+
 			int i;
 			for (i = -5; i < 6; i++) {  //+/-5 DCO codes should be about +/-1500Hz
 				freq = set_new_dco_code(dev_ptr, dco_code_estimate + i);
 				if (abs((int32_t)freq - (int32_t)target_freq_hz) < min_frequency_err_hz) {
 					min_frequency_err_hz = abs((int32_t)freq - (int32_t)target_freq_hz);
 					idx_min_error        = i;
-#ifdef CHDRV_DEBUG
-					printf("# *");
-#endif
+
+					CH_LOG_DEBUG("# *");
 				}
-#ifdef CHDRV_DEBUG
-				snprintf(cbuf, sizeof(cbuf), "# dco_code_estimate=%u, freq=%lu\n", dco_code_estimate + i, freq);
-				chbsp_print_str(cbuf);
-#endif
+				CH_LOG_DEBUG("# dco_code_estimate=%u, freq=%lu", dco_code_estimate + i, freq);
 			}
 			dco_code_estimate = dco_code_estimate + idx_min_error;
 			freq              = set_new_dco_code(dev_ptr, dco_code_estimate);
-#ifdef CHDRV_DEBUG
-			snprintf(cbuf, sizeof(cbuf), "# Final setting dco=%u, freq=%lu\n", dco_code_estimate, freq);
-			chbsp_print_str(cbuf);
-#endif
+
+			CH_LOG_DEBUG("# Final setting dco=%u, freq=%lu", dco_code_estimate, freq);
 		}
 		ret_val = RET_OK;
 #endif  // INCLUDE_WHITNEY_SUPPORT
@@ -2415,12 +1834,7 @@ uint8_t ch_common_set_frequency(ch_dev_t *dev_ptr, uint32_t request_op_freq_hz) 
 		/* Store values in device descriptor */
 		dev_ptr->cpu_frequency = cpu_freq;
 
-#ifdef CHDRV_DEBUG
-		char cbuf[80];
-		snprintf(cbuf, sizeof(cbuf), "#ch_common_set_frequency freq_trim=%u, bias=%u freq=%lu\n", freq_trim_out,
-		         bias_trim, freq);
-		chbsp_print_str(cbuf);
-#endif
+		CH_LOG_INFO("freq_trim=%u, bias=%u freq=%lu", freq_trim_out, bias_trim, freq);
 		ret_val = RET_OK;
 #endif  // INCLUDE_SHASTA_SUPPORT
 	}
@@ -2436,7 +1850,7 @@ uint8_t ch_common_group_set_frequency(ch_group_t *grp_ptr, uint32_t request_op_f
 		ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 		if ((dev_ptr != NULL) && dev_ptr->sensor_connected) {
 
-			if (dev_ptr->api_funcs.set_frequency == NULL) {  // if no API support
+			if (dev_ptr->current_fw->api_funcs->set_frequency == NULL) {  // if no API support
 				ret_val = RET_ERR;
 			}
 		}
@@ -2583,7 +1997,11 @@ uint32_t ch_common_usec_to_cycles(ch_dev_t *dev_ptr, uint32_t num_usec) {
 	uint32_t cycles_per_pmut;  // "cycle" units per PMUT cycle
 
 	if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
+#ifdef INCLUDE_SHASTA_SUPPORT
 		cycles_per_pmut = SHASTA_SMCLK_CYCLES_PER_PMUT;  // Shasta uses SMCLK cycles
+#else
+		cycles_per_pmut = 0;  // return an error
+#endif
 	} else {
 		cycles_per_pmut = 1;  // Whitney uses PMUT transducer cycles
 	}
@@ -2600,70 +2018,29 @@ uint32_t ch_common_cycles_to_usec(ch_dev_t *dev_ptr, uint32_t num_cycles) {
 	num_usec = (num_cycles * (1000000 / 64)) / (op_freq / 64);  // calculate as if PMUT cycles
 
 	if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {  // Shasta uses SMCLK cycles
+#ifdef INCLUDE_SHASTA_SUPPORT
 		num_usec /= SHASTA_SMCLK_CYCLES_PER_PMUT;
+#else
+		num_usec        = 0;  // return an error
+#endif
 	}
 
 	return num_usec;
 }
 
-uint32_t ch_common_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec) {
-	uint32_t rtc_ticks = 0;
+uint16_t ch_common_usec_to_ticks(const ch_dev_t *dev_ptr, uint32_t num_usec) {
+	uint16_t rtc_ticks = 0;
 
-	rtc_ticks = ((num_usec / dev_ptr->group->rtc_cal_pulse_ms) * dev_ptr->rtc_cal_result) / 1000;
+	rtc_ticks = (uint16_t)((uint64_t)num_usec * dev_ptr->rtc_cal_result / dev_ptr->group->rtc_cal_pulse_ms / 1000);
 
 	return rtc_ticks;
 }
 
-uint32_t ch_common_ticks_to_usec(ch_dev_t *dev_ptr, uint32_t num_rtc_ticks) {
+uint32_t ch_common_ticks_to_usec(const ch_dev_t *dev_ptr, uint16_t num_rtc_ticks) {
 	uint32_t num_usec = 0;
 
-	num_usec = ((num_rtc_ticks * dev_ptr->group->rtc_cal_pulse_ms) / dev_ptr->rtc_cal_result) * 1000;
-
-	return num_usec;
-}
-
-uint32_t ch_common_get_tof_us(ch_dev_t *dev_ptr) {
-	uint32_t tof_us = 0;
-
-	tof_us = ch_common_get_target_tof_us(dev_ptr, CH_DEFAULT_TARGET_NUM);
-
-	return tof_us;
-}
-
-uint32_t ch_common_get_target_tof_us(ch_dev_t *dev_ptr, uint8_t target_num) {
-	uint32_t num_usec = 0;
-
-#if (defined(INCLUDE_SHASTA_SUPPORT) && defined(INCLUDE_ALGO_RANGEFINDER))
-	if (dev_ptr->sensor_connected) {
-		uint8_t err = 0;
-
-		/* Get current target list from sensor */  // TODO optimize reads vs. get_amplitude etc.
-		err = read_target_list(dev_ptr);
-
-		if (!err) {
-			/* Report specified target from list */
-			target_list_t *tgt_list_ptr = (target_list_t *)&(dev_ptr->algo_out.tL);
-			uint32_t tof_cycles         = (uint32_t)tgt_list_ptr->targets[target_num].range;
-
-			int32_t tof_offset_lsb;
-			if (get_tof_offset_lsb(dev_ptr, &tof_offset_lsb) != RET_OK) {
-				// error means bad ODR. better to make it fail obviously here than silently continue without
-				// the compensation
-				return CH_NO_TARGET;
-			}
-
-			tof_cycles -= tof_offset_lsb;
-
-			num_usec = ch_cycles_to_usec(dev_ptr, tof_cycles);
-		}
-	}
-
-#else
-	// TODO add whitney
-	(void)dev_ptr;
-	(void)target_num;
-
-#endif  // INCLUDE_SHASTA_SUPPORT	&& 	INCLUDE_ALGO_RANGEFINDER
+	num_usec =
+			(uint32_t)(((float)(num_rtc_ticks * dev_ptr->group->rtc_cal_pulse_ms) / dev_ptr->rtc_cal_result) * 1000.0);
 
 	return num_usec;
 }
@@ -2745,8 +2122,7 @@ uint8_t ch_common_meas_init_queue(ch_dev_t *dev_ptr) {
 }
 
 uint8_t ch_common_meas_import(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr) {
-	uint8_t needs_update = 0;  // set if sensor needs update
-	uint8_t err          = 0;  // default is error return
+	uint8_t err = RET_OK;  // default is error return
 
 	if (meas_queue_ptr != NULL) {
 		/* Copy queue definition */
@@ -2765,34 +2141,20 @@ uint8_t ch_common_meas_import(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue
 		dev_ptr->group->sensor_int_pin  = (meas_queue_ptr->intconfig & INTCONFIG_DR_INT2 ? 2 : 1);
 		dev_ptr->group->sensor_trig_pin = (meas_queue_ptr->trigsrc == TRIGSRC_HWTRIGGER_INT2 ? 2 : 1);
 
-		/* Update measurement interval if self-timed (freerunning) */
+		/* Update measurement interval for MRQ0.if self-timed (freerunning) */
 		if (meas_queue_ptr->trigsrc == TRIGSRC_RTC) {
 			/* filter RTC raw measure period out of time hopping mask */
 			uint16_t meas_period = get_rtc_measure_period(meas_queue_ptr->meas[CH_DEFAULT_MEAS_NUM].meas_period);
 			uint32_t interval_ms = (uint32_t)meas_period * dev_ptr->group->rtc_cal_pulse_ms / dev_ptr->rtc_cal_result;
 			dev_ptr->freerun_intvl_us = interval_ms * 1000;
 		}
-		needs_update = 1;
+		/* Update sensor */
+		err = ch_common_meas_write_config(dev_ptr);
 	}
 
 	if (algo_cfg_ptr != NULL) {
-#ifdef USE_INTERNAL_ALGO
-		/* Copy algo configuration to device descriptor, will be written to sensor later */
-		memcpy((void *)&(dev_ptr->algo_cfg), (void *)algo_cfg_ptr, sizeof(ICU_ALGO_SHASTA_CONFIG));
-		needs_update = 1;
-#else
-		/* Algo can't be stored in device descriptor, write measurement algorithm configuration directly to sensor */
-		uint16_t algo_cfg_addr = (uint16_t)(uintptr_t)dev_ptr->algo_info.algo_cfg_ptr;
-		// destination address on sensor
-		uint16_t algo_cfg_nbytes = dev_ptr->algo_info.algo_cfg_len;
-
-		err = chdrv_burst_write(dev_ptr, algo_cfg_addr, (uint8_t *)algo_cfg_ptr, algo_cfg_nbytes);
-#endif  // USE_INTERNAL_ALGO
-	}
-
-	/* Update sensor */
-	if (!err && needs_update) {
-		err = ch_common_meas_write_config(dev_ptr);
+		/* Write measurement algorithm configuration directly to sensor */
+		err |= ch_common_set_algo_config(dev_ptr, algo_cfg_ptr);
 	}
 
 	return err;
@@ -2800,11 +2162,7 @@ uint8_t ch_common_meas_import(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue
 
 uint8_t ch_common_meas_reset(ch_dev_t *dev_ptr, uint8_t meas_num) {
 	measurement_t *meas_ptr = (measurement_t *)&(dev_ptr->meas_queue.meas[meas_num]);
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	InvnAlgoRangeFinderMeasConfig *meas_cfg_ptr =
-			(InvnAlgoRangeFinderMeasConfig *)&(dev_ptr->algo_cfg.meas_cfg[meas_num]);
-#endif
-	uint8_t ret_val = 0;
+	uint8_t ret_val         = 0;
 
 	meas_ptr->meas_period = 0;
 	meas_ptr->odr         = CH_ODR_DEFAULT;
@@ -2817,21 +2175,6 @@ uint8_t ch_common_meas_reset(ch_dev_t *dev_ptr, uint8_t meas_num) {
 
 	meas_ptr->trx_inst[0].cmd_config = PMUT_CMD_EOF;
 
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	// Init meas config
-	meas_cfg_ptr->num_ranges              = 0;
-	meas_cfg_ptr->ringdown_cancel_samples = 0;
-	meas_cfg_ptr->static_target_samples   = 0;
-	meas_cfg_ptr->iq_output_format        = 0;
-	meas_cfg_ptr->filter_update_modulo    = 0;
-
-	// Init thresholds
-	for (int i = 0; i < LEN_THRESH; i++) {
-		meas_cfg_ptr->thresholds.stop_index[i] = 0;
-		meas_cfg_ptr->thresholds.threshold[i]  = 0;
-	}
-#endif
-
 	// Init counters
 	dev_ptr->meas_num_segments[meas_num]   = 0;
 	dev_ptr->meas_num_rx_samples[meas_num] = 0;
@@ -2839,20 +2182,11 @@ uint8_t ch_common_meas_reset(ch_dev_t *dev_ptr, uint8_t meas_num) {
 	return ret_val;
 }
 
-uint8_t ch_common_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_config_t *meas_config_ptr,
-                            ch_thresholds_t *lib_thresh_ptr) {
+uint8_t ch_common_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_config_t *meas_config_ptr) {
 	measurement_queue_t *meas_q_ptr = (measurement_queue_t *)&(dev_ptr->meas_queue);
 	measurement_t *meas_ptr         = (measurement_t *)&(dev_ptr->meas_queue.meas[meas_num]);
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	InvnAlgoRangeFinderMeasConfig *meas_cfg_ptr =
-			(InvnAlgoRangeFinderMeasConfig *)&(dev_ptr->algo_cfg.meas_cfg[meas_num]);
-	thresholds_t *sens_thresh_ptr =
-			(thresholds_t *)&(meas_cfg_ptr->thresholds);  // thresholds converted to sensor format
-#else
-	(void)lib_thresh_ptr;
-#endif
+
 	uint8_t other_meas_num = (meas_num == 0 ? 1 : 0);  // assumes only 2 meas possible
-	uint8_t ret_val        = 0;
 
 	if (meas_config_ptr->mode == CH_MEAS_MODE_STANDBY) {  // if this meas will begin in standby mode (inactive)
 		meas_q_ptr->meas_start = other_meas_num;          //   other meas must be active
@@ -2871,37 +2205,22 @@ uint8_t ch_common_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_config_
 	meas_ptr->meas_period = meas_config_ptr->meas_period;
 	meas_ptr->odr         = (uint8_t)meas_config_ptr->odr;
 
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	meas_cfg_ptr->ringdown_cancel_samples = meas_config_ptr->ringdown_cancel_samples;  // TODO use zero for default ??
-	meas_cfg_ptr->static_target_samples   = meas_config_ptr->static_filter_samples;
-	meas_cfg_ptr->num_ranges              = meas_config_ptr->num_ranges;
-	meas_cfg_ptr->iq_output_format        = (uint8_t)meas_config_ptr->iq_output_format;
-	meas_cfg_ptr->filter_update_modulo    = meas_config_ptr->filter_update_interval;
-
-	if (lib_thresh_ptr == NULL) {
-		lib_thresh_ptr = &default_thresholds;
-	}
-
-	thresh_lib_to_sensor(dev_ptr, lib_thresh_ptr, sens_thresh_ptr);  // convert format and copy to meas config
-#endif
-
-	return ret_val;
+	return RET_OK;
 }
 
 uint8_t ch_common_meas_add_segment(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_segment_t *seg_ptr) {
-	measurement_t *meas_ptr = (measurement_t *)&(dev_ptr->meas_queue.meas[meas_num]);
-	uint8_t seg_num         = dev_ptr->meas_num_segments[meas_num];
-	uint16_t num_samples;
-	uint8_t err = 0;
+	volatile measurement_t *meas_ptr = &(dev_ptr->meas_queue.meas[meas_num]);
+	uint8_t seg_num                  = dev_ptr->meas_num_segments[meas_num];
+	uint8_t err                      = 1;
 
-	if (seg_num >= INST_BUF_LENGTH) {
-		err = 1;
-	}
-
-	if (!err) {
+	if (seg_num < INST_BUF_LENGTH - 1) {
 		// Copy transceiver instruction
 		meas_ptr->trx_inst[seg_num].cmd_config = seg_ptr->inst.cmd_config;
 		meas_ptr->trx_inst[seg_num].length     = seg_ptr->inst.length;
+
+		if (IS_INSTRUCTION_CMD_RX(meas_ptr->trx_inst[seg_num].cmd_config)) {
+			dev_ptr->meas_num_rx_samples[meas_num] += ch_common_cycles_to_samples(seg_ptr->inst.length, meas_ptr->odr);
+		}
 
 		// Mark end of instruction sequence, if any remaining slots
 		seg_num++;
@@ -2910,12 +2229,72 @@ uint8_t ch_common_meas_add_segment(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_
 		}
 
 		dev_ptr->meas_num_segments[meas_num]++;  // count one more active segment in this meas
-
-		num_samples                             = ch_common_cycles_to_samples(seg_ptr->inst.length, meas_ptr->odr);
-		dev_ptr->meas_num_rx_samples[meas_num] += num_samples;
+		err = 0;
 	}
 
 	return err;
+}
+
+uint8_t ch_common_meas_insert_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_segment_t *const inst_ptr,
+                                          uint8_t index_to_insert) {
+	uint8_t error = 1;
+
+	if (dev_ptr && inst_ptr && (meas_num < CH_MEAS_MAX_MEAS)) {
+		volatile measurement_t *meas_ptr = &(dev_ptr->meas_queue.meas[meas_num]);
+		uint8_t curr_max_inst_num        = dev_ptr->meas_num_segments[meas_num];
+
+		if (meas_ptr && (index_to_insert + 1 < INST_BUF_LENGTH) && (curr_max_inst_num + 1 < INST_BUF_LENGTH)) {
+
+			// copy instructions, from index_to_insert to the end, one index to the right
+			for (int i = dev_ptr->meas_num_segments[meas_num] + 1; i >= index_to_insert; --i) {
+				meas_ptr->trx_inst[i] = meas_ptr->trx_inst[i - 1];
+			}
+
+			meas_ptr->trx_inst[index_to_insert].cmd_config = inst_ptr->inst.cmd_config;
+			meas_ptr->trx_inst[index_to_insert].length     = inst_ptr->inst.length;
+
+			dev_ptr->meas_num_segments[meas_num]++;  // count one more active instruction in this meas
+
+			if (IS_INSTRUCTION_CMD_RX(meas_ptr->trx_inst[index_to_insert].cmd_config)) {
+				dev_ptr->meas_num_rx_samples[meas_num] +=
+						ch_common_cycles_to_samples(inst_ptr->inst.length, meas_ptr->odr);
+			}
+			error = 0;
+		}
+	}
+
+	return error;
+}
+
+uint8_t ch_common_meas_remove_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t index_to_remove) {
+	uint8_t error = 1;
+
+	if (dev_ptr && (meas_num < CH_MEAS_MAX_MEAS)) {
+		volatile measurement_t *meas_ptr = &(dev_ptr->meas_queue.meas[meas_num]);
+
+		if (meas_ptr && dev_ptr->meas_num_segments[meas_num] != 0 && (index_to_remove < INST_BUF_LENGTH)) {
+			if (IS_INSTRUCTION_CMD_RX(meas_ptr->trx_inst[index_to_remove].cmd_config)) {
+				dev_ptr->meas_num_rx_samples[meas_num] -=
+						ch_common_cycles_to_samples(meas_ptr->trx_inst[index_to_remove].length, meas_ptr->odr);
+			}
+
+			// copy instructions, from index_to_remove to the end, one index to the left
+			for (int i = index_to_remove; i < (INST_BUF_LENGTH - index_to_remove - 1); ++i) {
+				if (IS_INSTRUCTION_CMD_EOF(meas_ptr->trx_inst[i].cmd_config)) {
+					break;
+				}
+				meas_ptr->trx_inst[i]                = meas_ptr->trx_inst[i + 1];
+				meas_ptr->trx_inst[i + 1].cmd_config = 0;
+				meas_ptr->trx_inst[i + 1].length     = 0;
+			}
+
+			dev_ptr->meas_num_segments[meas_num]--;  // count one less active instruction in this meas
+
+			error = 0;
+		}
+	}
+
+	return error;
 }
 
 uint8_t ch_common_meas_add_segment_count(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_cycles, uint8_t int_enable) {
@@ -3005,18 +2384,6 @@ uint8_t ch_common_meas_write_config(ch_dev_t *dev_ptr) {
 	/* Write measurement queue values */
 	err = chdrv_meas_queue_write(dev_ptr, NULL);
 
-#ifdef USE_INTERNAL_ALGO
-	/* Write measurement algorithm configuration */
-	if (!err) {
-		uint8_t *algo_cfg_data = (uint8_t *)&(dev_ptr->algo_cfg);  // source copy in ch_dev_t
-		uint16_t algo_cfg_addr = (uint16_t)(uintptr_t)dev_ptr->sens_algo_cfg_addr;
-		// destination address on sensor
-		uint16_t algo_cfg_nbytes = (uint16_t)(uintptr_t)dev_ptr->algo_info.algo_cfg_len;
-
-		err = chdrv_burst_write(dev_ptr, algo_cfg_addr, algo_cfg_data, algo_cfg_nbytes);
-	}
-#endif  // USE_INTERNAL_ALGO
-
 	/* Send event to apply settings (especially ODR) immediately */
 	if (!err) {
 		chdrv_event_trigger(dev_ptr, EVENT_PREPARE_MEAS);
@@ -3036,9 +2403,11 @@ uint8_t ch_common_meas_write_config(ch_dev_t *dev_ptr) {
 
 uint8_t ch_common_meas_optimize(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr) {
 	uint8_t ret_val = RET_ERR;
-#if ((!defined(CHIRP_NO_INIT_FW) || (CHIRP_NO_INIT_FW == 0)) &&                                                        \
-     (!defined(CHIRP_NO_TX_OPTIMIZATION) || (CHIRP_NO_TX_OPTIMIZATION == 0)))
+
 	// must have init f/w that can perform optimization
+	if ((dev_ptr->init_fw_info == NULL) || !dev_ptr->init_fw_info->fw_includes_tx_optimization) {
+		return RET_ERR;
+	}
 
 	measurement_queue_t tx_opt_queue;  // meas queue after optimization
 	ch_group_t *grp_ptr = dev_ptr->group;
@@ -3054,12 +2423,8 @@ uint8_t ch_common_meas_optimize(ch_dev_t *dev_ptr, measurement_queue_t *meas_que
 
 		/* Load init f/w to perform optimization */
 		if (ret_val == RET_OK) {
-			grp_ptr->status = CH_GROUP_STAT_INIT_PENDING;  // re-init now pending
-
-			dev_ptr->fw_reinit_func = dev_ptr->fw_init_func;  // save original init routine to call again later
-
-			dev_ptr->fw_init_func = CH_INIT_AND_OPT_INIT_FUNC;  // init f/w with optimization support
-			ret_val = (dev_ptr->fw_init_func)(dev_ptr, grp_ptr, 0, dev_ptr->io_index, 0);  // call init func
+			grp_ptr->status     = CH_GROUP_STAT_INIT_PENDING;  // re-init now pending
+			dev_ptr->current_fw = dev_ptr->init_fw_info;
 		}
 
 		if (ret_val == RET_OK) {
@@ -3122,12 +2487,8 @@ uint8_t ch_common_meas_optimize(ch_dev_t *dev_ptr, measurement_queue_t *meas_que
 
 		/* Reload measurement f/w */
 		if (ret_val == RET_OK) {
-			dev_ptr->fw_init_func = dev_ptr->fw_reinit_func;
-			ret_val               = (dev_ptr->fw_init_func)(dev_ptr, grp_ptr, 0, dev_ptr->io_index, 0);
-		}
-
-		if (ret_val == RET_OK) {
-			ret_val = chdrv_restart(dev_ptr);
+			dev_ptr->current_fw = dev_ptr->main_fw_info;
+			ret_val             = chdrv_restart(dev_ptr);
 		}
 
 		/* Write new meas queue definition */
@@ -3142,11 +2503,6 @@ uint8_t ch_common_meas_optimize(ch_dev_t *dev_ptr, measurement_queue_t *meas_que
 		}
 
 	}  // end if (grp_ptr->status == CH_GROUP_STAT_INIT_OK)
-#else
-	(void)dev_ptr;  // unused
-	(void)meas_queue_ptr;
-	(void)algo_cfg_ptr;
-#endif  // not CHIRP_NO_INIT_FW and not CHIRP_NO_TX_OPTIMIZATION
 
 	return ret_val;
 }
@@ -3194,10 +2550,6 @@ uint8_t ch_common_meas_get_last_num(ch_dev_t *dev_ptr) {
 void ch_common_meas_get_info(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_info_t *info_ptr) {
 	measurement_queue_t *meas_q_ptr = &(dev_ptr->meas_queue);
 	measurement_t *meas_ptr         = (measurement_t *)&(dev_ptr->meas_queue.meas[meas_num]);
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	InvnAlgoRangeFinderMeasConfig *meas_cfg_ptr =
-			(InvnAlgoRangeFinderMeasConfig *)&(dev_ptr->algo_cfg.meas_cfg[meas_num]);
-#endif
 
 	memset((void *)info_ptr, 0, sizeof(ch_meas_info_t));  // init info struct
 
@@ -3214,13 +2566,6 @@ void ch_common_meas_get_info(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_info_t
 
 	info_ptr->meas_period = meas_ptr->meas_period;  // copies of values on sensor
 	info_ptr->odr         = (ch_odr_t)meas_ptr->odr;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	info_ptr->num_ranges              = meas_cfg_ptr->num_ranges;
-	info_ptr->ringdown_cancel_samples = meas_cfg_ptr->ringdown_cancel_samples;
-	info_ptr->static_filter_samples   = meas_cfg_ptr->static_target_samples;
-	info_ptr->iq_output_format        = meas_cfg_ptr->iq_output_format;
-	info_ptr->filter_update_interval  = meas_cfg_ptr->filter_update_modulo;
-#endif
 }
 
 void ch_common_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t seg_num, ch_meas_seg_info_t *info_ptr) {
@@ -3267,22 +2612,23 @@ void ch_common_meas_get_queue_info(ch_dev_t *dev_ptr, ch_meas_queue_info_t *info
 uint8_t ch_common_meas_update_counts(ch_dev_t *dev_ptr, uint8_t meas_num, measurement_t *meas_ptr) {
 	pmut_transceiver_inst_t *trx_inst_ptr =
 			(pmut_transceiver_inst_t *)&(meas_ptr->trx_inst[0]);  // first instruction in meas
-	uint16_t total_cycles      = 0;
-	uint16_t total_rx_samples  = 0;
-	uint8_t total_segments     = 0;
-	uint16_t pre_rx_cycles     = 0;
-	uint8_t num_rx_segments    = 0;
-	uint16_t max_range_mm      = 0;
-	uint8_t err                = 0;
-	uint16_t total_tx_segments = 0;  // # of tx instructions
+	uint16_t total_cycles        = 0;
+	uint16_t total_rx_samples    = 0;
+	uint8_t total_segments       = 0;
+	uint16_t pre_rx_cycles       = 0;
+	uint16_t pre_rx_cycles_no_tx = 0;  // COUNT cycles when no TX
+	uint8_t num_rx_segments      = 0;
+	uint16_t max_range_mm        = 0;
+	uint8_t err                  = 0;
+	uint16_t total_tx_segments   = 0;  // # of tx instructions
 
 	dev_ptr->meas_num_segments[meas_num]   = 0;
 	dev_ptr->meas_num_rx_samples[meas_num] = 0;
 
+	uint16_t num_inst = 0;  // # of instructions
 	/* Examine instructions until EOF marker */
 	while (trx_inst_ptr->cmd_config != PMUT_CMD_EOF) {
 		uint16_t num_samples = 0;  // samples in this segment
-		uint16_t num_inst    = 0;  // # of instructions
 		ch_meas_seg_type_t seg_type =
 				(ch_meas_seg_type_t)((trx_inst_ptr->cmd_config >> PMUT_CMD_BITSHIFT) & PMUT_CMD_BITS);
 		// use instruction as segment type
@@ -3299,12 +2645,21 @@ uint8_t ch_common_meas_update_counts(ch_dev_t *dev_ptr, uint8_t meas_num, measur
 			num_samples       = ch_common_cycles_to_samples(trx_inst_ptr->length, meas_ptr->odr);
 			total_rx_samples += num_samples;
 			num_rx_segments++;
-		} else {
-			if (num_rx_segments == 0) {
-				pre_rx_cycles += trx_inst_ptr->length;
+
+			if (total_tx_segments == 0) {
+				pre_rx_cycles = pre_rx_cycles_no_tx;
 			}
-			if (seg_type == CH_MEAS_SEG_TYPE_TX) {
-				total_tx_segments++;
+		} else if (seg_type == CH_MEAS_SEG_TYPE_TX) {
+			if (num_rx_segments == 0) {
+				pre_rx_cycles       += trx_inst_ptr->length;
+				pre_rx_cycles_no_tx  = 0;
+			}
+			total_tx_segments++;
+		} else if (seg_type == CH_MEAS_SEG_TYPE_COUNT) {
+			if (total_tx_segments > 0) {
+				pre_rx_cycles += trx_inst_ptr->length;
+			} else {
+				pre_rx_cycles_no_tx += trx_inst_ptr->length;
 			}
 		}
 
@@ -3319,7 +2674,7 @@ uint8_t ch_common_meas_update_counts(ch_dev_t *dev_ptr, uint8_t meas_num, measur
 		dev_ptr->meas_num_segments[meas_num]    = total_segments;
 		dev_ptr->meas_pre_rx_cycles[meas_num]   = pre_rx_cycles;
 
-		max_range_mm                         = ch_samples_to_mm(dev_ptr, total_rx_samples);
+		max_range_mm                         = ch_common_meas_samples_to_mm(dev_ptr, meas_num, total_rx_samples);
 		dev_ptr->meas_max_range_mm[meas_num] = max_range_mm;  // store corresponding range in mm
 
 		/* Fill in ch_dev_t fields for compatibility with simple SonicLib v2 API calls (use default meas) */
@@ -3406,35 +2761,9 @@ uint32_t ch_common_meas_get_interval_ticks(ch_dev_t *dev_ptr, uint8_t meas_num) 
 
 uint8_t ch_common_meas_set_odr(ch_dev_t *dev_ptr, uint8_t meas_num, ch_odr_t odr) {
 	measurement_t *meas_ptr = (measurement_t *)&(dev_ptr->meas_queue.meas[meas_num]);
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	InvnAlgoRangeFinderMeasConfig *meas_cfg_ptr =
-			(InvnAlgoRangeFinderMeasConfig *)&(dev_ptr->algo_cfg.meas_cfg[meas_num]);
-	ch_odr_t old_odr = (ch_odr_t)meas_ptr->odr;  // save previous ODR setting
-#endif
-	uint8_t err = RET_ERR;
+	uint8_t err             = RET_ERR;
 
 	meas_ptr->odr = (uint8_t)odr;  // set new ODR
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	/* Adjust ringdown and static filter sample counts */
-	if (odr < old_odr) {                                            // if lower ODR
-		meas_cfg_ptr->ringdown_cancel_samples >>= (old_odr - odr);  //   fewer samples for same time/distance
-		meas_cfg_ptr->static_target_samples   >>= (old_odr - odr);
-	} else if (odr > old_odr) {                                     // if higher ODR
-		meas_cfg_ptr->ringdown_cancel_samples <<= (odr - old_odr);  //   more samples
-		meas_cfg_ptr->static_target_samples   <<= (odr - old_odr);
-	}
-
-	/* Adjust detection threshold sample counts */
-	for (uint8_t thresh_num = 0; thresh_num < dev_ptr->max_num_thresholds; thresh_num++) {
-		thresholds_t *thresh_ptr = (thresholds_t *)&(meas_cfg_ptr->thresholds);
-		if (odr < old_odr) {                                         // if lower ODR
-			thresh_ptr->stop_index[thresh_num] >>= (old_odr - odr);  //   fewer samples for same time/distance
-		} else if (odr > old_odr) {                                  // if higher ODR
-			thresh_ptr->stop_index[thresh_num] <<= (odr - old_odr);  //   more samples
-		}
-	}
-#endif
 
 	err = ch_common_meas_write_config(dev_ptr);  // write to sensor
 
@@ -3453,7 +2782,7 @@ uint8_t ch_common_meas_set_num_samples(ch_dev_t *dev_ptr, uint8_t meas_num, uint
 	ch_odr_t odr            = (ch_odr_t)meas_ptr->odr;
 	uint16_t max_range_mm   = 0;
 
-	if (!dev_ptr->sensor_connected || num_samples > dev_ptr->max_samples) {
+	if (!dev_ptr->sensor_connected || num_samples > dev_ptr->current_fw->max_samples) {
 		return 1;
 	}
 
@@ -3492,7 +2821,7 @@ uint8_t ch_common_meas_set_num_samples(ch_dev_t *dev_ptr, uint8_t meas_num, uint
 		dev_ptr->meas_num_rx_samples[meas_num] -= deleted_samples;
 	}
 
-	max_range_mm                         = ch_meas_samples_to_mm(dev_ptr, meas_num, num_samples);
+	max_range_mm                         = ch_common_meas_samples_to_mm(dev_ptr, meas_num, num_samples);
 	dev_ptr->meas_max_range_mm[meas_num] = max_range_mm;
 
 	if (meas_num == CH_DEFAULT_MEAS_NUM) {
@@ -3520,8 +2849,8 @@ uint8_t ch_common_meas_set_max_range(ch_dev_t *dev_ptr, uint8_t meas_num, uint16
 	if (!ret_val) {
 		num_samples = ch_common_meas_mm_to_samples(dev_ptr, meas_num, max_range_mm);
 
-		if (num_samples > dev_ptr->max_samples) {
-			num_samples                          = dev_ptr->max_samples;
+		if (num_samples > dev_ptr->current_fw->max_samples) {
+			num_samples                          = dev_ptr->current_fw->max_samples;
 			dev_ptr->meas_max_range_mm[meas_num] = ch_common_meas_samples_to_mm(dev_ptr, meas_num, num_samples);
 			// store reduced max range
 		} else {
@@ -3531,21 +2860,17 @@ uint8_t ch_common_meas_set_max_range(ch_dev_t *dev_ptr, uint8_t meas_num, uint16
 		if (meas_num == CH_DEFAULT_MEAS_NUM) {
 			dev_ptr->max_range = dev_ptr->meas_max_range_mm[meas_num];
 		}
-#ifdef CHDRV_DEBUG
-		char cbuf[80];
-		snprintf(cbuf, sizeof(cbuf), "num_samples=%lu\n", num_samples);
-		chbsp_print_str(cbuf);
-#endif
+
+		CH_LOG_DEBUG("num_samples=%lu", num_samples);
 	}
 
 	if (!ret_val) {
 		ret_val = ch_meas_set_num_samples(dev_ptr, meas_num, num_samples);
 	}
 
-#ifdef CHDRV_DEBUG
-	printf("ch_common_meas_set_max_range: ret_val: %u  meas_num: %u dev_ptr->meas_num_rx_samples: %u\n", ret_val,
-	       meas_num, dev_ptr->meas_num_rx_samples[meas_num]);
-#endif
+	CH_LOG_INFO("ret_val: %u  meas_num: %u dev_ptr->meas_num_rx_samples: %u", ret_val, meas_num,
+	            dev_ptr->meas_num_rx_samples[meas_num]);
+
 	return ret_val;
 }
 
@@ -3580,213 +2905,6 @@ uint16_t ch_common_meas_samples_to_mm(ch_dev_t *dev_ptr, uint8_t meas_num, uint1
 
 	return num_mm;
 }
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-
-uint8_t ch_common_meas_set_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t num_ranges) {
-	uint8_t ret_val = RET_ERR;
-
-	dev_ptr->algo_cfg.meas_cfg[meas_num].num_ranges = num_ranges;
-
-	ret_val = ch_common_meas_write_config(dev_ptr);
-
-	return ret_val;
-}
-
-uint8_t ch_common_meas_get_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num) {
-
-	return dev_ptr->algo_cfg.meas_cfg[meas_num].num_ranges;
-}
-
-uint8_t ch_common_meas_set_ringdown_cancel(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples) {
-	uint8_t ret_val = RET_ERR;
-
-	dev_ptr->algo_cfg.meas_cfg[meas_num].ringdown_cancel_samples = num_samples;
-
-	ret_val = ch_common_meas_write_config(dev_ptr);
-
-	return ret_val;
-}
-
-uint16_t ch_common_meas_get_ringdown_cancel(ch_dev_t *dev_ptr, uint8_t meas_num) {
-
-	return dev_ptr->algo_cfg.meas_cfg[meas_num].ringdown_cancel_samples;
-}
-
-uint8_t ch_common_meas_set_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples) {
-	uint8_t ret_val = RET_ERR;
-
-	dev_ptr->algo_cfg.meas_cfg[meas_num].static_target_samples = num_samples;
-
-	ret_val = ch_common_meas_write_config(dev_ptr);
-
-	return ret_val;
-}
-
-uint16_t ch_common_meas_get_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num) {
-
-	return dev_ptr->algo_cfg.meas_cfg[meas_num].static_target_samples;
-}
-
-uint8_t ch_common_meas_set_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples) {
-	ch_thresholds_t thresholds;
-	uint8_t thresh_num;
-	uint8_t ret_val = RET_OK;
-
-	/* Get current threshold settings */
-	ret_val = ch_common_meas_get_thresholds(dev_ptr, meas_num, &thresholds);
-	if (ret_val != RET_OK)
-		return ret_val;
-
-	if (num_samples < thresholds.threshold[1].start_sample) {  // if rx holdoff is shorter than first threshold
-		/* Need to insert a new threshold[0] for holdoff */
-		thresh_num = (CH_NUM_THRESHOLDS - 2);  // start at next-to-last entry
-		for (uint8_t i = 0; i < (CH_NUM_THRESHOLDS - 1); i++) {
-			// shuffle contents up one entry
-			thresholds.threshold[thresh_num + 1].start_sample = thresholds.threshold[thresh_num].start_sample;
-			thresholds.threshold[thresh_num + 1].level        = thresholds.threshold[thresh_num].level;
-			thresh_num--;
-		}
-
-		thresholds.threshold[0].level        = CH_THRESH_LEVEL_HOLDOFF;  // first thresh get holdoff (max) value
-		thresholds.threshold[1].start_sample = num_samples;              // second thresh starts after holdoff samples
-
-	} else {
-		/* Increase/extend first threshold(s) to prevent detection */
-		uint16_t holdoff_samples_left = num_samples;
-
-		thresh_num = 0;
-
-		while ((holdoff_samples_left > 0) && (thresh_num < (CH_NUM_THRESHOLDS - 1))) {
-			uint16_t thresh_samples;
-
-			if (thresholds.threshold[thresh_num + 1].start_sample <= num_samples) {
-				/* this entire threshold is part of holdoff area */
-				thresholds.threshold[thresh_num].level = CH_THRESH_LEVEL_HOLDOFF;
-
-				thresh_samples = (thresholds.threshold[thresh_num + 1].start_sample -
-				                  thresholds.threshold[thresh_num].start_sample);
-
-				holdoff_samples_left -= thresh_samples;
-			} else {
-				/* end of holdoff is in this threshold - change start to extend previous holdoff thresh */
-				thresholds.threshold[thresh_num].start_sample = num_samples;
-
-				break;  // done now
-			}
-
-			thresh_num++;
-		}
-
-	}  // end if (num_samples < thresholds.threshold[1].start_sample)
-
-	/* Write updated threshold values */
-	ret_val = ch_common_meas_set_thresholds(dev_ptr, meas_num, &thresholds);
-
-	return ret_val;
-}
-
-uint16_t ch_common_meas_get_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num) {
-	ch_thresholds_t thresholds;
-	uint8_t err;
-	uint16_t rx_holdoff = 0;
-
-	err = ch_common_meas_get_thresholds(dev_ptr, meas_num, &thresholds);
-	if (err == RET_OK) {
-		if (thresholds.threshold[0].level == CH_THRESH_LEVEL_HOLDOFF) {
-			/* first threshold ends at start of the second thresh */
-			rx_holdoff = thresholds.threshold[1].start_sample;
-		}
-	}
-
-	return rx_holdoff;
-}
-
-uint8_t ch_common_meas_set_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num, ch_output_type_t output_format) {
-	uint8_t ret_val = RET_ERR;
-
-	dev_ptr->algo_cfg.meas_cfg[meas_num].iq_output_format = output_format;
-
-	ret_val = ch_common_meas_write_config(dev_ptr);
-
-	return ret_val;
-}
-
-ch_output_type_t ch_common_meas_get_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num) {
-
-	return dev_ptr->algo_cfg.meas_cfg[meas_num].iq_output_format;
-}
-
-uint8_t ch_common_meas_set_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t update_interval) {
-	uint8_t ret_val = RET_ERR;
-
-	dev_ptr->algo_cfg.meas_cfg[meas_num].filter_update_modulo = update_interval;
-
-	ret_val = ch_common_meas_write_config(dev_ptr);
-
-	return ret_val;
-}
-
-uint8_t ch_common_meas_get_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num) {
-
-	return dev_ptr->algo_cfg.meas_cfg[meas_num].filter_update_modulo;
-}
-
-static uint8_t read_target_list(ch_dev_t *dev_ptr) {
-	uint8_t err = 0;
-
-	/* Get current sensor algo output (includes target list) */
-	if ((err = chdrv_algo_out_read(dev_ptr, (void *)&(dev_ptr->algo_out))))  // copy algo output to ch_dev_t
-		goto handle_error;
-	if ((err = ch_common_read_meas_config(dev_ptr)))
-		goto handle_error;
-handle_error:
-	return err;
-}
-
-uint8_t ch_common_meas_set_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_thresholds_t *lib_thresh_buf_ptr) {
-	uint8_t ret_val = RET_ERR;
-
-	if (dev_ptr->sensor_connected && (lib_thresh_buf_ptr != NULL)) {
-		dev_ptr->max_num_thresholds = ICU_COMMON_NUM_THRESHOLDS;
-
-		/* Convert and write new threshold values to local copy of algo measurement config */
-		thresholds_t *sens_thresh_ptr = (thresholds_t *)&(dev_ptr->algo_cfg.meas_cfg[meas_num].thresholds);
-
-		thresh_lib_to_sensor(dev_ptr, lib_thresh_buf_ptr, sens_thresh_ptr);
-
-		/* Write to sensor */
-		uint16_t thresholds_addr =
-				(uint16_t)(uintptr_t) & ((dev_ptr->sens_algo_cfg_addr)->meas_cfg[meas_num].thresholds);
-
-		ret_val = chdrv_burst_write(dev_ptr, thresholds_addr, (uint8_t *)sens_thresh_ptr, sizeof(thresholds_t));
-	}
-
-	return ret_val;
-}
-
-uint8_t ch_common_meas_get_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_thresholds_t *lib_thresh_buf_ptr) {
-	uint8_t ret_val = RET_ERR;
-
-	if (dev_ptr->sensor_connected && (lib_thresh_buf_ptr != NULL)) {
-
-		thresholds_t *sens_thresh_ptr = (thresholds_t *)&(dev_ptr->algo_cfg.meas_cfg[meas_num].thresholds);
-
-		/* Refresh copy in ch_dev_t */
-		uint16_t thresh_start_addr =
-				(uint16_t)(uintptr_t) & ((dev_ptr->sens_algo_cfg_addr)->meas_cfg[meas_num].thresholds);
-		chdrv_burst_read(dev_ptr, thresh_start_addr, (uint8_t *)sens_thresh_ptr, sizeof(thresholds_t));
-
-		/* Copy fields to user buffer */
-		thresh_sensor_to_lib(dev_ptr, sens_thresh_ptr, lib_thresh_buf_ptr);  // convert format and copy
-
-		ret_val = RET_OK;
-	}
-
-	return ret_val;
-}
-
-#endif  // INCLUDE_ALGO_RANGEFINDER
 
 uint8_t ch_common_read_meas_config(ch_dev_t *dev_ptr) {
 	uint8_t err = 0;
@@ -3906,54 +3024,6 @@ ch_interrupt_drive_t ch_common_get_interrupt_drive(ch_dev_t *dev_ptr) {
 	return dev_ptr->int_drive;
 }
 
-uint8_t ch_common_set_data_output(ch_dev_t *dev_ptr, ch_output_t *output_ptr) {
-	uint8_t ret_val = RET_OK;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	/* Change each measurement */
-	for (uint8_t meas_num = 0; (ret_val == RET_OK) && (meas_num < CH_MEAS_MAX_MEAS); meas_num++) {
-		ch_odr_t new_odr = CH_ODR_DEFAULT;
-
-		/* Set data output type */
-		ret_val = ch_common_meas_set_iq_output(dev_ptr, meas_num, output_ptr->output_type);
-
-		/* Convert "decimation" to modified output data rate (ODR) */
-		if (ret_val == RET_OK) {
-			switch (output_ptr->decimation_factor) {
-			case CH_DECIMATION_4:
-				new_odr = CH_ODR_DEFAULT - 2;
-				break;
-			case CH_DECIMATION_2:
-				new_odr = CH_ODR_DEFAULT - 1;
-				break;
-			case CH_DECIMATION_NONE:
-				new_odr = CH_ODR_DEFAULT;
-				break;
-			case CH_DECIMATION_0_50:
-				new_odr = CH_ODR_DEFAULT + 1;
-				break;
-			case CH_DECIMATION_0_25:
-				new_odr = CH_ODR_DEFAULT + 2;
-				break;
-			default:
-				ret_val = RET_ERR;  // note: CH_DECIMATION_3 is not supported
-				break;
-			}
-		}
-		/* Set ODR */
-		if (ret_val == RET_OK) {
-			ch_common_meas_set_odr(dev_ptr, meas_num, new_odr);
-		}
-	}
-#else
-	(void)dev_ptr;
-	(void)output_ptr;
-	ret_val = RET_ERR;
-#endif  // INCLUDE_ALGO_RANGEFINDER
-
-	return ret_val;
-}
-
 uint8_t ch_common_init_algo(ch_dev_t *dev_ptr) {
 	uint8_t ret_val = RET_ERR;
 
@@ -3976,6 +3046,15 @@ uint8_t ch_common_get_algo_config(ch_dev_t *dev_ptr, void *algo_cfg_ptr) {
 
 	if (algo_cfg_ptr != NULL) {
 		ret_val = chdrv_algo_cfg_read(dev_ptr, algo_cfg_ptr);
+	}
+	return ret_val;
+}
+
+uint8_t ch_common_set_algo_config(ch_dev_t *dev_ptr, const void *algo_cfg_ptr) {
+	uint8_t ret_val = RET_ERR;
+
+	if (algo_cfg_ptr != NULL) {
+		ret_val = chdrv_algo_cfg_write(dev_ptr, algo_cfg_ptr);
 	}
 	return ret_val;
 }

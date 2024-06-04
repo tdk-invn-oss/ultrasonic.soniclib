@@ -21,7 +21,15 @@
 #include <invn/soniclib/details/ch_common.h>
 #include <invn/soniclib/details/ch_driver.h>
 #include <invn/soniclib/chirp_bsp.h>
+#include <invn/soniclib/ch_log.h>
 #include <invn/soniclib/details/ch_math_utils.h>
+
+uint8_t ch_group_init(ch_group_t *grp_ptr, uint8_t num_devices, uint8_t num_buses, uint16_t rtc_cal_pulse_ms) {
+	grp_ptr->num_ports        = num_devices;
+	grp_ptr->num_buses        = num_buses;
+	grp_ptr->rtc_cal_pulse_ms = rtc_cal_pulse_ms;
+	return 0;
+}
 
 /*!
  * \brief Initialize a Chirp ultrasonic sensor descriptor structure
@@ -53,58 +61,50 @@ uint8_t ch_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, ch_fw_i
 	return ret_val;
 }
 
+uint8_t ch_set_init_firmware(ch_dev_t *dev_ptr, ch_fw_init_func_t fw_init_func) {
+	uint8_t ret_val = RET_ERR;
+
+#ifdef INCLUDE_SHASTA_SUPPORT
+	if (fw_init_func != NULL) {
+		ret_val = ch_common_set_init_firmware(dev_ptr, fw_init_func);
+	}
+#else
+	(void)dev_ptr;
+	(void)fw_init_func;
+#endif
+
+	return ret_val;
+}
+
 uint8_t ch_get_config(ch_dev_t *dev_ptr, ch_config_t *config_ptr) {
-	uint8_t ret_val = 0;
+	uint8_t ret_val = RET_OK;
 
 	config_ptr->mode            = dev_ptr->mode;
 	config_ptr->max_range       = dev_ptr->max_range;
-	config_ptr->static_range    = dev_ptr->static_range;
 	config_ptr->sample_interval = dev_ptr->freerun_intvl_us / 1000;
-	config_ptr->thresh_ptr      = NULL;  // thresholds not returned here - use ch_get_thresholds()
 
 	return ret_val;
 }
 
 uint8_t ch_set_config(ch_dev_t *dev_ptr, ch_config_t *config_ptr) {
-	uint8_t ret_val = 0;
+	uint8_t ret_val;
 
 	ret_val = ch_set_max_range(dev_ptr, config_ptr->max_range);  // set max range
-
-	if (!ret_val) {
-
-		if (dev_ptr->api_funcs.set_static_range != NULL) {                     // if STR supported
-			ret_val = ch_set_static_range(dev_ptr, config_ptr->static_range);  // set static target rejection range
-
-			if (!ret_val) {
-				dev_ptr->static_range = config_ptr->static_range;
-			}
-		}
-	}
 
 	if (!ret_val) {
 		if (config_ptr->sample_interval != 0) {
 			ret_val = ch_set_freerun_interval(dev_ptr,
 			                                  config_ptr->sample_interval);  // set meas interval (free-run mode only)
+			if (!ret_val) {
+				dev_ptr->freerun_intvl_us = config_ptr->sample_interval * 1000;  // store  interval in usec
+			}
 		}
 	}
 
 	if (!ret_val) {
-		dev_ptr->freerun_intvl_us = config_ptr->sample_interval * 1000;    // store  interval in usec
-		if (dev_ptr->api_funcs.set_thresholds != NULL) {                   // if multi-thresholds supported
-			ret_val = ch_set_thresholds(dev_ptr, config_ptr->thresh_ptr);  // set multiple thresholds
-		}
-	}
-
-	if (!ret_val) {
-		if (dev_ptr->api_funcs.set_target_interrupt != NULL) {  // if target interrupt mode supported
+		if (dev_ptr->current_fw->api_funcs->set_target_interrupt != NULL) {  // if target interrupt mode supported
 			ret_val = ch_set_target_interrupt(dev_ptr,
 			                                  config_ptr->tgt_int_filter);  // enable/disable target detect interrupt
-		}
-	}
-
-	if (!ret_val) {
-		if (dev_ptr->api_funcs.set_time_plan != NULL) {                  // if SonicSync time plans supported
-			ret_val = ch_set_time_plan(dev_ptr, config_ptr->time_plan);  // set time plan (sonicsync only)
 		}
 	}
 
@@ -126,7 +126,6 @@ uint8_t ch_group_start(ch_group_t *grp_ptr) {
 
 uint8_t ch_restart(ch_dev_t *dev_ptr) {
 	uint8_t ret_val = RET_ERR;
-	;
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 	ret_val = chdrv_restart(dev_ptr);  // restart & program sensor
@@ -164,18 +163,23 @@ void ch_trigger(ch_dev_t *dev_ptr) {
 }
 
 void ch_trigger_soft(ch_dev_t *dev_ptr) {
-	ch_trigger_soft_func_t func_ptr = dev_ptr->api_funcs.trigger_soft;
-
+#ifdef INCLUDE_SHASTA_SUPPORT
 	if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
 		chdrv_event_trigger(dev_ptr, EVENT_SW_TRIG);
-	} else if (func_ptr != NULL) {  // CH101 and CH201 support depends on f/w type
-		(*func_ptr)(dev_ptr);
 	}
+#elif defined(INCLUDE_WHITNEY_SUPPORT)
+	if (dev_ptr->asic_gen == CH_ASIC_GEN_1_WHITNEY) {
+		ch_trigger_soft_func_t func_ptr = dev_ptr->current_fw->api_funcs->trigger_soft;
+		if (func_ptr != NULL) {  // CH101 and CH201 support depends on f/w type
+			(*func_ptr)(dev_ptr);
+		}
+	}
+#endif
 }
 
 void ch_set_trigger_type(ch_dev_t *dev_ptr, ch_trigger_type_t trig_type) {
 
-	if ((dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) || (dev_ptr->api_funcs.trigger_soft != NULL)) {
+	if ((dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) || (dev_ptr->current_fw->api_funcs->trigger_soft != NULL)) {
 		dev_ptr->trig_type = trig_type;
 	}
 }
@@ -190,11 +194,16 @@ void ch_group_trigger(ch_group_t *grp_ptr) {
 
 void ch_reset(ch_dev_t *dev_ptr, ch_reset_t reset_type) {
 
+#ifdef INCLUDE_SHASTA_SUPPORT
+	(void)reset_type;
+	chdrv_soft_reset(dev_ptr);  // Shasta doesn't have hard reset
+#elif defined(INCLUDE_WHITNEY_SUPPORT)
 	if (reset_type == CH_RESET_HARD) {
-		chdrv_group_hard_reset(dev_ptr->group);  // TODO need single device hard reset
-	} else {
+		chdrv_group_hard_reset(dev_ptr->group);  // Whitney can only do group hard reset
+	} else if (reset_type == CH_RESET_SOFT) {
 		chdrv_soft_reset(dev_ptr);
 	}
+#endif
 }
 
 void ch_group_reset(ch_group_t *grp_ptr, ch_reset_t reset_type) {
@@ -255,7 +264,7 @@ void ch_get_version(ch_version_t *version_ptr) {
 
 const char *ch_get_fw_version_string(ch_dev_t *dev_ptr) {
 
-	return dev_ptr->fw_version_string;
+	return dev_ptr->current_fw->fw_version_string;
 }
 
 uint8_t ch_log_init(ch_group_t *grp_ptr, ch_log_fmt_t format, ch_log_cfg_t *config_ptr) {
@@ -264,10 +273,10 @@ uint8_t ch_log_init(ch_group_t *grp_ptr, ch_log_fmt_t format, ch_log_cfg_t *conf
 	uint8_t start_sample_no_decim;
 
 	if (format == CH_LOG_FMT_REDSWALLOW) {
-		printf("# TDK InvenSense Embedded Redswallow Log\r\n");
-		printf("# sample rate: %0.2f S/s\r\n", (float)1000.0f / config_ptr->interval_ms);
-		printf("# Decimation factor: %u\r\n", config_ptr->decimation_factor);
-		printf("# Content: %s\r\n", config_ptr->output_type == CH_OUTPUT_IQ ? "iq" : "amp");
+		ch_log_printf("# TDK InvenSense Embedded Redswallow Log\r\n");
+		ch_log_printf("# sample rate: %0.2f S/s\r\n", 1000.0f / config_ptr->interval_ms);
+		ch_log_printf("# Decimation factor: %u\r\n", config_ptr->decimation_factor);
+		ch_log_printf("# Content: %s\r\n", config_ptr->output_type == CH_OUTPUT_IQ ? "iq" : "amp");
 
 		for (uint8_t dev_num = 0; dev_num < ch_get_num_ports(grp_ptr); dev_num++) {
 			ch_dev_t *dev_ptr = ch_get_dev_ptr(grp_ptr, dev_num);
@@ -281,24 +290,25 @@ uint8_t ch_log_init(ch_group_t *grp_ptr, ch_log_fmt_t format, ch_log_cfg_t *conf
 					num_samples_no_decim  = dev_ptr->num_rx_samples * config_ptr->decimation_factor;
 					start_sample_no_decim = config_ptr->start_sample * config_ptr->decimation_factor;
 				}
-				printf("# Sensors ID: %u\r\n", dev_num);
-				printf("# Sensors FOP: %lu Hz\r\n", dev_ptr->op_frequency);
-				printf("# Sensors NB Samples: %u\r\n", num_samples_no_decim);
-				printf("# Sensors NB First samples skipped: %u\r\n", start_sample_no_decim);
-				printf("# header, log ID, time [s], tx_id, rx_id, range [cm], intensity [a.u.], target_detected, "
-				       "insertionAnnotation");
+				ch_log_printf("# Sensors ID: %u\r\n", dev_num);
+				ch_log_printf("# Sensors FOP: %lu Hz\r\n", dev_ptr->op_frequency);
+				ch_log_printf("# Sensors NB Samples: %u\r\n", num_samples_no_decim);
+				ch_log_printf("# Sensors NB First samples skipped: %u\r\n", start_sample_no_decim);
+				ch_log_printf(
+						"# header, log ID, time [s], tx_id, rx_id, range [cm], intensity [a.u.], target_detected, "
+						"insertionAnnotation");
 
 				for (int count  = start_sample_no_decim; count < num_samples_no_decim;
 				     count     += config_ptr->decimation_factor) {
 					float sample_cm = (float)dev_ptr->max_range * (count + 1) / (num_samples_no_decim * 10.0);
-					printf(", idata_%0.1f", sample_cm);
+					ch_log_printf(", idata_%0.1f", sample_cm);
 				}
 				for (int count  = start_sample_no_decim; count < num_samples_no_decim;
 				     count     += config_ptr->decimation_factor) {
 					float sample_cm = (float)dev_ptr->max_range * (count + 1) / (num_samples_no_decim * 10.0);
-					printf(", qdata_%0.1f", sample_cm);
+					ch_log_printf(", qdata_%0.1f", sample_cm);
 				}
-				printf("\r\n");
+				ch_log_printf("\r\n");
 			}
 		}
 	}
@@ -307,11 +317,12 @@ uint8_t ch_log_init(ch_group_t *grp_ptr, ch_log_fmt_t format, ch_log_cfg_t *conf
 
 void ch_log_append(uint8_t log_id, ch_log_fmt_t format, uint64_t timestamp, ch_log_data_t *log_data_ptr) {
 	if (format == CH_LOG_FMT_REDSWALLOW) {
-		int16_t q_data[CH201_MAX_NUM_SAMPLES];
+		int16_t q_data[MAX_NUM_SAMPLES];
 
-		printf("chlog, %d, %0.6f, %u, %u, %0.1f, %u, %u, %u", log_id, (float)timestamp / 1000000.0f,
-		       log_data_ptr->tx_sensor_id, log_data_ptr->rx_sensor_id, (float)log_data_ptr->range / (32.0f * 10.0f),
-		       log_data_ptr->amplitude, log_data_ptr->range != CH_NO_TARGET, log_data_ptr->annotation);
+		ch_log_printf("chlog, %d, %0.6f, %u, %u, %0.1f, %u, %u, %u", log_id, (float)timestamp / 1000000.0f,
+		              log_data_ptr->tx_sensor_id, log_data_ptr->rx_sensor_id,
+		              (float)log_data_ptr->range / (32.0f * 10.0f), log_data_ptr->amplitude,
+		              log_data_ptr->range != CH_NO_TARGET, log_data_ptr->annotation);
 
 		/* Print first all I data then all Q data
 		 * If printing magnitude, print mag data in place of I data and 0 in place of Q data
@@ -319,21 +330,21 @@ void ch_log_append(uint8_t log_id, ch_log_fmt_t format, uint64_t timestamp, ch_l
 		for (int count = 0; count < log_data_ptr->num_samples; count++) {
 			if (log_data_ptr->output_type == CH_OUTPUT_IQ) {
 				/* print I data now */
-				printf(", %d", log_data_ptr->raw_data.iq_sample_ptr->i);
+				ch_log_printf(", %d", log_data_ptr->raw_data.iq_sample_ptr->i);
 				/* save Q data to be print after */
 				q_data[count] = log_data_ptr->raw_data.iq_sample_ptr->q;
 				log_data_ptr->raw_data.iq_sample_ptr++;
 			} else {
-				printf(", %u", *(log_data_ptr->raw_data.mag_data_ptr));
+				ch_log_printf(", %u", *(log_data_ptr->raw_data.mag_data_ptr));
 				q_data[count] = 0;
 				log_data_ptr->raw_data.mag_data_ptr++;
 			}
 		}
 		/* Q data */
 		for (int count = 0; count < log_data_ptr->num_samples; count++) {
-			printf(", %d", q_data[count]);
+			ch_log_printf(", %d", q_data[count]);
 		}
-		printf("\r\n");
+		ch_log_printf("\r\n");
 	}
 }
 
@@ -343,14 +354,8 @@ ch_mode_t ch_get_mode(ch_dev_t *dev_ptr) {
 }
 
 uint8_t ch_set_mode(ch_dev_t *dev_ptr, ch_mode_t mode) {
-	int ret_val                 = RET_ERR;
-	ch_set_mode_func_t func_ptr = dev_ptr->api_funcs.set_mode;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, mode);
-	}
-
-	if (ret_val == 0) {
+	int ret_val = ch_common_set_mode(dev_ptr, mode);
+	if (ret_val == RET_OK) {
 		dev_ptr->mode = mode;
 	}
 
@@ -380,8 +385,8 @@ uint32_t ch_get_freerun_interval_us(ch_dev_t *dev_ptr) {
 	return interval_us;
 }
 
-uint32_t ch_get_freerun_interval_ticks(ch_dev_t *dev_ptr) {
-	uint32_t rtc_ticks = 0;
+uint16_t ch_get_freerun_interval_ticks(ch_dev_t *dev_ptr) {
+	uint16_t rtc_ticks = 0;
 
 	if (dev_ptr->mode == CH_MODE_FREERUN) {
 		rtc_ticks = ch_usec_to_ticks(dev_ptr, dev_ptr->freerun_intvl_us);
@@ -410,11 +415,11 @@ uint8_t ch_set_sample_interval(ch_dev_t *dev_ptr, uint16_t sample_interval) {
 }
 
 uint8_t ch_freerun_time_hop_enable(ch_dev_t *dev_ptr) {
-	return ch_common_set_freerun_time_hop(dev_ptr, true);
+	return ch_common_set_freerun_time_hop(dev_ptr, CH_DEFAULT_MEAS_NUM, true);
 }
 
 uint8_t ch_freerun_time_hop_disable(ch_dev_t *dev_ptr) {
-	return ch_common_set_freerun_time_hop(dev_ptr, false);
+	return ch_common_set_freerun_time_hop(dev_ptr, CH_DEFAULT_MEAS_NUM, false);
 }
 
 uint16_t ch_get_num_samples(ch_dev_t *dev_ptr) {
@@ -424,7 +429,7 @@ uint16_t ch_get_num_samples(ch_dev_t *dev_ptr) {
 
 uint8_t ch_set_num_samples(ch_dev_t *dev_ptr, uint16_t num_samples) {
 	uint8_t ret_val                    = RET_ERR;
-	ch_set_num_samples_func_t func_ptr = dev_ptr->api_funcs.set_num_samples;
+	ch_set_num_samples_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_num_samples;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, num_samples);
@@ -442,19 +447,12 @@ uint16_t ch_get_max_range(ch_dev_t *dev_ptr) {
 }
 
 uint8_t ch_set_max_range(ch_dev_t *dev_ptr, uint16_t max_range) {
-	uint8_t ret_val                  = RET_ERR;
-	ch_set_max_range_func_t func_ptr = dev_ptr->api_funcs.set_max_range;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, max_range);
-	}
-
-	return ret_val;
+	return ch_common_set_max_range(dev_ptr, max_range);
 }
 
 uint16_t ch_get_max_samples(ch_dev_t *dev_ptr) {
 
-	return dev_ptr->max_samples;
+	return dev_ptr->current_fw->max_samples;
 }
 
 uint8_t ch_get_sample_window(ch_dev_t *dev_ptr, uint16_t *start_sample_ptr, uint16_t *num_samples_ptr) {
@@ -471,7 +469,7 @@ uint8_t ch_get_sample_window(ch_dev_t *dev_ptr, uint16_t *start_sample_ptr, uint
 
 uint8_t ch_set_sample_window(ch_dev_t *dev_ptr, uint16_t start_sample, uint16_t num_samples) {
 	uint8_t ret_val                      = RET_ERR;
-	ch_set_sample_window_func_t func_ptr = dev_ptr->api_funcs.set_sample_window;
+	ch_set_sample_window_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_sample_window;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, start_sample, num_samples);
@@ -480,25 +478,9 @@ uint8_t ch_set_sample_window(ch_dev_t *dev_ptr, uint16_t start_sample, uint16_t 
 	return ret_val;
 }
 
-uint16_t ch_get_static_range(ch_dev_t *dev_ptr) {
-
-	return dev_ptr->static_range;
-}
-
-uint8_t ch_set_static_range(ch_dev_t *dev_ptr, uint16_t num_samples) {
-	uint8_t ret_val                     = RET_OK;
-	ch_set_static_range_func_t func_ptr = dev_ptr->api_funcs.set_static_range;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, num_samples);
-	}
-
-	return ret_val;
-}
-
 uint32_t ch_get_range(ch_dev_t *dev_ptr, ch_range_t range_type) {
 	uint32_t range               = 0;
-	ch_get_range_func_t func_ptr = dev_ptr->api_funcs.get_range;
+	ch_get_range_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_range;
 
 	if (func_ptr != NULL) {
 		range = (*func_ptr)(dev_ptr, range_type);
@@ -507,20 +489,9 @@ uint32_t ch_get_range(ch_dev_t *dev_ptr, ch_range_t range_type) {
 	return range;
 }
 
-uint32_t ch_get_tof_us(ch_dev_t *dev_ptr) {
-	uint32_t tof_us               = 0;
-	ch_get_tof_us_func_t func_ptr = dev_ptr->api_funcs.get_tof_us;
-
-	if (func_ptr != NULL) {
-		tof_us = (*func_ptr)(dev_ptr);
-	}
-
-	return tof_us;
-}
-
 uint16_t ch_get_amplitude(ch_dev_t *dev_ptr) {
 	int amplitude                    = 0;
-	ch_get_amplitude_func_t func_ptr = dev_ptr->api_funcs.get_amplitude;
+	ch_get_amplitude_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_amplitude;
 
 	if (func_ptr != NULL) {
 		amplitude = (*func_ptr)(dev_ptr);
@@ -531,7 +502,7 @@ uint16_t ch_get_amplitude(ch_dev_t *dev_ptr) {
 
 uint16_t ch_get_amplitude_avg(ch_dev_t *dev_ptr) {
 	uint16_t amplitude_avg               = 0;
-	ch_get_amplitude_avg_func_t func_ptr = dev_ptr->api_funcs.get_amplitude_avg;
+	ch_get_amplitude_avg_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_amplitude_avg;
 
 	if (func_ptr != NULL) {
 		amplitude_avg = (*func_ptr)(dev_ptr);
@@ -543,7 +514,7 @@ uint16_t ch_get_amplitude_avg(ch_dev_t *dev_ptr) {
 uint8_t ch_get_amplitude_data(ch_dev_t *dev_ptr, uint16_t *amp_buf_ptr, uint16_t start_sample, uint16_t num_samples,
                               ch_io_mode_t mode) {
 	uint16_t error                        = RET_ERR;
-	ch_get_amplitude_data_func_t func_ptr = dev_ptr->api_funcs.get_amplitude_data;
+	ch_get_amplitude_data_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_amplitude_data;
 
 	if (func_ptr != NULL) {
 		error = (*func_ptr)(dev_ptr, amp_buf_ptr, start_sample, num_samples, mode);
@@ -565,7 +536,7 @@ uint16_t ch_get_bandwidth(ch_dev_t *dev_ptr) {
 
 uint8_t ch_set_frequency(ch_dev_t *dev_ptr, uint32_t request_op_freq_hz) {
 	int ret_val                      = RET_ERR;
-	ch_set_frequency_func_t func_ptr = dev_ptr->api_funcs.set_frequency;
+	ch_set_frequency_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_frequency;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, request_op_freq_hz);
@@ -613,7 +584,7 @@ uint16_t ch_get_scale_factor(ch_dev_t *dev_ptr) {
 uint8_t ch_get_iq_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint16_t start_sample, uint16_t num_samples,
                        ch_io_mode_t mode) {
 	int ret_val                    = RET_ERR;
-	ch_get_iq_data_func_t func_ptr = dev_ptr->api_funcs.get_iq_data;
+	ch_get_iq_data_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_iq_data;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, buf_ptr, start_sample, num_samples, mode);
@@ -623,47 +594,18 @@ uint8_t ch_get_iq_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint16_t star
 }
 
 uint16_t ch_samples_to_mm(ch_dev_t *dev_ptr, uint16_t num_samples) {
-	int num_mm                       = 0;
-	ch_samples_to_mm_func_t func_ptr = dev_ptr->api_funcs.samples_to_mm;
-
-	if (func_ptr != NULL) {
-		num_mm = (*func_ptr)(dev_ptr, num_samples);
-	}
-
-	return num_mm;
+	return ch_common_samples_to_mm(dev_ptr, num_samples);
 }
 
 uint16_t ch_mm_to_samples(ch_dev_t *dev_ptr, uint16_t num_mm) {
 	int num_samples                  = 0;
-	ch_mm_to_samples_func_t func_ptr = dev_ptr->api_funcs.mm_to_samples;
+	ch_mm_to_samples_func_t func_ptr = dev_ptr->current_fw->api_funcs->mm_to_samples;
 
 	if (func_ptr != NULL) {
 		num_samples = (*func_ptr)(dev_ptr, num_mm);
 	}
 
 	return num_samples;
-}
-
-uint8_t ch_set_threshold(ch_dev_t *dev_ptr, uint8_t threshold_index, uint16_t amplitude) {
-	int ret_val                      = RET_ERR;
-	ch_set_threshold_func_t func_ptr = dev_ptr->api_funcs.set_threshold;
-
-	if ((func_ptr != NULL)) {
-		ret_val = (*func_ptr)(dev_ptr, threshold_index, amplitude);
-	}
-
-	return ret_val;
-}
-
-uint16_t ch_get_threshold(ch_dev_t *dev_ptr, uint8_t threshold_index) {
-	uint16_t amplitude               = 0;
-	ch_get_threshold_func_t func_ptr = dev_ptr->api_funcs.get_threshold;
-
-	if ((func_ptr != NULL)) {
-		amplitude = (*func_ptr)(dev_ptr, threshold_index);
-	}
-
-	return amplitude;
 }
 
 uint16_t ch_iq_to_amplitude(ch_iq_sample_t *iq_sample) {
@@ -674,74 +616,6 @@ uint16_t ch_iq_to_amplitude(ch_iq_sample_t *iq_sample) {
 	amplitude = sqrt_int32(i_sq + q_sq);
 
 	return (uint16_t)amplitude;
-}
-
-uint8_t ch_set_thresholds(ch_dev_t *dev_ptr, ch_thresholds_t *thresh_ptr) {
-	int ret_val = RET_ERR;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	ch_set_thresholds_func_t func_ptr = dev_ptr->api_funcs.set_thresholds;
-
-	if ((func_ptr != NULL) && (thresh_ptr != NULL)) {
-		ret_val = (*func_ptr)(dev_ptr, thresh_ptr);
-	}
-#else
-	(void)dev_ptr;
-	(void)thresh_ptr;
-#endif
-
-	return ret_val;
-}
-
-uint8_t ch_get_thresholds(ch_dev_t *dev_ptr, ch_thresholds_t *thresh_ptr) {
-	int ret_val = RET_ERR;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	ch_get_thresholds_func_t func_ptr = dev_ptr->api_funcs.get_thresholds;
-
-	if ((func_ptr != NULL) && (thresh_ptr != NULL)) {
-		ret_val = (*func_ptr)(dev_ptr, thresh_ptr);
-	}
-#else
-	(void)dev_ptr;
-	(void)thresh_ptr;
-#endif
-
-	return ret_val;
-}
-
-uint8_t ch_get_num_thresholds(ch_dev_t *dev_ptr) {
-	uint8_t num_thresholds = 0;
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	num_thresholds = dev_ptr->max_num_thresholds;
-#else
-	(void)dev_ptr;
-#endif
-
-	return num_thresholds;
-}
-
-uint8_t ch_set_time_plan(ch_dev_t *dev_ptr, ch_time_plan_t time_plan) {
-	uint8_t ret_val                  = RET_ERR;
-	ch_set_time_plan_func_t func_ptr = dev_ptr->api_funcs.set_time_plan;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, time_plan);
-	}
-
-	return ret_val;
-}
-
-ch_time_plan_t ch_get_time_plan(ch_dev_t *dev_ptr) {
-	ch_time_plan_t time_plan         = CH_TIME_PLAN_NONE;
-	ch_get_time_plan_func_t func_ptr = dev_ptr->api_funcs.get_time_plan;
-
-	if (func_ptr != NULL) {
-		time_plan = (*func_ptr)(dev_ptr);
-	}
-
-	return time_plan;
 }
 
 /*!
@@ -814,7 +688,7 @@ void ch_io_notify(ch_group_t *grp_ptr, uint8_t i2c_bus_index) {
 
 uint8_t ch_set_target_interrupt(ch_dev_t *dev_ptr, ch_tgt_int_filter_t tgt_int_filter) {
 	int ret_val                             = RET_ERR;
-	ch_set_target_interrupt_func_t func_ptr = dev_ptr->api_funcs.set_target_interrupt;
+	ch_set_target_interrupt_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_target_interrupt;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, tgt_int_filter);
@@ -825,7 +699,7 @@ uint8_t ch_set_target_interrupt(ch_dev_t *dev_ptr, ch_tgt_int_filter_t tgt_int_f
 
 ch_tgt_int_filter_t ch_get_target_interrupt(ch_dev_t *dev_ptr) {
 	ch_tgt_int_filter_t tgt_int_mode        = CH_TGT_INT_FILTER_OFF;
-	ch_get_target_interrupt_func_t func_ptr = dev_ptr->api_funcs.get_target_interrupt;
+	ch_get_target_interrupt_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_target_interrupt;
 
 	if (func_ptr != NULL) {
 		tgt_int_mode = (*func_ptr)(dev_ptr);
@@ -836,7 +710,7 @@ ch_tgt_int_filter_t ch_get_target_interrupt(ch_dev_t *dev_ptr) {
 
 uint8_t ch_set_target_int_counter(ch_dev_t *dev_ptr, uint8_t meas_hist, uint8_t thresh_count, uint8_t reset) {
 	uint8_t ret_val                           = RET_ERR;
-	ch_set_target_int_counter_func_t func_ptr = dev_ptr->api_funcs.set_target_int_counter;
+	ch_set_target_int_counter_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_target_int_counter;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, meas_hist, thresh_count, reset);
@@ -848,13 +722,23 @@ uint8_t ch_set_target_int_counter(ch_dev_t *dev_ptr, uint8_t meas_hist, uint8_t 
 uint8_t ch_get_target_int_counter(ch_dev_t *dev_ptr, uint8_t *meas_hist_ptr, uint8_t *thresh_count_ptr,
                                   uint8_t *reset_ptr) {
 	uint8_t ret_val                           = RET_ERR;
-	ch_get_target_int_counter_func_t func_ptr = dev_ptr->api_funcs.get_target_int_counter;
+	ch_get_target_int_counter_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_target_int_counter;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, meas_hist_ptr, thresh_count_ptr, reset_ptr);
 	}
 
 	return ret_val;
+}
+
+ch_meas_status_t ch_meas_get_status(ch_dev_t *dev_ptr, uint8_t meas_num) {
+	ch_meas_status_t status            = CH_MEAS_STATUS_UNKNOWN;
+	ch_meas_get_status_func_t func_ptr = dev_ptr->current_fw->api_funcs->meas_get_status;
+
+	if (func_ptr != NULL) {
+		status = (*func_ptr)(dev_ptr, meas_num);
+	}
+	return status;
 }
 
 #ifdef INCLUDE_SHASTA_SUPPORT
@@ -879,54 +763,10 @@ ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr) {
 }
 #endif
 
-uint8_t ch_set_static_coeff(ch_dev_t *dev_ptr, uint8_t static_coeff) {
-	int ret_val                         = RET_ERR;
-	ch_set_static_coeff_func_t func_ptr = dev_ptr->api_funcs.set_static_coeff;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, static_coeff);
-	}
-
-	return ret_val;
-}
-
-uint8_t ch_get_static_coeff(ch_dev_t *dev_ptr) {
-	uint8_t statc_coeff                 = 0;
-	ch_get_static_coeff_func_t func_ptr = dev_ptr->api_funcs.get_static_coeff;
-
-	if (func_ptr != NULL) {
-		statc_coeff = (*func_ptr)(dev_ptr);
-	}
-
-	return statc_coeff;
-}
-
-uint8_t ch_set_rx_holdoff(ch_dev_t *dev_ptr, uint16_t num_samples) {
-	int ret_val                       = RET_ERR;
-	ch_set_rx_holdoff_func_t func_ptr = dev_ptr->api_funcs.set_rx_holdoff;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, num_samples);
-	}
-
-	return ret_val;
-}
-
-uint16_t ch_get_rx_holdoff(ch_dev_t *dev_ptr) {
-	uint16_t num_samples              = 0;
-	ch_get_rx_holdoff_func_t func_ptr = dev_ptr->api_funcs.get_rx_holdoff;
-
-	if (func_ptr != NULL) {
-		num_samples = (*func_ptr)(dev_ptr);
-	}
-
-	return num_samples;
-}
-
 uint8_t ch_set_rx_low_gain(ch_dev_t *dev_ptr, uint16_t num_samples) {
 	uint8_t ret_val = RET_ERR;
 
-	ch_set_rx_low_gain_func_t func_ptr = dev_ptr->api_funcs.set_rx_low_gain;
+	ch_set_rx_low_gain_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_rx_low_gain;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, num_samples);
@@ -938,7 +778,7 @@ uint8_t ch_set_rx_low_gain(ch_dev_t *dev_ptr, uint16_t num_samples) {
 uint16_t ch_get_rx_low_gain(ch_dev_t *dev_ptr) {
 	uint16_t num_samples = 0;
 
-	ch_get_rx_low_gain_func_t func_ptr = dev_ptr->api_funcs.get_rx_low_gain;
+	ch_get_rx_low_gain_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_rx_low_gain;
 
 	if (func_ptr != NULL) {
 		num_samples = (*func_ptr)(dev_ptr);
@@ -949,7 +789,7 @@ uint16_t ch_get_rx_low_gain(ch_dev_t *dev_ptr) {
 
 uint8_t ch_set_tx_length(ch_dev_t *dev_ptr, uint16_t tx_length) {
 	int ret_val                      = RET_ERR;
-	ch_set_tx_length_func_t func_ptr = dev_ptr->api_funcs.set_tx_length;
+	ch_set_tx_length_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_tx_length;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, tx_length);
@@ -960,24 +800,13 @@ uint8_t ch_set_tx_length(ch_dev_t *dev_ptr, uint16_t tx_length) {
 
 uint16_t ch_get_tx_length(ch_dev_t *dev_ptr) {
 	uint16_t tx_length               = 0;
-	ch_get_tx_length_func_t func_ptr = dev_ptr->api_funcs.get_tx_length;
+	ch_get_tx_length_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_tx_length;
 
 	if (func_ptr != NULL) {
 		tx_length = (*func_ptr)(dev_ptr);
 	}
 
 	return tx_length;
-}
-
-uint8_t ch_get_rx_pulse_length(ch_dev_t *dev_ptr) {
-	uint8_t rx_pulse_length                = 0;
-	ch_get_rx_pulse_length_func_t func_ptr = dev_ptr->api_funcs.get_rx_pulse_length;
-
-	if (func_ptr != NULL) {
-		rx_pulse_length = (*func_ptr)(dev_ptr);
-	}
-
-	return rx_pulse_length;
 }
 
 void ch_set_rx_pretrigger(ch_group_t *grp_ptr, uint8_t enable) {
@@ -1000,31 +829,9 @@ uint8_t ch_check_program(ch_dev_t *dev_ptr) {
 	return ch_common_check_program(dev_ptr);
 }
 
-uint8_t ch_set_modulated_tx_data(ch_dev_t *dev_ptr, uint8_t tx_data) {
-	int ret_val                              = RET_ERR;
-	ch_set_modulated_tx_data_func_t func_ptr = dev_ptr->api_funcs.set_modulated_tx_data;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, tx_data);
-	}
-
-	return ret_val;
-}
-
-uint8_t ch_get_demodulated_rx_data(ch_dev_t *dev_ptr, uint8_t rx_pulse_length, uint8_t *data_ptr) {
-	int ret_val                                = RET_ERR;
-	ch_get_demodulated_rx_data_func_t func_ptr = dev_ptr->api_funcs.get_demodulated_rx_data;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, rx_pulse_length, data_ptr);
-	}
-
-	return ret_val;
-}
-
 uint8_t ch_set_cal_result(ch_dev_t *dev_ptr, ch_cal_result_t *cal_ptr) {
 	int ret_val                       = RET_ERR;
-	ch_set_cal_result_func_t func_ptr = dev_ptr->api_funcs.set_cal_result;
+	ch_set_cal_result_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_cal_result;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, cal_ptr);
@@ -1035,7 +842,7 @@ uint8_t ch_set_cal_result(ch_dev_t *dev_ptr, ch_cal_result_t *cal_ptr) {
 
 uint8_t ch_get_cal_result(ch_dev_t *dev_ptr, ch_cal_result_t *cal_ptr) {
 	int ret_val                       = RET_ERR;
-	ch_get_cal_result_func_t func_ptr = dev_ptr->api_funcs.get_cal_result;
+	ch_get_cal_result_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_cal_result;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, cal_ptr);
@@ -1046,13 +853,35 @@ uint8_t ch_get_cal_result(ch_dev_t *dev_ptr, ch_cal_result_t *cal_ptr) {
 
 uint8_t ch_set_data_output(ch_dev_t *dev_ptr, ch_output_t *output_ptr) {
 	int ret_val                        = RET_ERR;
-	ch_set_data_output_func_t func_ptr = dev_ptr->api_funcs.set_data_output;
+	ch_set_data_output_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_data_output;
 
 	if (func_ptr != NULL) {
 		ret_val = (*func_ptr)(dev_ptr, output_ptr);
 	}
 
 	return ret_val;
+}
+
+uint8_t ch_set_data_ready_delay(ch_dev_t *dev_ptr, uint8_t delay_ms) {
+	int ret_val                             = RET_ERR;
+	ch_set_data_ready_delay_func_t func_ptr = dev_ptr->current_fw->api_funcs->set_data_ready_delay;
+
+	if (func_ptr != NULL) {
+		ret_val = (*func_ptr)(dev_ptr, delay_ms);
+	}
+
+	return ret_val;
+}
+
+uint8_t ch_get_data_ready_delay(ch_dev_t *dev_ptr) {
+	uint8_t delay_ms                        = 0;
+	ch_get_data_ready_delay_func_t func_ptr = dev_ptr->current_fw->api_funcs->get_data_ready_delay;
+
+	if (func_ptr != NULL) {
+		delay_ms = (*func_ptr)(dev_ptr);
+	}
+
+	return delay_ms;
 }
 
 #ifdef INCLUDE_SHASTA_SUPPORT
@@ -1066,46 +895,18 @@ uint8_t ch_meas_reset(ch_dev_t *dev_ptr, uint8_t meas_num) {
 	return ch_common_meas_reset(dev_ptr, meas_num);
 }
 
-uint8_t ch_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_config_t *meas_config_ptr,
-                     ch_thresholds_t *thresh_ptr) {
+uint8_t ch_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_config_t *meas_config_ptr,
+                     const void *thresh_ptr) {
 
-	return ch_common_meas_init(dev_ptr, meas_num, meas_config_ptr, thresh_ptr);
+	/* GPT algo code has been took out of Soniclib base code
+	 * To don't break existing API, keep existing GPT parameter
+	 * but return an error if used
+	 */
+	if (thresh_ptr != NULL)
+		return RET_ERR;
+
+	return ch_common_meas_init(dev_ptr, meas_num, meas_config_ptr);
 }
-#endif
-
-ch_meas_status_t ch_meas_get_status(ch_dev_t *dev_ptr, uint8_t meas_num) {
-	ch_meas_status_t status            = CH_MEAS_STATUS_UNKNOWN;
-	ch_meas_get_status_func_t func_ptr = dev_ptr->api_funcs.meas_get_status;
-
-	if (func_ptr != NULL) {
-		status = (*func_ptr)(dev_ptr, meas_num);
-	}
-	return status;
-}
-
-uint8_t ch_set_data_ready_delay(ch_dev_t *dev_ptr, uint8_t delay_ms) {
-	int ret_val                             = RET_ERR;
-	ch_set_data_ready_delay_func_t func_ptr = dev_ptr->api_funcs.set_data_ready_delay;
-
-	if (func_ptr != NULL) {
-		ret_val = (*func_ptr)(dev_ptr, delay_ms);
-	}
-
-	return ret_val;
-}
-
-uint8_t ch_get_data_ready_delay(ch_dev_t *dev_ptr) {
-	uint8_t delay_ms                        = 0;
-	ch_get_data_ready_delay_func_t func_ptr = dev_ptr->api_funcs.get_data_ready_delay;
-
-	if (func_ptr != NULL) {
-		delay_ms = (*func_ptr)(dev_ptr);
-	}
-
-	return delay_ms;
-}
-
-#ifdef INCLUDE_SHASTA_SUPPORT
 
 const char *ch_get_sensor_id(ch_dev_t *dev_ptr) {
 
@@ -1125,6 +926,24 @@ uint8_t ch_meas_import(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue_ptr, v
 uint8_t ch_meas_add_segment(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_segment_t *seg_ptr) {
 
 	return ch_common_meas_add_segment(dev_ptr, meas_num, seg_ptr);
+}
+
+uint8_t ch_meas_insert_segment(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_segment_t *inst_ptr,
+                               uint8_t index_to_insert) {
+	return ch_common_meas_insert_instruction(dev_ptr, meas_num, inst_ptr, index_to_insert);
+}
+
+uint8_t ch_meas_insert_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_segment_t *inst_ptr,
+                                   uint8_t index_to_insert) {
+	return ch_common_meas_insert_instruction(dev_ptr, meas_num, inst_ptr, index_to_insert);
+}
+
+uint8_t ch_meas_remove_segment(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t index_to_remove) {
+	return ch_common_meas_remove_instruction(dev_ptr, meas_num, index_to_remove);
+}
+
+uint8_t ch_meas_remove_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t index_to_remove) {
+	return ch_common_meas_remove_instruction(dev_ptr, meas_num, index_to_remove);
 }
 
 uint8_t ch_meas_add_segment_count(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_cycles, uint8_t int_enable) {
@@ -1251,6 +1070,14 @@ uint32_t ch_meas_get_interval_ticks(ch_dev_t *dev_ptr, uint8_t meas_num) {
 	return ch_common_meas_get_interval_ticks(dev_ptr, meas_num);
 }
 
+uint8_t ch_meas_time_hop_enable(ch_dev_t *dev_ptr, uint8_t meas_num) {
+	return ch_common_set_freerun_time_hop(dev_ptr, meas_num, true);
+}
+
+uint8_t ch_meas_time_hop_disable(ch_dev_t *dev_ptr, uint8_t meas_num) {
+	return ch_common_set_freerun_time_hop(dev_ptr, meas_num, false);
+}
+
 uint8_t ch_meas_set_odr(ch_dev_t *dev_ptr, uint8_t meas_num, ch_odr_t odr) {
 
 	return ch_common_meas_set_odr(dev_ptr, meas_num, odr);
@@ -1259,29 +1086,6 @@ uint8_t ch_meas_set_odr(ch_dev_t *dev_ptr, uint8_t meas_num, ch_odr_t odr) {
 ch_odr_t ch_meas_get_odr(ch_dev_t *dev_ptr, uint8_t meas_num) {
 
 	return ch_common_meas_get_odr(dev_ptr, meas_num);
-}
-
-uint8_t ch_meas_set_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t num_ranges) {
-	uint8_t err = 1;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	err = ch_common_meas_set_num_ranges(dev_ptr, meas_num, num_ranges);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-	(void)num_ranges;
-#endif
-	return err;
-}
-
-uint8_t ch_meas_get_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num) {
-	uint8_t num_ranges = 0;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	num_ranges = ch_common_meas_get_num_ranges(dev_ptr, meas_num);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-#endif
-	return num_ranges;
 }
 
 uint8_t ch_meas_set_num_samples(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples) {
@@ -1314,143 +1118,23 @@ uint16_t ch_meas_samples_to_mm(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num
 	return ch_common_meas_samples_to_mm(dev_ptr, meas_num, num_samples);
 }
 
-uint8_t ch_meas_set_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_thresholds_t *lib_thresh_buf_ptr) {
-	uint8_t ret_val = RET_ERR;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	ret_val = ch_common_meas_set_thresholds(dev_ptr, meas_num, lib_thresh_buf_ptr);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-	(void)lib_thresh_buf_ptr;
-#endif
-	return ret_val;
-}
+ch_output_type_t ch_meas_get_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num) {
+	ch_meas_get_iq_output_func_t func_ptr = dev_ptr->current_fw->api_funcs->meas_get_iq_output;
 
-uint8_t ch_meas_get_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_thresholds_t *lib_thresh_buf_ptr) {
-	uint8_t ret_val = RET_ERR;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	ret_val = ch_common_meas_get_thresholds(dev_ptr, meas_num, lib_thresh_buf_ptr);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-	(void)lib_thresh_buf_ptr;
-#endif
-	return ret_val;
-}
-
-uint8_t ch_meas_set_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples) {
-	uint8_t ret_val = RET_ERR;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	ret_val = ch_common_meas_set_rx_holdoff(dev_ptr, meas_num, num_samples);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-	(void)num_samples;
-#endif
-	return ret_val;
-}
-
-uint16_t ch_meas_get_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num) {
-	uint16_t num_samples = 0;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	num_samples = ch_common_meas_get_rx_holdoff(dev_ptr, meas_num);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-#endif
-	return num_samples;
-}
-
-uint8_t ch_meas_set_ringdown_cancel(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples) {
-	uint8_t err = 1;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	err = ch_common_meas_set_ringdown_cancel(dev_ptr, meas_num, num_samples);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-	(void)num_samples;
-#endif
-	return err;
-}
-
-uint16_t ch_meas_get_ringdown_cancel(ch_dev_t *dev_ptr, uint8_t meas_num) {
-	uint16_t ringdown_cancel = 0;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	ringdown_cancel = ch_common_meas_get_ringdown_cancel(dev_ptr, meas_num);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-#endif
-	return ringdown_cancel;
-}
-
-uint8_t ch_meas_set_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples) {
-	uint8_t err = 1;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	err = ch_common_meas_set_static_filter(dev_ptr, meas_num, num_samples);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-	(void)num_samples;
-#endif
-	return err;
-}
-
-uint16_t ch_meas_get_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num) {
-	uint16_t static_filter = 0;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	static_filter = ch_common_meas_get_static_filter(dev_ptr, meas_num);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-#endif
-	return static_filter;
+	if (func_ptr != NULL) {
+		return (*func_ptr)(dev_ptr, meas_num);
+	} else {
+		return CH_OUTPUT_IQ;  // standard I/Q by default
+	}
 }
 
 uint8_t ch_meas_set_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num, ch_output_type_t output_format) {
-	uint8_t err = 1;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	err = ch_common_meas_set_iq_output(dev_ptr, meas_num, output_format);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-	(void)output_format;
-#endif
-	return err;
-}
-
-ch_output_type_t ch_meas_get_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num) {
-	ch_output_type_t iq_output = CH_OUTPUT_IQ;  // standard I/Q by default
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	iq_output = ch_common_meas_get_iq_output(dev_ptr, meas_num);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-#endif
-	return iq_output;
-}
-
-uint8_t ch_meas_set_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t update_interval) {
-	uint8_t err = 1;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	err = ch_common_meas_set_filter_update(dev_ptr, meas_num, update_interval);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-	(void)update_interval;
-#endif
-	return err;
-}
-
-uint8_t ch_meas_get_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num) {
-	uint8_t filter_update = 0;
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	filter_update = ch_common_meas_get_filter_update(dev_ptr, meas_num);
-#else
-	(void)dev_ptr;
-	(void)meas_num;
-#endif
-	return filter_update;
+	ch_meas_set_iq_output_func_t func_ptr = dev_ptr->current_fw->api_funcs->meas_set_iq_output;
+	if (func_ptr != NULL) {
+		return (*func_ptr)(dev_ptr, meas_num, output_format);
+	} else {
+		return RET_ERR;
+	}
 }
 
 uint8_t ch_init_algo(ch_dev_t *dev_ptr) {
@@ -1466,6 +1150,10 @@ uint8_t ch_get_algo_info(ch_dev_t *dev_ptr, ICU_ALGO_SHASTA_INFO *algo_info_ptr)
 uint8_t ch_get_algo_config(ch_dev_t *dev_ptr, void *algo_cfg_ptr) {
 
 	return ch_common_get_algo_config(dev_ptr, algo_cfg_ptr);
+}
+
+uint8_t ch_set_algo_config(ch_dev_t *dev_ptr, const void *algo_cfg_ptr) {
+	return ch_common_set_algo_config(dev_ptr, algo_cfg_ptr);
 }
 
 uint8_t ch_get_algo_output(ch_dev_t *dev_ptr, void *algo_out_ptr) {
@@ -1515,50 +1203,6 @@ uint32_t ch_group_get_pmut_clock_freq(ch_group_t *grp_ptr) {
 	return grp_ptr->pmut_clock_freq;
 }
 
-uint8_t ch_get_num_targets(ch_dev_t *dev_ptr) {
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	return ch_common_get_num_targets(dev_ptr);
-#else
-	(void)dev_ptr;
-	return 0;
-#endif
-}
-
-uint32_t ch_get_target_range(ch_dev_t *dev_ptr, uint8_t target_num, ch_range_t range_type) {
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	return ch_common_get_target_range(dev_ptr, target_num, range_type);
-#else
-	(void)dev_ptr;
-	(void)target_num;
-	(void)range_type;
-	return 0;
-#endif
-}
-
-uint16_t ch_get_target_amplitude(ch_dev_t *dev_ptr, uint8_t target_num) {
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	return ch_common_get_target_amplitude(dev_ptr, target_num);
-#else
-	(void)dev_ptr;
-	(void)target_num;
-	return 0;
-#endif
-}
-
-uint32_t ch_get_target_tof_us(ch_dev_t *dev_ptr, uint8_t target_num) {
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-	return ch_common_get_target_tof_us(dev_ptr, target_num);
-#else
-	(void)dev_ptr;
-	(void)target_num;
-	return 0;
-#endif
-}
-
 uint16_t ch_get_num_output_samples(ch_dev_t *dev_ptr) {
 
 	return ch_common_get_num_output_samples(dev_ptr);
@@ -1584,12 +1228,12 @@ uint16_t ch_cycles_to_samples(uint32_t num_cycles, ch_odr_t odr) {
 	return ch_common_cycles_to_samples(num_cycles, odr);
 }
 
-uint32_t ch_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec) {
+uint16_t ch_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec) {
 
 	return ch_common_usec_to_ticks(dev_ptr, num_usec);
 }
 
-uint32_t ch_ticks_to_usec(ch_dev_t *dev_ptr, uint32_t num_ticks) {
+uint32_t ch_ticks_to_usec(ch_dev_t *dev_ptr, uint16_t num_ticks) {
 
 	return ch_common_ticks_to_usec(dev_ptr, num_ticks);
 }

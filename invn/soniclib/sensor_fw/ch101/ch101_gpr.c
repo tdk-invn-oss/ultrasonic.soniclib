@@ -19,66 +19,101 @@
 
  */
 
-#include <invn/soniclib/soniclib.h>
 #include "ch101_gpr.h"
 #include <invn/soniclib/details/ch_common.h>
 
-uint8_t ch101_gpr_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t io_index, uint8_t bus_index) {
+static const ch_rangefinder_api_funcs_t algo_api_funcs = {
+		.set_threshold    = NULL,
+		.get_threshold    = NULL,
+		.set_thresholds   = NULL,
+		.get_thresholds   = NULL,
+		.set_static_range = ch_rangefinder_set_static_range,
+		.set_rx_holdoff   = ch_rangefinder_set_rx_holdoff,
+		.get_rx_holdoff   = ch_rangefinder_get_rx_holdoff,
+		.get_tof_us       = NULL,
+};
 
-	(void)grp_ptr;
+static const ch_api_funcs_t api_funcs = {
+		.set_num_samples    = ch_common_set_num_samples,
+		.get_range          = ch_rangefinder_get_range,
+		.get_amplitude      = ch_rangefinder_get_amplitude,
+		.get_iq_data        = ch_common_get_iq_data,
+		.get_amplitude_data = ch_common_get_amplitude_data,
+		.mm_to_samples      = ch_common_mm_to_samples,
+		.set_sample_window  = ch_common_set_sample_window,
+		.get_amplitude_avg  = ch_common_get_amplitude_avg,
+		.set_cal_result     = ch_common_set_cal_result,
+		.get_cal_result     = ch_common_get_cal_result,
+		.algo_specific_api  = &algo_api_funcs,
+};
 
-	dev_ptr->part_number     = CH101_PART_NUMBER;
-	dev_ptr->app_i2c_address = i2c_addr;
-	dev_ptr->io_index        = io_index;
-	dev_ptr->bus_index       = bus_index;
+static const ch_calib_funcs_t calib_funcs = {
+		.prepare_pulse_timer = ch_common_prepare_pulse_timer,
+		.store_pt_result     = ch_common_store_pt_result,
+		.store_op_freq       = ch_common_store_op_freq,
+		.store_bandwidth     = ch_common_store_bandwidth,
+		.store_scalefactor   = ch_common_store_scale_factor,
+		.get_locked_state    = ch_common_get_locked_state,
+};
 
-	dev_ptr->freqCounterCycles = CH101_COMMON_FREQCOUNTERCYCLES;
-	dev_ptr->freqLockValue     = CH101_COMMON_READY_FREQ_LOCKED;
+static fw_info_t self = {
+		.api_funcs                   = &api_funcs,
+		.calib_funcs                 = &calib_funcs,
+		.fw_includes_sensor_init     = 1,
+		.fw_includes_tx_optimization = 0,
+		.freqCounterCycles           = CH101_COMMON_FREQCOUNTERCYCLES,
+		.freqLockValue               = CH101_COMMON_READY_FREQ_LOCKED,
+		.oversample                  = 0, /* This firmware does not use oversampling */
+		.max_samples                 = CH101_GPR_MAX_SAMPLES,
+};
+
+uint8_t ch101_gpr_init(ch_dev_t *dev_ptr, fw_info_t **fw_info) {
+
+	dev_ptr->part_number = CH101_PART_NUMBER;
 
 	/* Init firmware-specific function pointers */
-	dev_ptr->fw_text              = ch101_gpr_fw_text;
-	dev_ptr->fw_text_size         = ch101_gpr_text_size;
-	dev_ptr->fw_vec               = ch101_gpr_fw_vec;
-	dev_ptr->fw_vec_size          = ch101_gpr_vec_size;
-	dev_ptr->fw_version_string    = ch101_gpr_version;
-	dev_ptr->ram_init             = get_ram_ch101_gpr_init_ptr();
-	dev_ptr->get_fw_ram_init_size = get_ch101_gpr_fw_ram_init_size;
-	dev_ptr->get_fw_ram_init_addr = get_ch101_gpr_fw_ram_init_addr;
+	self.fw_text              = ch101_gpr_fw_text;
+	self.fw_text_size         = ch101_gpr_text_size;
+	self.fw_vec               = ch101_gpr_fw_vec;
+	self.fw_vec_size          = ch101_gpr_vec_size;
+	self.fw_version_string    = ch101_gpr_version;
+	self.ram_init             = get_ram_ch101_gpr_init_ptr();
+	self.get_fw_ram_init_size = get_ch101_gpr_fw_ram_init_size;
+	self.get_fw_ram_init_addr = get_ch101_gpr_fw_ram_init_addr;
 
-	dev_ptr->prepare_pulse_timer = ch_common_prepare_pulse_timer;
-	dev_ptr->store_pt_result     = ch_common_store_pt_result;
-	dev_ptr->store_op_freq       = ch_common_store_op_freq;
-	dev_ptr->store_bandwidth     = ch_common_store_bandwidth;
-	dev_ptr->store_scalefactor   = ch_common_store_scale_factor;
-	dev_ptr->get_locked_state    = ch_common_get_locked_state;
-
-	/* Init API function pointers */
-	dev_ptr->api_funcs.fw_load             = ch_common_fw_load;
-	dev_ptr->api_funcs.set_mode            = ch_common_set_mode;
-	dev_ptr->api_funcs.set_sample_interval = ch_common_set_sample_interval;
-	dev_ptr->api_funcs.set_num_samples     = ch_common_set_num_samples;
-	dev_ptr->api_funcs.set_max_range       = ch_common_set_max_range;
-	dev_ptr->api_funcs.set_static_range    = ch_common_set_static_range;
-	dev_ptr->api_funcs.set_rx_holdoff      = ch_common_set_rx_holdoff;
-	dev_ptr->api_funcs.get_rx_holdoff      = ch_common_get_rx_holdoff;
-	dev_ptr->api_funcs.get_range           = ch_common_get_range;
-	dev_ptr->api_funcs.get_amplitude       = ch_common_get_amplitude;
-	dev_ptr->api_funcs.get_iq_data         = ch_common_get_iq_data;
-	dev_ptr->api_funcs.get_amplitude_data  = ch_common_get_amplitude_data;
-	dev_ptr->api_funcs.samples_to_mm       = ch_common_samples_to_mm;
-	dev_ptr->api_funcs.mm_to_samples       = ch_common_mm_to_samples;
-	dev_ptr->api_funcs.set_thresholds      = NULL;  // not supported
-	dev_ptr->api_funcs.get_thresholds      = NULL;  // not supported
-	dev_ptr->api_funcs.set_sample_window   = ch_common_set_sample_window;
-	dev_ptr->api_funcs.get_amplitude_avg   = ch_common_get_amplitude_avg;
-	dev_ptr->api_funcs.set_cal_result      = ch_common_set_cal_result;
-	dev_ptr->api_funcs.get_cal_result      = ch_common_get_cal_result;
-
-	/* Init max sample count */
-	dev_ptr->max_samples = CH101_GPR_MAX_SAMPLES;
-
-	/* This firmware does not use oversampling */
-	dev_ptr->oversample = 0;
+	*fw_info = &self;
 
 	return 0;
+}
+
+uint8_t ch101_gpr_get_target_in_ringdown(ch_dev_t *dev_ptr) {
+	uint8_t in_ringdown = 0;
+
+	chdrv_read_byte(dev_ptr, CH101_GPR_REG_IN_RINGDOWN, &in_ringdown);
+
+	return in_ringdown;
+}
+
+uint16_t ch101_gpr_get_in_ringdown_ths(ch_dev_t *dev_ptr) {
+	uint16_t in_ringdown_ths = 0;
+
+	chdrv_read_word(dev_ptr, CH101_GPR_REG_IN_RINGDOWN_THS, &in_ringdown_ths);
+
+	return in_ringdown_ths;
+}
+
+void ch101_gpr_set_in_ringdown_ths(ch_dev_t *dev_ptr, uint16_t in_ringdown_ths) {
+	chdrv_write_word(dev_ptr, CH101_GPR_REG_IN_RINGDOWN_THS, in_ringdown_ths);
+}
+
+uint8_t ch101_gpr_get_in_ringdown_idx(ch_dev_t *dev_ptr) {
+	uint8_t in_ringdown_idx = 0;
+
+	chdrv_read_byte(dev_ptr, CH101_GPR_REG_IN_RINGDOWN_IDX, &in_ringdown_idx);
+
+	return in_ringdown_idx;
+}
+
+void ch101_gpr_set_in_ringdown_idx(ch_dev_t *dev_ptr, uint8_t in_ringdown_idx) {
+	chdrv_write_byte(dev_ptr, CH101_GPR_REG_IN_RINGDOWN_IDX, in_ringdown_idx);
 }

@@ -55,19 +55,20 @@
  * The second method for providing the symbols is to use the build system
  * define flags. For example, you can use the -D option with gcc. To use this
  * method, you must first define the symbol INVN_SONICLIB_INTERNAL_BOARD_CONFIG.
- * This will cause soniclib to use the board config in <invn/soniclilb/details>.
+ * This will cause soniclib to use the board config in <invn/soniclib/details>.
  * You should not edit this file directly. Instead, to change the value of the
  * symbols defined there, simply override them with -D flags during the build.
  *
  *
  * #### Basic Operating Sequence
  * At a high level, an application using SonicLib will do the following:
- *  -# Initialize the hardware on the board, by calling the BSP's \a chbsp_board_init() function.
- *  -# Initialize the SonicLib data structures, by calling \a ch_init() for each sensor.
+ *  -# Initialize the hardware on the board
+ *  -# Initialize the Soniclib group structures, by calling \a ch_group_init()
+ *  -# Initialize the SonicLib devices structures, by calling \a ch_init() for each sensor.
  *  -# Program and start the sensor(s), by calling \a ch_group_start().
  *  -# Set up a handler function to process interrupts from the sensor.
- *  -# Set up a triggering mechanism using a board timer, using \a chbsp_periodic_timer_init() etc.,
- *  (unless the sensor will be used in free-running mode, in which no external trigger is needed).  A
+ *  -# Set up a triggering mechanism using a board timer, (unless the sensor will be used
+ *  in free-running mode, in which no external trigger is needed).  A
  *  timer handler routine will typically trigger the sensor(s) using \a ch_group_trigger().
  *  -# Configure the sensor's operating range, detection thresholds, and other parameters.
  *  -# Set the sensor mode to enable sensing.
@@ -88,8 +89,7 @@
  *
  * #### Verbose Debug Output
  * To assist with debugging, verbose debug output from various internal SonicLib functions
- * may be enabled by defining `CHDRV_DEBUG` during the system build.  Uncomment the definition
- * near the top of the soniclib.h file.
+ * may be enabled by defining `CH_LOG_MODULE_LEVEL=X` during the system build.
  */
 
 /*
@@ -111,20 +111,12 @@ extern "C" {
 
 /*==============  SonicLib Version Info ===================*/
 /* SonicLib API/Driver version */
-#define SONICLIB_VER_MAJOR  (3)  /*!< SonicLib major version. */
-#define SONICLIB_VER_MINOR  (32) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (6)  /*!< SonicLib revision. */
-#define SONICLIB_VER_SUFFIX ""   /*!< SonicLib version suffix (contains pre-release info) */
-
-/*==============  Verbose Debug Output Control ===================*/
-/* To enable verbose console messages from internal SonicLib functions during
- * initialization and operation, uncomment the `CHDRV_DEBUG` definition symbol below.
- */
-// #define CHDRV_DEBUG				// uncomment to enable driver debug messages
+#define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
+#define SONICLIB_VER_MINOR  (2) /*!< SonicLib minor version. */
+#define SONICLIB_VER_REV    (0) /*!< SonicLib revision. */
+#define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
-
-/*==============  Header files for installed sensor firmware packages ===================*/
 
 #ifdef INVN_SONICLIB_INTERNAL_BOARD_CONFIG
 #include <invn/soniclib/details/chirp_board_config.h> /* Header from board support package containing h/w params */
@@ -134,52 +126,17 @@ extern "C" {
 #include "chirp_board_config.h"
 #endif
 
-#ifndef INCLUDE_ALGO_EXTERNAL     // If no external algo is used
-#define USE_INTERNAL_ALGO         // Sensor algo is handled internally
-#define INCLUDE_ALGO_RANGEFINDER  // Standard rangefinding (default)
-#endif
-
-#ifdef INCLUDE_WHITNEY_SUPPORT
-#define INCLUDE_ALGO_RANGEFINDER  // Whitney f/w performs rangefinding by default
-#endif
-
 /* Preliminary structure type definitions to resolve include order */
 typedef struct ch_dev_t ch_dev_t;
 typedef struct ch_group_t ch_group_t;
+typedef struct fw_info_st fw_info_t;
 
 /* ICU (second generation) Firmware  */
+#ifdef INCLUDE_SHASTA_SUPPORT
+#include <invn/icu_interface/shasta_external_regs.h> /* Shasta firmware interface */
 #include <invn/soniclib/details/icu.h>
-#include <invn/icu_interface/shasta_external_regs.h>   /* Shasta firmware interface */
-#include <invn/icu_interface/icu_algo_info.h>          /* ICU sensor algorithm interface */
-#include <invn/soniclib/sensor_fw/icu_gpt/icu_gpt.h>   /* ICU GPT General Purpose Transceiver firmware */
-#include <invn/soniclib/sensor_fw/icu_init/icu_init.h> /* ICU Init + tx optimization firmware */
-#include <invn/soniclib/sensor_fw/icu_init-no-txopt/icu_init-no-txopt.h> /* ICU Init-only firmware */
-
-/* ICU sensor algorithm header files */
-#ifdef USE_INTERNAL_ALGO
-#if defined(INCLUDE_ALGO_RANGEFINDER)
-#include <invn/soniclib/sensor_fw/icu_gpt/icu_algo_format.h>
-#include <invn/soniclib/sensor_fw/icu_gpt/icu_shasta_algo_structs.h>
-#include <invn/soniclib/sensor_fw/icu_gpt/shasta_gpt_interface.h>
-#else /* no algo selected - build minimal <invn/soniclib/sensor_fw/Init> config */
-#define INCLUDE_ALGO_NONE
-#include <invn/soniclib/sensor_fw/icu_init/icu_algo_format.h>
-#include <invn/soniclib/sensor_fw/icu_init/icu_shasta_algo_structs.h>
-#include <invn/soniclib/sensor_fw/icu_init/shasta_init_interface.h>
+#include <invn/icu_interface/icu_algo_info.h> /* ICU sensor algorithm interface */
 #endif
-#endif  // USE_INTERNAL_ALGO
-
-#ifdef INCLUDE_WHITNEY_SUPPORT
-/* CH-x01 (first generation) Firmware */
-/* General Purpose Rangefinding (GPR) */
-#include <invn/soniclib/sensor_fw/ch101/ch101_gpr.h> /* GPR - CH101 */
-#include <invn/soniclib/sensor_fw/ch101/ch101_gprmt.h>
-#include <invn/soniclib/sensor_fw/ch201/ch201_gprmt.h> /* GPR / Multi-Threshold - CH201 */
-#endif                                                 // INCLUDE_WHITNEY_SUPPORT
-
-/* ADD NEW HEADER FILES HERE */
-
-/*======================== End of sensor firmware header files ================================*/
 
 /* Miscellaneous header files */
 
@@ -190,9 +147,6 @@ typedef struct ch_group_t ch_group_t;
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#ifdef CHDRV_DEBUG
-#include <stdio.h>
-#endif
 
 /* Chirp sensor part numbers */
 #define CH101_PART_NUMBER       (101)   /*!< Integer sensor identifier for CH101. */
@@ -203,9 +157,19 @@ typedef struct ch_group_t ch_group_t;
 #define ICU_UNKNOWN_PART_NUMBER (0)     /*!< Integer sensor identifier for unknown ICU sensors. */
 
 /* Max expected number of samples per measurement (actual value depends on sensor f/w used) */
-#define CH101_MAX_NUM_SAMPLES (225)            /*!< Max expected samples per measurement for CH101. */
-#define CH201_MAX_NUM_SAMPLES (450)            /*!< Max expected samples per measurement for CH201. */
-#define ICU_MAX_NUM_SAMPLES   (IQ_SAMPLES_MAX) /*!< Max for ICU sensors, from shasta_external_regs.h */
+#ifdef INCLUDE_WHITNEY_SUPPORT
+
+#define CH101_MAX_NUM_SAMPLES (225) /*!< Max expected samples per measurement for CH101. */
+#define CH201_MAX_NUM_SAMPLES (450) /*!< Max expected samples per measurement for CH201. */
+#define MAX_NUM_SAMPLES       CH201_MAX_NUM_SAMPLES
+
+#endif
+#ifdef INCLUDE_SHASTA_SUPPORT
+
+#define ICU_MAX_NUM_SAMPLES (IQ_SAMPLES_MAX) /*!< Max for ICU sensors, from shasta_external_regs.h */
+#define MAX_NUM_SAMPLES     ICU_MAX_NUM_SAMPLES
+
+#endif
 
 /* Misc definitions */
 #define CH_NO_TARGET     (0xFFFFFFFF) /*!< Range value returned if no target was detected. */
@@ -222,14 +186,6 @@ typedef struct ch_group_t ch_group_t;
 #define CH_PMUT_TICKS_PER_CYCLE (16)    /*!< Number of PMUT clock ticks per transducer cycle */
 
 #define CH_OP_FREQ_USE_AVG (0) /*!< Special freq value to use average op freq for sensor group */
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-#ifdef INCLUDE_ALGO_RANGEFINDER
-#define CH_NUM_THRESHOLDS (LEN_THRESH) /*!< Number of internal detection thresholds (Shasta). */
-#endif
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-#define CH_NUM_THRESHOLDS (6) /*!< Number of internal detection thresholds (CH201 only). */
-#endif
 
 #ifdef MAXTARG
 #define CH_MAX_NUM_TARGETS (MAXTARG) /*!< Maximum number of targets supported in sensor f/w */
@@ -329,6 +285,7 @@ typedef enum {
 	CH_INTERRUPT_DRIVE_PUSH_PULL  = 1  /*!< Push pull type. */
 } ch_interrupt_drive_t;
 
+#ifdef INCLUDE_SHASTA_SUPPORT
 //! Sensor interrupt types.
 typedef enum {
 	CH_INTERRUPT_TYPE_UNKNOWN     = INT_SRC_NONE,            /*!< 0x0000 - Unknown. */
@@ -346,6 +303,26 @@ typedef enum {
 	CH_INTERRUPT_TYPE_DEBUG       = INT_SRC_DEBUG,           /*!< 0x4000 - Debug interrupt. */
 	CH_INTERRUPT_TYPE_ERROR       = INT_SRC_ERROR            /*!< 0x8000 - Unspecified error. */
 } ch_interrupt_type_t;
+
+//! Output type.
+typedef enum {
+	CH_OUTPUT_IQ         = IQ_OUTPUT_NORMAL,     /*!< (0) - Output I/Q int16_t pair values */
+	CH_OUTPUT_AMP_THRESH = IQ_OUTPUT_MAG_THRESH, /*!< (1) - Output amp + threshold uint16_t pair values */
+	CH_OUTPUT_AMP        = IQ_OUTPUT_MAG         /*!< (2) - Output amplitude uint16_t values only */
+} ch_output_type_t;
+#else
+//! Sensor interrupt types.(Whitney sensors only have one interrupt type)
+typedef enum {
+	CH_INTERRUPT_TYPE_UNKNOWN  = 0x0000,
+	CH_INTERRUPT_TYPE_DATA_RDY = 0x0001,
+} ch_interrupt_type_t;
+
+//! Output type.
+typedef enum {
+	CH_OUTPUT_IQ  = 0, /*!< Output I/Q int16_t pair values */
+	CH_OUTPUT_AMP = 2  /*!< Output amplitude uint16_t values only */
+} ch_output_type_t;
+#endif
 
 //! Target interrupt filter modes.
 typedef enum {
@@ -406,16 +383,6 @@ typedef enum {
 	CH_IO_MODE_NONBLOCK = 1  /*!< Non-blocking mode. */
 } ch_io_mode_t;
 
-//! Time plan.
-typedef enum { CH_TIME_PLAN_1 = 0, CH_TIME_PLAN_2 = 1, CH_TIME_PLAN_3 = 2, CH_TIME_PLAN_NONE = 255 } ch_time_plan_t;
-
-//! Output type.
-typedef enum {
-	CH_OUTPUT_IQ         = IQ_OUTPUT_NORMAL,     /*!< (0) - Output I/Q int16_t pair values */
-	CH_OUTPUT_AMP_THRESH = IQ_OUTPUT_MAG_THRESH, /*!< (1) - Output amp + threshold uint16_t pair values */
-	CH_OUTPUT_AMP        = IQ_OUTPUT_MAG         /*!< (2) - Output amplitude uint16_t values only */
-} ch_output_type_t;
-
 //! Decimation factor.
 typedef enum {
 	CH_DECIMATION_0_25 = -2,
@@ -468,15 +435,6 @@ typedef struct {
 	uint16_t level;
 } ch_thresh_t;
 
-//! Multiple detection threshold structure.
-typedef struct {
-#ifdef CH_NUM_THRESHOLDS
-	ch_thresh_t threshold[CH_NUM_THRESHOLDS];
-#else
-	int dummy;  // dummy field to avoid empty structure error
-#endif
-} ch_thresholds_t;
-
 //! Calibration result structure.
 typedef struct {
 	uint16_t dco_period;
@@ -493,13 +451,9 @@ typedef struct {
 
 //! Combined configuration structure.
 typedef struct {
-	ch_mode_t mode;           /*!< operating mode */
-	uint16_t max_range;       /*!< maximum range, in mm */
-	uint16_t static_range;    /*!< static target rejection range, in mm (0 if unused) */
-	uint16_t sample_interval; /*!< sensing interval, only used in free-running mode */
-	ch_thresholds_t
-			*thresh_ptr;      /*!< ptr to detection thresholds structure (if supported), should be NULL (0) for CH101 */
-	ch_time_plan_t time_plan; /*!< time plan, should be 0 for CH201 */
+	ch_mode_t mode;                     /*!< operating mode */
+	uint16_t max_range;                 /*!< maximum range, in mm */
+	uint16_t sample_interval;           /*!< sensing interval, only used in free-running mode */
 	ch_tgt_int_filter_t tgt_int_filter; /*!< target interrupt filtering mode */
 } ch_config_t;
 
@@ -535,28 +489,16 @@ typedef struct {
 
 //! Measurement configuration - used during ch_meas_init()
 typedef struct {
-	uint8_t num_ranges;
 	ch_odr_t odr;
 	uint16_t meas_period;
-	uint16_t ringdown_cancel_samples;
-	uint16_t static_filter_samples;
-	ch_output_type_t iq_output_format;  // normal (Q,I) pairs, threshold/amp pairs, or 16-bit amp
-	uint8_t filter_update_interval;     // update the ringdown and STR filters every N+1 samples (0=every time, 1=every
-	                                    // 2nd...
-	ch_meas_mode_t mode;                // 1 if meas initially in standby mode (inactive), 0 if active
+	ch_meas_mode_t mode;  // 1 if meas initially in standby mode (inactive), 0 if active
 } ch_meas_config_t;
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 /* Definitions for ICU-x0201 sensors (Shasta architecture) */
 
-/* Special initialization sensor f/w - selected by defines in chirp_board_config.h */
-#define CH_INIT_ONLY_INIT_FUNC    icu_init_no_txopt_init /*!< f/w init function for init only */
-#define CH_INIT_AND_OPT_INIT_FUNC icu_init_init          /*!< f/w init function for init + tx opt */
-
 #define CH_MEAS_MAX_SEGMENTS (INST_BUF_LENGTH)     /*!< max number of segments in a measurement */
 #define CH_MEAS_MAX_MEAS     (MEAS_QUEUE_MAX_MEAS) /*!< max number of measurements in meas queue */
-
-#define CH_THRESH_LEVEL_HOLDOFF (40000)
 
 #define CH_SENSOR_ID_LENGTH 8 /*!< length of sensor ID string in bytes: 3 byte lot + 4 byte serial num + null */
 
@@ -580,14 +522,9 @@ typedef struct {
 	uint16_t num_tx_segments;
 	uint16_t num_rx_samples;
 	uint8_t num_segments; /*!< number of active segments (does not include EOF) */
-	uint8_t num_ranges;
 	ch_odr_t odr;
 	uint16_t meas_period; /*!< measurement interval in ticks */
-	uint16_t ringdown_cancel_samples;
-	uint16_t static_filter_samples;
-	uint8_t iq_output_format;
-	uint8_t filter_update_interval;
-	ch_meas_mode_t mode; /*!< measurement mode (active or standby) */
+	ch_meas_mode_t mode;  /*!< measurement mode (active or standby) */
 } ch_meas_info_t;
 
 //! Measurement segment info
@@ -626,111 +563,125 @@ typedef struct {
 
 #endif  // INCLUDE_SHASTA_SUPPORT
 
-//! ASIC firmware init function pointer typedef.
-typedef uint8_t (*ch_fw_init_func_t)(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t dev_num,
-                                     uint8_t bus_index);
-
 //! API function pointer typedefs.
-typedef uint8_t (*ch_fw_load_func_t)(ch_dev_t *dev_ptr);
 typedef uint8_t (*ch_get_config_func_t)(ch_dev_t *dev_ptr, ch_config_t *config_ptr);
 typedef uint8_t (*ch_set_config_func_t)(ch_dev_t *dev_ptr, ch_config_t *config_ptr);
-typedef uint8_t (*ch_set_mode_func_t)(ch_dev_t *dev_ptr, ch_mode_t mode);
-typedef uint8_t (*ch_set_sample_interval_func_t)(ch_dev_t *dev_ptr, uint16_t sample_interval);
 typedef uint8_t (*ch_set_num_samples_func_t)(ch_dev_t *dev_ptr, uint16_t num_samples);
-typedef uint8_t (*ch_set_max_range_func_t)(ch_dev_t *dev_ptr, uint16_t max_range);
 typedef uint8_t (*ch_set_sample_window_func_t)(ch_dev_t *dev_ptr, uint16_t start_sample, uint16_t end_sample);
 typedef uint32_t (*ch_get_range_func_t)(ch_dev_t *dev_ptr, ch_range_t range_type);
-typedef uint32_t (*ch_get_tof_us_func_t)(ch_dev_t *dev_ptr);
 typedef uint16_t (*ch_get_amplitude_func_t)(ch_dev_t *dev_ptr);
 typedef uint16_t (*ch_get_amplitude_avg_func_t)(ch_dev_t *dev_ptr);
 typedef uint8_t (*ch_set_frequency_func_t)(ch_dev_t *dev_ptr, uint32_t target_freq_Hz);
-typedef uint32_t (*ch_get_frequency_func_t)(ch_dev_t *dev_ptr);
 typedef uint8_t (*ch_get_iq_data_func_t)(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint16_t start_sample,
                                          uint16_t num_samples, ch_io_mode_t io_mode);
 typedef uint8_t (*ch_get_amplitude_data_func_t)(ch_dev_t *dev_ptr, uint16_t *buf_ptr, uint16_t start_sample,
                                                 uint16_t num_samples, ch_io_mode_t io_mode);
-typedef uint16_t (*ch_samples_to_mm_func_t)(ch_dev_t *dev_ptr, uint16_t num_samples);
 typedef uint16_t (*ch_mm_to_samples_func_t)(ch_dev_t *dev_ptr, uint16_t num_mm);
-typedef uint8_t (*ch_set_threshold_func_t)(ch_dev_t *dev_ptr, uint8_t threshold_index, uint16_t amplitude);
-typedef uint16_t (*ch_get_threshold_func_t)(ch_dev_t *dev_ptr, uint8_t threshold_index);
-typedef uint8_t (*ch_set_thresholds_func_t)(ch_dev_t *dev_ptr, ch_thresholds_t *thresh_ptr);
-typedef uint8_t (*ch_get_thresholds_func_t)(ch_dev_t *dev_ptr, ch_thresholds_t *thresh_ptr);
 typedef uint8_t (*ch_set_target_interrupt_func_t)(ch_dev_t *dev_ptr, ch_tgt_int_filter_t tgt_int_filter);
 typedef ch_tgt_int_filter_t (*ch_get_target_interrupt_func_t)(ch_dev_t *dev_ptr);
 typedef uint8_t (*ch_set_target_int_counter_func_t)(ch_dev_t *dev_ptr, uint8_t meas_hist, uint8_t thresh_count,
                                                     uint8_t reset);
 typedef uint8_t (*ch_get_target_int_counter_func_t)(ch_dev_t *dev_ptr, uint8_t *meas_hist_ptr,
                                                     uint8_t *thresh_count_ptr, uint8_t *reset_ptr);
-typedef uint8_t (*ch_set_static_range_func_t)(ch_dev_t *dev_ptr, uint16_t static_range);
-typedef uint8_t (*ch_set_static_coeff_func_t)(ch_dev_t *dev_ptr, uint8_t static_coeff);
-typedef uint8_t (*ch_get_static_coeff_func_t)(ch_dev_t *dev_ptr);
-typedef uint8_t (*ch_set_rx_holdoff_func_t)(ch_dev_t *dev_ptr, uint16_t rx_holdoff);
-typedef uint16_t (*ch_get_rx_holdoff_func_t)(ch_dev_t *dev_ptr);
 typedef uint8_t (*ch_set_rx_low_gain_func_t)(ch_dev_t *dev_ptr, uint16_t num_samples);
 typedef uint16_t (*ch_get_rx_low_gain_func_t)(ch_dev_t *dev_ptr);
 typedef uint8_t (*ch_set_tx_length_func_t)(ch_dev_t *dev_ptr, uint16_t tx_length);
 typedef uint16_t (*ch_get_tx_length_func_t)(ch_dev_t *dev_ptr);
-typedef uint8_t (*ch_get_demodulated_rx_data_func_t)(ch_dev_t *dev_ptr, uint8_t rx_pulse_length, uint8_t *data_ptr);
-typedef uint8_t (*ch_set_modulated_tx_data_func_t)(ch_dev_t *dev_ptr, uint8_t ta_data);
-typedef uint8_t (*ch_get_rx_pulse_length_func_t)(ch_dev_t *dev_ptr);
-typedef uint8_t (*ch_set_time_plan_func_t)(ch_dev_t *dev_ptr, ch_time_plan_t time_plan);
-typedef ch_time_plan_t (*ch_get_time_plan_func_t)(ch_dev_t *dev_ptr);
 typedef uint8_t (*ch_set_cal_result_func_t)(ch_dev_t *dev_ptr, ch_cal_result_t *cal_ptr);
 typedef uint8_t (*ch_get_cal_result_func_t)(ch_dev_t *dev_ptr, ch_cal_result_t *cal_ptr);
-typedef uint8_t (*ch_set_data_output_func_t)(ch_dev_t *dev_ptr, ch_output_t *output);
+typedef uint8_t (*ch_set_data_output_func_t)(ch_dev_t *dev_ptr, const ch_output_t *output);
 typedef void (*ch_trigger_soft_func_t)(ch_dev_t *dev_ptr);
-typedef ch_meas_status_t (*ch_meas_get_status_func_t)(ch_dev_t *dev_ptr, uint8_t meas_num);
 typedef uint8_t (*ch_set_data_ready_delay_func_t)(ch_dev_t *dev_ptr, uint8_t num_cycles);
 typedef uint8_t (*ch_get_data_ready_delay_func_t)(ch_dev_t *dev_ptr);
+typedef ch_meas_status_t (*ch_meas_get_status_func_t)(ch_dev_t *dev_ptr, uint8_t meas_num);
+
+#ifdef INCLUDE_SHASTA_SUPPORT
+typedef ch_output_type_t (*ch_meas_get_iq_output_func_t)(ch_dev_t *dev_ptr, uint8_t meas_num);
+typedef uint8_t (*ch_meas_set_iq_output_func_t)(ch_dev_t *dev_ptr, uint8_t meas_num, ch_output_type_t output_format);
+#endif
 
 //! API function pointer structure (internal use).
 typedef struct {
-	ch_fw_load_func_t fw_load;
-	ch_set_mode_func_t set_mode;
-	ch_set_sample_interval_func_t set_sample_interval;  // deprecated
 	ch_set_num_samples_func_t set_num_samples;
-	ch_set_max_range_func_t set_max_range;
 	ch_set_sample_window_func_t set_sample_window;
 	ch_get_range_func_t get_range;
-	ch_get_tof_us_func_t get_tof_us;
 	ch_get_amplitude_func_t get_amplitude;
 	ch_get_amplitude_avg_func_t get_amplitude_avg;
 	ch_set_frequency_func_t set_frequency;
-	ch_get_frequency_func_t get_frequency;
 	ch_get_iq_data_func_t get_iq_data;
 	ch_get_amplitude_data_func_t get_amplitude_data;
-	ch_samples_to_mm_func_t samples_to_mm;
 	ch_mm_to_samples_func_t mm_to_samples;
-	ch_set_threshold_func_t set_threshold;
-	ch_get_threshold_func_t get_threshold;
-	ch_set_thresholds_func_t set_thresholds;
-	ch_get_thresholds_func_t get_thresholds;
 	ch_set_target_interrupt_func_t set_target_interrupt;
 	ch_get_target_interrupt_func_t get_target_interrupt;
 	ch_set_target_int_counter_func_t set_target_int_counter;
 	ch_get_target_int_counter_func_t get_target_int_counter;
-	ch_set_static_range_func_t set_static_range;
-	ch_set_static_coeff_func_t set_static_coeff;
-	ch_get_static_coeff_func_t get_static_coeff;
-	ch_set_rx_holdoff_func_t set_rx_holdoff;
-	ch_get_rx_holdoff_func_t get_rx_holdoff;
 	ch_set_rx_low_gain_func_t set_rx_low_gain;
 	ch_get_rx_low_gain_func_t get_rx_low_gain;
-	ch_get_demodulated_rx_data_func_t get_demodulated_rx_data;
 	ch_set_tx_length_func_t set_tx_length;
 	ch_get_tx_length_func_t get_tx_length;
-	ch_set_modulated_tx_data_func_t set_modulated_tx_data;
-	ch_get_rx_pulse_length_func_t get_rx_pulse_length;
-	ch_set_time_plan_func_t set_time_plan;
-	ch_get_time_plan_func_t get_time_plan;
 	ch_set_cal_result_func_t set_cal_result;
 	ch_get_cal_result_func_t get_cal_result;
 	ch_set_data_output_func_t set_data_output;
 	ch_trigger_soft_func_t trigger_soft;
-	ch_meas_get_status_func_t meas_get_status;
 	ch_set_data_ready_delay_func_t set_data_ready_delay;
 	ch_get_data_ready_delay_func_t get_data_ready_delay;
+	ch_meas_get_status_func_t meas_get_status;
+#ifdef INCLUDE_SHASTA_SUPPORT
+	ch_meas_get_iq_output_func_t meas_get_iq_output;
+	ch_meas_set_iq_output_func_t meas_set_iq_output;
+#endif
+	// Range finding specific
+	const void *algo_specific_api;
 } ch_api_funcs_t;
+
+typedef struct {
+	void (*prepare_pulse_timer)(ch_dev_t *dev_ptr); /*!< Pointer to function preparing sensor pulse
+	                                                     timer to measure real-time clock (RTC)
+	                                                     calibration pulse sent to device. */
+	void (*store_pt_result)(ch_dev_t *dev_ptr);     /*!< Pointer to function to read RTC calibration
+	                                                     pulse timer result from sensor and place value
+	                                                     in the \a rtc_cal_result field. */
+	void (*store_op_freq)(ch_dev_t *dev_ptr);       /*!< Pointer to function to read operating
+	                                                     frequency and place value in the
+	                                                     \a op_frequency field. */
+	void (*store_bandwidth)(ch_dev_t *dev_ptr);     /*!< Pointer to function to read operating bandwidth
+	                                                     and place value in the \a bandwidth field. */
+	void (*store_scalefactor)(ch_dev_t *dev_ptr);   /*!< Pointer to function to calculate ToF scale factor
+	                                                     and place value in the \a tof_scalefactor field. */
+	uint8_t (*get_locked_state)(ch_dev_t *dev_ptr); /*!< Pointer to function returning locked state
+	                                                     for sensor. */
+} ch_calib_funcs_t;
+
+struct fw_info_st {
+	/* Sensor Firmware-specific Linkage Definitions */
+	const char *fw_version_string;          /*!< Pointer to string identifying sensor firmware version. */
+	const uint8_t *fw_text;                 /*!< Pointer to start of sensor firmware image text to be loaded */
+	const uint8_t *fw_vec;                  /*!< Pointer to start of sensor firmware image vectors to be loaded */
+	const uint8_t *ram_init;                /*!< Pointer to ram initialization data */
+	uint16_t (*get_fw_ram_init_size)(void); /*!< Pointer to function returning ram init size
+	                                             for sensor. */
+	uint16_t (*get_fw_ram_init_addr)(void); /*!< Pointer to function returning start address of
+	                                             ram initialization area in the sensor. */
+	/* Functions used for sensor calibration */
+	const ch_calib_funcs_t *const calib_funcs;
+	/* API and callback functions */
+	const ch_api_funcs_t *const api_funcs; /*!< Structure containing API function pointers. */
+	uint16_t fw_text_size;                 /*!< Size of sensor firmware image text */
+	uint16_t fw_vec_size;                  /*!< Size of sensor firmware interrupt vectors */
+
+	uint16_t max_samples;             /*!< Maximum number of receiver samples for this sensor firmware */
+	const uint16_t freqCounterCycles; /*!< Frequency counter cycles */
+	const uint8_t freqLockValue;      /*!< Value set when sensor has locked */
+	const int8_t oversample;          /*!< Oversampling factor (power of 2) */
+	const uint8_t max_num_thresholds; /*!< Maximum number of detection thresholds for this sensor firmware */
+	/* Sensor Firmware infos */
+	const uint8_t fw_includes_sensor_init : 1;     /*!< If set, the firmware is able to initialize sensor hardware */
+	const uint8_t fw_includes_tx_optimization : 1; /*!< If set, the firmware is able to run tx optimization */
+	const uint8_t reserved : 6;
+};
+
+//! ASIC firmware init function pointer typedef.
+typedef uint8_t (*ch_fw_init_func_t)(ch_dev_t *dev_ptr, fw_info_t **fw_info);
 
 //! Sensor interrupt callback routine pointer.
 typedef void (*ch_io_int_callback_t)(ch_group_t *grp_ptr, uint8_t io_index, ch_interrupt_type_t int_type);
@@ -762,7 +713,6 @@ struct ch_group_t {
 	                                                     \a chbsp_get_i2c_info()*/
 	uint16_t rtc_cal_pulse_ms;                      /*!< Real-time clock calibration pulse length (in ms) */
 	uint16_t pretrig_delay_us;                      /*!< Pre-trigger delay for rx-only sensors (in us) */
-	chdrv_discovery_hook_t disco_hook;              /*!< Addr of hook routine to call when device found on bus */
 	ch_io_int_callback_t io_int_callback;           /*!< Addr of routine to call when sensor interrupts */
 	ch_io_complete_callback_t io_complete_callback; /*!< Addr of routine to call when non-blocking I/O
 	                                                     completes */
@@ -782,8 +732,6 @@ struct ch_dev_t {
 #endif
 	ch_asic_gen_t asic_gen;         /*!< Sensor asic design generation. */
 	ch_mode_t mode;                 /*!< Sensor operating mode. */
-	uint8_t freqLockValue;          /*!< Value set when sensor has locked */
-	uint16_t freqCounterCycles;     /*!< Frequency counter cycles */
 	uint16_t max_range;             /*!< Maximum range, in mm */
 	uint16_t static_range;          /*!< Static target rejection range, in samples (0 if unused) */
 	uint32_t freerun_intvl_us;      /*!< Measurement interval (in microsec), if in free-running mode */
@@ -808,30 +756,27 @@ struct ch_dev_t {
 	uint8_t app_i2c_address; /*!< Assigned application I2C address for device in normal operation*/
 	uint16_t i2c_drv_flags;  /*!< Flags for special I2C handling by Chirp driver */
 #endif
-	uint8_t bus_index;          /*!< Index value identifying which SPI/I2C bus is used for this device. */
-	uint16_t part_number;       /*!< Integer part number (e.g. 101 for a CH101 device). */
-	int8_t oversample;          /*!< Oversampling factor (power of 2) */
-	uint8_t sensor_connected;   /*!< Sensor connection status:
-	                                 1 if discovered and successfully initialized, 0 otherwise. */
-	uint8_t io_index;           /*!< Index value (device number) identifying device within group */
-	uint8_t max_num_thresholds; /*!< Maximum number of detection thresholds for this sensor firmware */
-	uint16_t max_samples;       /*!< Maximum number of receiver samples for this sensor firmware */
-	uint16_t num_rx_samples;    /*!< Number of receiver samples for the current max range setting. */
-	uint16_t win_start_sample;  /*!< Starting sample of sample window, if supported */
-	uint16_t num_win_samples;   /*!< Number of samples in sample window, if supported */
+	uint8_t bus_index;         /*!< Index value identifying which SPI/I2C bus is used for this device. */
+	uint16_t part_number;      /*!< Integer part number (e.g. 101 for a CH101 device). */
+	uint8_t sensor_connected;  /*!< Sensor connection status:
+	                                1 if discovered and successfully initialized, 0 otherwise. */
+	uint8_t io_index;          /*!< Index value (device number) identifying device within group */
+	uint16_t num_rx_samples;   /*!< Number of receiver samples for the current max range setting. */
+	uint16_t win_start_sample; /*!< Starting sample of sample window, if supported */
+	uint16_t num_win_samples;  /*!< Number of samples in sample window, if supported */
 
-	uint8_t restart_only;               /*!< Sensor f/w uses reinit after separate init/calibration */
 	ch_meas_status_t meas_status;       /*!< Sensor measurement status */
 	ch_trigger_type_t trig_type;        /*!< Sensor triggering type (hardware or software) */
 	ch_interrupt_mode_t int_mode;       /*!< Sensor interrupt mode (pulse or latching) */
 	ch_interrupt_drive_t int_drive;     /*!< Sensor interrupt drive type (open drain or push pull) */
 	ch_tgt_int_filter_t tgt_int_filter; /*!< Target interrupt filter mode */
-	ch_fw_init_func_t fw_init_func;     /*!< Function called during last init */
+	fw_info_t *main_fw_info;            /*!< Pointer to firmware infos for main/application firmware */
+	fw_info_t *current_fw;              /*!< Pointer on firmware currently used by sensor */
 #ifdef INCLUDE_SHASTA_SUPPORT
-	ch_fw_init_func_t fw_reinit_func; /*!< Function to call during next re-init */
-	uint8_t restart_pending;          /*!< Reinit/restart is pending */
-	uint8_t asic_ready;               /*!< Indicates ASIC is ready for commands */
-	ch_clock_cal_t test_clock_cal;    /*!< Clock calibration values from factory test */
+	fw_info_t *init_fw_info;       /*!< Pointer to firmware infos for initialization firmware (if necessary) */
+	uint8_t main_fw_init_done;     /*!< Flag to indicate if main/application firmware have been initialized */
+	uint8_t asic_ready;            /*!< Indicates ASIC is ready for commands */
+	ch_clock_cal_t test_clock_cal; /*!< Clock calibration values from factory test */
 
 	/* Sensor measurement queue */
 	measurement_queue_t meas_queue; /*!< Sensor measurement queue (local copy) */
@@ -852,47 +797,32 @@ struct ch_dev_t {
 	/* Sensor algorithm */
 	ICU_ALGO_SHASTA_INFO *sens_algo_info_addr; /*!< Algorithm info addr on sensor */
 	ICU_ALGO_SHASTA_INFO algo_info;            /*!< Sensor algorithm information (copy) */
-#ifdef USE_INTERNAL_ALGO
-	ICU_ALGO_SHASTA_OUTPUT *sens_algo_out_addr; /*!< Algorithm data output addr on sensor */
-	ICU_ALGO_SHASTA_OUTPUT algo_out;            /*!< Sensor algorithm data output (copy) */
-	ICU_ALGO_SHASTA_CONFIG *sens_algo_cfg_addr; /*!< Algorithm configuration addr on sensor */
-	ICU_ALGO_SHASTA_CONFIG algo_cfg;            /*!< Sensor algorithm configuration (copy) */
-#endif
+	void *algo_cfg_ptr; /*!< Sensor algorithm config pointer (might be initialized by some fw interfaces) */
 
 #endif  // INCLUDE_SHASTA_SUPPORT
-
-	/* Sensor Firmware-specific Linkage Definitions */
-	const char *fw_version_string; /*!< Pointer to string identifying sensor firmware version. */
-	const uint8_t *fw_text;        /*!< Pointer to start of sensor firmware image text to be loaded */
-	const uint8_t *fw_vec;         /*!< Pointer to start of sensor firmware image vectors to be loaded */
-	uint16_t fw_text_size;         /*!< Size of sensor firmware image text */
-	uint16_t fw_vec_size;          /*!< Size of sensor firmware interrupt vectors */
-	const uint8_t *ram_init;       /*!< Pointer to ram initialization data */
-	void (*prepare_pulse_timer)(ch_dev_t *dev_ptr); /*!< Pointer to function preparing sensor pulse
-	                                                     timer to measure real-time clock (RTC)
-	                                                     calibration pulse sent to device. */
-	void (*store_pt_result)(ch_dev_t *dev_ptr);     /*!< Pointer to function to read RTC calibration
-	                                                     pulse timer result from sensor and place value
-	                                                     in the \a rtc_cal_result field. */
-	void (*store_op_freq)(ch_dev_t *dev_ptr);       /*!< Pointer to function to read operating
-	                                                     frequency and place value in the
-	                                                     \a op_frequency field. */
-	void (*store_bandwidth)(ch_dev_t *dev_ptr);     /*!< Pointer to function to read operating bandwidth
-	                                                     and place value in the \a bandwidth field. */
-	void (*store_scalefactor)(ch_dev_t *dev_ptr);   /*!< Pointer to function to calculate ToF scale factor
-	                                                     and place value in the \a tof_scalefactor field. */
-	uint8_t (*get_locked_state)(ch_dev_t *dev_ptr); /*!< Pointer to function returning locked state
-	                                                     for sensor. */
-	uint16_t (*get_fw_ram_init_size)(void);         /*!< Pointer to function returning ram init size
-	                                                     for sensor. */
-	uint16_t (*get_fw_ram_init_addr)(void);         /*!< Pointer to function returning start address of
-	                                                     ram initialization area in the sensor. */
-
-	/* API and callback functions */
-	ch_api_funcs_t api_funcs; /*!< Structure containing API function pointers. */
 };
 
 /*==============  API function prototypes and documentation ===================*/
+
+/*!
+ * \brief Initialize the group descriptor for a group of sensors.
+ *
+ * \param grp_ptr 			pointer to the ch_group_t descriptor for sensor group to join
+ * \param num_devices		number of the device within the sensor group
+ * \param num_devices		number of the buses the sensors use
+ * \param rtc_cal_pulse_ms	Length of the pulse used to calibrate the sensors RTC
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function is used to initialize few group structure field before initializing sensors
+ *
+ * Generally, an application will require only one ch_group_t structure to manage all Chirp sensors.
+ *
+ * \note This function only performs internal initialization of data structures, etc.  It does not
+ * actually initialize the physical sensor device(s).  See \a ch_group_start(), \a ch_restart(),
+ * and \a ch_group_restart().
+ */
+uint8_t ch_group_init(ch_group_t *grp_ptr, uint8_t num_devices, uint8_t num_buses, uint16_t rtc_cal_pulse_ms);
 
 /*!
  * \brief Initialize the device descriptor for a sensor.
@@ -914,8 +844,7 @@ struct ch_dev_t {
  * ch_group_t structure describing the sensor group that will include the new sensor.  Both the ch_dev_t
  * structure and the ch_group_t structure must have already been allocated before this function is called.
  *
- * Generally, an application will require only one ch_group_t structure to manage all Chirp sensors.
- * However, a separate ch_dev_t structure must be allocated for each sensor.
+ * A separate ch_dev_t structure must be allocated for each sensor.
  *
  * \a dev_num is a simple index value that uniquely identifies a sensor within a group.  Each possible
  * sensor (i.e. each physical port on the board that could have a Chirp sensor attached) has a number,
@@ -935,6 +864,25 @@ struct ch_dev_t {
  * and \a ch_group_restart().
  */
 uint8_t ch_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, ch_fw_init_func_t fw_init_func);
+
+/*!
+ * \brief Initialize the init firmware to use for a sensor.
+ *
+ * \param dev_ptr      pointer to the ch_dev_t descriptor structure
+ * \param fw_init_func pointer to the sensor init firmware initialization function
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function is used to define the init firmware for a sensor if the main firwmware (determined with ch_init)
+ * doesn't have initialization features in it.
+ * It can be necessary to set a specific initialization firmware (with tx optimization) if using measure optimization
+ * API.
+ *
+ * \note This function only performs internal initialization of data structures, etc. It does not
+ * actually initialize the physical sensor device(s).  See \a ch_group_start(), \a ch_restart(),
+ * \a ch_group_restart() and \a ch_meas_optimize().
+ */
+uint8_t ch_set_init_firmware(ch_dev_t *dev_ptr, ch_fw_init_func_t fw_init_func);
 
 /*!
  * \brief	Program and start a group of sensors.
@@ -1215,7 +1163,7 @@ uint8_t ch_get_bus(ch_dev_t *dev_ptr);
  * The version number consists of three x.y.z fields: <major>.<minor>.<rev>
  *
  * - \a Major versions are infrequent architectural releases that may include
- * fundamental changes to interfaces and other compatibilty issues.
+ * fundamental changes to interfaces and other compatiblity issues.
  * - \a Minor releases introduce new features and may include minor changes to
  * individual interfaces, but are generally backwards compatible.
  * - \a Revision releases include bug fixes and other changes that do not
@@ -1276,7 +1224,7 @@ uint8_t ch_set_mode(ch_dev_t *dev_ptr, ch_mode_t mode);
  * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
  * \return 			Interval between samples (in ms), or 0 if device is not in free-running mode
  *
- * \note This function is DEPRECATED and is provided only for backwards compatibilty.  New
+ * \note This function is DEPRECATED and is provided only for backwards compatiblity.  New
  * applications should use the equivalent \a ch_get_freerun_interval() function.
  *
  * This function returns the interval between measurements, in milliseconds, for
@@ -1326,7 +1274,7 @@ uint32_t ch_get_freerun_interval_us(ch_dev_t *dev_ptr);
  *
  * See also \a ch_get_freerun_interval_us(), \a ch_get_freerun_interval_ticks().
  */
-uint32_t ch_get_freerun_interval_ticks(ch_dev_t *dev_ptr);
+uint16_t ch_get_freerun_interval_ticks(ch_dev_t *dev_ptr);
 
 /*!
  * \brief Set the internal sensing interval (deprecated).
@@ -1600,53 +1548,6 @@ uint8_t ch_get_sample_window(ch_dev_t *dev_ptr, uint16_t *start_sample_ptr, uint
 uint8_t ch_set_sample_window(ch_dev_t *dev_ptr, uint16_t start_sample, uint16_t num_samples);
 
 /*!
- * \brief Get static target rejection range setting.
- *
- * \param dev_ptr pointer to the ch_dev_t descriptor structure
- *
- * \return Static target rejection range setting, in samples, or 0 if not enabled
- *
- * This function returns the number of samples at the beginning of a measurement cycle over
- * which static target rejection filtering will be applied.
- *
- * To calculate the physical distance that corresponds to the number of samples, use the
- * \a ch_samples_to_mm() function.
- *
- * For ICU sensors, this function always returns the value for the default measurement
- * definition.  To specify which measurement to query, use the \a ch_meas_get_static_filter()
- * function.
- *
- * See also \a ch_set_static_range().
- */
-uint16_t ch_get_static_range(ch_dev_t *dev_ptr);
-
-/*!
- * \brief Configure static target rejection.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param num_samples 	number of sensor samples (at beginning of measurement cycle) over
- *                    	which static targets will be rejected
- *
- * \return 0 if successful, non-zero if error
- *
- * Static target rejection is a special processing mode in which the sensor will actively filter
- * out signals from close, non-moving objects, so that they do not continue to generate range
- * readings.  This allows detection and reporting of target objects that are farther away than the
- * static objects.  (Normally, the sensor reports the range value for the closest detected object.)
- *
- * Static target rejection is applied for a specified number of samples, starting at the beginning
- * of a measurement cycle* (i.e. for the closest objects).  The num_samples parameter specifies the
- * number of samples that will be filtered.  To calculate the appropriate value for \a num_samples
- * to filter over a certain physical distance, use the \a ch_mm_to_samples() function.
- *
- * For ICU sensors, this function always controls the default measurement definition.  To
- * specify which measurement to modify, use the \a ch_meas_set_static_filter() function.
- *
- * See also \a ch_get_static_range().
- */
-uint8_t ch_set_static_range(ch_dev_t *dev_ptr, uint16_t num_samples);
-
-/*!
  * \brief Get the measured range from a sensor.
  *
  * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
@@ -1684,29 +1585,6 @@ uint8_t ch_set_static_range(ch_dev_t *dev_ptr, uint16_t num_samples);
  *
  */
 uint32_t ch_get_range(ch_dev_t *dev_ptr, ch_range_t range_type);
-
-/*!
- * \brief Get the measured time-of-flight from a sensor in microseconds
- *
- * \param dev_ptr pointer to the ch_dev_t descriptor structure
- *
- * \return Time-of-flight in microseconds,
- *         or 0 if error
- *
- * This function reads the measurement result registers from the sensor and then computes the
- * time-of-flight in microseconds.  The time-of-flight is returned as a 32-bit integer.
- *
- * If the sensor did not successfully find the range of a target during the most recent measurement,
- * the returned value will be \a zero (0).  If an error occurs when getting or calculating the
- * range, zero (0) will be returned.
- *
- * \note This function only reports the results from the most recently completed measurement cycle.  It
- * does not actually trigger a measurement.  The time-of-flight that is reported is the total time
- * measured by the sensor between transmission and reception.  The value is always the full round-trip
- * time-of-flight.
- *
- */
-uint32_t ch_get_tof_us(ch_dev_t *dev_ptr);
 
 /*!
  * \brief Get the measured amplitude from a sensor.
@@ -1823,7 +1701,7 @@ uint32_t ch_get_frequency(ch_dev_t *dev_ptr);
  * When a group of sensors are used in paired pitch/catch operation, it is often
  * helpful to set them to a common acoustic operating frequency.  A better frequency
  * match between the transmitting and receiving sensors improves the range and
- * reliablity.
+ * reliability.
  *
  * All sensors in the group must be the same production model (part number).  It
  * is not possible to set the frequency to a value that is outside the
@@ -1896,7 +1774,7 @@ uint16_t ch_get_rtc_cal_result(ch_dev_t *dev_ptr);
  * This function returns the length (duration), in milliseconds, of the the real-time clock (RTC)
  * calibration pulse used for the sensor.  The pulse is applied to the sensor's INT line during
  * \a ch_group_start() to calibrate the sensor's internal clock.  The pulse length is specified by
- * the board support package during the \a chbsp_board_init() function.
+ * the board support package during the \a ch_group_init() function.
  *
  * The RTC calibration pulse length is used internally in calculations that convert between time
  * and distance.
@@ -1956,7 +1834,7 @@ uint16_t ch_get_scale_factor(ch_dev_t *dev_ptr);
  *
  * To determine what sample number corresponds to a physical distance, use \a ch_mm_to_samples().
  *
- * To allow more flexibilty in your application, the I/Q data readout from the device may be done
+ * To allow more flexibility in your application, the I/Q data readout from the device may be done
  * in a non-blocking mode, by setting \a mode to \a CH_IO_MODE_NONBLOCK (1).  In non-blocking
  * mode, the I/O operation takes place using DMA access in the background.  This function will
  * return immediately, and a notification will later be issued when the I/Q has been read.  To
@@ -2097,7 +1975,7 @@ uint8_t ch_get_amplitude_data(ch_dev_t *dev_ptr, uint16_t *buf_ptr, uint16_t sta
  * This function is similar to \a ch_get_amplitude_data(), except that the data values each
  * contains a 16-bit unsigned threshold value in addition to the 16-bit unsigned sample amplitude.
  * The threshold value is the required amplitude at that sample offset to detect a target object,
- * as set by ch_set_thesholds().  This output format may be useful in tuning and debugging the
+ * as set by ch_set_thresholds().  This output format may be useful in tuning and debugging the
  * detection threshold values.
  *
  * Each output sample consists of a ch_amp_thresh_t structure, containing one unsigned 16-bit
@@ -2277,126 +2155,6 @@ void ch_io_complete_callback_set(ch_group_t *grp_ptr, ch_io_complete_callback_t 
 void ch_io_notify(ch_group_t *grp_ptr, uint8_t bus_index);
 
 /*!
- * \brief Get the detection threshold.
- *
- * \param dev_ptr 			pointer to the ch_dev_t descriptor structure
- * \param threshold_index 	index to the thresholds, starting from 0
- *
- * \return amplitude threshold value
- *
- * This function obtains the detection threshold value with the specified \a threshold_index
- * from the sensor and returns the corresponding threshold amplitude.
- *
- * See also \a ch_set_threshold().
- *
- * \note This function is only available when using special sensor firmware packages from Chirp.
- *
- * \note For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with programmable
- * sample ranges are supported - use \a ch_get_thresholds().
- */
-uint16_t ch_get_threshold(ch_dev_t *dev_ptr, uint8_t threshold_index);
-
-/*!
- * \brief Set the detection threshold.
- *
- * \param dev_ptr 			pointer to the ch_dev_t descriptor structure
- * \param threshold_index 	index to the thresholds, starting from 0
- * \param amplitude 		amplitude threshold value
- *
- * \return 0 if success, 1 if error
- *
- * This function sets the detection threshold value with the specified \a threshold_index value
- * for the sensor.  The detection threshold is the minimum amplitude required for a target detection
- * to be reported.  The \a amplitude value is the new required amplitude, expressed in the same
- * internal units used in \a ch_get_amplitude() and other functions.
- *
- * See also \a ch_get_threshold().
- *
- * \note This function is only available when using select sensor firmware packages from Chirp.
- *
- * \note For ICU sensors and CH201 sensors with GPRMT firmware, multiple thresholds with programmable
- * sample ranges are supported - use \a ch_set_thresholds().
- */
-uint8_t ch_set_threshold(ch_dev_t *dev_ptr, uint8_t threshold_index, uint16_t amplitude);
-
-/*!
- * \brief Get detection thresholds.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param thresh_ptr 	pointer to ch_thresholds_t structure to receive threshold data
- *
- * \return 0 if success, 1 if error
- *
- * This function obtains the current detection threshold values from the sensor and
- * returns them in a ch_thresholds_t structure specified by \a thresh_ptr.  The
- * ch_thresholds_t structure holds an array of ch_thresh_t structures, each of which
- * contains a starting sample number and amplitude threshold value.
- *
- * For ICU sensors, this function only reports the thresholds for the default measurement
- * (CH_DEFAULT_MEAS_NUM).  If both measurements are being used, the thresholds for each
- * may be obtained individually by using the \a ch_meas_get_thresholds() function.
- *
- * See also \a ch_set_thresholds().
- *
- * \note This function is available for ICU sensors and when using most sensor firmware for
- * CH201 sensors.  If using other CH101/CH201 firmware with only a single detection treshold,
- * use \a ch_get_threshold().
- */
-uint8_t ch_get_thresholds(ch_dev_t *dev_ptr, ch_thresholds_t *thresh_ptr);
-
-/*!
- * \brief Set detection thresholds.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param thresh_ptr 	pointer to ch_thresholds_t structure containing threshold data
- *
- * \return 0 if success, 1 if error
- *
- * This function sets the detection threshold values for the sensor based on the
- * values in the \a ch_thresholds_t structure specified by \a thresh_ptr.  The
- * ch_thresholds_t structure holds an array of ch_thresh_t structures, each of which
- * contains a starting sample number and amplitude threshold value.
- *
- * To use this function, first initialize the ch_thresh_t sample/level pair of values for
- * each threshold.  The ICU sensor supports eight (8) separate thresholds, while the CH201 sensor
- * with GPRMT firmware supports six (6) thresholds.  Each threshold has a maximum
- * sample length of 255.
- *
- * It is not necessary to use the full set of thresholds, if the application and sensing
- * environment do not require that many different levels.  Unused thresholds should occupy
- * the last elements in the ch_thresholds_t structure and should have zero (0) for their
- * starting sample number.  These entries will be ignored, and the threshold specified
- * in the final valid entry will apply to the rest of the measurement.
- *
- * For ICU sensors, this function only sets the thresholds for the default measurement
- * (CH_DEFAULT_MEAS_NUM).  If both measurements are being used, the thresholds for each
- * may be set individually by using the \a ch_meas_set_thresholds() function.
- *
- * See also \a ch_get_thresholds().
- *
- * \note This function supports ICU sensors and CH201 sensors with GPRMT firmware, with multiple
- * detection thresholds and programmable sample ranges.  If using other firmware with a
- * single detection treshold, use \a ch_set_threshold().
- */
-uint8_t ch_set_thresholds(ch_dev_t *dev_ptr, ch_thresholds_t *thresh_ptr);
-
-/*!
- * \brief Get number of detection thresholds.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- *
- * \return number of detection thresholds, or 0 if thresholds are not supported
- *
- * This function returns the number of independent detection threshold values that
- * are supported by the current sensor and sensor firmware.  For firmware supporting
- * multiple thresholds, the number of thresholds is the same as the number of threshold
- * fields in the \a ch_thresholds_t structure.
- *
- * See also \a ch_set_thresholds().
- */
-uint8_t ch_get_num_thresholds(ch_dev_t *dev_ptr);
-
-/*!
  * \brief Configure target interrupt filtering mode.
  *
  * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
@@ -2485,7 +2243,7 @@ ch_tgt_int_filter_t ch_get_target_interrupt(ch_dev_t *dev_ptr);
  * specifying \a CH_TGT_INT_FILTER_COUNTER as the filter type.
  *
  * When the counter filter is used, a certain threshold number of positive target detections must
- * be observered within a specified number of measurements in order for an interrupt to
+ * be observed within a specified number of measurements in order for an interrupt to
  * be generated by the sensor.
  *
  * \a meas_hist specifies the number of previous measurements that will be included
@@ -2607,7 +2365,7 @@ ch_interrupt_mode_t ch_get_interrupt_mode(ch_dev_t *dev_ptr);
  * push-pull drive.
  *
  * \note This option is only available for ICU sensors.  CH101 and CH201 sensors
- * always use active-high, pull low interupts.  Attempting to set \a drive to
+ * always use active-high, pull low interrupts.  Attempting to set \a drive to
  * CH_INTERRUPT_MODE_PUSH_PULL on a CH101 or CH201 will return an error.
  */
 uint8_t ch_set_interrupt_drive(ch_dev_t *dev_ptr, ch_interrupt_drive_t drive);
@@ -2629,40 +2387,6 @@ uint8_t ch_set_interrupt_drive(ch_dev_t *dev_ptr, ch_interrupt_drive_t drive);
 ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr);
 
 /*!
- * \brief Set the static coefficient for sensor IIR filter.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param static_coeff 	static coefficient for the IIR filter
- *
- * \return 0 if success, 1 if error
- *
- * This function sets the static coefficient for the sensor's internal IIR filter.
- *
- * If using shorter ultrasound transmit pulses, you may decrease the static coefficient.
- * If using longer ultrasound transmit pulses, you may increase the static coefficient.
- *
- * See also \a ch_get_static_coeff().
- *
- * \note This function is only available in select Chirp sensor firmware versions.
- */
-uint8_t ch_set_static_coeff(ch_dev_t *dev_ptr, uint8_t static_coeff);
-
-/*!
- * \brief Get the static coefficient for IIR filter.
- *
- * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
- *
- * \return IIR static coefficient
- *
- * This function gets the static coefficient value for the sensor's internal IIR filter.
- *
- * See also \a ch_get_static_coeff().
- *
- * \note This function is only available in select Chirp sensor firmware versions.
- */
-uint8_t ch_get_static_coeff(ch_dev_t *dev_ptr);
-
-/*!
  * \brief Set the receive holdoff sample count.
  *
  * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
@@ -2677,7 +2401,7 @@ uint8_t ch_get_static_coeff(ch_dev_t *dev_ptr);
  * To convert a physical distance into a sample count value to use here, use \a ch_mm_to_samples().
  *
  * For ICU sensors, this function always controls the default measurement definition.  To
- * specify which measurement to modify, use the \a ch_meas_set_rx_holdoff() function.
+ * specify which measurement to modify, use the \a icu_gpt_set_rx_holdoff() function.
  *
  * See also \a ch_get_rx_holdoff().
  */
@@ -2697,7 +2421,7 @@ uint8_t ch_set_rx_holdoff(ch_dev_t *dev_ptr, uint16_t num_samples);
  * To convert the returned sample count to a physical distance, use \a ch_samples_to_mm().
  *
  * For ICU sensors, this function always returns the value for the default measurement
- * definition.  To specify which measurement to query, use the \a ch_meas_get_rx_holdoff()
+ * definition.  To specify which measurement to query, use the \a icu_gpt_get_rx_holdoff()
  * function.
  *
  * See also \a ch_set_rx_holdoff().
@@ -2793,86 +2517,6 @@ uint8_t ch_set_tx_length(ch_dev_t *dev_ptr, uint16_t num_cycles);
 uint16_t ch_get_tx_length(ch_dev_t *dev_ptr);
 
 /*!
- * \brief Get the detected length of the received ultrasound pulse.
- *
- * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
- *
- * \return pulse length
- *
- * This function gets the detected length of the received ultrasonic pulse.
- *
- * \note This function is only available in select Chirp sensor firmware versions.
- */
-uint8_t ch_get_rx_pulse_length(ch_dev_t *dev_ptr);
-
-/*!
- * \brief Configure SonicSync timing plan.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param time_plan 	time plan identifier
- *
- * This routine sets the timing plan for a SonicSync master or slave node.  The possible values are:
- *  SONICSYNC_TIME_PLAN_1		(0),
- *  SONICSYNC_TIME_PLAN_2		(1),
- *  SONICSYNC_TIME_PLAN_3		(2), and
- *  SONICSYNC_TIME_PLAN_NONE	(255)
- *
- * For a master device, this value specifies the timing plan that will be used for the master and slave
- * pair.  (The default value, SONICSYNC_TIME_PLAN_1, is used if this routine is not called.)  SONICSYNC_TIME_PLAN_NONE
- * should not be specified as the master node time plan.
- *
- * By default, a slave device initially uses SONICSYNC_TIME_PLAN_NONE, which causes the slave to cycle through
- * the various time plans attempting to pair with the master.  (This is the behavior if this routine is not called.)
- * When the slave successfully discovers and pairs with the master, the successful time plan is recorded and then used
- * for all subsequent exchanges, unless it is reset to SONICSYNC_TIME_PLAN_NONE by a call to this routine.  Once the
- * slave has successfully paired with a master device, the time plan value may be determined by calling the
- * \a ch_get_time_plan() routine.
- *
- * However, a slave device may be forced to only use a single time plan by calling this routine before the master is
- * discovered.  This may be desirable to speed up the master discovery or to avoid pairing with nearby sensor pairs that
- * use a different time plan.
- *
- * See also \a ch_get_time_plan().
- *
- * \return 0 if successful.
- *
- * \note This function is only available when using Chirp SonicSync sensor firmware.
- */
-uint8_t ch_set_time_plan(ch_dev_t *dev_ptr, ch_time_plan_t time_plan);
-
-/*!
- * \brief Get SonicSync timing plan.
- *
- * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
- *
- * This routine returns the timing plan currently in use for a SonicSync master or slave node.  The possible values are:
- *  SONICSYNC_TIME_PLAN_1		(0),
- *  SONICSYNC_TIME_PLAN_2		(1),
- *  SONICSYNC_TIME_PLAN_3		(2), and
- *  SONICSYNC_TIME_PLAN_NONE	(255)
- *
- * For a master device, this value will always be the value specified in a previous call to \a ch_set_time_plan().
- * If no such call was made, the master device will use the default time plan, SONICSYNC_TIME_PLAN_1, and that value
- * will be returned by this routine.
- *
- * By default, a slave device initially uses SONICSYNC_TIME_PLAN_NONE, which causes the slave to cycle through
- * the various time plans attempting to pair with the master.  Until the slave has successfully paired with a master
- * node, this routine will return SONICSYNC_TIME_PLAN_NONE.
- *
- * Once the slave has successfully discovered and paired with a master, this routine will return the value indicating
- * the time plan.  Therefore, this routine may be used a polling mechanism to determine when a slave has successfully
- * paired.  Once paired, the time plan value for the slave will not change (unless explicitly set using the
- * \a ch_set_time_plan() routine).
- *
- * See also \a ch_set_time_plan().
- *
- * \return time plan value currently in use
- *
- * \note This function is only available when using Chirp SonicSync sensor firmware.
- */
-ch_time_plan_t ch_get_time_plan(ch_dev_t *dev_ptr);
-
-/*!
  * \brief Enable/disable receive-only sensor pre-triggering.
  *
  * \param grp_ptr 	pointer to the ch_group_t group descriptor structure
@@ -2923,36 +2567,6 @@ uint8_t ch_get_rx_pretrigger(ch_group_t *grp_ptr);
  * \return 0 if firmware matches the original program, or 1 if mismatch (error)
  */
 uint8_t ch_check_program(ch_dev_t *dev_ptr);
-
-/*!
- * \brief Set modulated TX data.
- *
- * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
- * \param tx_data 	The data to be transmitted over ultrasound
- *
- * This function sets the modulated TX data
- * The tx_data must be between 0-31 decimal
- *
- * \return 0 if successful.
- *
- * \note This function is only available when using Chirp GPPC sensor firmware.
- */
-uint8_t ch_set_modulated_tx_data(ch_dev_t *dev_ptr, uint8_t tx_data);
-
-/*!
- * \brief Get the demodulated data from the received ultrasound pulse.
- *
- * \param dev_ptr 			pointer to the ch_dev_t descriptor structure
- * \param rx_pulse_length	the detected length of the received ultrasound pulse
- * \param *data_ptr				pointer to the data
- *
- * This function gets the raw data from the received ultrasound pulse and demodulates it
- *
- * \return 0 if successful.
- *
- * \note This function is only available when using Chirp GPPC sensor firmware.
- */
-uint8_t ch_get_demodulated_rx_data(ch_dev_t *dev_ptr, uint8_t rx_pulse_length, uint8_t *data_ptr);
 
 /*!
  * \brief Set the calibration result.
@@ -3129,7 +2743,7 @@ uint16_t ch_cycles_to_samples(uint32_t num_cycles, ch_odr_t odr);
  *
  * See also \a ch_ticks_to_usec(), ch_set_rtc().
  */
-uint32_t ch_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec);
+uint16_t ch_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec);
 
 /*!
  * \brief Convert sensor RTC clock ticks to microseconds.
@@ -3144,7 +2758,7 @@ uint32_t ch_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec);
  *
  * See also \a ch_usec_to_ticks(), \a ch_set_rtc().
  */
-uint32_t ch_ticks_to_usec(ch_dev_t *dev_ptr, uint32_t num_ticks);
+uint32_t ch_ticks_to_usec(ch_dev_t *dev_ptr, uint16_t num_ticks);
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 
@@ -3208,30 +2822,24 @@ uint8_t ch_meas_reset(ch_dev_t *dev_ptr, uint8_t meas_num);
  * \param dev_ptr 			pointer to the ch_dev_t descriptor structure
  * \param meas_num			measurement number
  * \param meas_config_ptr	pointer to measurement configuration settings
- * \param thresh_ptr		pointer to detection threshold definitions
+ * \param thresh_ptr		deprecated. Parameter not used. Shall be set to NULL
  *
  * \return 0 if success, 1 if error
  *
  * This function initializes the measurement specified by \a meas_num with the specified
- * configuration and detection thresholds.
+ * configuration.
  * \a meas_config_ptr is a pointer to a ch_meas_config_t structure which must have already
  * been initialized.  The fields in this structure specify various parameters for the measurement
  * including
- * - num_ranges - maximum number of separate target range values to report
  * - odr - output data rate for the sensor (time between samples within measurement)
  * - meas_period - repeat period for measurement, in ticks (optional, freerun interval may be set later)
- * - ringdown_cancel_samples - number of samples close to sensor to use ringdown cancellation filter
- * - static_filter_samples - number of samples close to sensor to have static target rejection (STR) filter
- * - iq_output_format - 0=normal (Q,I) pairs; 1=mag,threshold pairs, 2=mag,phase pairs
- * - filter_update_interval - how often to update the ringdown and STR filters
  * - mode - if CH_MEAS_MODE_STANDBY, this measurement will initially be put in standby mode (not active),
  *   if CH_MEAS_MODE_ACTIVE (zero), this measurement will initially be active and will be performed
  *
- * \a thresh_ptr is a pointer to a structure containing the definitions of the detection thresholds
- * that will be used to detect a target.  (This same type of structure is used by \a ch_set_thresholds().)
+ * \a thresh_ptr was used to initialize GPT thresholds. Now use icu_gpt_algo_configure() to configure algo.
  */
-uint8_t ch_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_config_t *meas_config_ptr,
-                     ch_thresholds_t *thresh_ptr);
+uint8_t ch_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_config_t *meas_config_ptr,
+                     const void *thresh_ptr);
 
 /*!
  * \brief Write measurement configuration to sensor.
@@ -3425,6 +3033,72 @@ uint8_t ch_meas_get_queue(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue_ptr
  * \a ch_meas_init_segment_rx(),
  */
 uint8_t ch_meas_add_segment(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_segment_t *seg_ptr);
+
+/*!
+ * \brief Insert an instruction(segment) to a measurement.
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
+ * \param meas_num		measurement number
+ * \param inst_ptr		pointer to measurement instruction(segment) to be inserted
+ * \param index_to_insert		instruction(segment) number to be inserted
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function inserts a measurement instruction(segment) to the measurement specified by \a meas_num.
+ * \a inst_ptr points to an instruction(segment) descriptor, which must have already been initialized.
+ *
+ * Will be deprecated by the new equivalent function ch_meas_insert_instruction.
+ */
+uint8_t ch_meas_insert_segment(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_segment_t *inst_ptr,
+                               uint8_t index_to_insert);
+
+/*!
+ * \brief Insert an instruction(segment) to a measurement.
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
+ * \param meas_num		measurement number
+ * \param inst_ptr		pointer to measurement instruction(segment) to be inserted
+ * \param index_to_insert		instruction(segment) number to be remove
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function inserts a measurement instruction(segment) to the measurement specified by \a meas_num.
+ * \a inst_ptr points to an instruction(segment) descriptor, which must have already been initialized.
+ *
+ */
+uint8_t ch_meas_insert_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_segment_t *inst_ptr,
+                                   uint8_t index_to_insert);
+
+/*!
+ * \brief Remove an instruction(segment) in a measurement.
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
+ * \param meas_num		measurement number
+ * \param index_to_remove		instruction(segment) number to be removed
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function removes a measurement instruction(segment) to the measurement specified by \a meas_num.
+ * \a inst_ptr points to an instruction(segment) descriptor, which must have already been initialized.
+ *
+ * Will be deprecated by the new equivalent function ch_meas_remove_instruction.
+ */
+uint8_t ch_meas_remove_segment(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t index_to_remove);
+
+/*!
+ * \brief Remove an instruction(segment) in a measurement.
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
+ * \param meas_num		measurement number
+ * \param index_to_remove		instruction(segment) number to be removed
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function removes a measurement instruction(segment) to the measurement specified by \a meas_num.
+ * \a inst_ptr points to an instruction(segment) descriptor, which must have already been initialized.
+ *
+ */
+uint8_t ch_meas_remove_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t index_to_remove);
 
 /*!
  * \brief Add a count (delay) segment to a measurement.
@@ -3714,6 +3388,43 @@ uint32_t ch_meas_get_interval_us(ch_dev_t *dev_ptr, uint8_t meas_num);
 uint32_t ch_meas_get_interval_ticks(ch_dev_t *dev_ptr, uint8_t meas_num);
 
 /*!
+ * \brief Enable time-hopping on measure period freerunning mode.
+ *
+ * \param dev_ptr pointer to the ch_dev_t descriptor structure
+ * \return 0 if successful.
+ *
+ * This function enables the time-hopping for a sensor operating in freerunning mode
+ * (\a CH_MODE_FREERUN).  The sensor will use its internal real-time clock (RTC) to wake
+ * and perform a measurement every \a measure interval plus a random delay to
+ * avoid coexistence with other sensors. Mean measure period is however equals to
+ * \a measure interval.
+ *
+ * \note This function has no effect for a sensor operating in one of the triggered modes.
+ *
+ * See also \a ch_meas_time_hop_disable(), \a ch_meas_get_interval_ticks(),
+ * \a ch_meas_set_interval(), \a ch_meas_set_interval_us(),
+ * \a ch_meas_set_interval_ticks().
+ */
+uint8_t ch_meas_time_hop_enable(ch_dev_t *dev_ptr, uint8_t meas_num);
+
+/*!
+ * \brief Disable time-hopping on measure period freerunning mode
+ *
+ * \param dev_ptr pointer to the ch_dev_t descriptor structure
+ * \return 0 if successful.
+ *
+ * This function disable the time-hopping for a sensor operating in freerunning mode
+ * (\a CH_MODE_FREERUN).
+ *
+ * \note This function has no effect for a sensor operating in one of the triggered modes
+ *
+ * See also \a ch_meas_time_hop_enable(), \a ch_meas_get_interval_ticks(),
+ * \a ch_meas_set_interval(), \a ch_meas_set_interval_us(),
+ * \a ch_meas_set_interval_ticks().
+ */
+uint8_t ch_meas_time_hop_disable(ch_dev_t *dev_ptr, uint8_t meas_num);
+
+/*!
  * \brief Set the output data rate for a measurement.
  *
  * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
@@ -3749,42 +3460,6 @@ uint8_t ch_meas_set_odr(ch_dev_t *dev_ptr, uint8_t meas_num, ch_odr_t odr);
  * See also \a ch_meas_set_odr().
  */
 ch_odr_t ch_meas_get_odr(ch_dev_t *dev_ptr, uint8_t meas_num);
-
-/*!
- * \brief Set the max number of reported target ranges for a measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- * \param num_ranges	maximum number of target range values to report
- *
- * \return 0 if success, 1 if error
- *
- * This function sets the maximum number of separate target range values that the
- * sensor will report in a single measurement.
- *
- * If \a num_ranges is set to 1, only a single target will be reported. Generally,
- * this will be the closest target whose signal exceeds the detection threshold value for
- * that part of the measurement.  Other targets will not be reported.
- *
- * If \a num_ranges is greater than 1, if multiple targets have ultrasound signals that
- * exceed the applicable threshold value, the sensor will report range (and amplitude)
- * values for each.
- *
- * See also \a ch_get_target_range(), \a ch_get_target_amplitude(), \a ch_meas_get_num_ranges().
- */
-uint8_t ch_meas_set_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t num_ranges);
-
-/*!
- * \brief Get the max number of reported target ranges for a measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- *
- * \return max number of target range values that will be reported
- *
- * This function returns the maximum number of separate target range values that the
- * sensor will report in a single measurement.
- */
-uint8_t ch_meas_get_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num);
 
 /*!
  * \brief Set the sensor sample count for a specific measurement.
@@ -3937,195 +3612,21 @@ uint16_t ch_meas_mm_to_samples(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num
 uint16_t ch_meas_samples_to_mm(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples);
 
 /*!
- * \brief Set the number of ringdown cancellation samples for a measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- * \param num_samples	number of samples (closest to sensor) to get ringdown cancellation
- *
- * \return 0 if success, 1 if error
- *
- * This function sets the number of samples in the specified measurement that will receive "ringdown
- * cancellation" processing.  These samples are always the first in the measurement (corresponding
- * to targets closest to the sensor).
- *
- * Ringdown is the physical settling time of the ultrasound
- * transducer after generating a transmit pulse.  This settling causes a large false signal in
- * the first receive samples after the transmit segment ends.  Ringdown cancellation is a
- * filtering technique to remove these ringdown artifacts.  However, it can also
- * affect the sensing ability at close range.  The number of ringdown samples may be
- * tuned to obtain the best performance in a specific application.
- *
- * If the ringdown cancel sample count is too low, it will result in false detections at
- * very close indicated ranges.
- *
- * See also \a ch_meas_get_ringdown_cancel(), \a ch_meas_init().
- */
-uint8_t ch_meas_set_ringdown_cancel(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples);
-
-/*!
- * \brief Get the number of ringdown cancellation samples for a measurement.
+ * \brief Get the I/Q data output format for a measurement.
  *
  * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
  * \param meas_num		measurement number
  *
- * \return number of ringdown cancellation samples
+ * \return I/Q data output format
  *
- * This function returns the number of samples in the specified measurement that will receive "ringdown
- * cancellation" processing.  These samples are always the first in the measurement (corresponding
- * to targets closest to the sensor).
+ * This function returns the measurement I/Q data output format, as follows:
+ *  - CH_OUTPUT_IQ (0) - Standard pairs of {Q,I} int16_t values
+ *  - CH_OUTPUT_AMP_THRESH (1) - Output amplitude + threshold uint16_t pair values
+ *  - CH_OUTPUT_AMP	(2) - Output uint16_t amplitude values only
  *
- * See also \a ch_meas_set_ringdown_cancel().
+ * See also \a ch_meas_set_iq_output().
  */
-uint16_t ch_meas_get_ringdown_cancel(ch_dev_t *dev_ptr, uint8_t meas_num);
-
-/*!
- * \brief Set detection thresholds for a specific measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- * \param thresh_ptr 	pointer to ch_thresholds_t structure containing threshold data
- *
- * \return 0 if success, 1 if error
- *
- * This function sets the detection threshold values for the measurement specified
- * by \a meas_num, based on the values in the ch_thresholds_t structure specified by
- * \a thresh_ptr.  The ch_thresholds_t structure holds an array of ch_thresh_t
- * structures, each of which contains a starting sample number and amplitude threshold value.
- *
- * To use this function, first initialize the fields in the ch_thresh_t structure with
- * the sample/level pair of values for each threshold.  The ICU sensor supports eight (8)
- * separate thresholds.  Each threshold has a maximum sample length of 255.
- *
- * It is not necessary to use the full set of thresholds, if the appliction and sensing
- * environment do not require that many different levels.  Unused thresholds should occupy
- * the last ch_thresh_t elements in the ch_thresholds_t structure and should have zero (0)
- * for their starting sample number.  These entries will be ignored, and the threshold specified
- * in the final valid entry will apply to the rest of the measurement.
- *
- * The \a ch_set_thresholds() function performs the same operation for the default
- * measurement (same as setting \a meas_num to CH_DEFAULT_MEAS_NUM).
- *
- * See also \a ch_set_thresholds(), \a ch_meas_get_thresholds().
- *
- * \note This function is only available for ICU sensors.
- */
-uint8_t ch_meas_set_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_thresholds_t *lib_thresh_buf_ptr);
-
-/*!
- * \brief Get detection thresholds for a specific measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- * \param thresh_ptr 	pointer to ch_thresholds_t structure to receive threshold data
- *
- * \return 0 if success, 1 if error
- *
- * This function obtains the current detection threshold values for one of the two
- * measurements, as specified by \a meas_num.
- *
- * The threshold values are returned in a ch_thresholds_t structure specified by
- * \a thresh_ptr.  The ch_thresholds_t structure holds an array of ch_thresh_t
- * structures, each of which contains a starting sample number and amplitude threshold
- * value.
- *
- * The \a ch_get_thresholds() function performs the same operation for the default
- * measurement (same as setting \a meas_num to CH_DEFAULT_MEAS_NUM).
- *
- * \note This function is only available for ICU sensors.
- */
-uint8_t ch_meas_get_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_thresholds_t *lib_thresh_buf_ptr);
-
-/*!
- * \brief Set the number of static target filter samples for a measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- * \param num_samples	number of samples (closest to sensor) to have STR filtering
- *
- * \return 0 if success, 1 if error
- *
- * This function sets the number pf samples in the specified measurement that will have static
- * target rejection (STR) filtering.  STR filtering compares the active measurement with
- * previously observed values and will only report a target detection when there has been
- * noticeable change in the measured signal.
- *
- * The STR samples are always the first in the measurement (corresponding to targets closest to
- * the sensor).
- *
- * The \a ch_set_static_range() function performs the same operation for the default
- * measurement (same as setting \a meas_num to CH_DEFAULT_MEAS_NUM).
- *
- * See also \a ch_meas_get_static_filter(), \a ch_meas_init().
- */
-uint8_t ch_meas_set_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples);
-
-/*!
- * \brief Get the number of static target filter samples for a measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- *
- * \return number of samples to have STR filtering
- *
- * This function returns the number pf samples in the specified measurement that will have static
- * target rejection (STR) filtering.  STR filtering compares the active measurement with
- * previously observed values and will only report a target detection when there has been
- * noticeable change in the measured signal.
- *
- * The STR samples are always the first in the measurement (corresponding to targets closest to
- * the sensor).
- *
- * The \a ch_get_static_filter() function performs the same operation for the default
- * measurement (same as setting \a meas_num to CH_DEFAULT_MEAS_NUM).
- *
- * See also \a ch_meas_set_static_filter().
- */
-uint16_t ch_meas_get_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num);
-
-/*!
- * \brief Set the receive holdoff sample count for a specific measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- * \param num_samples 	number of samples to be ignored at the beginning of each measurement
- *
- * \return 0 if success, 1 if error
- *
- * This function sets the receive (rx) holdoff sample count for the specified measurement.
- * \a num_samples specifies a number of samples at the beginning of a measurement that will
- * be ignored for the purpose of detecting a target.  (These samples correspond to the closest
- * distances from the sensor.)
- *
- * To convert a physical distance into a sample count value to use here, use \a ch_meas_mm_to_samples().
- *
- * The \a ch_set_rx_holdoff() function performs the same operation for the default
- * measurement (same as setting \a meas_num to CH_DEFAULT_MEAS_NUM).
- *
- * See also \a ch_meas_get_rx_holdoff().
- */
-uint8_t ch_meas_set_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples);
-
-/*!
- * \brief Get the receive holdoff sample count for a specific measurement.
- *
- * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- *
- * \return number of samples that are ignored at the beginning of each measurement
- *
- * This function gets the receive (rx) holdoff sample count for the specified measurement.
- * The rx holdoff count is the number of samples at the beginning of a measurement that will
- * be ignored for the purpose of detecting a target, as previously set by \a ch_meas_set_rx_holdoff().
- *
- * To convert the returned sample count to a physical distance, use \a ch_samples_to_mm().
- *
- * The \a ch_get_rx_holdoff() function performs the same operation for the default
- * measurement (same as setting \a meas_num to CH_DEFAULT_MEAS_NUM).
- *
- * See also \a ch_meas_set_rx_holdoff().
- */
-uint16_t ch_meas_get_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num);
+ch_output_type_t ch_meas_get_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num);
 
 /*!
  * \brief Set the I/Q data output format for a measurement.
@@ -4145,57 +3646,6 @@ uint16_t ch_meas_get_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num);
  * See also \a ch_meas_get_iq_output(), \a ch_set_data_output(), \a ch_meas_init().
  */
 uint8_t ch_meas_set_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num, ch_output_type_t output_format);
-
-/*!
- * \brief Get the I/Q data output format for a measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param meas_num		measurement number
- *
- * \return I/Q data output format
- *
- * This function returns the measurement I/Q data output format, as follows:
- *  - CH_OUTPUT_IQ (0) - Standard pairs of {Q,I} int16_t values
- *  - CH_OUTPUT_AMP_THRESH (1) - Output amplitude + threshold uint16_t pair values
- *  - CH_OUTPUT_AMP	(2) - Output uint16_t amplitude values only
- *
- * See also \a ch_meas_set_iq_output().
- */
-ch_output_type_t ch_meas_get_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num);
-
-/*!
- * \brief Set the filter update interval for a measurement.
- *
- * \param dev_ptr 			pointer to the ch_dev_t descriptor structure
- * \param meas_num			measurement number
- * \param update_interval	how often to update, 0 = every sample
- *
- * \return 0 if success, 1 if error
- *
- * This function specifies how often the ringdown cancellation and static target
- * rejection (STR) filters are updated in the sensor.  A value of 0 will
- * update the filters during every measurement.  A value of 1 will update every
- * second measurement, a value of 2 will update every third measurement, etc.
- *
- * See also \a ch_meas_get_filter_update(), \a ch_meas_init().
- */
-uint8_t ch_meas_set_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t update_interval);
-
-/*!
- * \brief Get the filter update interval for a measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- *
- * \return 0 if success, 1 if error
- *
- * This function returns the interval value for how often the ringdown cancellation
- * and static target rejection (STR) filters are updated in the sensor.  A value of
- * 0 will update the filters during every measurement.  A value of 1 will update every
- * second measurement, a value of 2 will update every third measurement, etc.
- *
- * See also \a ch_meas_set_filter_update().
- */
-uint8_t ch_meas_get_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num);
 
 /*!
  * \brief	Initialize the measurement algorithm on a sensor.
@@ -4265,6 +3715,23 @@ uint8_t ch_get_algo_state(ch_dev_t *dev_ptr, void *algo_state_ptr);
  *
  */
 uint8_t ch_get_algo_config(ch_dev_t *dev_ptr, void *algo_cfg_ptr);
+
+/*!
+ * \brief	Set the measurement algorithm configuration data to a sensor.
+ *
+ * \param 	dev_ptr 		pointer to the ch_dev_t descriptor structure
+ * \param	algo_cfg_ptr	pointer to a buffer to send configuration data
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function writes the configuration data to an algorithm running on the ICU sensor.
+ * This interface is independent of the specific algorithm or configuration format.
+ *
+ * Normally, this routine will only be used by special applications or libraries which
+ * interact with specific sensor firmware.
+ *
+ */
+uint8_t ch_set_algo_config(ch_dev_t *dev_ptr, const void *algo_cfg_ptr);
 
 /*!
  * \brief	Get the measurement algorithm information data from a sensor.
@@ -4584,7 +4051,7 @@ void ch_group_set_pmut_clock_freq(ch_group_t *grp_ptr, uint32_t pmut_clock_freq)
  * from an independent signal source.  (See \a ch_set_pmut_clock().)
  *
  * This function returns the frequency of the group PMUT clock signal, in Hz,
- * regardless of its source.  The returned freqency will be zero if no sensor
+ * regardless of its source.  The returned frequency will be zero if no sensor
  * is outputting a clock signal and no independent clock rate has been specified
  * using \a ch_set_pmut_clock_freq().
  *
@@ -4640,93 +4107,6 @@ uint8_t ch_set_data_ready_delay(ch_dev_t *dev_ptr, uint8_t delay_ms);
  * \note This function is only available in select Chirp sensor firmware versions.
  */
 uint8_t ch_get_data_ready_delay(ch_dev_t *dev_ptr);
-
-/*!
- * \brief Get the number of targets detected in last measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- *
- * \return number of targets detected in last measurement
- *
- * This function returns the number of valid targets that were detected in
- * the last measurement completed by the sensor.  Data for each of these targets
- * may then be read using \a ch_get_target_range() and \a ch_get_target_amplitude().
- *
- * See also \a ch_get_target_range(), \a ch_set_num_ranges().
- */
-uint8_t ch_get_num_targets(ch_dev_t *dev_ptr);
-
-/*!
- * \brief Get the range to a specific target detected in last measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param target_num	number of target to report
- * \param range_type 	the range type to be reported (e.g. one-way vs. round-trip)
- *
- * \return Range in millimeters times 32, or \a CH_NO_TARGET (0xFFFFFFFF) if no target was detected,
- *         or 0 if error
- *
- * This function reads the measurement data for a specific target and then computes the actual
- * range.  It should be called after the sensor has indicated that a measurement cycle is complete
- * by generating a signal on the INT line.  (Typically, this will be set up by an interrupt handler
- * associated with that input line.)
- *
- * \a target_num specifies the target whose range is to be calculated.  The \a ch_get_num_targets()
- * function may be used to determine the total number of valid targets detected by the measurement.
- *
- * The \a range_type parameter indicates whether the measurement is based on the one-way or round-trip
- * distance to/from a target, or the direct distance between two sensors operating in pitch-catch mode.
- * The possible values are:
- *   - \a CH_RANGE_ECHO_ONE_WAY -  gets full pulse/echo round-trip distance, then divides by 2
- *   - \a CH_RANGE_ECHO_ROUND_TRIP	- full pulse/echo round-trip distance
- *   - \a CH_RANGE_DIRECT - for receiving sensor in pitch-catch mode (one-way)
- *
- * See also \a ch_get_target_amplitude(), \a ch_get_range(), ch_get_num_targets().
- */
-uint32_t ch_get_target_range(ch_dev_t *dev_ptr, uint8_t target_num, ch_range_t range_type);
-
-/*!
- * \brief Get the amplitude for a specific target detected in last measurement.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param target_num	number of target to report
- *
- * \return amplitude value (LSBs)
- *
- * This function reads the measurement data for a specific target and returns the measured
- * amplitude value.  The amplitude is representative of the incoming sound pressure.  The value is expressed
- * in internal sensor counts (LSBs) and is not calibrated to any standard units.
- *
- * The amplitude value is not updated if a measurement cycle resulted in \a CH_NO_TARGET, as returned
- * by \a ch_get_target_range().
- *
- * See also \a ch_get_target_range(), \a ch_get_amplitude().
- */
-uint16_t ch_get_target_amplitude(ch_dev_t *dev_ptr, uint8_t target_num);
-
-/*!
- * \brief Get the measured time-of-flight for a specific target in microseconds.
- *
- * \param dev_ptr 		pointer to the ch_dev_t descriptor structure
- * \param target_num	number of the detected target to be reported
- *
- * \return Time-of-flight in microseconds,
- *         or 0 if error
- *
- * This function reads the measurement result registers from the sensor and then computes the
- * time-of-flight in microseconds.  The time-of-flight is returned as a 32-bit integer.
- *
- * If the sensor did not successfully find the range of a target during the most recent measurement,
- * the returned value will be \a zero (0).  If an error occurs when getting or calculating the
- * range, zero (0) will be returned.
- *
- * \note This function only reports the results from the most recently completed measurement cycle.  It
- * does not actually trigger a measurement.  The time-of-flight that is reported is the total time
- * measured by the sensor between transmission and reception.  The value is always the full round-trip
- * time-of-flight.
- *
- */
-uint32_t ch_get_target_tof_us(ch_dev_t *dev_ptr, uint8_t target_num);
 
 /*!
  * \brief Get the number of valid output samples in last measurement.

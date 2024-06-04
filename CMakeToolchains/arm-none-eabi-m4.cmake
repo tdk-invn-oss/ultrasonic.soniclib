@@ -15,9 +15,19 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 set(ARCH_FLAGS "-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16")
 
+if(UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+endif()
+
 if ("${ARM_GCC_PATH}" STREQUAL "")
-    set(CMAKE_C_COMPILER arm-none-eabi-gcc.exe)
-    set(CMAKE_CXX_COMPILER arm-none-eabi-g++.exe)
+    # Use default paths
+    if(WIN32)
+        set(CMAKE_C_COMPILER arm-none-eabi-gcc.exe)
+        set(CMAKE_CXX_COMPILER arm-none-eabi-g++.exe)
+    elseif(LINUX)
+        set(CMAKE_C_COMPILER /usr/bin/arm-none-eabi-gcc)
+        set(CMAKE_CXX_COMPILER /usr/bin/arm-none-eabi-g++) 
+    endif()
 else()
     if(WIN32)
         set(CMAKE_C_COMPILER "${ARM_GCC_PATH}/bin/arm-none-eabi-gcc.exe")

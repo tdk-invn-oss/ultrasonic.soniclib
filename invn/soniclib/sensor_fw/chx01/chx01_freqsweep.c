@@ -29,57 +29,57 @@ extern const uint8_t chx01_freqsweep_fw[CHX01_FW_SIZE];
 
 uint32_t chx01_freqsweep_get_range(ch_dev_t *dev_ptr, ch_range_t range_type);
 
-uint8_t chx01_freqsweep_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t io_index,
-                             uint8_t bus_index) {
+static const ch_rangefinder_api_funcs_t algo_api_funcs = {
+		.set_static_range = NULL,
+		.set_thresholds   = NULL,  // not supported
+		.get_thresholds   = NULL,  // not supported
+		.set_rx_holdoff   = ch_rangefinder_set_rx_holdoff,
+		.get_rx_holdoff   = ch_rangefinder_get_rx_holdoff,
+};
 
-	(void)grp_ptr;
+static const ch_api_funcs_t api_funcs = {
+		.set_num_samples   = ch_common_set_num_samples,
+		.get_range         = chx01_freqsweep_get_range,
+		.get_amplitude     = chx01_freqsweep_get_amplitude,
+		.get_iq_data       = (ch_get_iq_data_func_t)chx01_freqsweep_get_iq_data,
+		.mm_to_samples     = ch_common_mm_to_samples,
+		.algo_specific_api = &algo_api_funcs,
+};
 
-	dev_ptr->app_i2c_address = i2c_addr;
-	dev_ptr->io_index        = io_index;
-	dev_ptr->bus_index       = bus_index;
+static const ch_calib_funcs_t calib_funcs = {
+		.prepare_pulse_timer = ch_common_prepare_pulse_timer,
+		.store_pt_result     = chx01_freqsweep_store_pt_result,
+		.store_op_freq       = chx01_freqsweep_store_op_freq,
+		.store_bandwidth     = ch_common_store_bandwidth,
+		.store_scalefactor   = chx01_freqsweep_store_scale_factor,
+		.get_locked_state    = chx01_freqsweep_get_locked_state,
+};
 
-	dev_ptr->freqCounterCycles = CH101_COMMON_FREQCOUNTERCYCLES;
-	dev_ptr->freqLockValue     = CH101_COMMON_READY_FREQ_LOCKED;
+static fw_info_t self = {
+		.api_funcs                   = &api_funcs,
+		.calib_funcs                 = &calib_funcs,
+		.fw_includes_sensor_init     = 1,
+		.fw_includes_tx_optimization = 0,
+		.freqCounterCycles           = CH101_COMMON_FREQCOUNTERCYCLES,
+		.freqLockValue               = CH101_COMMON_READY_FREQ_LOCKED,
+		.oversample                  = 0,                           /* This firmware does not use oversampling */
+		.max_samples                 = CHX01_FREQSWEEP_MAX_SAMPLES, /* Init max sample count */
+};
+
+uint8_t chx01_freqsweep_init(ch_dev_t *dev_ptr, fw_info_t **fw_info) {
+	(void)dev_ptr;
 
 	/* Init firmware-specific function pointers */
-	dev_ptr->fw_text              = chx01_freqsweep_fw_text;
-	dev_ptr->fw_text_size         = chx01_freqsweep_text_size;
-	dev_ptr->fw_vec               = chx01_freqsweep_fw_vec;
-	dev_ptr->fw_vec_size          = chx01_freqsweep_vec_size;
-	dev_ptr->fw_version_string    = chx01_freqsweep_version;
-	dev_ptr->ram_init             = get_ram_chx01_freqsweep_init_ptr();
-	dev_ptr->get_fw_ram_init_size = get_chx01_freqsweep_fw_ram_init_size;
-	dev_ptr->get_fw_ram_init_addr = get_chx01_freqsweep_fw_ram_init_addr;
+	self.fw_text              = chx01_freqsweep_fw_text;
+	self.fw_text_size         = chx01_freqsweep_text_size;
+	self.fw_vec               = chx01_freqsweep_fw_vec;
+	self.fw_vec_size          = chx01_freqsweep_vec_size;
+	self.fw_version_string    = chx01_freqsweep_version;
+	self.ram_init             = get_ram_chx01_freqsweep_init_ptr();
+	self.get_fw_ram_init_size = get_chx01_freqsweep_fw_ram_init_size;
+	self.get_fw_ram_init_addr = get_chx01_freqsweep_fw_ram_init_addr;
 
-	dev_ptr->prepare_pulse_timer = ch_common_prepare_pulse_timer;
-	dev_ptr->store_pt_result     = chx01_freqsweep_store_pt_result;
-	dev_ptr->store_op_freq       = chx01_freqsweep_store_op_freq;
-	dev_ptr->store_bandwidth     = ch_common_store_bandwidth;
-	dev_ptr->store_scalefactor   = chx01_freqsweep_store_scale_factor;
-	dev_ptr->get_locked_state    = chx01_freqsweep_get_locked_state;
-
-	/* Init API function pointers */
-	dev_ptr->api_funcs.fw_load             = ch_common_fw_load;
-	dev_ptr->api_funcs.set_mode            = ch_common_set_mode;
-	dev_ptr->api_funcs.set_sample_interval = ch_common_set_sample_interval;
-	dev_ptr->api_funcs.set_num_samples     = ch_common_set_num_samples;
-	dev_ptr->api_funcs.set_max_range       = ch_common_set_max_range;
-	dev_ptr->api_funcs.set_static_range    = NULL;
-	dev_ptr->api_funcs.set_rx_holdoff      = ch_common_set_rx_holdoff;
-	dev_ptr->api_funcs.get_rx_holdoff      = ch_common_get_rx_holdoff;
-	dev_ptr->api_funcs.get_range           = (ch_get_range_func_t)chx01_freqsweep_get_range;
-	dev_ptr->api_funcs.get_amplitude       = chx01_freqsweep_get_amplitude;
-	dev_ptr->api_funcs.get_iq_data         = (ch_get_iq_data_func_t)chx01_freqsweep_get_iq_data;
-	dev_ptr->api_funcs.samples_to_mm       = ch_common_samples_to_mm;
-	dev_ptr->api_funcs.mm_to_samples       = ch_common_mm_to_samples;
-	dev_ptr->api_funcs.set_thresholds      = NULL;  // not supported
-	dev_ptr->api_funcs.get_thresholds      = NULL;  // not supported
-
-	/* Init max sample count */
-	dev_ptr->max_samples = CHX01_FREQSWEEP_MAX_SAMPLES;
-
-	/* This firmware does not use oversampling */
-	dev_ptr->oversample = 0;
+	*fw_info = &self;
 
 	return 0;
 }
@@ -148,7 +148,7 @@ uint32_t chx01_freqsweep_get_range(ch_dev_t *dev_ptr, ch_range_t range_type) {
 				}
 
 				/* Adjust for oversampling, if used */
-				range >>= dev_ptr->oversample;
+				range >>= dev_ptr->current_fw->oversample;
 			}
 		}
 	}
@@ -241,7 +241,7 @@ int chx01_freqsweep_set_dco_stop(ch_dev_t *dev_ptr, uint16_t dco_stop) {
 uint32_t chx01_freqsweep_get_op_freq(ch_dev_t *dev_ptr) {
 	uint32_t num, den, opfreq;
 	uint16_t raw_freq;  // aka scale factor
-	uint32_t freq_counter_cycles = dev_ptr->freqCounterCycles;
+	uint32_t freq_counter_cycles = dev_ptr->current_fw->freqCounterCycles;
 
 	chdrv_read_word(dev_ptr, CHX01_FREQSWEEP_REG_TOF_SF, &raw_freq);
 	num    = (uint32_t)(((dev_ptr->rtc_cal_result) * 1000U) / (16U * freq_counter_cycles)) * (uint32_t)(raw_freq);

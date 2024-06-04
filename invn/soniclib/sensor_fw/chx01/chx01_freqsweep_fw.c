@@ -1,10 +1,10 @@
 //
-// InvenSense Firmware Header Generator v2.5 (Python 3.8.11)
+// InvenSense Firmware Header Generator v3.0 (Python 3.7.9)
 //
-// File generated at 2022-04-06 15:34:26.512544 by cryang
+// File generated at 2024-04-11 07:13:50.700060 by jenkins
 // Script input parameters:
-//   - Input file:                 ccsout.hex
-//   - Output file:                chx01_freqsweep_fw.c
+//   - Input file:                 release/invn.chirpmicro.asic.chx01.freqsweep.v19.hex
+//   - Output file:                release\chx01_freqsweep_fw.c
 //   - Part number:                x01
 //   - Program size:               2048
 //   - DMEM start address:         0x0
@@ -14,7 +14,7 @@
 //   - Firmware git version:       testsweep_v19
 //   - Firmware git sha1:          e0e1621d15cfa090c54e26e4d1c52c7b23625851
 //
-// Copyright (c) 2022, InvenSense. All rights reserved.
+// Copyright (c) 2024, InvenSense. All rights reserved.
 //
 
 #include <stdint.h>

@@ -4,8 +4,10 @@ project(SONICLIB C ASM)
 
 set(CMAKE_C_STANDARD 99)
 
+set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}) # needed to allow soniclib files to see relative include paths
 set(SRC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/invn/soniclib)
 set(SENS_FW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/invn/soniclib/sensor_fw)
+set(ICU_INTERFACE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/invn/icu_interface)
 
 message(STATUS "")
 message(STATUS "CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
@@ -40,8 +42,24 @@ set_property(CACHE CHIRP_INIT_FW_TYPE PROPERTY STRINGS FULL
 
 set(INCLUDE_ALGO_EXTERNAL OFF CACHE BOOL
 "If set, do not include gpt (rangefinder) support")
+set(CHIRP_LOG_LEVEL 4 CACHE STRING
+    "Define the log level to use for the Soniclib internal log messages (4 = CH_LOG_LEVEL_ERROR)")
+
+
+set(RUN_UNIT_TEST OFF CACHE BOOL "If set, compile and run unit tests.")
+
+message(RUN_UNIT_TEST "RUN_UNIT_TEST=${RUN_UNIT_TEST}")
+
+if(RUN_UNIT_TEST)
+  set(CMAKE_C_FLAGS --coverage)
+  set(GCOV_LINK_FLAGS "--coverage")
+endif()
 
 message(STATUS "CHIRP_INIT_FW_TYPE=${CHIRP_INIT_FW_TYPE}")
+message(STATUS "INCLUDE_ALGO_EXTERNAL=${INCLUDE_ALGO_EXTERNAL}")
+message(STATUS "INCLUDE_SHASTA_SUPPORT=${INCLUDE_SHASTA_SUPPORT}")
+message(STATUS "CHIRP_LOG_LEVEL=${CHIRP_LOG_LEVEL}")
+
 
 set(SOURCES ${SRC_PATH}/chbsp_dummy.c
             ${SRC_PATH}/ch_api.c
@@ -49,6 +67,12 @@ set(SOURCES ${SRC_PATH}/chbsp_dummy.c
             ${SRC_PATH}/ch_driver.c
             ${SRC_PATH}/ch_math_utils.c
             ${SRC_PATH}/extra/ch_extra_display_utils.c)
+
+if (NOT ${CHIRP_LOG_LEVEL} EQUAL 6)
+# Build ch_log module if CHIRP_LOG_LEVEL isn't CH_LOG_LEVEL_DISABLE
+set(SOURCES ${SOURCES}
+            ${SRC_PATH}/ch_log.c)
+endif()
 
 if(INCLUDE_SHASTA_SUPPORT)
     if (NOT INCLUDE_ALGO_EXTERNAL)
@@ -73,7 +97,8 @@ else()
                 ${SENS_FW_PATH}/ch201/ch201_gprmt.c
                 ${SENS_FW_PATH}/ch201/ch201_gprmt_fw.c
                 ${SENS_FW_PATH}/chx01/chx01_freqsweep.c
-                ${SENS_FW_PATH}/chx01/chx01_freqsweep_fw.c)
+                ${SENS_FW_PATH}/chx01/chx01_freqsweep_fw.c
+                ${SRC_PATH}/ch_rangefinder.c)
 endif()
 
 
@@ -85,24 +110,22 @@ target_include_directories(${PROJ_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(${PROJ_NAME}
     PRIVATE -DINVN_SONICLIB_INTERNAL_BOARD_CONFIG
             -DCHIRP_MAX_NUM_SENSORS=${CHIRP_MAX_NUM_SENSORS}
-            -DCHIRP_NUM_BUSES=${CHIRP_NUM_BUSES})
+            -DCHIRP_NUM_BUSES=${CHIRP_NUM_BUSES}
+            -DCH_LOG_MODULE_LEVEL=${CHIRP_LOG_LEVEL})
 
 if(INCLUDE_SHASTA_SUPPORT)
     target_compile_definitions(${PROJ_NAME} PUBLIC -DINCLUDE_SHASTA_SUPPORT
         PRIVATE -DCHIRP_SENSOR_INT_PIN=${CHIRP_SENSOR_INT_PIN}
                 -DCHIRP_SENSOR_TRIG_PIN=${CHIRP_SENSOR_TRIG_PIN})
-    if(${CHIRP_INIT_FW_TYPE} STREQUAL "NO_TX_OPTIMIZATION")
-        target_compile_definitions(${PROJ_NAME} PRIVATE
-            -DCHIRP_NO_TX_OPTIMIZATION)
-    elseif(${CHIRP_INIT_FW_TYPE} STREQUAL "NONE")
-        target_compile_definitions(${PROJ_NAME} PRIVATE -DCHIRP_NO_INIT_FW)
-    endif()
-    if (INCLUDE_ALGO_EXTERNAL)
-        target_compile_definitions(${PROJ_NAME} PRIVATE -DINCLUDE_ALGO_EXTERNAL)
-    endif()
 else()
     target_compile_definitions(${PROJ_NAME} PRIVATE -DINCLUDE_WHITNEY_SUPPORT)
 endif()
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
         DESTINATION ${CMAKE_SOURCE_DIR})
+
+if(RUN_UNIT_TEST)
+  add_compile_options(-g -O0 --coverage)
+  add_link_options("--coverage")
+  add_subdirectory(test/unit_test)
+endif()
