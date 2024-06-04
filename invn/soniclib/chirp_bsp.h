@@ -196,83 +196,6 @@ extern "C" {
 #include <invn/soniclib/soniclib.h>
 
 /*!
- * \brief Main hardware initialization
- *
- * This function executes the required hardware initialization sequence for the board being used.
- * This includes clock, memory, and processor setup as well as any special handling that is needed.
- * This function is called at the beginning of an application, as the first operation.
- *
- * Along with the actual hardware initialization, this function must also initialize the following
- * fields within the ch_group_t sensor group descriptor:
- *  - \b num_ports = number of sensor ports (possible connections) on the board.  This is usually the
- *  same as \a CHIRP_MAX_DEVICES in \b chirp_board_config.h.
- *  - \b num_buses = number of I/O buses on the board, usually the same as \a CHIRP_NUM_BUSES
- *  in \b chirp_board_config.h.
- *  - \b rtc_cal_pulse_ms = length (duration) of the "pulse" sent on the INT line to each sensor
- *  during calibration of the real-time clock.  For ICU sensors, there are actually two low
- *  pulses, separated by this interval.  For CH101/CH201 sensors, there is a single high pulse
- *  with this duration.  A typical value of this field is \b 100ms, but it can be adjusted to
- *  suit your system contraints.
- *
- *	#### Discovering If a Sensor Is Present
- * Often, during initialization the BSP needs to determine which sensor ports (possible
- * connections) actually have a sensor attached. Here is a short sequence you can use to
- * confirm if a Chirp sensor is alive and communicating by reading two signature byte
- * values from the device using SPI/I2C.
- *
- * ##### ICU Sensors
- * ICU sensors (based on the Shasta architecture) contain a multi-byte "CPU ID" value that may be
- * read over SPI.  The two most signficant bytes will always contain a standard value that can
- * be read to confirm that an ICU sensor is present.
- *
- * - Using SPI, read two bytes from debug register \a SHASTA_DBG_REG_CPU_ID_HI (0x0001):
- *
- *			uint16_t command = (SPI_CMD_DBG_REG_READ | SHASTA_DBG_REG_CPU_ID_HI);
- *			uint8_t  cmd_buf[3];
- *
- *			cmd_buf[0] = (command & 0x00FF);			// LSB
- *			cmd_buf[1] = ((command & 0xFF00) >> 8);		// MSB
- *			cmd_buf[2] = 0;								// required dummy byte
- *
- *			// *** Assert SPI chip select for device
- *
- *			// *** Write 3 cmd_buf bytes to device via spi
- *
- *			// *** Read 2 bytes from device
- *
- *			// *** De-assert SPI chip select for device
- *
- * - If an ICU sensor is present, the read value will be \a SHASTA_CPU_ID_HI_VALUE (0x2041).
-
-
- *
- * ##### CH101 & CH201 Sensors
- * This sequence applies to CH101 and CH201 devices using an I2C interface.
- *
- * A couple key points:
- * - The initial I2C address for all CH101 and CH201 sensors is \a CH_I2C_ADDR_PROG (0x45).
- *   This address is used during initialization and programming.  Once the device is programmed,
- *   a different I2C address is assigned for normal operation.
- * - A device will only respond to this programming address (0x45) if its PROG line is asserted
- *   (active high).
- *
- * So, the overall sequence should be:
- *  -# Power on board and device, initialize I2C bus.
- *  -# Assert the PROG line for the sensor port to be tested (active high).
- *  -# Perform a two-byte I2C register read from the device from this location:
- *  	- I2C address = \a CH_I2C_ADDR_PROG (0x45)
- *  	- Register address/offset = 0x00
- *  -# Check the byte values that were read from the device.  If a Chirp sensor is present, the
- *  returned bytes should be:
- *		- \a CH_SIG_BYTE_0	(hex value \b 0x0A)
- *		- \a CH_SIG_BYTE_1	(hex value \b 0x02)
- *  -# De-assert the PROG line for the sensor port.
- *
- * This function is REQUIRED.
- */
-void chbsp_board_init(ch_group_t *grp_ptr);
-
-/*!
  * \brief Toggle a debug indicator pin
  *
  * \param dbg_pin_num  index value for debug pin to toggle
@@ -286,7 +209,7 @@ void chbsp_board_init(ch_group_t *grp_ptr);
  * \note OPTIONAL - Implementing this function is optional and only needed for debugging support.
  *       The indicator pins may be any convenient GPIO signals on the host system.  They are
  *       only used to provide a detectable indication of the program execution for debugging.
- *       If used, the debug pin(s) must be initialized during \a chbsp_board_init().
+ *       If used, the debug pin(s) must be initialized during board init.
  */
 void chbsp_debug_toggle(uint8_t dbg_pin_num);
 
@@ -304,7 +227,7 @@ void chbsp_debug_toggle(uint8_t dbg_pin_num);
  * \note OPTIONAL - Implementing this function is optional and only needed for debugging support.
  *       The indicator pins may be any convenient GPIO signals on the host system.  They are
  *       only used to provide a detectable indication of the program execution for debugging.
- *       If used, the debug pin(s) must be initialized during \a chbsp_board_init().
+ *       If used, the debug pin(s) must be initialized during board init.
  */
 void chbsp_debug_on(uint8_t dbg_pin_num);
 
@@ -322,7 +245,7 @@ void chbsp_debug_on(uint8_t dbg_pin_num);
  * \note OPTIONAL - Implementing this function is optional and only needed for debugging support.
  *       The indicator pins may be any convenient GPIO signals on the host system.  They are
  *       only used to provide a detectable indication of the program execution for debugging.
- *       If used, the debug pin(s) must be initialized during \a chbsp_board_init().
+ *       If used, the debug pin(s) must be initialized during board init.
  */
 void chbsp_debug_off(uint8_t dbg_pin_num);
 
@@ -733,8 +656,6 @@ void chbsp_delay_ms(uint32_t ms);
  * This function should use a running timer to provide an updated timestamp, in milliseconds,
  * when called.
  *
- * If \a CHDRV_DEBUG is defined, this function is used too by the SonicLib driver to calculate
- * elapsed times for various operations.
  *
  * This function is REQUIRED for ICU and CH101/CH201 sensors.
  */
@@ -799,7 +720,7 @@ uint8_t chbsp_i2c_get_info(ch_group_t *grp_ptr, uint8_t dev_num, ch_i2c_info_t *
  *
  * This function is REQUIRED for CH101 and CH201 sensors.  It is not used for ICU sensors.
  */
-int chbsp_i2c_write(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes);
+int chbsp_i2c_write(ch_dev_t *dev_ptr, const uint8_t *data, uint16_t num_bytes);
 
 // clang-format off
 /*!
@@ -1038,7 +959,7 @@ void chbsp_spi_cs_off(ch_dev_t *dev_ptr);
  *
  * This function is REQUIRED for ICU sensors.  It is not used for CH101 or CH201 sensors.
  */
-int chbsp_spi_write(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes);
+int chbsp_spi_write(ch_dev_t *dev_ptr, const uint8_t *data, uint16_t num_bytes);
 
 /*!
  * \brief Read bytes from an SPI slave.
@@ -1075,181 +996,6 @@ int chbsp_spi_read(ch_dev_t *dev_ptr, uint8_t *data, uint16_t num_bytes);
 int chbsp_spi_mem_read_nb(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes);
 
 /*!
- * \brief Initialize periodic timer.
- *
- * \param interval_ms		timer interval, in milliseconds
- * \param callback_func_ptr	address of routine to be called every time the timer expires
- *
- * \return 0 if successful, 1 if error
- *
- * This function initializes a periodic timer on the board.  The timer should be programmed
- * to generate an interrupt after every \a interval_ms milliseconds.
- *
- * The \a callback_func_ptr parameter specifies a callback routine that will be called when the
- * timer expires (and interrupt occurs).  The timer interrupt handler function within the board
- * support package should call this function.
- *
- * The period timer is often used to trigger sensor measurement cycles by having the application's
- * callback function call \a ch_trigger() or \a ch_group_trigger().
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This and other periodic timer functions are not called by SonicLib
- * functions, so are not required.  However, they are used in examples and other applications
- * from Chirp.
- */
-uint8_t chbsp_periodic_timer_init(uint16_t interval_ms, ch_timer_callback_t callback_func_ptr);
-
-/*!
- * \brief Enable periodic timer interrupt.
- *
- * This function enables the interrupt associated with the periodic timer initialized by
- * \a chbsp_periodic_timer_init().
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This and other periodic timer functions are not called by SonicLib
- * functions, so are not required.  However, they are used in examples and other applications
- * from Chirp.
- */
-void chbsp_periodic_timer_irq_enable(void);
-
-/*!
- * \brief Disable periodic timer interrupt.
- *
- * This function enables the interrupt associated with the periodic timer initialized by
- * \a chbsp_periodic_timer_init().
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This and other periodic timer functions are not called by SonicLib
- * functions, so are not required.  However, they are used in examples and other applications
- * from Chirp.
- */
-void chbsp_periodic_timer_irq_disable(void);
-
-/*!
- * \brief Start periodic timer.
- *
- * \return 0 if successful, 1 if error
- *
- * This function starts the periodic timer initialized by \a chbsp_periodic_timer_init().
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This and other periodic timer functions are not called by SonicLib
- * functions, so are not required.  However, they are used in examples and other applications
- * from Chirp.
- */
-uint8_t chbsp_periodic_timer_start(void);
-
-/*!
- * \brief Stop periodic timer.
- *
- * \return 0 if successful, 1 if error
- *
- * This function stops the periodic timer initialized by \a chbsp_periodic_timer_init().
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This and other periodic timer functions are not called by SonicLib
- * functions, so are not required.  However, they are used in examples and other applications
- * from Chirp.
- */
-uint8_t chbsp_periodic_timer_stop(void);
-
-/*!
- * \brief Periodic timer handler.
- *
- * \return 0 if successful, 1 if error
- *
- * This function handles the expiration of the periodic timer, re-arms it and any associated
- * interrupts for the next interval, and calls the callback routine that was registered using
- * \a chbsp_periodic_timer_init().
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This and other periodic timer functions are not called by SonicLib
- * functions, so are not required.  However, they are used in examples and other applications
- * from Chirp.
- */
-void chbsp_periodic_timer_handler(void);
-
-/*!
- * \brief Change the period for interrupts
- *
- * \param new_period_us		the new timer interval, in microseconds
- *
- * This function changes the period of the periodic timer.
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This and other periodic timer functions are not called by SonicLib
- * functions, so are not required.  However, they are used in examples and other applications
- * from Chirp.
- */
-void chbsp_periodic_timer_change_period(uint32_t new_period_us);
-
-/*!
- * \brief Put the processor into low-power sleep state.
- *
- * This function puts the host processor (MCU) into a low-power sleep mode, to conserve energy.
- * The sleep state should be selected such that interrupts associated with the SPI/I2C external
- * GPIO pins, and the periodic timer (if used) are able to wake up the device.
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This function is not called by SonicLib functions, so it is not required.
- * However, it is used in examples and other applications from Chirp.
- */
-void chbsp_proc_sleep(void);
-
-/*!
- * \brief Turn on an LED on the board.
- *
- * This function turns on an LED on the board.  The implementation of this function is flexible
- * to allow for different numbers and arrangements of LEDs.
- *
- * The \a led_num parameter specifies which LED on the board should be turned on.
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This function is not called by SonicLib functions, so it is not required.
- * However, it is used in examples and other applications from Chirp.
- */
-void chbsp_led_on(uint8_t led_num);
-
-/*!
- * \brief Turn off an LED on the board.
- *
- * This function turns off an LED on the board.  The implementation of this function is flexible
- * to allow for different numbers and arrangements of LEDs.
- *
- * The \a led_num parameter specifies which LED on the board should be turned off.
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This function is not called by SonicLib functions, so it is not required.
- * However, it is used in examples and other applications from Chirp.
- */
-void chbsp_led_off(uint8_t led_num);
-
-/*!
- * \brief Toggle an LED on the board.
- *
- * This function toggles an LED on the board. It changes the on/off state from whatever it currently is.
- * The implementation of this function is flexible to allow for different arrangements of LEDs.
- *
- * The \a led_num parameter specifies which LED on the board should be toggled.
- *
- * This function is RECOMMENDED.
- *
- * \note RECOMMENDED - This function is not called by SonicLib functions, so it is not required.
- * However, it is used in examples and other applications from Chirp.
- */
-void chbsp_led_toggle(uint8_t led_num);
-
-/*!
  * \brief Output a text string via serial interface
  *
  * \param str		pointer to a string of characters to be output
@@ -1258,11 +1004,11 @@ void chbsp_led_toggle(uint8_t led_num);
  * function to print characters over a serial port, for example.
  *
  * In the Chirp SonicLib sensor driver, debug message output may be enabled by defining
- * \a CHDRV_DEBUG and/or \a CHDRV_DEBUG_VERBOSE.
+ * \a CH_LOG_MODULE_LEVEL.
  *
  * \note OPTIONAL - Implementing this function is optional and only needed for debugging support.
  */
-void chbsp_print_str(char *str);
+void chbsp_print_str(const char *str);
 
 #ifdef __cplusplus
 }

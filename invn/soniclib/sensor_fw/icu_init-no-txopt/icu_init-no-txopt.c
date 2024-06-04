@@ -23,67 +23,55 @@
 #include "icu_init-no-txopt.h"
 #include <invn/soniclib/details/ch_common.h>
 
-uint8_t icu_init_no_txopt_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t io_index,
-                               uint8_t bus_index) {
+static const ch_api_funcs_t api_funcs = {
+		.set_num_samples      = NULL,
+		.get_range            = NULL,
+		.get_amplitude        = NULL,
+		.get_iq_data          = ch_common_get_iq_data,
+		.get_amplitude_data   = NULL,
+		.mm_to_samples        = ch_common_mm_to_samples,
+		.set_data_output      = NULL,
+		.set_target_interrupt = NULL,
+		.get_target_interrupt = NULL,
+		.set_sample_window    = NULL,
+		.get_amplitude_avg    = NULL,
+		.set_tx_length        = ch_common_set_tx_length,
+		.get_tx_length        = ch_common_get_tx_length,
+		.algo_specific_api    = NULL,
+};
 
-	dev_ptr->io_index = io_index;
+static const ch_calib_funcs_t calib_funcs = {
+		.prepare_pulse_timer = ch_common_prepare_pulse_timer,
+		.store_pt_result     = ch_common_store_pt_result,
+		.store_op_freq       = ch_common_store_op_freq,
+		.store_bandwidth     = ch_common_store_bandwidth,
+		.store_scalefactor   = ch_common_store_scale_factor,
+		.get_locked_state    = ch_common_get_locked_state,
+};
 
-	(void)grp_ptr;
-	(void)i2c_addr;
-	(void)bus_index;
+static fw_info_t self = {.api_funcs                   = &api_funcs,
+                         .calib_funcs                 = &calib_funcs,
+                         .fw_includes_sensor_init     = 1,
+                         .fw_includes_tx_optimization = 0,
+                         .freqCounterCycles           = ICU_COMMON_FREQCOUNTERCYCLES,
+                         .freqLockValue               = ICU_COMMON_READY_FREQ_LOCKED,
+                         .oversample                  = 0, /* This firmware does not use oversampling */
+                         .max_num_thresholds          = 0};
 
-	dev_ptr->restart_only = 0;
-
-	dev_ptr->freqCounterCycles  = ICU_COMMON_FREQCOUNTERCYCLES;
-	dev_ptr->freqLockValue      = ICU_COMMON_READY_FREQ_LOCKED;
-	dev_ptr->max_num_thresholds = ICU_COMMON_NUM_THRESHOLDS;
+uint8_t icu_init_no_txopt_init(ch_dev_t *dev_ptr, fw_info_t **fw_info) {
+	(void)dev_ptr;
 
 	/* Init firmware-specific function pointers */
-	dev_ptr->fw_text              = icu_init_no_txopt_fw_text;
-	dev_ptr->fw_text_size         = icu_init_no_txopt_text_size;
-	dev_ptr->fw_vec               = icu_init_no_txopt_fw_vec;
-	dev_ptr->fw_vec_size          = icu_init_no_txopt_vec_size;
-	dev_ptr->fw_version_string    = icu_init_no_txopt_version;
-	dev_ptr->ram_init             = get_ram_icu_init_no_txopt_init_ptr();
-	dev_ptr->get_fw_ram_init_size = get_icu_init_no_txopt_fw_ram_init_size;
-	dev_ptr->get_fw_ram_init_addr = get_icu_init_no_txopt_fw_ram_init_addr;
+	self.fw_text              = icu_init_no_txopt_fw_text;
+	self.fw_text_size         = icu_init_no_txopt_text_size;
+	self.fw_vec               = icu_init_no_txopt_fw_vec;
+	self.fw_vec_size          = icu_init_no_txopt_vec_size;
+	self.fw_version_string    = icu_init_no_txopt_version;
+	self.ram_init             = get_ram_icu_init_no_txopt_init_ptr();
+	self.get_fw_ram_init_size = get_icu_init_no_txopt_fw_ram_init_size;
+	self.get_fw_ram_init_addr = get_icu_init_no_txopt_fw_ram_init_addr;
 
-	dev_ptr->prepare_pulse_timer = ch_common_prepare_pulse_timer;
-	dev_ptr->store_pt_result     = ch_common_store_pt_result;
-	dev_ptr->store_op_freq       = ch_common_store_op_freq;
-	dev_ptr->store_bandwidth     = ch_common_store_bandwidth;
-	dev_ptr->store_scalefactor   = ch_common_store_scale_factor;
-	dev_ptr->get_locked_state    = ch_common_get_locked_state;
-
-	/* Init API function pointers */
-	dev_ptr->api_funcs.fw_load              = ch_common_fw_load;
-	dev_ptr->api_funcs.set_mode             = ch_common_set_mode;
-	dev_ptr->api_funcs.set_num_samples      = NULL;
-	dev_ptr->api_funcs.set_max_range        = NULL;
-	dev_ptr->api_funcs.set_static_range     = NULL;
-	dev_ptr->api_funcs.set_rx_holdoff       = NULL;
-	dev_ptr->api_funcs.get_rx_holdoff       = NULL;
-	dev_ptr->api_funcs.get_range            = NULL;
-	dev_ptr->api_funcs.get_amplitude        = NULL;
-	dev_ptr->api_funcs.get_iq_data          = ch_common_get_iq_data;
-	dev_ptr->api_funcs.get_amplitude_data   = NULL;
-	dev_ptr->api_funcs.get_tof_us           = NULL;
-	dev_ptr->api_funcs.samples_to_mm        = NULL;
-	dev_ptr->api_funcs.mm_to_samples        = NULL;
-	dev_ptr->api_funcs.get_thresholds       = NULL;
-	dev_ptr->api_funcs.set_thresholds       = NULL;
-	dev_ptr->api_funcs.set_data_output      = NULL;
-	dev_ptr->api_funcs.set_target_interrupt = NULL;
-	dev_ptr->api_funcs.get_target_interrupt = NULL;
-	dev_ptr->api_funcs.set_sample_window    = NULL;
-	dev_ptr->api_funcs.get_amplitude_avg    = NULL;
-	dev_ptr->api_funcs.set_tx_length        = ch_common_set_tx_length;
-	dev_ptr->api_funcs.get_tx_length        = ch_common_get_tx_length;
-
-	dev_ptr->max_samples = ICU_INIT_NO_TXOPT_MAX_SAMPLES;
-
-	/* This firmware does not use oversampling */
-	dev_ptr->oversample = 0;
+	*fw_info = &self;
 
 	return 0;
 }

@@ -30,7 +30,7 @@ typedef struct raw_output_data{
     // IQdata now defined by ASIC app layer. It is placed at the end of this
     // struct by specifying memory location at link step. For shared memory
     // usage, the host can reference the address of this field to get the correct
-    // offset. This field is actually an array on the ASIC. Reference dev_ptr->max_samples
+    // offset. This field is actually an array on the ASIC. Reference dev_ptr->current_fw->max_samples
     // to get the array size.
     volatile qi_t IQdata;
 #endif

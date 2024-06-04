@@ -20,6 +20,7 @@
  */
 #include <stdbool.h>
 #include <invn/soniclib/ch_extra_display_utils.h>
+#include <invn/soniclib/ch_log.h>
 
 #define ODR_TO_FREQ_DIV(odr) (1 << (7 - odr))
 
@@ -51,7 +52,7 @@ void ch_extra_display_init_info(ch_group_t *grp_ptr) {
 	bool one_icu_sensor_connected = false;
 	ch_dev_t *dev_ptr;
 
-	printf("Sensor  Type       Freq      RTC Cal     B/W    CPU Freq   Firmware\r\n");
+	ch_log_printf("Sensor  Type       Freq      RTC Cal     B/W    CPU Freq   Firmware\r\n");
 	for (uint8_t dev_num = 0; dev_num < num_ports; dev_num++) {
 		dev_ptr = ch_get_dev_ptr(grp_ptr, dev_num);
 		bool is_icu_sensor;
@@ -60,13 +61,14 @@ void ch_extra_display_init_info(ch_group_t *grp_ptr) {
 			is_icu_sensor             = is_part_number_icu(dev_ptr);
 			one_icu_sensor_connected |= is_icu_sensor;
 
-			printf("  %u     %s%u  %lu Hz  %u@%ums  %uHz  %0.2fMHz  %s\r\n", dev_num,
-			       (is_icu_sensor) ? "ICU-" : "    CH", ch_get_part_number(dev_ptr), ch_get_frequency(dev_ptr),
-			       ch_get_rtc_cal_result(dev_ptr), ch_get_rtc_cal_pulselength(dev_ptr), ch_get_bandwidth(dev_ptr),
-			       (ch_get_cpu_frequency(dev_ptr) / 1000000.0f), ch_get_fw_version_string(dev_ptr));
+			ch_log_printf("  %u     %s%u  %lu Hz  %u@%ums  %uHz  %0.2fMHz  %s\r\n", dev_num,
+			              (is_icu_sensor) ? "ICU-" : "    CH", ch_get_part_number(dev_ptr), ch_get_frequency(dev_ptr),
+			              ch_get_rtc_cal_result(dev_ptr), ch_get_rtc_cal_pulselength(dev_ptr),
+			              ch_get_bandwidth(dev_ptr), (ch_get_cpu_frequency(dev_ptr) / 1000000.0f),
+			              ch_get_fw_version_string(dev_ptr));
 		}
 	}
-	printf("\n");
+	ch_log_printf("\n");
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 	const char *sensor_id_str;
@@ -75,16 +77,17 @@ void ch_extra_display_init_info(ch_group_t *grp_ptr) {
 	if (!one_icu_sensor_connected)
 		return;
 
-	printf("Sensor\tId\tYear\tWeek\tSite\tProduct\tPackage\tMEMS\tModule\r\n");
+	ch_log_printf("Sensor\tId\tYear\tWeek\tSite\tProduct\tPackage\tMEMS\tModule\r\n");
 	for (uint8_t dev_num = 0; dev_num < num_ports; dev_num++) {
 		dev_ptr = ch_get_dev_ptr(grp_ptr, dev_num);
 
 		if (ch_sensor_is_connected(dev_ptr) && is_part_number_icu(dev_ptr)) {
 			sensor_id_str = ch_get_sensor_id(dev_ptr);
 			ch_get_mfg_info(dev_ptr, &manufacturing_info);
-			printf("%u\t%s\t%04u\tW%02u\t%u\t%03u\t%u\t%u\t%u\r\n", dev_num, sensor_id_str, manufacturing_info.mfg_year,
-			       manufacturing_info.mfg_week, manufacturing_info.mfg_site, manufacturing_info.product_code,
-			       manufacturing_info.package_code, manufacturing_info.mems_code, manufacturing_info.module_code);
+			ch_log_printf("%u\t%s\t%04u\tW%02u\t%u\t%03u\t%u\t%u\t%u\r\n", dev_num, sensor_id_str,
+			              manufacturing_info.mfg_year, manufacturing_info.mfg_week, manufacturing_info.mfg_site,
+			              manufacturing_info.product_code, manufacturing_info.package_code,
+			              manufacturing_info.mems_code, manufacturing_info.module_code);
 		}
 	}
 #endif  // INCLUDE_SHASTA_SUPPORT
@@ -101,13 +104,8 @@ uint8_t ch_extra_display_config_info(ch_dev_t *dev_ptr) {
 		ch_err = ch_get_config(dev_ptr, &sensor_config);
 		if (!ch_err) {
 			/* Display sensor number, mode and max range */
-			printf("Sensor %u:\tmax_range=%umm (%u samples)\tmode=%s  ", dev_num, sensor_config.max_range,
-			       ch_get_num_samples(dev_ptr), MODE_TO_STR(sensor_config.mode));
-
-			/* Display static target rejection range, if used */
-			if (sensor_config.static_range != 0) {
-				printf("static_range=%u samples\r\n", sensor_config.static_range);
-			}
+			ch_log_printf("Sensor %u:\tmax_range=%umm (%u samples)\tmode=%s  ", dev_num, sensor_config.max_range,
+			              ch_get_num_samples(dev_ptr), MODE_TO_STR(sensor_config.mode));
 		}
 	} else {
 #ifdef INCLUDE_SHASTA_SUPPORT
@@ -121,64 +119,42 @@ uint8_t ch_extra_display_config_info(ch_dev_t *dev_ptr) {
 			if (meas_info.num_segments == 0)
 				continue;
 
-			printf("Device %u: Measurement %u Configuration\r\n", dev_num, meas_num);
+			ch_log_printf("Device %u: Measurement %u Configuration\r\n", dev_num, meas_num);
 
-			printf("  Total Samples = %u  (%u mm max range) \tRingdown samples = %u\r\n", meas_info.num_rx_samples,
-			       ch_samples_to_mm(dev_ptr, meas_info.num_rx_samples), meas_info.ringdown_cancel_samples);
+			ch_log_printf("  Total Samples = %u  (%u mm max range)\r\n", meas_info.num_rx_samples,
+			              ch_meas_samples_to_mm(dev_ptr, meas_num, meas_info.num_rx_samples));
 
 			uint8_t odr_freq_div = ODR_TO_FREQ_DIV(meas_info.odr);
-			printf("  Active Segments = %u\tRate = CH_ODR_FREQ_DIV_%u\r\n", meas_info.num_segments, odr_freq_div);
+			ch_log_printf("  Active Segments = %u\tRate = CH_ODR_FREQ_DIV_%u\r\n", meas_info.num_segments,
+			              odr_freq_div);
 
 			for (int seg_num = 0; seg_num <= meas_info.num_segments; seg_num++) { /* also display EOF */
 				ch_meas_get_seg_info(dev_ptr, meas_num, seg_num, &seg_info);
-				printf("   Seg %u  %s ", seg_num, SEG_TYPE_TO_STR(seg_info.type));
+				ch_log_printf("   Seg %u  %s ", seg_num, SEG_TYPE_TO_STR(seg_info.type));
 				if (seg_info.type == CH_MEAS_SEG_TYPE_RX) {
-					printf("%3d sample%s  ", seg_info.num_rx_samples, (seg_info.num_rx_samples == 1 ? " " : "s"));
+					ch_log_printf("%3d sample%s  ", seg_info.num_rx_samples,
+					              (seg_info.num_rx_samples == 1 ? " " : "s"));
 				} else {
-					printf("             ");
+					ch_log_printf("             ");
 				}
-				printf("%5d cycles  ", seg_info.num_cycles);
+				ch_log_printf("%5d cycles  ", seg_info.num_cycles);
 				if (seg_info.type == CH_MEAS_SEG_TYPE_TX) {
-					printf("Pulse width = %2u  Phase = %u  ", seg_info.tx_pulse_width, seg_info.tx_phase);
+					ch_log_printf("Pulse width = %2u  Phase = %u  ", seg_info.tx_pulse_width, seg_info.tx_phase);
 				} else if (seg_info.type == CH_MEAS_SEG_TYPE_RX) {
-					printf("Gain reduce = %2u  Atten = %u  ", seg_info.rx_gain, seg_info.rx_atten);
+					ch_log_printf("Gain reduce = %2u  Atten = %u  ", seg_info.rx_gain, seg_info.rx_atten);
 				}
 				if (seg_info.rdy_int_en) {
-					printf("Rdy Int  ");
+					ch_log_printf("Rdy Int  ");
 				}
 				if (seg_info.done_int_en) {
-					printf("Done Int");
+					ch_log_printf("Done Int");
 				}
-				printf("\r\n");
+				ch_log_printf("\r\n");
 			} /* for (seg_num...) */
 		}     /* for(meas_num...) */
 #endif        // INCLUDE_SHASTA_SUPPORT
 	}
-
-#if defined(CH_NUM_THRESHOLDS)
-	/* Get threshold values in structure */
-	ch_thresholds_t detect_thresholds;
-	ch_err = ch_get_thresholds(dev_ptr, &detect_thresholds);
-	if (!ch_err) {
-		printf("\r\n  Detection thresholds:\r\n");
-		for (int thresh_num = 0; thresh_num < CH_NUM_THRESHOLDS; thresh_num++) {
-			uint16_t start_sample = detect_thresholds.threshold[thresh_num].start_sample;
-			uint16_t start_mm     = ch_samples_to_mm(dev_ptr, start_sample);
-
-			if ((thresh_num == 0) || (start_sample != 0)) { /* unused thresholds have start = 0 */
-				printf("     %u\tstart sample: %3u  = %4u mm\tlevel: %u", thresh_num, start_sample, start_mm,
-				       detect_thresholds.threshold[thresh_num].level);
-#ifdef INCLUDE_SHASTA_SUPPORT
-				if (detect_thresholds.threshold[thresh_num].level == CH_THRESH_LEVEL_HOLDOFF) {
-					printf(" (Rx Holdoff)");
-				}
-#endif  // INCLUDE_SHASTA_SUPPORT
-				printf("\r\n");
-			}
-		}
-	} /* else : error reading thresholds or thresholds not handled by fw */
-#endif
-	printf("\r\n");
+	ch_log_printf("\r\n");
 
 	return ch_err;
 }

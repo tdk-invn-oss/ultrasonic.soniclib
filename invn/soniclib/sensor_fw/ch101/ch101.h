@@ -22,6 +22,10 @@
 #ifndef CH101_H_
 #define CH101_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define CH101_DATA_MEM_SIZE 0x800
 #define CH101_DATA_MEM_ADDR 0x0200
 #define CH101_PROG_MEM_SIZE 0x800
@@ -39,5 +43,9 @@
 #define CH101_DCO_HIGH             (250)
 #define CH101_DCO_SEARCH_THRESHOLD (100)  // Hz, if error is above this, do a search
 #define CH101_REVDRIVE_DEFAULT     (2)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

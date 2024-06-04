@@ -19,6 +19,9 @@
 #include <string.h>
 #include <ctype.h>
 
+#define CH_LOG_MODULE_NAME "CH_DRV"
+#include <invn/soniclib/ch_log.h>
+
 #include <invn/soniclib/soniclib.h>
 #include <invn/soniclib/chirp_bsp.h>
 #include <invn/soniclib/details/ch_driver.h>
@@ -29,7 +32,7 @@
 #include <invn/icu_interface/shasta_pmut_cmds.h>
 #endif
 
-/* DEBUG : Uncomment to toogle GPIO DEBUG1 when waiting sensor interrupt */
+/* DEBUG : Uncomment to toggle GPIO DEBUG1 when waiting sensor interrupt */
 // #define CHDRV_WAIT_DEBUG
 
 #define CH_PROG_XFER_RETRY 4
@@ -47,64 +50,169 @@
 /* Local variables */
 static volatile uint32_t interrupt_sensors = 0;  // one bit for each possible sensor
 
-/* Forward references */
-#ifdef INCLUDE_SHASTA_SUPPORT
-static uint8_t chdrv_exit_debug(ch_dev_t *dev_ptr);
-#endif  // INCLUDE_SHASTA_SUPPORT
+#if IS_CH_LOG_USED
 
-#ifdef CHDRV_DEBUG
 static inline void print_connected_sensors(int prog_status, const ch_group_t *grp_ptr, uint32_t start_time) {
-	char cbuf[208]; /* "Sensor count: %u, %lu ms.\n" + 4x "Chirp sensor initialized on I2C addr %u:%u\n" */
+
+#if !IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_INFO)
+	(void)grp_ptr;
+	(void)start_time;
+#endif
 
 	if (prog_status) {
-		snprintf(&cbuf[0], sizeof(cbuf), "No Chirp sensor devices are responding\n");
+		CH_LOG_ERR("No Chirp sensor devices are responding");
 	} else {
-		int nb_char_written = snprintf(&cbuf[0], sizeof(cbuf), "Sensor count: %u, %lu ms.\n", grp_ptr->sensor_count,
-		                               chbsp_timestamp_ms() - start_time);
+		CH_LOG_INFO("Sensor count: %u, %lu ms.", grp_ptr->sensor_count, chbsp_timestamp_ms() - start_time);
 #ifdef INCLUDE_WHITNEY_SUPPORT
 		for (uint8_t dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
 			ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 			if (dev_ptr->sensor_connected) {
-				nb_char_written +=
-						snprintf(&cbuf[nb_char_written], sizeof(cbuf), "Chirp sensor initialized on I2C addr %u:%u\n",
-				                 dev_ptr->bus_index, dev_ptr->i2c_address);
+				CH_LOG_INFO("Chirp sensor initialized on I2C addr %u:%u", dev_ptr->bus_index, dev_ptr->i2c_address);
 			}
 		}
-#else
-		(void)nb_char_written;
 #endif
 	}
-	chbsp_print_str(&cbuf[0]);
 }
 
 #ifdef INCLUDE_WHITNEY_SUPPORT
 static inline void print_freq_lock_status(int freq_lock_status, uint32_t start_time) {
-	char cbuf[30]; /* "Frequency locked, %lu ms\n" */
-
+#if !IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_INFO)
+	(void)start_time;
+#endif
 	if (!freq_lock_status) {
-		snprintf(&cbuf[0], sizeof(cbuf), "Frequency locked, %lu ms\n", chbsp_timestamp_ms() - start_time);
+		CH_LOG_INFO("Frequency locked, %lu ms", chbsp_timestamp_ms() - start_time);
 	} else {
-		snprintf(&cbuf[0], sizeof(cbuf), "Frequency lock failed\n");
+		CH_LOG_ERR("Frequency lock failed");
 	}
-	chbsp_print_str(&cbuf[0]);
 }
 #endif /* #ifdef INCLUDE_WHITNEY_SUPPORT */
 
 static inline void print_rtc_cal_result(const ch_group_t *grp_ptr, uint32_t start_time) {
-	char cbuf[120]; /* "RTC calibrated, %lu ms\n" + 4x "%u : Cal result = %u\n" */
 
-	int nb_char_written =
-			snprintf(&cbuf[0], sizeof(cbuf), "RTC calibrated, %lu ms\n", chbsp_timestamp_ms() - start_time);
+#if !IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_INFO)
+	(void)start_time;
+#endif
+
+	CH_LOG_INFO("RTC calibrated, %lu ms", chbsp_timestamp_ms() - start_time);
 	for (uint8_t dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
 		const ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 		if (dev_ptr->sensor_connected) {
-			nb_char_written += snprintf(&cbuf[nb_char_written], sizeof(cbuf), "%u : Cal result = %u\n", dev_num,
-			                            dev_ptr->rtc_cal_result);
+			CH_LOG_INFO("%u : Cal result = %u", dev_num, dev_ptr->rtc_cal_result);
 		}
 	}
-	chbsp_print_str(&cbuf[0]);
 }
-#endif /* #ifdef CHDRV_DEBUG */
+#endif /* #if IS_CH_LOG_USED */
+
+/*!
+ * \brief Transfer firmware to the sensor on-chip memory.
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
+ *
+ * \return 0 if firmware write succeeded, non-zero otherwise
+ *
+ * This local function writes the sensor firmware image to the device.
+ */
+static int write_firmware(ch_dev_t *dev_ptr) {
+	int ch_err;
+
+	if (!dev_ptr->sensor_connected) {
+		return 1;
+	}
+
+	CH_LOG_INFO("Programming sensor...");
+#if IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_INFO)
+	uint64_t prog_time = chbsp_timestamp_ms();
+#endif
+
+	ch_err = ch_common_fw_load(dev_ptr);
+
+	if (!ch_err) {
+#if IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_INFO)
+		uint16_t fw_wrote_size = dev_ptr->current_fw->fw_text_size + dev_ptr->current_fw->fw_vec_size;
+		prog_time              = chbsp_timestamp_ms() - prog_time;
+#endif
+		CH_LOG_INFO("Wrote %u bytes in %lu ms.", fw_wrote_size, prog_time);
+	} else {
+		CH_LOG_ERR("Error programming device");
+	}
+
+	return ch_err;
+}
+
+/*!
+ * \brief Initialize sensor memory contents.
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
+ *
+ * \return 0 if memory write succeeded, non-zero otherwise
+ *
+ * This local function initializes memory locations in the Chirp sensor, as required by the firmware image.
+ */
+static int init_ram(ch_dev_t *dev_ptr) {
+	int ch_err;
+
+	if (!dev_ptr || !dev_ptr->sensor_connected || (dev_ptr->current_fw->get_fw_ram_init_size() == 0)) {
+		return 1;
+	}
+
+	uint16_t ram_address;
+	uint16_t ram_bytecount;
+
+	ram_address   = dev_ptr->current_fw->get_fw_ram_init_addr();
+	ram_bytecount = dev_ptr->current_fw->get_fw_ram_init_size();
+
+	CH_LOG_INFO("Loading RAM init data...");
+#if IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_INFO)
+	uint32_t prog_time = chbsp_timestamp_ms();
+#endif
+
+#ifdef INCLUDE_SHASTA_SUPPORT
+	ch_err = chdrv_burst_write(dev_ptr, ram_address, dev_ptr->current_fw->ram_init, ram_bytecount);
+#elif defined(INCLUDE_WHITNEY_SUPPORT)
+	ch_err = chdrv_prog_mem_write(dev_ptr, ram_address, dev_ptr->current_fw->ram_init, ram_bytecount);
+#endif
+
+#if IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_INFO)
+	if (!ch_err) {
+		prog_time = chbsp_timestamp_ms() - prog_time;
+		CH_LOG_INFO("Wrote %u bytes in %lu ms.", ram_bytecount, prog_time);
+	}
+#endif
+
+	return ch_err;
+}
+
+/*!
+ * \brief Reset and halt a sensor
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
+ *
+ * \return 0 if write to sensor succeeded, non-zero otherwise
+ *
+ * This function resets and halts a sensor device by writing to the control registers.
+ *
+ * WHITNEY: In order for the device to respond, the PROG pin for the device must be asserted before this function is
+ * called.
+ */
+static int reset_and_halt(ch_dev_t *dev_ptr) {
+	int ch_err = 0;
+#ifdef INCLUDE_SHASTA_SUPPORT
+	dev_ptr->asic_ready = 0;
+
+	// enter debug mode and clear active-low reset bit to do reset
+	ch_err |= chdrv_sys_ctrl_write(dev_ptr, SYS_CTRL_DEBUG);
+
+	// enter debug mode and set the active-low reset bit to undo reset
+	ch_err |= chdrv_sys_ctrl_write(dev_ptr, (SYS_CTRL_DEBUG | SYS_CTRL_RESET_N));
+
+#elif defined(INCLUDE_WHITNEY_SUPPORT)
+	ch_err = chdrv_prog_write(dev_ptr, CH_PROG_REG_CPU, 0x40);  // reset asic			// TODO need define
+
+	ch_err |= chdrv_prog_write(dev_ptr, CH_PROG_REG_CPU, 0x11);  // halt asic and disable watchdog;	// TODO need define
+#endif  // INCLUDE_SHASTA_SUPPORT
+
+	return ch_err;
+}
 
 /* Interrupt Pin Routines */
 
@@ -116,7 +224,7 @@ void chdrv_int_group_assert(ch_group_t *grp_ptr) {
 		chbsp_group_int2_clear(grp_ptr);  // active low
 	}
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	chbsp_group_int1_set(grp_ptr);    // active high
+	chbsp_group_int1_set(grp_ptr);                               // active high
 #endif
 }
 
@@ -128,7 +236,7 @@ void chdrv_int_group_deassert(ch_group_t *grp_ptr) {
 		chbsp_group_int2_set(grp_ptr);  // inactive high
 	}
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	chbsp_group_int1_clear(grp_ptr);  // inactive low
+	chbsp_group_int1_clear(grp_ptr);                             // inactive low
 #endif
 }
 
@@ -303,7 +411,7 @@ void chdrv_trig_group_set_dir_out(ch_group_t *grp_ptr) {
  * This function writes bytes to the device using the programming I2C address.  The
  * PROG line for the device must have been asserted before this function is called.
  */
-int chdrv_prog_i2c_write(ch_dev_t *dev_ptr, uint8_t *message, uint16_t len) {
+int chdrv_prog_i2c_write(ch_dev_t *dev_ptr, const uint8_t *message, uint16_t len) {
 
 	dev_ptr->i2c_address = CH_I2C_ADDR_PROG;
 	int ch_err           = chbsp_i2c_write(dev_ptr, message, len);
@@ -390,7 +498,7 @@ int chdrv_write_byte(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t data_value) {
  *
  * \return 0 if successful, non-zero otherwise
  */
-int chdrv_burst_write(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data_ptr, uint16_t num_bytes) {
+int chdrv_burst_write(ch_dev_t *dev_ptr, uint16_t mem_addr, const uint8_t *data_ptr, uint16_t num_bytes) {
 	int ch_err;
 
 #ifdef INCLUDE_SHASTA_SUPPORT
@@ -449,7 +557,7 @@ int chdrv_write_word(ch_dev_t *dev_ptr, uint16_t mem_addr, uint16_t data_value) 
 	// Sensor is little-endian, so LSB goes in at the lower address
 	uint8_t message[] = {sizeof(data_value), (uint8_t)data_value, (uint8_t)(data_value >> 8)};
 
-	ch_err  = chbsp_i2c_mem_write(dev_ptr, mem_addr, message, sizeof(message));
+	ch_err   = chbsp_i2c_mem_write(dev_ptr, mem_addr, message, sizeof(message));
 #endif
 
 	return ch_err;
@@ -470,7 +578,7 @@ int chdrv_read_byte(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data_ptr) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 	ret_val = chdrv_burst_read(dev_ptr, mem_addr, data_ptr, 1);
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	ret_val = chbsp_i2c_mem_read(dev_ptr, mem_addr, data_ptr, 1);
+	ret_val  = chbsp_i2c_mem_read(dev_ptr, mem_addr, data_ptr, 1);
 #endif
 
 	return ret_val;
@@ -516,7 +624,7 @@ int chdrv_burst_read(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data_ptr, ui
 	chbsp_spi_cs_off(dev_ptr);  // de-assert chip select
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	ret_val = chbsp_i2c_mem_read(dev_ptr, mem_addr, data_ptr, num_bytes);
+	ret_val  = chbsp_i2c_mem_read(dev_ptr, mem_addr, data_ptr, num_bytes);
 #endif
 
 	return ret_val;
@@ -537,24 +645,21 @@ int chdrv_read_word(ch_dev_t *dev_ptr, uint16_t mem_addr, uint16_t *data_ptr) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 	ret_val = chdrv_burst_read(dev_ptr, mem_addr, (uint8_t *)data_ptr, 2);
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	ret_val = chbsp_i2c_mem_read(dev_ptr, mem_addr, (uint8_t *)data_ptr, 2);
+	ret_val  = chbsp_i2c_mem_read(dev_ptr, mem_addr, (uint8_t *)data_ptr, 2);
 #endif
 
 	return ret_val;
 }
 
-uint8_t chdrv_event_trigger(ch_dev_t *dev_ptr, uint16_t event) {
-	uint8_t err = RET_ERR;
 #ifdef INCLUDE_SHASTA_SUPPORT
+uint8_t chdrv_event_trigger(ch_dev_t *dev_ptr, uint16_t event) {
+	uint8_t err                     = RET_ERR;
 	uint16_t event_trigger_reg_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->common.event_trigger);
 
 	err = chdrv_write_word(dev_ptr, event_trigger_reg_addr, event);
-#else
-	(void)dev_ptr;  // unused - not supported on CH101/CH201
-	(void)event;
-#endif
 	return err;
 }
+#endif
 
 void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num) {
 	ch_dev_t *dev_ptr             = grp_ptr->device[dev_num];
@@ -783,7 +888,7 @@ uint8_t chdrv_otpmem_copy(ch_dev_t *dev_ptr, otp_copy_t *otp_ptr) {
 	return err;
 }
 
-static inline uint8_t chdrv_event_wait(ch_dev_t *dev_ptr) {
+static inline uint8_t event_wait(ch_dev_t *dev_ptr) {
 	uint8_t err         = 0;
 	uint32_t start_time = chbsp_timestamp_ms();
 	interrupt_sensors   = 0;  // re-init bitmask
@@ -868,9 +973,9 @@ static uint8_t clear_interrupts(volatile pmut_transceiver_inst_t *inst_ptr, int 
 	*rx_idx     = -1;  // offset of first RX instruction
 	int j       = 0;
 	while (j < max_num_trx && (inst_ptr[j].cmd_config & PMUT_CMD_BITS) != PMUT_CMD_EOF) {
-#ifdef CHDRV_DEBUG
-		printf("inst %d: cmd=%d\n", j, inst_ptr[j].cmd_config & PMUT_CMD_BITS);
-#endif
+
+		CH_LOG_TRACE("inst %d: cmd=%d", j, inst_ptr[j].cmd_config & PMUT_CMD_BITS);
+
 		inst_ptr[j].cmd_config &= ~PMUT_RDY_IEN_BITS;
 		inst_ptr[j].cmd_config &= ~PMUT_DONE_IEN_BITS;
 		if ((inst_ptr[j].cmd_config & PMUT_CMD_BITS) == PMUT_CMD_RX) {
@@ -891,9 +996,9 @@ static uint8_t clear_interrupts(volatile pmut_transceiver_inst_t *inst_ptr, int 
 	} else {
 		*eof_idx = j;
 	}
-#ifdef CHDRV_DEBUG
-	printf("clear_interrupts: eof_idx=%d rx_idx=%d\n", *eof_idx, *rx_idx);
-#endif
+
+	CH_LOG_TRACE("clear_interrupts: eof_idx=%d rx_idx=%d", *eof_idx, *rx_idx);
+
 	return err;
 }
 
@@ -947,9 +1052,10 @@ static uint8_t adjust_rx_len(volatile measurement_t *meas, int rx_len, int eof_i
 	const int rx_samples = rx_len >> (11 - meas->odr);
 	const int new_rx_len = rx_samples << (11 - meas->odr);
 	int samples_to_cut   = rx_len - new_rx_len;
-#ifdef CHDRV_DEBUG
-	printf("rx_len=%d rx_samples=%d new_rx_len=%d samples_to_cut=%d\n", rx_len, rx_samples, new_rx_len, samples_to_cut);
-#endif
+
+	CH_LOG_DEBUG("rx_len=%d rx_samples=%d new_rx_len=%d samples_to_cut=%d", rx_len, rx_samples, new_rx_len,
+	             samples_to_cut);
+
 	if (meas->trx_inst[eof_idx - 1].length > (1 << (11 - meas->odr)) + samples_to_cut) {
 		// make sure resulting rx instruction will have at least one RX sample left
 		// in it after the cut.
@@ -978,17 +1084,15 @@ static uint8_t meas_queue_sanitize(measurement_queue_t *q_buf_ptr, uint16_t iq_s
 	int eof_idx[2];
 	int rx_idx[2];
 	int rx_len[2];
-#ifdef CHDRV_DEBUG
-	printf("clear_interrupts 0\n");
-#endif
+
+	CH_LOG_TRACE("clear_interrupts 0");
 	uint8_t err = clear_interrupts(q_buf_ptr->meas[0].trx_inst, &eof_idx[0], &rx_idx[0], &rx_len[0]);
 	if (err) {
 		// if meas queue 0 is bad, just abort
 		return err;
 	}
-#ifdef CHDRV_DEBUG
-	printf("clear_interrupts 1\n");
-#endif
+
+	CH_LOG_TRACE("clear_interrupts 1");
 	err = clear_interrupts(q_buf_ptr->meas[1].trx_inst, &eof_idx[1], &rx_idx[1], &rx_len[1]);
 	switch (q_buf_ptr->trigsrc) {
 	case TRIGSRC_CONTINUOUS_RX:
@@ -1038,15 +1142,15 @@ static uint8_t meas_queue_sanitize(measurement_queue_t *q_buf_ptr, uint16_t iq_s
 		}
 		break;
 	}
-#ifdef CHDRV_DEBUG
+
 	for (int i = 0; i < 2; i++) {
-		printf("meas queue %d after sanitize:\n", i);
+		CH_LOG_TRACE("meas queue %d after sanitize:", i);
 		for (int j = 0; j < max_num_trx; j++) {
-			printf("inst %d: cmd=0x%04x len=%d\n", j, q_buf_ptr->meas[i].trx_inst[j].cmd_config,
-			       q_buf_ptr->meas[i].trx_inst[j].length);
+			CH_LOG_TRACE("inst %d: cmd=0x%04x len=%d", j, q_buf_ptr->meas[i].trx_inst[j].cmd_config,
+			             q_buf_ptr->meas[i].trx_inst[j].length);
 		}
 	}
-#endif
+
 	return err;
 }
 
@@ -1062,7 +1166,7 @@ uint8_t chdrv_meas_queue_write(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr
 	// writing invalid queues. It is OK to write them so long as they are not
 	// used, and it's a bit confusing for us to just arbitrarily set them when
 	// the user has not requested it
-	meas_queue_sanitize(q_buf_ptr, dev_ptr->max_samples);
+	meas_queue_sanitize(q_buf_ptr, dev_ptr->current_fw->max_samples);
 	err |= chdrv_burst_write(dev_ptr, meas_queue_addr, (uint8_t *)q_buf_ptr, sizeof(measurement_queue_t));
 
 	return err;
@@ -1111,6 +1215,13 @@ uint8_t chdrv_algo_cfg_read(ch_dev_t *dev_ptr, void *algo_cfg_ptr) {
 	return err;
 }
 
+uint8_t chdrv_algo_cfg_write(ch_dev_t *dev_ptr, const void *algo_cfg_ptr) {
+	uint16_t algo_cfg_addr   = (uint16_t)(uintptr_t)dev_ptr->algo_info.algo_cfg_ptr;
+	uint16_t algo_cfg_nbytes = dev_ptr->algo_info.algo_cfg_len;
+
+	return (uint8_t)chdrv_burst_write(dev_ptr, algo_cfg_addr, (uint8_t *)algo_cfg_ptr, algo_cfg_nbytes);
+}
+
 uint8_t chdrv_algo_out_read(ch_dev_t *dev_ptr, void *algo_out_ptr) {
 	uint8_t err;
 	uint16_t algo_out_addr   = (uint16_t)(uintptr_t)dev_ptr->algo_info.algo_out_ptr;
@@ -1131,7 +1242,7 @@ uint8_t chdrv_algo_state_read(ch_dev_t *dev_ptr, void *algo_state_ptr) {
 	return err;
 }
 
-static void chdrv_clock_init(ch_dev_t *dev_ptr, uint8_t restart) {
+static void clock_init(ch_dev_t *dev_ptr, uint8_t restart) {
 	clock_control_t *clock_ctrl_addr = (clock_control_t *)&((dev_ptr->sens_cfg_addr)->common.clock);
 	clock_control_t clock_ctrl;
 	uint16_t reg_addr;
@@ -1154,9 +1265,8 @@ static void chdrv_clock_init(ch_dev_t *dev_ptr, uint8_t restart) {
 		if ((test_rtc_freq != 0) && (test_rtc_freq != UINT16_MAX)) {  // check for actual data
 			dev_ptr->rtc_frequency = test_rtc_freq;
 		}
-#ifdef CHDRV_DEBUG
-		printf("chdrv_clock_init: using factory test rtc freq = %05u \n", test_rtc_freq);
-#endif
+
+		CH_LOG_INFO("Using factory test rtc freq = %05u", test_rtc_freq);
 	}
 
 	/* Set clock trim values */
@@ -1199,10 +1309,8 @@ static void chdrv_clock_init(ch_dev_t *dev_ptr, uint8_t restart) {
 	/* Trigger event to apply settings */
 	chdrv_event_trigger(dev_ptr, EVENT_CONFIG_CLOCKS);
 
-#ifdef CHDRV_DEBUG
-	printf("chdrv_clock_init: cpu_trim=0x%02x  pmut_trim=0x%04x rtc_source=%d control=0x%02x step=%d\n",
-	       clock_ctrl.cpu_trim, clock_ctrl.pmut_trim, clock_ctrl.rtc_sources, clock_ctrl.control, clock_ctrl.step);
-#endif
+	CH_LOG_INFO("cpu_trim=0x%02x  pmut_trim=0x%04x rtc_source=%d control=0x%02x step=%d", clock_ctrl.cpu_trim,
+	            clock_ctrl.pmut_trim, clock_ctrl.rtc_sources, clock_ctrl.control, clock_ctrl.step);
 }
 
 uint32_t chdrv_cpu_freq_adjust(ch_dev_t *dev_ptr, uint32_t pmut_op_freq) {
@@ -1225,10 +1333,8 @@ uint32_t chdrv_cpu_freq_adjust(ch_dev_t *dev_ptr, uint32_t pmut_op_freq) {
 
 	mult_offset = (cpu_freq % pmut_clock_freq);  // calculate offset for current CPU freq
 
-#ifdef CHDRV_DEBUG
-	printf("chdrv_cpu_freq_adjust:  starting cpu_freq=%lu  starting cpu_trim=%d\n", cpu_freq, start_trim);
-	printf("chdrv_cpu_freq_adjust:  mult_offset=%lu  (min=%lu  max=%lu)\n", mult_offset, min_offset, max_offset);
-#endif
+	CH_LOG_INFO("Starting cpu_freq=%lu  starting cpu_trim=%d", cpu_freq, start_trim);
+	CH_LOG_DEBUG("mult_offset=%lu  (min=%lu  max=%lu)", mult_offset, min_offset, max_offset);
 
 	while ((mult_offset < min_offset) || (mult_offset > max_offset)) {
 		uint8_t new_trim;
@@ -1243,26 +1349,22 @@ uint32_t chdrv_cpu_freq_adjust(ch_dev_t *dev_ptr, uint32_t pmut_op_freq) {
 		new_trim = (start_trim + trim_adj);  // calculate new trim value
 
 		if ((new_trim == 0) || (new_trim > SHASTA_CPU_TRIM_MAX)) {
-#ifdef CHDRV_DEBUG
-			printf("chdrv_cpu_freq_adjust:  error: CPU trim out of range\n");
-#endif
 			cpu_freq = 0;  // error - trim out of range
+			CH_LOG_ERR("CPU trim out of range");
 			break;
 		}
 
 		if (cpu_freq != 0) {  // if no error
-#ifdef CHDRV_DEBUG
-			printf("chdrv_cpu_freq_adjust:  setting cpu_trim to %d\n", new_trim);
-#endif
+			CH_LOG_INFO("Setting cpu_trim to %d", new_trim);
+
 			chdrv_write_byte(dev_ptr, reg_addr, new_trim);  // write new value to clock_config cpu_trim
 			chdrv_event_trigger(dev_ptr, EVENT_CONFIG_CLOCKS);
 
 			dev_ptr->cpu_trim = new_trim;                           // update trim value in dev descriptor
 			cpu_freq          = chdrv_cpu_freq_calculate(dev_ptr);  // get updated frequency and recalculate mult offset
 			mult_offset       = (cpu_freq % pmut_clock_freq);
-#ifdef CHDRV_DEBUG
-			printf("chdrv_cpu_freq_adjust:  cpu_freq=%lu  mult_offset=%lu\n", cpu_freq, mult_offset);
-#endif
+
+			CH_LOG_INFO("cpu_freq=%lu  mult_offset=%lu", cpu_freq, mult_offset);
 		}
 	}
 
@@ -1284,11 +1386,10 @@ uint32_t chdrv_cpu_freq_calculate(ch_dev_t *dev_ptr) {
 	chdrv_write_word(dev_ptr, reg_addr, dev_ptr->fcount_cycles);
 
 	err = chdrv_event_trigger_and_wait(dev_ptr, EVENT_CPU_FCOUNT);  // start CPU freq count
-#ifdef CHDRV_DEBUG
+
 	if (err) {
-		printf("chdrv_cpu_freq_calculate:  error waiting for EVENT_CPU_FCOUNT\n");
+		CH_LOG_ERR("error waiting for EVENT_CPU_FCOUNT");
 	}
-#endif
 
 	if (!err) {
 		reg_addr = (uint16_t)(uintptr_t) & (output_data_ptr->cpu_clock_fcount);  // CPU freq count
@@ -1296,9 +1397,7 @@ uint32_t chdrv_cpu_freq_calculate(ch_dev_t *dev_ptr) {
 
 		cpu_freq = (dev_ptr->rtc_frequency * raw_cpu_count) / (dev_ptr->fcount_cycles / 16);
 
-#ifdef CHDRV_DEBUG
-		printf("chdrv_cpu_freq_calculate:  raw_cpu_count = %u  cpu_freq = %lu Hz\n\r", raw_cpu_count, cpu_freq);
-#endif
+		CH_LOG_INFO("raw_cpu_count = %u  cpu_freq = %lu Hz", raw_cpu_count, cpu_freq);
 	}
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
@@ -1321,27 +1420,22 @@ uint8_t chdrv_run_bist(ch_dev_t *dev_ptr) {
 	uint16_t pmut_trim_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->common.clock.pmut_trim);  // PMUT trim
 
 	chdrv_read_word(dev_ptr, pmut_trim_addr, &pmut_trim);
-#ifdef CHDRV_DEBUG
-	printf("pmut freq trim before = 0x%04x\n\r", pmut_trim);
-#endif  // CHDRV_DEBUG
 
-#ifdef CHDRV_DEBUG
-	printf("triggering BIST\n\r");
-#endif  // CHDRV_DEBUG
+	CH_LOG_DEBUG("Triggering BIST :");
+	CH_LOG_DEBUG("pmut freq trim before = 0x%04x", pmut_trim);
+
 	chbsp_int1_interrupt_enable(dev_ptr);
 	err = chdrv_event_trigger_and_wait(dev_ptr, EVENT_BIST);
-#ifdef CHDRV_DEBUG
+
 	if (err) {
-		printf("chdrv_run_bist:  error waiting for EVENT_BIST\n");
+		CH_LOG_ERR("error waiting for EVENT_BIST");
 	}
-#endif
 
 	if (!err) {
 		chdrv_read_word(dev_ptr, pmut_trim_addr, &pmut_trim);
 		dev_ptr->pmut_trim = pmut_trim;
-#ifdef CHDRV_DEBUG
-		printf("pmut freq trim after = 0x%04x\n\r", pmut_trim);
-#endif  // CHDRV_DEBUG
+
+		CH_LOG_DEBUG("pmut freq trim after = 0x%04x", pmut_trim);
 	}
 
 #ifdef READ_BIST_DATA  // Not needed for normal startup sequence
@@ -1354,7 +1448,7 @@ uint8_t chdrv_run_bist(ch_dev_t *dev_ptr) {
 	}
 
 	if (!err) {
-#ifdef CHDRV_DEBUG
+#if IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_DEBUG)
 		uint8_t num_xcvr_inst       = sizeof(bist_data.tx_opt_cal_inst) / sizeof(bist_data.tx_opt_cal_inst[0]);
 		uint16_t fcount             = (uint16_t)bist_data.fcount;
 		uint16_t pmut_clock_fn_code = (uint16_t)bist_data.pmut_clock_fn_code;
@@ -1364,21 +1458,18 @@ uint8_t chdrv_run_bist(ch_dev_t *dev_ptr) {
 		uint16_t cmd_config;
 		uint16_t length;
 
-		printf("\n\r");
-		printf("BIST:  fcount=%d  pmut_clock_fn_code=0x%04x  sf=%d  rd=[%d,%d]\n\r", fcount, pmut_clock_fn_code,
-		       bist_sf, bist_rd0, bist_rd1);
+		CH_LOG_DEBUG("\r\nBIST:  fcount=%d  pmut_clock_fn_code=0x%04x  sf=%d  rd=[%d,%d]", fcount, pmut_clock_fn_code,
+		             bist_sf, bist_rd0, bist_rd1);
 
 		for (int i = 0; i < num_xcvr_inst; i++) {
 			cmd_config = (uint16_t)bist_data.tx_opt_cal_inst[i].cmd_config;
 			length     = (uint16_t)bist_data.tx_opt_cal_inst[i].length;
-			printf("   PMUT instr %d:  cmd_config=0x%04x  length=%d\n\r", i, cmd_config, length);
+			CH_LOG_DEBUG("   PMUT instr %d:  cmd_config=0x%04x  length=%d", i, cmd_config, length);
 		}
-#endif  // CHDRV_DEBUG
+#endif
 
 	} else {
-#ifdef CHDRV_DEBUG
-		printf("Error running BIST\n\r");
-#endif  // CHDRV_DEBUG
+		CH_LOG_ERR("Error running BIST");
 	}
 #endif  // READ_BIST_DATA
 
@@ -1424,7 +1515,7 @@ void chdrv_group_measure_rtc(ch_group_t *grp_ptr) {
 		ch_dev_t *dev_ptr = grp_ptr->device[i];
 
 		if (dev_ptr->sensor_connected) {
-			dev_ptr->prepare_pulse_timer(dev_ptr);
+			dev_ptr->current_fw->calib_funcs->prepare_pulse_timer(dev_ptr);
 		}
 	}
 
@@ -1467,7 +1558,7 @@ void chdrv_group_measure_rtc(ch_group_t *grp_ptr) {
 		ch_dev_t *dev_ptr = grp_ptr->device[i];
 		if (dev_ptr->sensor_connected) {
 			dev_ptr->rtc_status = CH_RTC_STATUS_CAL_DONE;
-			dev_ptr->store_pt_result(dev_ptr);
+			dev_ptr->current_fw->calib_funcs->store_pt_result(dev_ptr);
 		}
 	}
 }
@@ -1503,7 +1594,7 @@ void chdrv_group_measure_rtc_no_pulse(ch_group_t *grp_ptr) {
 		ch_dev_t *dev_ptr = grp_ptr->device[i];
 
 		if (dev_ptr->sensor_connected) {
-			dev_ptr->prepare_pulse_timer(dev_ptr);
+			dev_ptr->current_fw->calib_funcs->prepare_pulse_timer(dev_ptr);
 		}
 	}
 
@@ -1512,7 +1603,7 @@ void chdrv_group_measure_rtc_no_pulse(ch_group_t *grp_ptr) {
 		ch_dev_t *dev_ptr = grp_ptr->device[i];
 		if (dev_ptr->sensor_connected) {
 
-			dev_ptr->store_pt_result(dev_ptr);
+			dev_ptr->current_fw->calib_funcs->store_pt_result(dev_ptr);
 		}
 	}
 }
@@ -1525,10 +1616,10 @@ void chdrv_group_measure_pmut(ch_group_t *grp_ptr) {
 		if (dev_ptr->sensor_connected) {
 
 			/* Call calibration func */
-			dev_ptr->store_op_freq(dev_ptr);
+			dev_ptr->current_fw->calib_funcs->store_op_freq(dev_ptr);
 
-			if (dev_ptr->store_bandwidth != NULL) {
-				dev_ptr->store_bandwidth(dev_ptr);
+			if (dev_ptr->current_fw->calib_funcs->store_bandwidth != NULL) {
+				dev_ptr->current_fw->calib_funcs->store_bandwidth(dev_ptr);
 			}
 
 			/* Calculate amplitude scale factor */
@@ -1575,13 +1666,8 @@ uint32_t chdrv_one_way_range(ch_dev_t *dev_ptr, uint16_t tof, uint16_t tof_sf) {
 		range *= 2;  // CH-201 range (TOF) encoding is 1/2 of actual
 	}
 
-#ifdef CHDRV_DEBUG
-	char cbuf[80];
-
-	snprintf(cbuf, sizeof(cbuf), "%u:%u: timeOfFlight=%u, tofScaleFactor=%u, num=%lu, den=%lu, range=%lu\n",
-	         dev_ptr->bus_index, dev_ptr->io_index, tof, tof_sf, num, den, range);
-	chbsp_print_str(cbuf);
-#endif
+	CH_LOG_DEBUG("%u:%u: timeOfFlight=%u, tofScaleFactor=%u, num=%lu, den=%lu, range=%lu", dev_ptr->bus_index,
+	             dev_ptr->io_index, tof, tof_sf, num, den, range);
 
 	return range;
 }
@@ -1848,18 +1934,14 @@ int chdrv_wait_for_lock(ch_dev_t *dev_ptr, uint16_t timeout_ms) {
 	uint32_t start_time = chbsp_timestamp_ms();
 	int ch_err          = !(dev_ptr->sensor_connected);
 
-	while (!ch_err && !(dev_ptr->get_locked_state(dev_ptr))) {
+	while (!ch_err && !(dev_ptr->current_fw->calib_funcs->get_locked_state(dev_ptr))) {
 		chbsp_delay_ms(10);
 		ch_err = ((chbsp_timestamp_ms() - start_time) > timeout_ms);
 	}
 
-#ifdef CHDRV_DEBUG
 	if (ch_err) {
-		char cbuf[80];
-		snprintf(cbuf, sizeof(cbuf), "Sensor %hhu initialization timed out or missing\n", dev_ptr->io_index);
-		chbsp_print_str(cbuf);
+		CH_LOG_INFO("Sensor %hhu initialization timed out or missing", dev_ptr->io_index);
 	}
-#endif
 
 	return ch_err;
 }
@@ -2050,7 +2132,7 @@ int chdrv_prog_write(ch_dev_t *dev_ptr, uint8_t reg_addr, uint16_t data) {
  * This function writes to sensor memory using the low-level programming interface.  The type
  * of write is automatically determined based on data length and target address alignment.
  */
-int chdrv_prog_mem_write(ch_dev_t *dev_ptr, uint16_t addr, uint8_t *message, uint16_t nbytes) {
+int chdrv_prog_mem_write(ch_dev_t *dev_ptr, uint16_t addr, const uint8_t *message, uint16_t nbytes) {
 	int ch_err = (nbytes == 0);
 
 	if (!ch_err) {
@@ -2094,7 +2176,7 @@ int chdrv_prog_mem_write(ch_dev_t *dev_ptr, uint16_t addr, uint8_t *message, uin
  *
  * This local function reads a value from a sensor programming register.
  */
-static int chdrv_prog_read(ch_dev_t *dev_ptr, uint8_t reg_addr, uint16_t *data_ptr) {
+static int prog_read(ch_dev_t *dev_ptr, uint8_t reg_addr, uint16_t *data_ptr) {
 	uint8_t nbytes = CH_PROG_SIZEOF(reg_addr);
 
 	uint8_t read_data[2];
@@ -2115,152 +2197,91 @@ static int chdrv_prog_read(ch_dev_t *dev_ptr, uint8_t reg_addr, uint16_t *data_p
 
 	return ch_err;
 }
+
+static inline uint8_t run_charge_pumps(ch_dev_t *dev_ptr) {
+	uint8_t ch_err;
+	uint16_t write_val;
+
+	/* PMUT.CNTRL4 = HVVSS_FON */
+	write_val = PMUT_CNTRL4_HVVSS_FON;
+	ch_err    = chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_PMUT_CNTRL4_REG, (uint8_t *)&write_val, sizeof(write_val));
+	chbsp_delay_ms(CHDRV_DELAY_EN_CHARGE_PUMP_MS);
+	/* PMUT.CNTRL4 = (HVVSS_FON | HVVDD_FON) */
+	write_val  = PMUT_CNTRL4_HVVSS_FON | PMUT_CNTRL4_HVVDD_FON;
+	ch_err    |= chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_PMUT_CNTRL4_REG, (uint8_t *)&write_val, sizeof(write_val));
+	chbsp_delay_ms(CHDRV_DELAY_EN_CHARGE_PUMP_MS);
+	/* PMUT.CNTRL4 = 0 */
+	write_val  = 0x0000;
+	ch_err    |= chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_PMUT_CNTRL4_REG, (uint8_t *)&write_val, sizeof(write_val));
+
+	return ch_err;
+}
+
+static inline uint8_t whitney_detect_and_program(ch_dev_t *dev_ptr) {
+	uint8_t ch_err = 0;
+
+	chbsp_program_enable(dev_ptr);  // assert PROG pin
+
+	if (!chdrv_prog_ping(dev_ptr)) {
+		/* prog_ping failed - no device found */
+		CH_LOG_INFO("Ping failed, device %u not found", dev_ptr->io_index);
+
+		dev_ptr->sensor_connected = 0;
+		goto EXIT_WHITNEY_DETECT_AND_PROGRAM;
+	}
+
+	/* Device found on bus */
+	CH_LOG_INFO("Device %u found on bus", dev_ptr->io_index);
+
+	dev_ptr->sensor_connected = 1;
+	dev_ptr->trig_type        = CH_TRIGGER_TYPE_HW;  // use hardware triggering by default
+
+#if IS_CH_LOG_LEVEL_USED(CH_LOG_LEVEL_DEBUG)
+	if (!ch_err) {
+		uint16_t prog_stat = UINT16_MAX;
+		ch_err             = prog_read(dev_ptr, CH_PROG_REG_STAT, &prog_stat);
+		CH_LOG_DEBUG("PROG_STAT: 0x%02X", prog_stat);
+	}
+#endif
+
+	if (!ch_err) {
+		dev_ptr->asic_gen = CH_ASIC_GEN_1_WHITNEY;
+		dev_ptr->int_mode = CH_INTERRUPT_MODE_PULSE;  // always uses interrupt pulse
+
+		ch_err  = init_ram(dev_ptr);        // init ram values
+		ch_err |= write_firmware(dev_ptr);  // transfer program
+		ch_err |= reset_and_halt(dev_ptr);  // reset asic, since it was running mystery code before halt
+	}
+
+	if (!ch_err) {
+		CH_LOG_INFO("Changing I2C address to %u", dev_ptr->i2c_address);
+
+		ch_err = chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_DEV_I2C_ADDR_REG, &dev_ptr->i2c_address, 1);
+	}
+
+	/* Run charge pumps */
+	if (!ch_err) {
+		ch_err = run_charge_pumps(dev_ptr);
+	}
+
+	if (!ch_err) {
+		ch_err = chdrv_prog_write(dev_ptr, CH_PROG_REG_CPU, 2);  // Exit programming mode and run the chip
+	}
+
+EXIT_WHITNEY_DETECT_AND_PROGRAM:
+	chbsp_program_disable(dev_ptr);  // de-assert PROG pin
+
+	if (ch_err) {  // if error, reinitialize I2C bus associated with this device
+		chbsp_debug_toggle(CHDRV_DEBUG_PIN_NUM);
+		chbsp_i2c_reset(dev_ptr);
+
+		dev_ptr->sensor_connected = 0;  // only marked as connected if no errors
+	}
+
+	return ch_err;
+}
+
 #endif  // INCLUDE_WHITNEY_SUPPORT
-
-/*!
- * \brief Transfer firmware to the sensor on-chip memory.
- *
- * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
- *
- * \return 0 if firmware write succeeded, non-zero otherwise
- *
- * This local function writes the sensor firmware image to the device.
- */
-/*!
- */
-static int chdrv_write_firmware(ch_dev_t *dev_ptr) {
-	ch_fw_load_func_t func_ptr = dev_ptr->api_funcs.fw_load;  // pointer to firmware load function
-	int ch_err                 = ((func_ptr == NULL) || (!dev_ptr->sensor_connected));
-
-#ifdef CHDRV_DEBUG
-	char cbuf[80];
-	uint32_t prog_time = 0;
-
-	if (!ch_err) {
-		snprintf(cbuf, sizeof(cbuf), "chdrv_write_firmware\n");
-		chbsp_print_str(cbuf);
-	}
-#endif
-
-	if (!ch_err) {
-#ifdef CHDRV_DEBUG
-		snprintf(cbuf, sizeof(cbuf), "Programming sensor...\n");
-		chbsp_print_str(cbuf);
-		prog_time = chbsp_timestamp_ms();
-#endif
-		if (func_ptr != NULL) {
-			ch_err = (*func_ptr)(dev_ptr);
-		} else {
-			ch_err = 1;  // indicate error
-		}
-	}
-
-#ifdef CHDRV_DEBUG
-	if (!ch_err) {
-		uint16_t fw_size = (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) ? ICU_FW_SIZE : CH101_FW_SIZE;
-		prog_time        = chbsp_timestamp_ms() - prog_time;
-		snprintf(cbuf, sizeof(cbuf), "Wrote %u bytes in %lu ms.\n", fw_size, prog_time);
-		chbsp_print_str(cbuf);
-	} else {
-		snprintf(cbuf, sizeof(cbuf), "Error programming device\n");
-		chbsp_print_str(cbuf);
-	}
-#endif
-
-	return ch_err;
-}
-
-/*!
- * \brief Initialize sensor memory contents.
- *
- * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
- *
- * \return 0 if memory write succeeded, non-zero otherwise
- *
- * This local function initializes memory locations in the Chirp sensor, as required by the firmware image.
- */
-static int chdrv_init_ram(ch_dev_t *dev_ptr) {
-	int ch_err = !dev_ptr || !dev_ptr->sensor_connected;
-
-#ifdef CHDRV_DEBUG
-	char cbuf[80];
-	uint32_t prog_time;
-	if (!ch_err) {
-		snprintf(cbuf, sizeof(cbuf), "chdrv_init_ram\n");
-		chbsp_print_str(cbuf);
-	}
-#endif
-
-	if ((!ch_err) && (dev_ptr->get_fw_ram_init_size() != 0)) {  // if size is not zero, ram init data exists
-		uint16_t ram_address;
-		uint16_t ram_bytecount;
-
-		ram_address   = dev_ptr->get_fw_ram_init_addr();
-		ram_bytecount = dev_ptr->get_fw_ram_init_size();
-
-		if (!ch_err) {
-#ifdef CHDRV_DEBUG
-			snprintf(cbuf, sizeof(cbuf), "Loading RAM init data...\n");
-			chbsp_print_str(cbuf);
-			prog_time = chbsp_timestamp_ms();
-#endif
-#ifdef INCLUDE_SHASTA_SUPPORT
-			ch_err = chdrv_burst_write(dev_ptr, ram_address, (uint8_t *)dev_ptr->ram_init, ram_bytecount);
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-			ch_err = chdrv_prog_mem_write(dev_ptr, ram_address, (uint8_t *)dev_ptr->ram_init, ram_bytecount);
-#endif
-
-#ifdef CHDRV_DEBUG
-			if (!ch_err) {
-				prog_time = chbsp_timestamp_ms() - prog_time;
-				snprintf(cbuf, sizeof(cbuf), "Wrote %u bytes in %lu ms.\n", ram_bytecount, prog_time);
-				chbsp_print_str(cbuf);
-			}
-#endif
-		}
-	}
-	return ch_err;
-}
-
-/*!
- * \brief Reset and halt a sensor
- *
- * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
- *
- * \return 0 if write to sensor succeeded, non-zero otherwise
- *
- * This function resets and halts a sensor device by writing to the control registers.
- *
- * WHITNEY: In order for the device to respond, the PROG pin for the device must be asserted before this function is
- * called.
- */
-static int chdrv_reset_and_halt(ch_dev_t *dev_ptr) {
-	int ch_err = 0;
-#ifdef INCLUDE_SHASTA_SUPPORT
-	volatile uint16_t cpu_ctl_val = 0;
-	dev_ptr->asic_ready           = 0;
-
-	ch_err |= chdrv_sys_ctrl_write(dev_ptr, (SYS_CTRL_DEBUG | SYS_CTRL_RESET_N));
-	// clear reset, enter debug mode
-
-	ch_err |= chdrv_dbg_reg_read(dev_ptr, SHASTA_DBG_REG_CPU_CTL, (uint16_t *)&cpu_ctl_val);
-
-	ch_err |= chdrv_dbg_reg_write(dev_ptr, SHASTA_DBG_REG_CPU_CTL,
-	                              (CPU_CTL_RST_BRK_EN | CPU_CTL_FRZ_BRK_EN | CPU_CTL_HALT));
-	// halt CPU, enable reset, freeze wdog/timers
-
-	ch_err  = chdrv_sys_ctrl_write(dev_ptr, SYS_CTRL_DEBUG);  // reset (SYS_CTRL_RESET_N is low)
-	ch_err |= chdrv_sys_ctrl_write(dev_ptr, (SYS_CTRL_DEBUG | SYS_CTRL_RESET_N));
-	// clear reset, enter debug mode
-
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-	ch_err = chdrv_prog_write(dev_ptr, CH_PROG_REG_CPU, 0x40);  // reset asic			// TODO need define
-
-	ch_err |= chdrv_prog_write(dev_ptr, CH_PROG_REG_CPU, 0x11);  // halt asic and disable watchdog;	// TODO need define
-#endif  // INCLUDE_SHASTA_SUPPORT
-
-	return ch_err;
-}
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 
@@ -2273,7 +2294,7 @@ static int chdrv_reset_and_halt(ch_dev_t *dev_ptr) {
  *
  * This function resets and runs a sensor device by writing to the control registers.
  */
-static int chdrv_reset_and_run(ch_dev_t *dev_ptr) {
+static int reset_and_run(ch_dev_t *dev_ptr) {
 	int ch_err          = 0;
 	dev_ptr->asic_ready = 0;
 
@@ -2287,7 +2308,7 @@ static int chdrv_reset_and_run(ch_dev_t *dev_ptr) {
 	return ch_err;
 }
 
-static uint8_t chdrv_exit_debug(ch_dev_t *dev_ptr) {
+static uint8_t exit_debug(ch_dev_t *dev_ptr) {
 	uint8_t err          = 0;
 	uint8_t sys_ctrl_val = 0;
 
@@ -2299,6 +2320,86 @@ static uint8_t chdrv_exit_debug(ch_dev_t *dev_ptr) {
 	}
 
 	return err;
+}
+
+static inline uint8_t shasta_detect_and_program(ch_dev_t *dev_ptr) {
+	uint8_t ch_err;
+
+	if (!chdrv_prog_ping(dev_ptr)) {
+		/* prog_ping failed - no device found */
+		CH_LOG_INFO("Ping failed, device %u not found", dev_ptr->io_index);
+		dev_ptr->sensor_connected = 0;
+		/* continue without returning error */
+		return 0;
+	}
+
+	/* device found on bus*/
+	CH_LOG_INFO("Device %u found on bus", dev_ptr->io_index);
+
+	dev_ptr->sensor_connected = 1;
+	dev_ptr->trig_type        = CH_TRIGGER_TYPE_HW;       // use hardware triggering by default
+	dev_ptr->asic_gen         = CH_ASIC_GEN_2_SHASTA;     // sensor ASIC design generation
+	dev_ptr->int_mode         = CH_INTERRUPT_MODE_LATCH;  // uses latching (non-pulsed) interrupt by default
+
+	ch_err  = reset_and_halt(dev_ptr);  // reset and enter debug mode for programming
+	ch_err |= init_ram(dev_ptr);        // init ram values
+
+	interrupt_sensors = 0;
+	chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***
+
+	ch_err |= write_firmware(dev_ptr);  // transfer program
+
+	ch_err |= reset_and_run(dev_ptr);  // reset asic, exit debug mode, and run
+
+	if (!ch_err) {
+		ch_err |= event_wait(dev_ptr);  // wait for sensor to interrupt
+	}
+
+	/* Get addr of shared config mem and algo info */
+	if (!ch_err) {
+		uint16_t config_addr;
+
+		ch_err = chdrv_read_word(dev_ptr, SHASTA_CONFIG_PTR_ADDR, &config_addr);
+		if (!ch_err) {
+			dev_ptr->sens_cfg_addr = (shasta_config_t *)(uintptr_t)config_addr;
+
+			uint16_t algo_info_addr;
+			ch_err                       = chdrv_read_word(dev_ptr, SHASTA_ALGO_INFO_PTR_ADDR, &algo_info_addr);
+			dev_ptr->sens_algo_info_addr = (ICU_ALGO_SHASTA_INFO *)(uintptr_t)algo_info_addr;
+		}
+
+		CH_LOG_INFO("Sensor shared mem addr = 0x%04x", (uint16_t)(uintptr_t)dev_ptr->sens_cfg_addr);
+		CH_LOG_INFO("Sensor algo info addr = 0x%04x", (uint16_t)(uintptr_t)dev_ptr->sens_algo_info_addr);
+	}
+
+	/* Copy OTP (one-time-programmable) mem contents to sensor ram and process contents.
+	 * Firmware not including initialization feature may not be able to copy OTP
+	 */
+	if (!ch_err && dev_ptr->current_fw->fw_includes_sensor_init) {
+		ch_err = chdrv_otpmem_read(dev_ptr);
+	}
+
+	/* Read sensor algorithm info */
+	if (!ch_err) {
+		ch_err = chdrv_algo_info_read(dev_ptr, &(dev_ptr->algo_info));
+	}
+	if (!ch_err) {
+		uint16_t iq_data_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->raw.IQdata);  // start of I/Q data
+		// find the IQ buffer size through pointer arithmetic. IQ buffer is
+		// always guaranteed to be followed by algo_out. Divide by 4 to get the
+		// result in terms of IQ samples instead of bytes
+		dev_ptr->current_fw->max_samples = ((uint16_t)dev_ptr->algo_info.algo_out_ptr - iq_data_addr) >> 2;
+		CH_LOG_INFO("dev_ptr->current_fw->max_samples=%d", dev_ptr->current_fw->max_samples);
+
+		/* Might point later on a dedicated algo config structure */
+		dev_ptr->algo_cfg_ptr = NULL;
+	}
+
+	if (ch_err) {
+		dev_ptr->sensor_connected = 0;  // only marked as connected if no errors
+	}
+
+	return ch_err;
 }
 
 #endif  // INCLUDE_SHASTA_SUPPORT
@@ -2316,10 +2417,6 @@ static uint8_t chdrv_exit_debug(ch_dev_t *dev_ptr) {
  * In order for the device to respond, the PROG pin for the device must be asserted before this function is called.
  */
 int chdrv_prog_ping(ch_dev_t *dev_ptr) {
-	// Try a dummy write to the sensor to make sure it's connected and working
-#ifdef INCLUDE_WHITNEY_SUPPORT
-	uint16_t tmp = 0;
-#endif  // INCLUDE_WHITNEY_SUPPORT
 	int ch_err = 0;
 
 #ifdef INCLUDE_SHASTA_SUPPORT
@@ -2350,17 +2447,15 @@ int chdrv_prog_ping(ch_dev_t *dev_ptr) {
 	}
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
-	ch_err  = chdrv_reset_and_halt(dev_ptr);
+	ch_err = reset_and_halt(dev_ptr);
 
-	ch_err |= chdrv_prog_read(dev_ptr, CH_PROG_REG_PING, &tmp);
+	/* Try a dummy write to the sensor to make sure it's connected and working */
+	uint16_t tmp  = 0;
+	ch_err       |= prog_read(dev_ptr, CH_PROG_REG_PING, &tmp);
 
-#ifdef CHDRV_DEBUG
 	if (!ch_err) {
-		char cbuf[80];
-		snprintf(cbuf, sizeof(cbuf), "Test I2C read: %04X\n", tmp);
-		chbsp_print_str(cbuf);
+		CH_LOG_INFO("Test I2C read: %04X", tmp);
 	}
-#endif
 #endif  // INCLUDE_SHASTA_SUPPORT
 
 	return !(ch_err); /* convert err to boolean indicator whether sensor was found */
@@ -2382,171 +2477,15 @@ int chdrv_prog_ping(ch_dev_t *dev_ptr) {
  * \note This routine will leave the PROG pin de-asserted when it completes.
  */
 int chdrv_detect_and_program(ch_dev_t *dev_ptr) {
-	int ch_err = !dev_ptr;
-	if (ch_err) {
-		return ch_err;
+	if (!dev_ptr || (dev_ptr->current_fw == NULL)) {
+		return 1;
 	}
 
 #ifdef INCLUDE_WHITNEY_SUPPORT
-	chbsp_program_enable(dev_ptr);  // assert PROG pin
-#endif                              // INCLUDE_WHITNEY_SUPPORT
-
-	if (chdrv_prog_ping(dev_ptr)) {  // if device found
-		dev_ptr->sensor_connected = 1;
-		dev_ptr->trig_type        = CH_TRIGGER_TYPE_HW;  // use hardware triggering by default
-
-		// Call device discovery hook routine, if any
-		chdrv_discovery_hook_t hook_ptr = dev_ptr->group->disco_hook;
-		if (hook_ptr != NULL) {
-			ch_err = (*hook_ptr)(dev_ptr);  // hook routine can return error, will abort device init
-		}
-
-#ifdef CHDRV_DEBUG
-		char cbuf[80];
-		if (!ch_err) {
-			uint16_t prog_stat = UINT16_MAX;
-#ifdef INCLUDE_WHITNEY_SUPPORT
-			ch_err = chdrv_prog_read(dev_ptr, CH_PROG_REG_STAT, &prog_stat);
+	return whitney_detect_and_program(dev_ptr);
+#elif defined(INCLUDE_SHASTA_SUPPORT)
+	return shasta_detect_and_program(dev_ptr);
 #endif  // INCLUDE_WHITNEY_SUPPORT
-			snprintf(cbuf, sizeof(cbuf), "PROG_STAT: 0x%02X\n", prog_stat);
-			chbsp_print_str(cbuf);
-		}
-#endif
-
-#ifdef INCLUDE_SHASTA_SUPPORT
-		if (!ch_err) {
-			dev_ptr->asic_gen = CH_ASIC_GEN_2_SHASTA;     // sensor ASIC design generation
-			dev_ptr->int_mode = CH_INTERRUPT_MODE_LATCH;  // uses latching (non-pulsed) interrupt by default
-
-			ch_err  = chdrv_reset_and_halt(dev_ptr);  // reset and enter debug mode for programming
-			ch_err |= chdrv_init_ram(dev_ptr);        // init ram values
-
-			interrupt_sensors = 0;
-			chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***
-
-			ch_err |= chdrv_write_firmware(dev_ptr);  // transfer program
-
-			ch_err |= chdrv_reset_and_run(dev_ptr);  // reset asic, exit debug mode, and run
-		}
-
-		if (!ch_err) {
-			ch_err |= chdrv_event_wait(dev_ptr);  // wait for sensor to interrupt
-		}
-
-		/* Get addr of shared config mem and algo info */
-		if (!ch_err) {
-			uint16_t config_addr;
-
-			ch_err = chdrv_read_word(dev_ptr, SHASTA_CONFIG_PTR_ADDR, (uint16_t *)&config_addr);
-			if (!ch_err) {
-				dev_ptr->sens_cfg_addr = (shasta_config_t *)(uintptr_t)config_addr;
-
-				uint16_t algo_info_addr;
-				ch_err = chdrv_read_word(dev_ptr, SHASTA_ALGO_INFO_PTR_ADDR, (uint16_t *)&algo_info_addr);
-				dev_ptr->sens_algo_info_addr = (ICU_ALGO_SHASTA_INFO *)(uintptr_t)algo_info_addr;
-			}
-
-#ifdef CHDRV_DEBUG
-			snprintf(cbuf, sizeof(cbuf), "Sensor shared mem addr = 0x%04x\n",
-			         (uint16_t)(uintptr_t)dev_ptr->sens_cfg_addr);
-			chbsp_print_str(cbuf);
-			snprintf(cbuf, sizeof(cbuf), "Sensor algo info addr = 0x%04x\n",
-			         (uint16_t)(uintptr_t)dev_ptr->sens_algo_info_addr);
-			chbsp_print_str(cbuf);
-#endif
-		}
-
-		/* Copy OTP (one-time-programmable) mem contents to sensor ram and process contents */
-		if (!ch_err && !dev_ptr->restart_only) {  // restart-only f/w may not be able to copy OTP
-			ch_err = chdrv_otpmem_read(dev_ptr);
-		}
-
-		/* Read sensor algorithm info */
-		if (!ch_err) {
-			ch_err = chdrv_algo_info_read(dev_ptr, &(dev_ptr->algo_info));
-		}
-		uint16_t iq_data_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->raw.IQdata);  // start of I/Q data
-		// find the IQ buffer size through pointer arithmetic. IQ buffer is
-		// always guaranteed to be followed by algo_out. Divide by 4 to get the
-		// result in terms of IQ samples instead of bytes
-		dev_ptr->max_samples = ((uint16_t)dev_ptr->algo_info.algo_out_ptr - iq_data_addr) >> 2;
-#ifdef CHDRV_DEBUG
-		printf("dev_ptr->max_samples=%d\n", dev_ptr->max_samples);
-#endif
-
-#ifdef USE_INTERNAL_ALGO
-		/* Initialize algorithm on sensor */
-		if (!ch_err) {
-			ch_err = chdrv_algo_init(dev_ptr);
-
-			dev_ptr->sens_algo_cfg_addr = (ICU_ALGO_SHASTA_CONFIG *)(uintptr_t)dev_ptr->algo_info.algo_cfg_ptr;
-			dev_ptr->sens_algo_out_addr = (ICU_ALGO_SHASTA_OUTPUT *)(uintptr_t)dev_ptr->algo_info.algo_out_ptr;
-		}
-#endif
-
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-		if (!ch_err) {
-			dev_ptr->asic_gen = CH_ASIC_GEN_1_WHITNEY;
-			dev_ptr->int_mode = CH_INTERRUPT_MODE_PULSE;  // always uses interrupt pulse
-
-			ch_err  = chdrv_init_ram(dev_ptr);        // init ram values
-			ch_err |= chdrv_write_firmware(dev_ptr);  // transfer program
-			ch_err |= chdrv_reset_and_halt(dev_ptr);  // reset asic, since it was running mystery code before halt
-		}
-#ifdef CHDRV_DEBUG
-		if (!ch_err) {
-			snprintf(cbuf, sizeof(cbuf), "Changing I2C address to %u\n", dev_ptr->i2c_address);
-			chbsp_print_str(cbuf);
-		}
-#endif
-
-		if (!ch_err) {
-			ch_err = chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_DEV_I2C_ADDR_REG, &dev_ptr->i2c_address, 1);
-		}
-
-		/* Run charge pumps */
-		if (!ch_err) {
-			uint16_t write_val;
-			/* PMUT.CNTRL4 = HVVSS_FON */
-			write_val  = PMUT_CNTRL4_HVVSS_FON;
-			ch_err    |= chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_PMUT_CNTRL4_REG, (uint8_t *)&write_val,
-			                                  sizeof(write_val));
-			chbsp_delay_ms(CHDRV_DELAY_EN_CHARGE_PUMP_MS);
-			/* PMUT.CNTRL4 = (HVVSS_FON | HVVDD_FON) */
-			write_val = PMUT_CNTRL4_HVVSS_FON | PMUT_CNTRL4_HVVDD_FON;
-			ch_err    = chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_PMUT_CNTRL4_REG, (uint8_t *)&write_val,
-			                                 sizeof(write_val));
-			chbsp_delay_ms(CHDRV_DELAY_EN_CHARGE_PUMP_MS);
-			/* PMUT.CNTRL4 = 0 */
-			write_val  = 0x0000;
-			ch_err    |= chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_PMUT_CNTRL4_REG, (uint8_t *)&write_val,
-			                                  sizeof(write_val));
-		}
-
-		if (!ch_err) {
-			ch_err = chdrv_prog_write(dev_ptr, CH_PROG_REG_CPU, 2);  // Exit programming mode and run the chip
-		}
-#endif  // INCLUDE_SHASTA_SUPPORT
-	} else {
-		dev_ptr->sensor_connected = 0;  // prog_ping failed - no device found
-	}
-
-#ifdef INCLUDE_WHITNEY_SUPPORT
-	chbsp_program_disable(dev_ptr);  // de-assert PROG pin
-#endif                               // INCLUDE_WHITNEY_SUPPORT
-
-	if (ch_err) {  // if error, reinitialize I2C bus associated with this device
-#ifdef INCLUDE_WHITNEY_SUPPORT
-		chbsp_debug_toggle(CHDRV_DEBUG_PIN_NUM);
-		chbsp_i2c_reset(dev_ptr);
-#endif  // INCLUDE_WHITNEY_SUPPORT
-	}
-
-	if (ch_err) {
-		dev_ptr->sensor_connected = 0;  // only marked as connected if no errors
-	}
-
-	return ch_err;
 }
 
 /*!
@@ -2567,7 +2506,7 @@ int chdrv_set_idle(ch_dev_t *dev_ptr) {
 	const uint16_t idle_loop[2] = {0x4003, 0xFFFC};  // TODO need define
 	int ch_err = chdrv_prog_mem_write(dev_ptr, CH_PROG_ADDR_IDLE_LOC, (uint8_t *)&idle_loop[0], sizeof(idle_loop));
 	if (!ch_err) {
-		ch_err = chdrv_reset_and_halt(dev_ptr);
+		ch_err = reset_and_halt(dev_ptr);
 	}
 
 	// keep wdt stopped after we exit programming mode
@@ -2653,6 +2592,27 @@ int chdrv_group_prepare(ch_group_t *grp_ptr) {
 	return ch_err;
 }
 
+static void calibrate_rtc(ch_group_t *grp_ptr, uint8_t restart) {
+	if (grp_ptr->rtc_cal_type == CH_RTC_CAL_BUS) {
+		/* Calibrate RTC clocks using I/O bus clock (no pulse generation) */
+		chdrv_group_measure_rtc_no_pulse(grp_ptr);
+	}
+	if ((grp_ptr->rtc_cal_type == CH_RTC_CAL_BUS) || (grp_ptr->rtc_cal_type == CH_RTC_CAL_MANUAL)) {
+		/* RTC freq already set - synthesize missing input values using defaults */
+		for (uint8_t dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
+			ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
+			if (dev_ptr->sensor_connected) {
+				dev_ptr->group->rtc_cal_pulse_ms = CH_COMMON_RTC_CAL_PULSE_MS;
+				dev_ptr->rtc_cal_result =
+						(uint16_t)((uint32_t)dev_ptr->rtc_frequency * CH_COMMON_RTC_CAL_PULSE_MS / 1000);
+			}
+		}
+	} else if (!restart) {
+		/* Calibrate RTC clocks if normal start */
+		chdrv_group_measure_rtc(grp_ptr);
+	}
+}
+
 #ifdef INCLUDE_WHITNEY_SUPPORT
 static inline void set_all_devices_idle(ch_group_t *grp_ptr) {
 	chbsp_reset_assert();
@@ -2694,28 +2654,68 @@ static inline void count_connected_sensors_per_bus(ch_group_t *grp_ptr) {
 			grp_ptr->num_connected[dev_ptr->bus_index] += 1;
 	}
 }
+
+static inline uint8_t whitney_group_start(ch_group_t *grp_ptr) {
+	uint8_t ch_err;
+	uint8_t prog_tries = 0;
+#if IS_CH_LOG_USED
+	const uint32_t start_time = chbsp_timestamp_ms();
 #endif
 
-static void calibrate_rtc(ch_group_t *grp_ptr, uint8_t restart) {
-	if (grp_ptr->rtc_cal_type == CH_RTC_CAL_BUS) {
-		/* Calibrate RTC clocks using I/O bus clock (no pulse generation) */
-		chdrv_group_measure_rtc_no_pulse(grp_ptr);
+RESET_AND_LOAD:
+	do {
+		set_all_devices_idle(grp_ptr);
+
+		ch_err = chdrv_group_detect_and_program(grp_ptr);
+		if (ch_err)
+			prog_tries++;
+
+	} while (ch_err && (prog_tries < CH_PROG_XFER_RETRY));
+
+	if (!ch_err) {
+		ch_err = (grp_ptr->sensor_count == 0);
+
+#if IS_CH_LOG_USED
+		print_connected_sensors(ch_err, grp_ptr, start_time);
+#endif
 	}
-	if ((grp_ptr->rtc_cal_type == CH_RTC_CAL_BUS) || (grp_ptr->rtc_cal_type == CH_RTC_CAL_MANUAL)) {
-		/* RTC freq already set - synthesize missing input values using defaults */
-		for (uint8_t dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
-			ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
-			if (dev_ptr->sensor_connected) {
-				dev_ptr->group->rtc_cal_pulse_ms = CH_COMMON_RTC_CAL_PULSE_MS;
-				dev_ptr->rtc_cal_result =
-						(uint16_t)((uint32_t)dev_ptr->rtc_frequency * CH_COMMON_RTC_CAL_PULSE_MS / 1000);
+
+	if (!ch_err) {
+		ch_err = chdrv_group_wait_for_lock(grp_ptr);
+
+#if IS_CH_LOG_USED
+		print_freq_lock_status(ch_err, start_time);
+#endif
+		if (ch_err) {
+			prog_tries++;
+			if (prog_tries < (CH_PROG_XFER_RETRY + 1)) {
+				goto RESET_AND_LOAD;
 			}
+		} else {
+			grp_ptr->io_bus_speed_hz = I2C_BUS_SPEED_HZ;
 		}
-	} else if (!restart) {
-		/* Calibrate RTC clocks if normal start */
-		chdrv_group_measure_rtc(grp_ptr);
 	}
+
+	if (!ch_err) {
+		chbsp_delay_ms(1);
+
+		calibrate_rtc(grp_ptr, 0);
+
+#if IS_CH_LOG_USED
+		if (grp_ptr->rtc_cal_type == CH_RTC_CAL_STD) {
+			print_rtc_cal_result(grp_ptr, start_time);
+		}
+#endif
+
+		/* Normal start or manual RTC clock cal - run BIST and measure PMUT freq */
+		chdrv_group_measure_pmut(grp_ptr);
+	}
+
+	count_connected_sensors_per_bus(grp_ptr);
+
+	return ch_err;
 }
+#endif
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 static inline int init_int_pins_config(ch_group_t *grp_ptr) {
@@ -2756,50 +2756,20 @@ static inline void set_clock_config(const ch_group_t *grp_ptr) {
 		chdrv_event_trigger(dev_ptr, EVENT_CONFIG_CLOCKS);            // force sensor update
 
 		/* Store only bandwidth if restart, will use existing clock cal */
-		if (dev_ptr->store_bandwidth != NULL) {
-			dev_ptr->store_bandwidth(dev_ptr);
+		if (dev_ptr->current_fw->calib_funcs->store_bandwidth != NULL) {
+			dev_ptr->current_fw->calib_funcs->store_bandwidth(dev_ptr);
 		}
 	}
 }
-#endif /* #ifdef INCLUDE_SHASTA_SUPPORT */
 
-/*!
- * \brief Initalize and start a group of sensors.
- *
- * \param grp_ptr 		pointer to the ch_group_t config structure for a group of sensors
- * \param restart 		0 = normal start, 1 = restart (no calibration)
- *
- * \return 0 if successful, 1 if device doesn't respond
- *
- * This function resets each sensor in programming mode, transfers the firmware image to the sensor's on-chip memory,
- * changes the sensor's application I2C address from the default, then starts the sensor and sends a timed pulse on the
- * INT line for real-time clock calibration.
- *
- * This function assumes firmware-specific initialization has already been performed for each a ch_dev_t
- * descriptor for each sensor in the group.  See \a ch_init().
- */
-int chdrv_group_start(ch_group_t *grp_ptr, uint8_t restart) {
-	int ch_err;
+static inline uint8_t shasta_group_start(ch_group_t *grp_ptr) {
+	uint8_t ch_err;
 	uint8_t prog_tries = 0;
-#ifdef CHDRV_DEBUG
+#if IS_CH_LOG_USED
 	const uint32_t start_time = chbsp_timestamp_ms();
 #endif
 
-	if (!grp_ptr)
-		return 1;
-
-	ch_err = chdrv_group_prepare(grp_ptr);
-	if (ch_err)
-		return ch_err;
-
-#ifdef INCLUDE_WHITNEY_SUPPORT
-RESET_AND_LOAD:
-#endif
 	do {
-#ifdef INCLUDE_WHITNEY_SUPPORT
-		set_all_devices_idle(grp_ptr);
-#endif  // INCLUDE_WHITNEY_SUPPORT
-
 		ch_err = chdrv_group_detect_and_program(grp_ptr);
 		if (ch_err)
 			prog_tries++;
@@ -2808,80 +2778,65 @@ RESET_AND_LOAD:
 
 	if (!ch_err) {
 		ch_err = (grp_ptr->sensor_count == 0);
-#ifdef CHDRV_DEBUG
+
+#if IS_CH_LOG_USED
 		print_connected_sensors(ch_err, grp_ptr, start_time);
 #endif
 	}
 
-#ifdef INCLUDE_WHITNEY_SUPPORT
-	if (!ch_err) {
-		ch_err = chdrv_group_wait_for_lock(grp_ptr);
-#ifdef CHDRV_DEBUG
-		print_freq_lock_status(ch_err, start_time);
-#endif
-		if (ch_err) {
-			prog_tries++;
-			if (prog_tries < (CH_PROG_XFER_RETRY + 1)) {
-				goto RESET_AND_LOAD;
-			}
-		} else {
-			grp_ptr->io_bus_speed_hz = I2C_BUS_SPEED_HZ;
-		}
-	}
-#endif  // INCLUDE_WHITNEY_SUPPORT
-
 	if (!ch_err) {
 		chbsp_delay_ms(1);
 
-#ifdef INCLUDE_SHASTA_SUPPORT
 		for (uint8_t dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
 			ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 			if (dev_ptr->sensor_connected)
-				chdrv_clock_init(dev_ptr, restart);
+				clock_init(dev_ptr, 0);
 		}
-#endif  // INCLUDE_SHASTA_SUPPORT
 
-		calibrate_rtc(grp_ptr, restart);
-#ifdef CHDRV_DEBUG
-		if ((grp_ptr->rtc_cal_type == CH_RTC_CAL_STD) && !restart) {
+		calibrate_rtc(grp_ptr, 0);
+
+#if IS_CH_LOG_USED
+		if (grp_ptr->rtc_cal_type == CH_RTC_CAL_STD) {
 			print_rtc_cal_result(grp_ptr, start_time);
 		}
-#endif  // CHDRV_DEBUG
+#endif
 
-#ifdef INCLUDE_SHASTA_SUPPORT
-#ifdef CHDRV_DEBUG
-		printf("chdrv_group_start: exiting debug mode\n");
-#endif  // CHDRV_DEBUG
+		CH_LOG_DEBUG("Exiting debug mode");
 		for (uint8_t dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
 			ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 			if (dev_ptr->sensor_connected) {
-				chdrv_exit_debug(dev_ptr); /* exit debug mode */
+				exit_debug(dev_ptr); /* exit debug mode */
 			}
 		}
-#endif  // INCLUDE_SHASTA_SUPPORT
 
-		if (!restart) {
-			/* Normal start or manual RTC clock cal - run BIST and measure PMUT freq */
-			chdrv_group_measure_pmut(grp_ptr);
-		} else {
-#ifdef INCLUDE_SHASTA_SUPPORT
-			/* Restart - use values from previous init */
-			set_clock_config(grp_ptr);
-#endif  // INCLUDE_SHASTA_SUPPORT
-		}
+		/* Normal start or manual RTC clock cal - run BIST and measure PMUT freq */
+		chdrv_group_measure_pmut(grp_ptr);
 	}
 
-#ifdef INCLUDE_WHITNEY_SUPPORT
-	count_connected_sensors_per_bus(grp_ptr);
-#endif
-
-#ifdef INCLUDE_SHASTA_SUPPORT
 	/* Set interrupt and trigger pins from BSP definitions */
 	if (!ch_err)
 		ch_err = init_int_pins_config(grp_ptr);
-#endif
 
 	return ch_err;
+}
+
+#endif /* #ifdef INCLUDE_SHASTA_SUPPORT */
+
+uint8_t chdrv_group_start(ch_group_t *grp_ptr) {
+	int ch_err;
+
+	if (!grp_ptr)
+		return RET_ERR;
+
+	ch_err = chdrv_group_prepare(grp_ptr);
+	if (ch_err)
+		return ch_err;
+
+#ifdef INCLUDE_WHITNEY_SUPPORT
+	return whitney_group_start(grp_ptr);
+#elif defined(INCLUDE_SHASTA_SUPPORT)
+	return shasta_group_start(grp_ptr);
+#endif
 }
 
 /*!
@@ -2904,10 +2859,10 @@ int chdrv_restart(ch_dev_t *dev_ptr) {
 		ch_err = chdrv_detect_and_program(dev_ptr);
 	}
 
-	chdrv_clock_init(dev_ptr, 1);         // init clock, restart w/ saved values
+	clock_init(dev_ptr, 1);               // init clock, restart w/ saved values
 	chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***
 
-	chdrv_exit_debug(dev_ptr);  // exit debug mode
+	exit_debug(dev_ptr);  // exit debug mode
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
 	(void)dev_ptr;  // not supported for CH101/CH201
 #endif
@@ -2930,15 +2885,15 @@ int chdrv_soft_reset(ch_dev_t *dev_ptr) {
 	if (dev_ptr->sensor_connected) {
 
 #ifdef INCLUDE_SHASTA_SUPPORT
-		ch_err = chdrv_reset_and_halt(dev_ptr);
+		ch_err = reset_and_halt(dev_ptr);
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
 		chbsp_program_enable(dev_ptr);
 
-		ch_err = chdrv_reset_and_halt(dev_ptr);
+		ch_err = reset_and_halt(dev_ptr);
 
 		if (!ch_err) {
-			ch_err = chdrv_init_ram(dev_ptr) || chdrv_reset_and_halt(dev_ptr);
+			ch_err = init_ram(dev_ptr) || reset_and_halt(dev_ptr);
 		}
 		if (!ch_err) {
 			ch_err = chdrv_prog_mem_write(dev_ptr, 0x01C5, &dev_ptr->i2c_address, 1) ||  // TODO need define
@@ -2964,7 +2919,7 @@ int chdrv_soft_reset(ch_dev_t *dev_ptr) {
  * CH101 and CH201 sensors, each device's RESET_N pin is asserted and then a soft reset
  * is performed.
  *
- * ICU sensors do not have a hardare reset pin, so only a soft reset is performed.
+ * ICU sensors do not have a hardware reset pin, so only a soft reset is performed.
  */
 int chdrv_group_hard_reset(ch_group_t *grp_ptr) {
 
@@ -3007,22 +2962,6 @@ int chdrv_group_soft_reset(ch_group_t *grp_ptr) {
 }
 
 /*!
- * \brief Register a hook routine to be called after device discovery.
- *
- * \param grp_ptr 		pointer to the ch_group_t config structure for a group of sensors
- * \param hook_func_ptr	address of hook routine to be called
- *
- * This function sets a pointer to a user supplied hook routine, which will be called from the
- * Chirp driver when each device is discovered on the I2C bus, before the device is initialized.
- *
- * This function should be called between \a ch_init() and \a ch_group_start().
- */
-void chdrv_discovery_hook_set(ch_group_t *grp_ptr, chdrv_discovery_hook_t hook_func_ptr) {
-
-	grp_ptr->disco_hook = hook_func_ptr;
-}
-
-/*!
  * \brief Set the pre-trigger delay for rx-only sensors
  *
  * \param grp_ptr 		pointer to the ch_group_t config structure for a group of sensors
@@ -3050,7 +2989,7 @@ void chdrv_pretrigger_delay_set(ch_group_t *grp_ptr, uint16_t delay_us) {
  * status bit in CPU_STAT debug register.
  * The function updates the "\a reset_state_ptr is set to 1 if the sensor was reset, otherwise it is set to zero.
  * Note this will continue to return a reset state as set until the PUC_PND bit is cleared
- * by writing a 1 to it, which is done in chdrv_reset_and_run function.
+ * by writing a 1 to it, which is done in reset_and_run function.
  *
  */
 uint8_t chdrv_check_reset_state(ch_dev_t *dev_ptr, uint8_t *reset_state_ptr) {

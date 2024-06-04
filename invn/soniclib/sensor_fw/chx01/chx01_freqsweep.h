@@ -26,9 +26,14 @@
 #ifndef CHX01_FREQSWEEP_H_
 #define CHX01_FREQSWEEP_H_
 
-#include <invn/soniclib/soniclib.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include <stdint.h>
+#include <invn/soniclib/soniclib.h>
+#include <invn/soniclib/ch_rangefinder.h>
 
 #define CHX01_FREQSWEEP_REG_REGMAPFMT     0x00
 #define CHX01_FREQSWEEP_REG_OPMODE        0x01
@@ -94,8 +99,7 @@ const unsigned char *get_ram_chx01_freqsweep_init_ptr(void);
 uint16_t get_chx01_freqsweep_fw_ram_init_addr(void);
 uint16_t get_chx01_freqsweep_fw_ram_init_size(void);
 
-uint8_t chx01_freqsweep_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t i2c_addr, uint8_t io_index,
-                             uint8_t bus_index);
+uint8_t chx01_freqsweep_init(ch_dev_t *dev_ptr, fw_info_t **fw_info);
 
 /*!
  * \brief Set the MAX_RANGE register directly.
@@ -197,4 +201,9 @@ uint16_t chx01_freqsweep_get_dco_code(ch_dev_t *dev_ptr);
 int chx01_freqsweep_set_dco_start(ch_dev_t *dev_ptr, uint16_t dco_start);
 
 int chx01_freqsweep_set_dco_stop(ch_dev_t *dev_ptr, uint16_t dco_stop);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* CHX01_FREQSWEEP_H_ */

@@ -1,10 +1,10 @@
 //
-// Chirp Microsystems Firmware Header Generator v2.4 (Python 3.8.5)
+// InvenSense Firmware Header Generator v3.0 (Python 3.7.9)
 //
-// File generated at 2022-03-09 18:02:09.836996 by klong
+// File generated at 2024-04-11 06:33:04.545397 by jenkins
 // Script input parameters:
-//   - Input file:                 ch201_gprmt_v10a.hex
-//   - Output file:                ch201_gprmt_fw.c
+//   - Input file:                 release/invn.chirpmicro.asic.ch201.gprmt.v10a.hex
+//   - Output file:                release\ch201_gprmt_fw.c
 //   - Part number:                201
 //   - Program size:               2048
 //   - DMEM start address:         0x0
@@ -14,11 +14,11 @@
 //   - Firmware git version:       gprmt-201_v10a
 //   - Firmware git sha1:          247eb617b50e896de61a12488571555935b91867
 //
-// Copyright (c) 2022, Chirp Microsystems. All rights reserved.
+// Copyright (c) 2024, InvenSense. All rights reserved.
 //
 
 #include <stdint.h>
-#include "ch201.h"
+#include <invn/soniclib/sensor_fw/ch201/ch201.h>
 #include "ch201_gprmt.h"
 
 const char * ch201_gprmt_version = "gprmt_gprmt-201_v10a";

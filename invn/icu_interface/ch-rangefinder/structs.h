@@ -17,7 +17,7 @@ typedef struct target {
 #define MAXTARG (5U)
 typedef struct target_list{
     volatile uint8_t num_valid_targets; //number of valid targets
-    volatile uint8_t reserved; //was output ODR
+    volatile uint8_t reserved; //bitmask: last bit used for target_in_ringdown detection
     volatile target_t targets[MAXTARG];
 }target_list_t;
 
@@ -48,15 +48,5 @@ typedef struct
 {
     InvnAlgoRangeFinderMeasConfig meas_cfg[MEAS_QUEUE_MAX_MEAS];
 }InvnAlgoRangeFinderConfig;
-
-typedef struct
-{
-    const InvnAlgoRangeFinderConfig * config;
-    qi_t qifilt[RINGDOWN_CANCEL_SAMPLES_MAX][MEAS_QUEUE_MAX_MEAS];
-    uint32_t magfilt_raw[GPT_IQ_SAMPLES_MAX+2];
-    uint32_t * magfilt;
-    uint8_t filter_uninitialized[MEAS_QUEUE_MAX_MEAS];
-    uint8_t update_count[MEAS_QUEUE_MAX_MEAS];
-}InvnAlgoRangeFinder;
 
 #endif

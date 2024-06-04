@@ -32,6 +32,10 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <invn/soniclib/soniclib.h>
+#ifdef INCLUDE_WHITNEY_SUPPORT
+#include <invn/soniclib/sensor_fw/ch101/ch101.h>
+#include <invn/soniclib/sensor_fw/ch201/ch201.h>
+#endif
 
 /* All sensor common definitions */
 #define CH_COMMON_RTC_CAL_PULSE_MS 100  // typical (default) rtc calibration pulse, in ms
@@ -90,7 +94,6 @@ extern "C" {
 #define CH101_COMMON_FREQCOUNTERCYCLES (128)
 
 #define CH101_COMMON_STAT_COEFF_DEFAULT (6)  // default value for stationary target coefficient
-#define CH101_COMMON_NUM_THRESHOLDS     (6)  // total number of thresholds
 
 /* CH-201 common definitions */
 
@@ -123,8 +126,6 @@ extern "C" {
 #define CH201_COMMON_FREQCOUNTERCYCLES (128)
 #define CH201_COMMON_RX_LOW_GAIN_MIN   (8)  // minimum low-gain sample count
 
-#define CHX01_COMMON_NUM_THRESHOLDS (6)  // total number of thresholds
-
 #define CHX01_GPRMT_REG_OPMODE         0x01
 #define CHX01_GPRMT_REG_TICK_INTERVAL  0x02
 #define CHX01_GPRMT_REG_LOW_GAIN_RXLEN 0x04
@@ -151,16 +152,11 @@ extern "C" {
 
 #define NSEC_PER_SEC              (1000000000U)
 #define PMUT_FREQUENCY_ERROR_CODE (1)  // this indicates some error in the frequency measurement
-/* ICU sensor common definitions */
-
-#ifdef INCLUDE_ALGO_RANGEFINDER
-#define ICU_COMMON_NUM_THRESHOLDS (LEN_THRESH)  // total number of thresholds from shasta_external_regs.h
-#else
-#define ICU_COMMON_NUM_THRESHOLDS (0)  // no thresholds
-#endif                                 // INCLUDE_ALGO_RANGEFINDER
 
 /* Function prototypes */
 uint8_t ch_common_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, ch_fw_init_func_t fw_init_func);
+
+uint8_t ch_common_set_init_firmware(ch_dev_t *dev_ptr, ch_fw_init_func_t fw_init_func);
 
 uint8_t ch_common_group_start(ch_group_t *grp_ptr);
 
@@ -177,21 +173,13 @@ uint8_t ch_common_set_freerun_interval_us(ch_dev_t *dev_ptr, uint32_t interval_u
 
 uint8_t ch_common_set_freerun_interval_ticks(ch_dev_t *dev_ptr, uint32_t interval_periods);
 
-uint8_t ch_common_set_freerun_time_hop(ch_dev_t *dev_ptr, bool enable);
+uint8_t ch_common_set_freerun_time_hop(ch_dev_t *dev_ptr, uint8_t meas_num, bool enable);
 
 uint8_t ch_common_set_num_samples(ch_dev_t *dev_ptr, uint16_t num_samples);
 
 uint16_t ch_common_get_num_samples(ch_dev_t *dev_ptr);
 
 uint8_t ch_common_set_max_range(ch_dev_t *dev_ptr, uint16_t max_range_mm);
-
-uint8_t ch_common_set_static_range(ch_dev_t *dev_ptr, uint16_t samples);
-
-uint32_t ch_common_get_range(ch_dev_t *dev_ptr, ch_range_t range_type);
-
-uint16_t ch_common_get_amplitude(ch_dev_t *dev_ptr);
-
-uint32_t ch_common_get_tof_us(ch_dev_t *dev_ptr);
 
 uint8_t ch_common_get_locked_state(ch_dev_t *dev_ptr);
 
@@ -207,10 +195,6 @@ void ch_common_store_bandwidth(ch_dev_t *dev_ptr);
 
 void ch_common_store_scale_factor(ch_dev_t *dev_ptr);
 
-uint8_t ch_common_set_thresholds(ch_dev_t *dev_ptr, ch_thresholds_t *thresholds_ptr);
-
-uint8_t ch_common_get_thresholds(ch_dev_t *dev_ptr, ch_thresholds_t *thresh_buf_ptr);
-
 uint16_t ch_common_mm_to_samples(ch_dev_t *dev_ptr, uint16_t num_mm);
 
 uint16_t ch_common_samples_to_mm(ch_dev_t *dev_ptr, uint16_t num_samples);
@@ -220,17 +204,12 @@ uint8_t ch_common_get_iq_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint16
 
 uint8_t ch_common_set_sample_window(ch_dev_t *dev_ptr, uint16_t start_sample, uint16_t end_sample);
 
-uint8_t ch_common_set_time_plan(ch_dev_t *dev_ptr, ch_time_plan_t time_plan);
-
-ch_time_plan_t ch_common_get_time_plan(ch_dev_t *dev_ptr);
 uint16_t ch_common_get_amplitude_avg(ch_dev_t *dev_ptr);
 
 uint8_t ch_common_get_amplitude_data(ch_dev_t *dev_ptr, uint16_t *buf_ptr, uint16_t start_sample, uint16_t num_samples,
                                      ch_io_mode_t mode);
 uint8_t ch_common_get_amp_thresh_data(ch_dev_t *dev_ptr, ch_amp_thresh_t *buf_ptr, uint16_t start_sample,
                                       uint16_t num_samples, ch_io_mode_t mode);
-uint8_t ch_common_set_rx_holdoff(ch_dev_t *dev_ptr, uint16_t rx_holdoff);
-uint16_t ch_common_get_rx_holdoff(ch_dev_t *dev_ptr);
 
 uint8_t ch_common_set_rx_low_gain(ch_dev_t *dev_ptr, uint16_t num_samples);
 uint16_t ch_common_get_rx_low_gain(ch_dev_t *dev_ptr);
@@ -251,13 +230,15 @@ uint8_t ch_common_watchdog_disable(ch_dev_t *dev_ptr);
 #ifdef INCLUDE_SHASTA_SUPPORT
 uint8_t ch_common_meas_init_queue(ch_dev_t *dev_ptr);
 uint8_t ch_common_meas_reset(ch_dev_t *dev_ptr, uint8_t meas_num);
-uint8_t ch_common_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_config_t *meas_config_ptr,
-                            ch_thresholds_t *thresh_ptr);
+uint8_t ch_common_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_config_t *meas_config_ptr);
 
 uint8_t ch_common_get_mfg_info(ch_dev_t *dev_ptr, ch_mfg_info_t *info_ptr);
 
 uint8_t ch_common_meas_import(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr);
 uint8_t ch_common_meas_add_segment(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_segment_t *seg_ptr);
+uint8_t ch_common_meas_insert_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_segment_t *const inst_ptr,
+                                          uint8_t inst_num_to_insert);
+uint8_t ch_common_meas_remove_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t inst_num_to_remove);
 uint8_t ch_common_meas_add_segment_count(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_cycles, uint8_t int_enable);
 uint8_t ch_common_meas_add_segment_rx(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples, uint8_t gain,
                                       uint8_t atten, uint8_t int_enable);
@@ -291,16 +272,6 @@ uint8_t ch_common_meas_set_odr(ch_dev_t *dev_ptr, uint8_t meas_num, ch_odr_t odr
 ch_odr_t ch_common_meas_get_odr(ch_dev_t *dev_ptr, uint8_t meas_num);
 uint16_t ch_common_meas_mm_to_samples(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_mm);
 uint16_t ch_common_meas_samples_to_mm(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples);
-uint8_t ch_common_meas_set_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t num_ranges);
-uint8_t ch_common_meas_get_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num);
-uint8_t ch_common_meas_set_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_thresholds_t *lib_thresh_buf_ptr);
-uint8_t ch_common_meas_get_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_thresholds_t *lib_thresh_buf_ptr);
-uint8_t ch_common_meas_set_ringdown_cancel(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples);
-uint16_t ch_common_meas_get_ringdown_cancel(ch_dev_t *dev_ptr, uint8_t meas_num);
-uint8_t ch_common_meas_set_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples);
-uint16_t ch_common_meas_get_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num);
-uint8_t ch_common_meas_set_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t num_samples);
-uint16_t ch_common_meas_get_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num);
 
 /**
  * \brief Read configuration settings associated with the last measurement.
@@ -310,7 +281,7 @@ uint16_t ch_common_meas_get_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num);
  * config index from the sensor and sets it into the corresponding fields of
  * dev_ptr.
  *
- * This function is already called from ch_common_get_target_range, which
+ * This function is already called from ch_rangefinder_get_target_range, which
  * requires the ODR to convert the range from raw counts to millimeters. You
  * may need to manually call this function when implementing your own methods
  * that fetch and post-process data from the sensor.
@@ -322,13 +293,10 @@ uint16_t ch_common_meas_get_rx_holdoff(ch_dev_t *dev_ptr, uint8_t meas_num);
  */
 uint8_t ch_common_read_meas_config(ch_dev_t *dev_ptr);
 
-uint8_t ch_common_meas_set_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num, ch_output_type_t output_format);
-ch_output_type_t ch_common_meas_get_iq_output(ch_dev_t *dev_ptr, uint8_t meas_num);
-uint8_t ch_common_meas_set_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t update_interval);
-uint8_t ch_common_meas_get_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num);
 uint8_t ch_common_init_algo(ch_dev_t *dev_ptr);
 uint8_t ch_common_get_algo_info(ch_dev_t *dev_ptr, ICU_ALGO_SHASTA_INFO *algo_info_ptr);
 uint8_t ch_common_get_algo_config(ch_dev_t *dev_ptr, void *algo_cfg_ptr);
+uint8_t ch_common_set_algo_config(ch_dev_t *dev_ptr, const void *algo_cfg_ptr);
 uint8_t ch_common_get_algo_output(ch_dev_t *dev_ptr, void *algo_out_ptr);
 uint8_t ch_common_get_algo_state(ch_dev_t *dev_ptr, void *algo_state_ptr);
 
@@ -342,9 +310,6 @@ ch_interrupt_drive_t ch_common_get_interrupt_drive(ch_dev_t *dev_ptr);
 
 uint8_t ch_common_set_target_interrupt(ch_dev_t *dev_ptr, ch_tgt_int_filter_t tgt_filter_mode);
 ch_tgt_int_filter_t ch_common_get_target_interrupt(ch_dev_t *dev_ptr);
-uint8_t ch_common_set_data_output(ch_dev_t *dev_ptr, ch_output_t *output_ptr);
-
-uint8_t ch_common_get_num_targets(ch_dev_t *dev_ptr);
 
 /**
  * \brief Convert the raw range from the sensor to millimeters.
@@ -365,15 +330,12 @@ uint8_t ch_common_get_num_targets(ch_dev_t *dev_ptr);
  */
 uint32_t ch_common_range_lsb_to_mm(const ch_dev_t *dev_ptr, uint32_t time_of_flight, ch_range_t range_type);
 
-uint32_t ch_common_get_target_range(ch_dev_t *dev_ptr, uint8_t target_num, ch_range_t range_type);
-uint16_t ch_common_get_target_amplitude(ch_dev_t *dev_ptr, uint8_t target_num);
-uint32_t ch_common_get_target_tof_us(ch_dev_t *dev_ptr, uint8_t target_num);
 uint32_t ch_common_samples_to_cycles(uint16_t num_samples, ch_odr_t odr);
 uint16_t ch_common_cycles_to_samples(uint32_t num_cycles, ch_odr_t odr);
 uint32_t ch_common_usec_to_cycles(ch_dev_t *dev_ptr, uint32_t num_usec);
 uint32_t ch_common_cycles_to_usec(ch_dev_t *dev_ptr, uint32_t num_cycles);
-uint32_t ch_common_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec);
-uint32_t ch_common_ticks_to_usec(ch_dev_t *dev_ptr, uint32_t num_rtc_periods);
+uint16_t ch_common_usec_to_ticks(const ch_dev_t *dev_ptr, uint32_t num_usec);
+uint32_t ch_common_ticks_to_usec(const ch_dev_t *dev_ptr, uint16_t num_rtc_periods);
 
 uint16_t ch_common_get_num_output_samples(ch_dev_t *dev_ptr);
 

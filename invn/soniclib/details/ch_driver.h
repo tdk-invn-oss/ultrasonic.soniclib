@@ -32,8 +32,6 @@
 extern "C" {
 #endif
 
-// #define CHDRV_DEBUG
-
 // #define USE_PRE_PROD_SERIAL_NUM		// if defined, handle pre-production ICU serial number
 
 #include <invn/soniclib/soniclib.h>
@@ -42,9 +40,6 @@ extern "C" {
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#ifdef CHDRV_DEBUG
-#include <stdio.h>
-#endif
 
 #define CHDRV_I2C_MAX_WRITE_BYTES 256 /*!< maximum number of bytes in a single I2C write */
 
@@ -103,9 +98,6 @@ extern "C" {
 #define CHDRV_EVENT_TIMEOUT_MS        (750) /*!< Max time to wait for sensor event, in ms */
 
 #define CHDRV_I2C_SPEED_DEFAULT_HZ (400000) /*!< Default I2C speed assumed if CHIRP_I2C_SPEED_HZ not defined in BSP */
-
-//! Hook routine pointer typedefs
-typedef uint8_t (*chdrv_discovery_hook_t)(ch_dev_t *dev_ptr);
 
 //! Transaction control structure
 typedef struct chdrv_transaction {
@@ -225,7 +217,7 @@ int chdrv_group_queue(ch_group_t *grp_ptr, ch_dev_t *instance, uint8_t rd_wrb, u
  * I2C/SPI bus is shared between the Chirp sensor(s) and other devices.
  *
  * The transaction is flagged for special handling when the I/O operation completes.  Specifically, the
- * \a chbsp_external_irq_handler() will be called by the driver to allow the board support packate (BSP)
+ * \a chbsp_external_irq_handler() will be called by the driver to allow the board support package (BSP)
  * to perform any necessary operations.
  */
 int chdrv_external_queue(ch_group_t *grp_ptr, ch_dev_t *instance, uint8_t rd_wrb, uint16_t addr, uint16_t nbytes,
@@ -396,10 +388,9 @@ int chdrv_init(ch_dev_t *dev_ptr, uint8_t i2c_addr, uint8_t io_index, uint8_t bu
 int chdrv_group_prepare(ch_group_t *grp_ptr);
 
 /*!
- * \brief Initalize and start a group of sensors.
+ * \brief Initialize and start a group of sensors.
  *
  * \param grp_ptr 	pointer to the ch_group_t descriptor structure for a group of sensors
- * \param restart	0 if normal startup, 1 if restarting (will not re-calibrate)
  *
  * \return 0 if successful, 1 if device doesn't respond
  *
@@ -407,19 +398,16 @@ int chdrv_group_prepare(ch_group_t *grp_ptr);
  * on-chip memory, and starts the sensor.  For CH101 and CH201 sensors, the I2C address is changed from
  * the default value.
  *
- * In a normal startup (when \a restart is zero), a timed pulse is sent on the INT line for real-time clock
- * calibration.  This may be over-ridden by specifying that default (factory) values should be used,
+ * In a normal startup, a timed pulse is sent on the INT line for real-time clock
+ * calibration. This may be over-ridden by specifying that default (factory) values should be used,
  * or by supplying custom clock calibration values.  Either of these options may be enabled by calling the
  * \a ch_set_clock_cal() function before ch_group_start().
  *
- * If \a restart is non-zero, the initialization assumes that the sensor has already been started
- * (possibly using different sensor firmware). Various calibration values will be inherited and
- * re-used from the previous startup.
  *
  * This function assumes firmware-specific initialization has already been performed for each ch_dev_t
  * descriptor in the sensor group.  (See \a ch_init()).
  */
-int chdrv_group_start(ch_group_t *grp_ptr, uint8_t restart);
+uint8_t chdrv_group_start(ch_group_t *grp_ptr);
 
 /*!
  * \brief Restart a sensor
@@ -501,7 +489,7 @@ int chdrv_burst_read(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16
  * \return 0 if successful, non-zero otherwise
  *
  */
-int chdrv_burst_write(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t num_bytes);
+int chdrv_burst_write(ch_dev_t *dev_ptr, uint16_t mem_addr, const uint8_t *data, uint16_t num_bytes);
 
 /*!
  * \brief Perform a soft reset on a sensor.
@@ -577,7 +565,7 @@ int chdrv_prog_write(ch_dev_t *dev_ptr, uint8_t reg_addr, uint16_t data);
  * This function writes bytes to the device using the programming I2C address.  The
  * PROG line for the device must have been asserted before this function is called.
  */
-int chdrv_prog_i2c_write(ch_dev_t *dev_ptr, uint8_t *message, uint16_t len);
+int chdrv_prog_i2c_write(ch_dev_t *dev_ptr, const uint8_t *message, uint16_t len);
 
 /*!
  * \brief Read bytes from a CHx01 device in programming mode.
@@ -621,20 +609,7 @@ int chdrv_prog_i2c_read_nb(ch_dev_t *dev_ptr, uint8_t *message, uint16_t len);
  * This function writes to sensor memory using the low-level programming interface.  The type
  * of write is automatically determined based on data length and target address alignment.
  */
-int chdrv_prog_mem_write(ch_dev_t *dev_ptr, uint16_t addr, uint8_t *message, uint16_t nbytes);
-
-/*!
- * \brief Register a hook routine to be called after device discovery.
- *
- * \param grp_ptr 		pointer to the ch_group_t config structure for a group of sensors
- * \param hook_func_ptr	address of hook routine to be called
- *
- * This function sets a pointer to a hook routine, which will be called from the
- * Chirp driver when each device is discovered on the I2C bus, before the device is initialized.
- *
- * This function should be called between \a ch_init() and \a ch_group_start().
- */
-void chdrv_discovery_hook_set(ch_group_t *grp_ptr, chdrv_discovery_hook_t hook_func_ptr);
+int chdrv_prog_mem_write(ch_dev_t *dev_ptr, uint16_t addr, const uint8_t *message, uint16_t nbytes);
 
 /*!
  * \brief Set the pre-trigger delay for rx-only sensors.
@@ -708,6 +683,54 @@ uint8_t chdrv_dbg_reg_read(ch_dev_t *dev_ptr, uint8_t reg_id, uint16_t *reg_valu
 uint8_t chdrv_dbg_reg_write(ch_dev_t *dev_ptr, uint8_t reg_id, uint16_t reg_value);
 
 /*!
+ * \brief Driver callback routine for sensor interrupt.
+ *
+ * \param grp_ptr 	pointer to the ch_group_t config structure for a group of sensors
+ * \param dev_num	interrupting sensor's device number within group
+ *
+ *
+ * This function should be called from the board support package when
+ * an interrupt from the sensor is received.  The \a dev_num parameter
+ * indicates which sensor interrupted.
+ *
+ * For sensor data-ready interrupts, this routine will in turn call the
+ * application's callback routine which was set using \a ch_io_int_callback_set().
+ *
+ * See also \a ch_io_int_callback_set()
+ */
+void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num);
+
+#ifdef INCLUDE_SHASTA_SUPPORT
+
+/*!
+ * \brief Trigger an event on a sensor and return immediately.
+ *
+ * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
+ * \param event		event type to trigger
+ *
+ * This function will trigger the event specified by \a event on an ICU sensor.
+ * The routine will return immediately, without waiting for any completion
+ * notification from the sensor.
+ *
+ * See also \a chdrv_event_trigger_and_wait()
+ */
+uint8_t chdrv_event_trigger(ch_dev_t *dev_ptr, uint16_t event);
+
+/*!
+ * \brief Trigger an event on a sensor and wait for completion.
+ *
+ * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
+ * \param event		event type to trigger
+ *
+ * This function will trigger the event specified by \a event on an ICU sensor.
+ * The routine will wait for the sensor to indicate the event has completed
+ * by generating a pulse on the interrupt line.
+ *
+ * See also \a chdrv_event_trigger()
+ */
+uint8_t chdrv_event_trigger_and_wait(ch_dev_t *dev_ptr, uint16_t event);
+
+/*!
  * \brief Read OTP memory contents
  *
  * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
@@ -745,52 +768,6 @@ uint8_t chdrv_otpmem_read(ch_dev_t *dev_ptr);
 uint8_t chdrv_otpmem_copy(ch_dev_t *dev_ptr, otp_copy_t *otp_copy_ptr);
 
 /*!
- * \brief Trigger an event on a sensor and return immediately.
- *
- * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
- * \param event		event type to trigger
- *
- * This function will trigger the event specified by \a event on an ICU sensor.
- * The routine will return immediately, without waiting for any completion
- * notification from the sensor.
- *
- * See also \a chdrv_event_trigger_and_wait()
- */
-uint8_t chdrv_event_trigger(ch_dev_t *dev_ptr, uint16_t event);
-
-/*!
- * \brief Trigger an event on a sensor and wait for completion.
- *
- * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
- * \param event		event type to trigger
- *
- * This function will trigger the event specified by \a event on an ICU sensor.
- * The routine will wait for the sensor to indicate the event has completed
- * by generating a pulse on the interrupt line.
- *
- * See also \a chdrv_event_trigger()
- */
-uint8_t chdrv_event_trigger_and_wait(ch_dev_t *dev_ptr, uint16_t event);
-
-/*!
- * \brief Driver callback routine for sensor interrupt.
- *
- * \param grp_ptr 	pointer to the ch_group_t config structure for a group of sensors
- * \param dev_num	interrupting sensor's device number within group
- *
- *
- * This function should be called from the board support package when
- * an interrupt from the sensor is received.  The \a dev_num parameter
- * indicates which sensor interrupted.
- *
- * For sensor data-ready interrupts, this routine will in turn call the
- * application's callback routine which was set using \a ch_io_int_callback_set().
- *
- * See also \a ch_io_int_callback_set()
- */
-void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num);
-
-/*!
  * \brief Initialize the measurement algorithm on a sensor.
  *
  * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
@@ -798,7 +775,7 @@ void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num);
  * \return 0 if success, non-zero if failure detected
  *
  * This function initializes a measurement algorithm that has already
- * been programmed into an ICU sesnor.
+ * been programmed into an ICU sensor.
  */
 uint8_t chdrv_algo_init(ch_dev_t *dev_ptr);
 
@@ -828,6 +805,19 @@ uint8_t chdrv_algo_info_read(ch_dev_t *dev_ptr, ICU_ALGO_SHASTA_INFO *algo_info_
 uint8_t chdrv_algo_cfg_read(ch_dev_t *dev_ptr, void *algo_cfg_ptr);
 
 /*!
+ * \brief Write the algorithm configuration data to a sensor.
+ *
+ * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
+ *
+ * \return 0 if success, non-zero if failure detected
+ *
+ * This function write the algorithm configuration data for an algorithm that
+ * has been programmed into an ICU sensor.  The format of the configuration
+ * data is defined by the specific algorithm being used.
+ */
+uint8_t chdrv_algo_cfg_write(ch_dev_t *dev_ptr, const void *algo_cfg_ptr);
+
+/*!
  * \brief Read the algorithm output data from a sensor.
  *
  * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
@@ -852,6 +842,44 @@ uint8_t chdrv_algo_out_read(ch_dev_t *dev_ptr, void *algo_out_ptr);
  * data is defined by the specific algorithm being used.
  */
 uint8_t chdrv_algo_state_read(ch_dev_t *dev_ptr, void *algo_state_ptr);
+
+/*!
+ * \brief Write the measurement queue to a sensor.
+ *
+ * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
+ * \param q_buf_ptr	pointer to the meas queue to write, NULL = use ch_dev_t copy
+ *
+ * \return 0 if success, non-zero if error
+ *
+ * This function writes a measurement queue structure to a sensor.
+ *
+ * If \a q_buf_ptr is NULL, this function writes the local copy of the measurement queue
+ * structure in \a ch_dev_t to the sensor shared memory.  It is typically used after some
+ * measurement settings have been modified.
+ * If \a q_buf_ptr is not NULL, the measurement queue values from the specified location
+ * will be written to the sensor.  The copy in the \a ch_dev_t structure is not modified.
+ */
+uint8_t chdrv_meas_queue_write(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr);
+
+/*!
+ * \brief Read the measurement queue from a sensor.
+ *
+ * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
+ * \param q_buf_ptr	pointer to the meas queue to write, NULL = update ch_dev_t copy
+ *
+ * \return 0 if success, non-zero if error
+ *
+ * This function reads the measurement queue structure from the sensor and copies it
+ * to the location indiciated by \a q_buf_ptr.
+ *
+ * If \a q_buf_ptr is NULL, the measurement queue copy in the \a ch_dev_t descriptor will
+ * be updated with the values read from the sensor.
+ * If \a q_buf_ptr is not NULL, the measurement queue values read from the device will
+ * be copied to the specified location.
+ */
+uint8_t chdrv_meas_queue_read(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr);
+
+#endif
 
 /*!
  * \brief Assert the hardware trigger line for a sensor.
@@ -1143,42 +1171,6 @@ uint32_t chdrv_cpu_freq_adjust(ch_dev_t *dev_ptr, uint32_t pmut_freq);
  * This function initiates the build-in self test (BIST) on a sensor.
  */
 uint8_t chdrv_run_bist(ch_dev_t *dev_ptr);
-
-/*!
- * \brief Write the measurement queue to a sensor.
- *
- * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
- * \param q_buf_ptr	pointer to the meas queue to write, NULL = use ch_dev_t copy
- *
- * \return 0 if success, non-zero if error
- *
- * This function writes a measurement queue structure to a sensor.
- *
- * If \a q_buf_ptr is NULL, this function writes the local copy of the measurement queue
- * structure in \a ch_dev_t to the sensor shared memory.  It is typically used after some
- * measurement settings have been modified.
- * If \a q_buf_ptr is not NULL, the measurement queue values from the specified location
- * will be written to the sensor.  The copy in the \a ch_dev_t structure is not modified.
- */
-uint8_t chdrv_meas_queue_write(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr);
-
-/*!
- * \brief Read the measurement queue from a sensor.
- *
- * \param dev_ptr	pointer to the ch_dev_t config structure for a sensor
- * \param q_buf_ptr	pointer to the meas queue to write, NULL = update ch_dev_t copy
- *
- * \return 0 if success, non-zero if error
- *
- * This function reads the measurement queue structure from the sensor and copies it
- * to the location indiciated by \a q_buf_ptr.
- *
- * If \a q_buf_ptr is NULL, the measurement queue copy in the \a ch_dev_t descriptor will
- * be updated with the values read from the sensor.
- * If \a q_buf_ptr is not NULL, the measurement queue values read from the device will
- * be copied to the specified location.
- */
-uint8_t chdrv_meas_queue_read(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr);
 
 /*!
  * \brief Measure the ultrasonic transducer frequency & bandwidth.

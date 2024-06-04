@@ -56,18 +56,16 @@ extern "C" {
 #define CHIRP_NUM_BUSES 2  // number of I2C/SPI buses used by sensors
 #endif
 
+#ifndef CHIRP_RTC_CAL_PULSE_MS
+#define CHIRP_RTC_CAL_PULSE_MS 100 /* Default length of RTC calibration pulse */
+#endif
+
 #ifdef INCLUDE_SHASTA_SUPPORT
 #ifndef CHIRP_SENSOR_INT_PIN
 #define CHIRP_SENSOR_INT_PIN 1
 #endif
 #ifndef CHIRP_SENSOR_TRIG_PIN
 #define CHIRP_SENSOR_TRIG_PIN 1
-#endif
-#ifndef CHIRP_NO_INIT_FW
-#define CHIRP_NO_INIT_FW 0  // if non-zero, do not include separate init f/w
-#endif
-#ifndef CHIRP_NO_TX_OPTIMIZATION
-#define CHIRP_NO_TX_OPTIMIZATION 0  // if non-zero, do not use init f/w with tx optimization
 #endif
 #endif  // INCLUDE_SHASTA_SUPPORT
 
