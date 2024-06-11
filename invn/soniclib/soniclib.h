@@ -113,7 +113,7 @@ extern "C" {
 /* SonicLib API/Driver version */
 #define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
 #define SONICLIB_VER_MINOR  (2) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (0) /*!< SonicLib revision. */
+#define SONICLIB_VER_REV    (1) /*!< SonicLib revision. */
 #define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/

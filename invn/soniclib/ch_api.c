@@ -25,10 +25,18 @@
 #include <invn/soniclib/details/ch_math_utils.h>
 
 uint8_t ch_group_init(ch_group_t *grp_ptr, uint8_t num_devices, uint8_t num_buses, uint16_t rtc_cal_pulse_ms) {
+	if (grp_ptr == NULL || num_devices == 0 || num_buses == 0) {
+		return RET_ERR;
+	}
+
+	/* Init all fields of group to avoid potential "variables not initialized" issues */
+	memset(grp_ptr, 0x00, sizeof(ch_group_t));
+
 	grp_ptr->num_ports        = num_devices;
 	grp_ptr->num_buses        = num_buses;
 	grp_ptr->rtc_cal_pulse_ms = rtc_cal_pulse_ms;
-	return 0;
+
+	return RET_OK;
 }
 
 /*!
@@ -41,12 +49,16 @@ uint8_t ch_group_init(ch_group_t *grp_ptr, uint8_t num_devices, uint8_t num_buse
  */
 
 uint8_t ch_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, ch_fw_init_func_t fw_init_func) {
+	uint8_t ret_val;
 
-	uint8_t ret_val = RET_ERR;
-
-	if (fw_init_func != NULL) {
-		ret_val = ch_common_init(dev_ptr, grp_ptr, dev_num, fw_init_func);
+	if (dev_ptr == NULL || grp_ptr == NULL || fw_init_func == NULL) {
+		return RET_ERR;
 	}
+
+	/* Init all fields of device to avoid potential "variables not initialized" issues */
+	memset(dev_ptr, 0x00, sizeof(ch_dev_t));
+
+	ret_val = ch_common_init(dev_ptr, grp_ptr, dev_num, fw_init_func);
 
 	if (ret_val == RET_OK) {
 		/* Set mode to idle */
