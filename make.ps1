@@ -17,15 +17,15 @@ to build Release, MinSizeRel, RelWithDebInfo, and Debug.
 (shasta-only) Specify which init FW to use in the build. Options are FULL,
 NO_TX_OPTIMIZATION, and NONE. Default is to build all.
 
+.PARAMETER MainFwOptions
+Specify which main FW to use in the build. Options are NONE,
+GPT, CH101_GPR, CH201_GPRMT, and CHX01_FREQSWEEP. Default is to build GPT is SensorType is SHASTA and all if SensorType is Whitney.
+
 .PARAMETER CMakeToolchainFile
 Specify the path to the CMakeToolchain file. The deafult is arm-non-eabi-m4.cmake.
 
 .PARAMETER Generator
 The CMake generator to use. Default is "MinGW Makefiles".
-
-.PARAMETER ExternalAlgoOptions
-
-Options to use for INCLDUE_ALGO_EXTERNAL. Must be list of OFF, ON.
 
 .PARAMETER SensorTypes
 
@@ -62,9 +62,9 @@ param(
     [switch]$Clean,
     [string[]]$BuildTypes = ("Release", "MinSizeRel", "RelWithDebInfo", "Debug"),
     [string[]]$InitFwOptions = ("FULL", "NO_TX_OPTIMIZATION", "NONE"),
+    [string[]]$MainFwOptions = ("GPT", "CH101_GPR", "CH201_GPRMT", "CHX01_FREQSWEEP", "NONE"),
     [string]$CMakeToolchainFile = "CMakeToolchains/arm-none-eabi-m4.cmake",
     [string]$Generator = "MinGW Makefiles",
-    [string[]]$ExternalAlgoOptions = ("OFF", "ON"),
     [string[]]$LogLevels = ("Disabled", "Min", "Max"),
     [switch]$Install,
     [switch]$RunTests,
@@ -127,36 +127,99 @@ if ($Coverage) {
 }
 
 ForEach ($BuildType in $BuildTypes) {
-    # shasta build
-    if ($SensorTypes -Contains "SHASTA") {
-        ForEach ($InitFwOption in $InitFwOptions) {
-            ForEach ($ExternalAlgoOption in $ExternalAlgoOptions) {
-                ForEach ($LogLevel in $LogLevels) {
-                    if ($BuildType -eq "Debug") {
-                        Switch($LogLevel) {
-                            "Disabled" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_DISABLE).value__}
-                            "Min" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__}
-                            "Max" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_TRACE).value__}
-                        }
-                        $LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__
-                    } else {
-                        # For other builds, always use the default log level
-                        if ($LogLevel -eq "Min") {
+    ForEach($SensorType in $SensorTypes) {
+        # shasta build
+        if ($SensorType -Contains "SHASTA") {
+            $MainFwOptions = $MainFwOptions|where{$_ -match "(GPT|NONE)"} # Keep only shasta fw
+            ForEach ($InitFwOption in $InitFwOptions) {
+                ForEach ($MainFwOption in $MainFwOptions) {
+                    ForEach ($LogLevel in $LogLevels) {
+                        if ($BuildType -eq "Debug") {
+                            Switch($LogLevel) {
+                                "Disabled" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_DISABLE).value__}
+                                "Min" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__}
+                                "Max" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_TRACE).value__}
+                            }
                             $LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__
                         } else {
-                            # return # continue
-                            continue
+                            # For other builds, always use the default log level
+                            if ($LogLevel -eq "Min") {
+                                $LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__
+                            } else {
+                                # return # continue
+                                continue
+                            }
+                        }
+                        $BuildConfig = "shasta_$InitFwOption`_Fw_$MainFwOption`_$BuildType`_log$LogLevel".ToLower()
+                        $SubBuildDir = Join-Path "$BuildDir" "$BuildConfig"
+                        cmake -G "$Generator" `
+                            -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" `
+                            -DINCLUDE_SHASTA_SUPPORT:BOOL=ON `
+                            -DCMAKE_BUILD_TYPE:STRING="$BuildType" `
+                            -DCHIRP_INIT_FW_TYPE="$InitFwOption" `
+                            -B "$SubBuildDir" `
+                            -DCHIRP_MAIN_FW_TYPE="$MainFwOption" `
+                            -DCHIRP_LOG_LEVEL="$LogLevelInt" `
+                            -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON `
+                            $RUN_UNIT_TEST
+                        if ($LASTEXITCODE) { exit $LASTEXITCODE }
+                        try {
+                            Build-Project "$SubBuildDir"
+                            if ($RunTests) {
+                                # ctest --test-dir "$SubBuildDir/test/unit_test" --output-junit "junitoutput.xml"  # CMake 3.21+
+                                ctest --test-dir "$SubBuildDir/test/unit_test" -VV --output-on-failure --no-compress-output "-D" "ExperimentalTest"
+
+                                # Generate coverage report
+                                python -m gcovr `
+                                    --print-summary `
+                                    --branches `
+                                    --calls `
+                                    --decisions `
+                                    --json "$SubBuildDir/$BuildConfig`_coverage.json" --json-pretty `
+                                    --gcov-executable "$MingwGccPath/bin/gcov.exe" `
+                                    --root $source_dir `
+                                    "$SubBuildDir/CMakeFiles/soniclib.dir/invn/soniclib"
+                            }
+                            if ($Install) {
+                                cmake --install "$SubBuildDir"
+                            }
+                        }
+                        catch {
+                            Write-Output $_
+                            exit 1
                         }
                     }
-                    $BuildConfig = "shasta_$InitFwOption`_extalgo$ExternalAlgoOption`_$BuildType`_log$LogLevel".ToLower()
+                }
+            }
+        }
+        # whitney build
+        if ($SensorType -Contains "WHITNEY") {
+            ForEach ($LogLevel in $LogLevels) {
+                if ($BuildType -eq "Debug") {
+                    Switch($LogLevel) {
+                        "Disabled" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_DISABLE).value__}
+                        "Min" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__}
+                        "Max" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_TRACE).value__}
+                    }
+                    $LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__
+                } else {
+                    # For other builds, always use the default log level
+                    if ($LogLevel -eq "Min") {
+                        $LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__
+                    } else {
+                        # return # continue
+                        continue
+                    }
+                }
+                $MainFwOptions = $MainFwOptions|where{$_ -match "(CH101_GPR|CH201_GPRMT|CHX01_FREQSWEEP)"} # Keep only whitney fw
+                ForEach ($MainFwOption in $MainFwOptions) {
+                    $BuildConfig = "whitney_Fw_$MainFwOption`_$BuildType`_log$LogLevel".ToLower()
                     $SubBuildDir = Join-Path "$BuildDir" "$BuildConfig"
                     cmake -G "$Generator" `
                         -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" `
-                        -DINCLUDE_SHASTA_SUPPORT:BOOL=ON `
                         -DCMAKE_BUILD_TYPE:STRING="$BuildType" `
-                        -DCHIRP_INIT_FW_TYPE="$InitFwOption" `
                         -B "$SubBuildDir" `
-                        -DINCLUDE_ALGO_EXTERNAL:BOOL="$ExternalAlgoOption" `
+                        -DCHIRP_MAIN_FW_TYPE="$MainFwOption" `
                         -DCHIRP_LOG_LEVEL="$LogLevelInt" `
                         -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON `
                         $RUN_UNIT_TEST
@@ -165,7 +228,7 @@ ForEach ($BuildType in $BuildTypes) {
                         Build-Project "$SubBuildDir"
                         if ($RunTests) {
                             # ctest --test-dir "$SubBuildDir/test/unit_test" --output-junit "junitoutput.xml"  # CMake 3.21+
-                            ctest --test-dir "$SubBuildDir/test/unit_test" -VV --output-on-failure --no-compress-output "-D" "ExperimentalTest"
+                            ctest --test-dir "$SubBuildDir/test/unit_test" --no-compress-output "-D" "ExperimentalTest"
 
                             # Generate coverage report
                             python -m gcovr `
@@ -176,7 +239,7 @@ ForEach ($BuildType in $BuildTypes) {
                                 --json "$SubBuildDir/$BuildConfig`_coverage.json" --json-pretty `
                                 --gcov-executable "$MingwGccPath/bin/gcov.exe" `
                                 --root $source_dir `
-                                 "$SubBuildDir/CMakeFiles/soniclib.dir/invn/soniclib"
+                                "$SubBuildDir/CMakeFiles/soniclib.dir/invn/soniclib"
                         }
                         if ($Install) {
                             cmake --install "$SubBuildDir"
@@ -187,62 +250,6 @@ ForEach ($BuildType in $BuildTypes) {
                         exit 1
                     }
                 }
-            }
-        }
-    }
-    # whitney build
-    if ($SensorTypes -Contains "WHITNEY") {
-        ForEach ($LogLevel in $LogLevels) {
-            if ($BuildType -eq "Debug") {
-                Switch($LogLevel) {
-                    "Disabled" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_DISABLE).value__}
-                    "Min" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__}
-                    "Max" {$LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_TRACE).value__}
-                }
-                $LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__
-            } else {
-                # For other builds, always use the default log level
-                if ($LogLevel -eq "Min") {
-                    $LogLevelInt = ([ChLogLevels]::CH_LOG_LEVEL_ERROR).value__
-                } else {
-                    # return # continue
-                    continue
-                }
-            }
-            $BuildConfig = "whitney_$BuildType`_log$LogLevel".ToLower()
-            $SubBuildDir = Join-Path "$BuildDir" "$BuildConfig"
-            cmake -G "$Generator" `
-                -DCMAKE_TOOLCHAIN_FILE="$CMakeToolchainFile" `
-                -DCMAKE_BUILD_TYPE:STRING="$BuildType" `
-                -B "$SubBuildDir" `
-                -DCHIRP_LOG_LEVEL="$LogLevelInt" `
-                -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON `
-                $RUN_UNIT_TEST
-            if ($LASTEXITCODE) { exit $LASTEXITCODE }
-            try {
-                Build-Project "$SubBuildDir"
-                if ($RunTests) {
-                    # ctest --test-dir "$SubBuildDir/test/unit_test" --output-junit "junitoutput.xml"  # CMake 3.21+
-                    ctest --test-dir "$SubBuildDir/test/unit_test" --no-compress-output "-D" "ExperimentalTest"
-
-                    # Generate coverage report
-                    python -m gcovr `
-                        --print-summary `
-                        --branches `
-                        --calls `
-                        --decisions `
-                        --json "$SubBuildDir/$BuildConfig`_coverage.json" --json-pretty `
-                        --gcov-executable "$MingwGccPath/bin/gcov.exe" `
-                        --root $source_dir `
-                         "$SubBuildDir/CMakeFiles/soniclib.dir/invn/soniclib"
-                }
-                if ($Install) {
-                    cmake --install "$SubBuildDir"
-                }
-            }
-            catch {
-                Write-Output $_
-                exit 1
             }
         }
     }

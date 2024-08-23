@@ -170,6 +170,7 @@ uint8_t icu_gpt_set_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t 
 uint16_t icu_gpt_get_static_filter(ch_dev_t *dev_ptr, uint8_t meas_num)
 uint8_t icu_gpt_set_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t update_interval)
 uint8_t icu_gpt_get_filter_update(ch_dev_t *dev_ptr, uint8_t meas_num)
+```
 
 #### New API
 

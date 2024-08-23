@@ -150,7 +150,9 @@ extern "C" {
 
 #endif /* INCLUDE_WHITNEY_SUPPORT */
 
-#define NSEC_PER_SEC              (1000000000U)
+#ifndef NSEC_PER_SEC
+#define NSEC_PER_SEC (1000000000U)
+#endif
 #define PMUT_FREQUENCY_ERROR_CODE (1)  // this indicates some error in the frequency measurement
 
 /* Function prototypes */
