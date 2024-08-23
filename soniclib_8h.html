@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.2.1</span>
+   &#160;<span id="projectnumber">4.2.5</span>
    </div>
   </td>
  </tr>
@@ -240,7 +240,7 @@ Macros</h2></td></tr>
 <tr class="separator:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(2)</td></tr>
 <tr class="separator:a3114f821e7b6c5971ddf1c363597b761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(1)</td></tr>
+<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(5)</td></tr>
 <tr class="separator:a602271af8c1cf2ba218e68b49e5d465f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87026a07278934542ce439d706df7aef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87026a07278934542ce439d706df7aef">SONICLIB_VER_SUFFIX</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
 <tr class="separator:a87026a07278934542ce439d706df7aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1554,7 +1554,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(1)</td>
+          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(5)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -5955,7 +5955,7 @@ This function is only available in select Chirp sensor firmware versions. </dd><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function initializes the measurement segment descriptor specified by <em>seg_ptr</em> as a receive segment. </p>
+<p>This function initializes the measurement segment descriptor specified by <em>seg_ptr</em> as a receive segment. The number of samples of added to the segments is limited by the maximum number of rx samples that firmware can read and by the number of cycles a segment can store. The length of segment in samples is converted to a number of cycles. A segment have a maximum length of 65535 cycles. If the number of sample exceeds the limitation, define the segments manually and import them to a measure queue using <em><a class="el" href="soniclib_8h.html#a719bb8d611224839c6d9404d339bc9e8" title="Import an externally defined measurement configuration.">ch_meas_import()</a></em> </p>
 
 </div>
 </div>

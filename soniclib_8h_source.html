@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.2.1</span>
+   &#160;<span id="projectnumber">4.2.5</span>
    </div>
   </td>
  </tr>
@@ -99,7 +99,7 @@ $(function() {
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">/* SonicLib API/Driver version */</span></div>
 <div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="soniclib_8h.html#a3407caaf3d2f8bb12e8c26bccbe3ae40">  114</a></span>&#160;<span class="preprocessor">#define SONICLIB_VER_MAJOR  (4) </span></div>
 <div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">  115</a></span>&#160;<span class="preprocessor">#define SONICLIB_VER_MINOR  (2) </span></div>
-<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">  116</a></span>&#160;<span class="preprocessor">#define SONICLIB_VER_REV    (1) </span></div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">  116</a></span>&#160;<span class="preprocessor">#define SONICLIB_VER_REV    (5) </span></div>
 <div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="soniclib_8h.html#a87026a07278934542ce439d706df7aef">  117</a></span>&#160;<span class="preprocessor">#define SONICLIB_VER_SUFFIX &quot;&quot;</span>  </div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">/***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/</span></div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
@@ -917,115 +917,115 @@ $(function() {
 <div class="line"><a name="l03163"></a><span class="lineno"> 3163</span>&#160; </div>
 <div class="line"><a name="l03181"></a><span class="lineno"> 3181</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#ac1cbeef0db6da0bdafa19165151b4c40">ch_meas_init_segment_count</a>(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_cycles, uint8_t int_enable);</div>
 <div class="line"><a name="l03182"></a><span class="lineno"> 3182</span>&#160; </div>
-<div class="line"><a name="l03198"></a><span class="lineno"> 3198</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#aaf5a793e1e01da899f3a64b8bed4acc9">ch_meas_init_segment_rx</a>(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_samples, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr, uint8_t gain_reduce,</div>
-<div class="line"><a name="l03199"></a><span class="lineno"> 3199</span>&#160;                             uint8_t atten, uint8_t int_enable);</div>
-<div class="line"><a name="l03200"></a><span class="lineno"> 3200</span>&#160; </div>
-<div class="line"><a name="l03220"></a><span class="lineno"> 3220</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#adde2d67659346569ec81c5e7f51d7647">ch_meas_init_segment_tx</a>(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_cycles, uint8_t pulse_width, uint8_t phase,</div>
-<div class="line"><a name="l03221"></a><span class="lineno"> 3221</span>&#160;                             uint8_t int_enable);</div>
-<div class="line"><a name="l03222"></a><span class="lineno"> 3222</span>&#160; </div>
-<div class="line"><a name="l03246"></a><span class="lineno"> 3246</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#aa3d2278773b6676145e9d86bb1cdf769">ch_meas_get_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__meas__info__t.html">ch_meas_info_t</a> *info_ptr);</div>
-<div class="line"><a name="l03247"></a><span class="lineno"> 3247</span>&#160; </div>
-<div class="line"><a name="l03266"></a><span class="lineno"> 3266</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a3800e5639a3dae4272db79573180641d">ch_meas_get_queue_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__meas__queue__info__t.html">ch_meas_queue_info_t</a> *info_ptr);</div>
-<div class="line"><a name="l03267"></a><span class="lineno"> 3267</span>&#160; </div>
-<div class="line"><a name="l03292"></a><span class="lineno"> 3292</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a081ad1d7648bac0ed82f3ff93d7f0321">ch_meas_get_seg_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t seg_num, <a class="code" href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a> *info_ptr);</div>
-<div class="line"><a name="l03293"></a><span class="lineno"> 3293</span>&#160; </div>
-<div class="line"><a name="l03312"></a><span class="lineno"> 3312</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a52398f9f8bf2f5a20531e7c8ab1852fd">ch_meas_set_interval</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t interval_ms);</div>
-<div class="line"><a name="l03313"></a><span class="lineno"> 3313</span>&#160; </div>
-<div class="line"><a name="l03329"></a><span class="lineno"> 3329</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a4001469a3a233c39cead6f6624d436eb">ch_meas_set_interval_us</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t interval_us);</div>
-<div class="line"><a name="l03330"></a><span class="lineno"> 3330</span>&#160; </div>
-<div class="line"><a name="l03346"></a><span class="lineno"> 3346</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a88d3915b3152ca1fda21ddddefb95fec">ch_meas_set_interval_ticks</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t rtc_ticks);</div>
-<div class="line"><a name="l03347"></a><span class="lineno"> 3347</span>&#160; </div>
-<div class="line"><a name="l03360"></a><span class="lineno"> 3360</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a5c76a6684d06acdd7ff60de902ef9cf0">ch_meas_get_interval</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03361"></a><span class="lineno"> 3361</span>&#160; </div>
-<div class="line"><a name="l03374"></a><span class="lineno"> 3374</span>&#160;uint32_t <a class="code" href="soniclib_8h.html#aa6062925563a899604cc8665398fa635">ch_meas_get_interval_us</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03375"></a><span class="lineno"> 3375</span>&#160; </div>
-<div class="line"><a name="l03388"></a><span class="lineno"> 3388</span>&#160;uint32_t <a class="code" href="soniclib_8h.html#a2402d08e2043ec130dbbb090b1c67596">ch_meas_get_interval_ticks</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03389"></a><span class="lineno"> 3389</span>&#160; </div>
-<div class="line"><a name="l03408"></a><span class="lineno"> 3408</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#aa2b5b2e869a15194c08ae15f0e20cb14">ch_meas_time_hop_enable</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03409"></a><span class="lineno"> 3409</span>&#160; </div>
-<div class="line"><a name="l03425"></a><span class="lineno"> 3425</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a8421a242bc38e92a27e96814c64c1c95">ch_meas_time_hop_disable</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03426"></a><span class="lineno"> 3426</span>&#160; </div>
-<div class="line"><a name="l03446"></a><span class="lineno"> 3446</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#adc5748ec903986b27b78f4a52b8c9e23">ch_meas_set_odr</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr);</div>
-<div class="line"><a name="l03447"></a><span class="lineno"> 3447</span>&#160; </div>
-<div class="line"><a name="l03462"></a><span class="lineno"> 3462</span>&#160;<a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> <a class="code" href="soniclib_8h.html#abc69e96679d03384c1cf912ebf66c614">ch_meas_get_odr</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03463"></a><span class="lineno"> 3463</span>&#160; </div>
-<div class="line"><a name="l03488"></a><span class="lineno"> 3488</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a7d24256fc81eaadb687786ee41bec7c9">ch_meas_set_num_samples</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
-<div class="line"><a name="l03489"></a><span class="lineno"> 3489</span>&#160; </div>
-<div class="line"><a name="l03508"></a><span class="lineno"> 3508</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a9bf5688451893bddde1d3623dd34f48d">ch_meas_get_num_samples</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03509"></a><span class="lineno"> 3509</span>&#160; </div>
-<div class="line"><a name="l03534"></a><span class="lineno"> 3534</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#acfc7192978564ab0f477ee2132870fea">ch_meas_set_max_range</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t max_range_mm);</div>
-<div class="line"><a name="l03535"></a><span class="lineno"> 3535</span>&#160; </div>
-<div class="line"><a name="l03552"></a><span class="lineno"> 3552</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#acd7763faeec4c696c10410544cb01365">ch_meas_get_max_range</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03553"></a><span class="lineno"> 3553</span>&#160; </div>
-<div class="line"><a name="l03578"></a><span class="lineno"> 3578</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a4203c97c07e47db67bf2e1c1eb16b054">ch_meas_mm_to_samples</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_mm);</div>
-<div class="line"><a name="l03579"></a><span class="lineno"> 3579</span>&#160; </div>
-<div class="line"><a name="l03612"></a><span class="lineno"> 3612</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a70baf4591a0f4031f566ca7fcb73b0cd">ch_meas_samples_to_mm</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
-<div class="line"><a name="l03613"></a><span class="lineno"> 3613</span>&#160; </div>
-<div class="line"><a name="l03629"></a><span class="lineno"> 3629</span>&#160;<a class="code" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> <a class="code" href="soniclib_8h.html#abae9547bfdb9eda44b7f3f44c42d815e">ch_meas_get_iq_output</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l03630"></a><span class="lineno"> 3630</span>&#160; </div>
-<div class="line"><a name="l03648"></a><span class="lineno"> 3648</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a3fb6e60f175bbb08c87787c0ac680865">ch_meas_set_iq_output</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> output_format);</div>
-<div class="line"><a name="l03649"></a><span class="lineno"> 3649</span>&#160; </div>
-<div class="line"><a name="l03666"></a><span class="lineno"> 3666</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#ad725040c45603cc81f47ccb4ab104efc">ch_init_algo</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l03667"></a><span class="lineno"> 3667</span>&#160; </div>
-<div class="line"><a name="l03683"></a><span class="lineno"> 3683</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a40e276c66c4a835c1146135580d7d5c7">ch_get_algo_output</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_out_ptr);</div>
-<div class="line"><a name="l03684"></a><span class="lineno"> 3684</span>&#160; </div>
-<div class="line"><a name="l03700"></a><span class="lineno"> 3700</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#abfe62802f4bc1c41bc96d903e3aa323c">ch_get_algo_state</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_state_ptr);</div>
-<div class="line"><a name="l03701"></a><span class="lineno"> 3701</span>&#160; </div>
-<div class="line"><a name="l03717"></a><span class="lineno"> 3717</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#ac05e1055eb673ae1c6e03d8d72046039">ch_get_algo_config</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
-<div class="line"><a name="l03718"></a><span class="lineno"> 3718</span>&#160; </div>
-<div class="line"><a name="l03734"></a><span class="lineno"> 3734</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a0946a2fe093c2eb4c8de5d4d7535c159">ch_set_algo_config</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keyword">const</span> <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
-<div class="line"><a name="l03735"></a><span class="lineno"> 3735</span>&#160; </div>
-<div class="line"><a name="l03751"></a><span class="lineno"> 3751</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a1e8e425d463961d442133253235c5a41">ch_get_algo_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structicu__algo__info.html">ICU_ALGO_SHASTA_INFO</a> *algo_info_ptr);</div>
-<div class="line"><a name="l03752"></a><span class="lineno"> 3752</span>&#160; </div>
-<div class="line"><a name="l03771"></a><span class="lineno"> 3771</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="soniclib_8h.html#a76945903073c49706d025c7679b07059">ch_get_sensor_id</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l03772"></a><span class="lineno"> 3772</span>&#160; </div>
-<div class="line"><a name="l03793"></a><span class="lineno"> 3793</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a0894c6a31cecc608ab6c457f918abe09">ch_get_mfg_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__mfg__info__t.html">ch_mfg_info_t</a> *info_ptr);</div>
-<div class="line"><a name="l03794"></a><span class="lineno"> 3794</span>&#160; </div>
-<div class="line"><a name="l03795"></a><span class="lineno"> 3795</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// INCLUDE_SHASTA_SUPPORT</span></div>
-<div class="line"><a name="l03796"></a><span class="lineno"> 3796</span>&#160; </div>
-<div class="line"><a name="l03807"></a><span class="lineno"> 3807</span>&#160;uint32_t <a class="code" href="soniclib_8h.html#a7747e4f758aa7d957d3e69a94ced2363">ch_get_cpu_frequency</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l03808"></a><span class="lineno"> 3808</span>&#160; </div>
-<div class="line"><a name="l03915"></a><span class="lineno"> 3915</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a5e0552ddb44341f86d96a9c5b4d9a1ca">ch_set_rtc</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a95396c4034eb6e41fffcfa7d9dbcd830">ch_rtc_src_t</a> rtc_source, uint16_t rtc_freq);</div>
-<div class="line"><a name="l03916"></a><span class="lineno"> 3916</span>&#160; </div>
-<div class="line"><a name="l03927"></a><span class="lineno"> 3927</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a3157748b36bfb84930fd16ab06570eb7">ch_get_rtc_frequency</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l03928"></a><span class="lineno"> 3928</span>&#160; </div>
-<div class="line"><a name="l03990"></a><span class="lineno"> 3990</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a50819630a6c6dc83303090054413866d">ch_set_pmut_clock</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#aca9006600c4c232750578f7ed6c0416e">ch_pmut_clk_cfg_t</a> clock_cfg);</div>
-<div class="line"><a name="l03991"></a><span class="lineno"> 3991</span>&#160; </div>
-<div class="line"><a name="l04005"></a><span class="lineno"> 4005</span>&#160;<a class="code" href="soniclib_8h.html#aca9006600c4c232750578f7ed6c0416e">ch_pmut_clk_cfg_t</a> <a class="code" href="soniclib_8h.html#a80da2e1dc19b0f3a40c775b818ead954">ch_get_pmut_clock</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l04006"></a><span class="lineno"> 4006</span>&#160; </div>
-<div class="line"><a name="l04039"></a><span class="lineno"> 4039</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#ac5702e109dfbbd351a32df3df36c6e1b">ch_group_set_pmut_clock_freq</a>(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint32_t pmut_clock_freq);</div>
-<div class="line"><a name="l04040"></a><span class="lineno"> 4040</span>&#160; </div>
-<div class="line"><a name="l04066"></a><span class="lineno"> 4066</span>&#160;uint32_t <a class="code" href="soniclib_8h.html#af80e105e4c2bcee89f2f606d35015050">ch_group_get_pmut_clock_freq</a>(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr);</div>
-<div class="line"><a name="l04067"></a><span class="lineno"> 4067</span>&#160; </div>
-<div class="line"><a name="l04093"></a><span class="lineno"> 4093</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a0fd13d9b1ba62dca747988e1b4abc1e0">ch_set_data_ready_delay</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t delay_ms);</div>
-<div class="line"><a name="l04094"></a><span class="lineno"> 4094</span>&#160; </div>
-<div class="line"><a name="l04109"></a><span class="lineno"> 4109</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#aacf8233ee597b2795c3e478e70f3aefd">ch_get_data_ready_delay</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l04110"></a><span class="lineno"> 4110</span>&#160; </div>
-<div class="line"><a name="l04130"></a><span class="lineno"> 4130</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a2806d7b51748c5dcd870d7c3c21b222a">ch_get_num_output_samples</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l04131"></a><span class="lineno"> 4131</span>&#160; </div>
-<div class="line"><a name="l04148"></a><span class="lineno"> 4148</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a2b585794c893ffa579775e060df36915">ch_trigger_soft</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l04149"></a><span class="lineno"> 4149</span>&#160; </div>
-<div class="line"><a name="l04175"></a><span class="lineno"> 4175</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a035896185096ae0cc1e4c54db205d38c">ch_set_trigger_type</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#aa18105c6986688c2700df504020bc2f2">ch_trigger_type_t</a> trig_type);</div>
-<div class="line"><a name="l04176"></a><span class="lineno"> 4176</span>&#160; </div>
-<div class="line"><a name="l04195"></a><span class="lineno"> 4195</span>&#160;<a class="code" href="soniclib_8h.html#aa18105c6986688c2700df504020bc2f2">ch_trigger_type_t</a> <a class="code" href="soniclib_8h.html#a74355ffe5e8887d74e9cdf5b3bd48a6f">ch_get_trigger_type</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l04196"></a><span class="lineno"> 4196</span>&#160; </div>
-<div class="line"><a name="l04220"></a><span class="lineno"> 4220</span>&#160;<a class="code" href="soniclib_8h.html#a00b8943dd0033cdbdd6e4da6334f283b">ch_meas_status_t</a> <a class="code" href="soniclib_8h.html#a90245534189e3893901e90e63fc9e26c">ch_meas_get_status</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
-<div class="line"><a name="l04221"></a><span class="lineno"> 4221</span>&#160; </div>
-<div class="line"><a name="l04233"></a><span class="lineno"> 4233</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a4a33406081a2392fd38f36cd65e8b8cb">ch_log_init</a>(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, <a class="code" href="soniclib_8h.html#a9b0598bc1d023573411e2831f3d28108">ch_log_fmt_t</a> format, <a class="code" href="structch__log__cfg__t.html">ch_log_cfg_t</a> *config_ptr);</div>
-<div class="line"><a name="l04234"></a><span class="lineno"> 4234</span>&#160; </div>
-<div class="line"><a name="l04249"></a><span class="lineno"> 4249</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a21e0ba880449ca3c613730091ba089c4">ch_log_append</a>(uint8_t log_id, <a class="code" href="soniclib_8h.html#a9b0598bc1d023573411e2831f3d28108">ch_log_fmt_t</a> format, uint64_t timestamp, <a class="code" href="structch__log__data__t.html">ch_log_data_t</a> *log_data_ptr);</div>
-<div class="line"><a name="l04250"></a><span class="lineno"> 4250</span>&#160; </div>
-<div class="line"><a name="l04274"></a><span class="lineno"> 4274</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a6703bf9649051f66c8c8acff42db746d">ch_watchdog_enable</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l04275"></a><span class="lineno"> 4275</span>&#160; </div>
-<div class="line"><a name="l04290"></a><span class="lineno"> 4290</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#aabaaeecabbda3d134a582405cc2ec812">ch_watchdog_disable</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
-<div class="line"><a name="l04291"></a><span class="lineno"> 4291</span>&#160; </div>
-<div class="line"><a name="l04308"></a><span class="lineno"> 4308</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a1a659b8b3969c202074c09bfb54ee9b7">ch_check_reset_state</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a8579cbcd7ce6352dcb003317568123c9">ch_sensor_reset_state_t</a> *reset_state_ptr);</div>
-<div class="line"><a name="l04309"></a><span class="lineno"> 4309</span>&#160; </div>
-<div class="line"><a name="l04310"></a><span class="lineno"> 4310</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l04311"></a><span class="lineno"> 4311</span>&#160;}</div>
-<div class="line"><a name="l04312"></a><span class="lineno"> 4312</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l04313"></a><span class="lineno"> 4313</span>&#160; </div>
-<div class="line"><a name="l04314"></a><span class="lineno"> 4314</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __SONICLIB_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l03204"></a><span class="lineno"> 3204</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#aaf5a793e1e01da899f3a64b8bed4acc9">ch_meas_init_segment_rx</a>(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_samples, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr, uint8_t gain_reduce,</div>
+<div class="line"><a name="l03205"></a><span class="lineno"> 3205</span>&#160;                             uint8_t atten, uint8_t int_enable);</div>
+<div class="line"><a name="l03206"></a><span class="lineno"> 3206</span>&#160; </div>
+<div class="line"><a name="l03226"></a><span class="lineno"> 3226</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#adde2d67659346569ec81c5e7f51d7647">ch_meas_init_segment_tx</a>(<a class="code" href="structch__meas__segment__t.html">ch_meas_segment_t</a> *seg_ptr, uint16_t num_cycles, uint8_t pulse_width, uint8_t phase,</div>
+<div class="line"><a name="l03227"></a><span class="lineno"> 3227</span>&#160;                             uint8_t int_enable);</div>
+<div class="line"><a name="l03228"></a><span class="lineno"> 3228</span>&#160; </div>
+<div class="line"><a name="l03252"></a><span class="lineno"> 3252</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#aa3d2278773b6676145e9d86bb1cdf769">ch_meas_get_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="structch__meas__info__t.html">ch_meas_info_t</a> *info_ptr);</div>
+<div class="line"><a name="l03253"></a><span class="lineno"> 3253</span>&#160; </div>
+<div class="line"><a name="l03272"></a><span class="lineno"> 3272</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a3800e5639a3dae4272db79573180641d">ch_meas_get_queue_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__meas__queue__info__t.html">ch_meas_queue_info_t</a> *info_ptr);</div>
+<div class="line"><a name="l03273"></a><span class="lineno"> 3273</span>&#160; </div>
+<div class="line"><a name="l03298"></a><span class="lineno"> 3298</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a081ad1d7648bac0ed82f3ff93d7f0321">ch_meas_get_seg_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint8_t seg_num, <a class="code" href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a> *info_ptr);</div>
+<div class="line"><a name="l03299"></a><span class="lineno"> 3299</span>&#160; </div>
+<div class="line"><a name="l03318"></a><span class="lineno"> 3318</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a52398f9f8bf2f5a20531e7c8ab1852fd">ch_meas_set_interval</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t interval_ms);</div>
+<div class="line"><a name="l03319"></a><span class="lineno"> 3319</span>&#160; </div>
+<div class="line"><a name="l03335"></a><span class="lineno"> 3335</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a4001469a3a233c39cead6f6624d436eb">ch_meas_set_interval_us</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t interval_us);</div>
+<div class="line"><a name="l03336"></a><span class="lineno"> 3336</span>&#160; </div>
+<div class="line"><a name="l03352"></a><span class="lineno"> 3352</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a88d3915b3152ca1fda21ddddefb95fec">ch_meas_set_interval_ticks</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint32_t rtc_ticks);</div>
+<div class="line"><a name="l03353"></a><span class="lineno"> 3353</span>&#160; </div>
+<div class="line"><a name="l03366"></a><span class="lineno"> 3366</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a5c76a6684d06acdd7ff60de902ef9cf0">ch_meas_get_interval</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03367"></a><span class="lineno"> 3367</span>&#160; </div>
+<div class="line"><a name="l03380"></a><span class="lineno"> 3380</span>&#160;uint32_t <a class="code" href="soniclib_8h.html#aa6062925563a899604cc8665398fa635">ch_meas_get_interval_us</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03381"></a><span class="lineno"> 3381</span>&#160; </div>
+<div class="line"><a name="l03394"></a><span class="lineno"> 3394</span>&#160;uint32_t <a class="code" href="soniclib_8h.html#a2402d08e2043ec130dbbb090b1c67596">ch_meas_get_interval_ticks</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03395"></a><span class="lineno"> 3395</span>&#160; </div>
+<div class="line"><a name="l03414"></a><span class="lineno"> 3414</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#aa2b5b2e869a15194c08ae15f0e20cb14">ch_meas_time_hop_enable</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03415"></a><span class="lineno"> 3415</span>&#160; </div>
+<div class="line"><a name="l03431"></a><span class="lineno"> 3431</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a8421a242bc38e92a27e96814c64c1c95">ch_meas_time_hop_disable</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03432"></a><span class="lineno"> 3432</span>&#160; </div>
+<div class="line"><a name="l03452"></a><span class="lineno"> 3452</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#adc5748ec903986b27b78f4a52b8c9e23">ch_meas_set_odr</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> odr);</div>
+<div class="line"><a name="l03453"></a><span class="lineno"> 3453</span>&#160; </div>
+<div class="line"><a name="l03468"></a><span class="lineno"> 3468</span>&#160;<a class="code" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> <a class="code" href="soniclib_8h.html#abc69e96679d03384c1cf912ebf66c614">ch_meas_get_odr</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03469"></a><span class="lineno"> 3469</span>&#160; </div>
+<div class="line"><a name="l03494"></a><span class="lineno"> 3494</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a7d24256fc81eaadb687786ee41bec7c9">ch_meas_set_num_samples</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
+<div class="line"><a name="l03495"></a><span class="lineno"> 3495</span>&#160; </div>
+<div class="line"><a name="l03514"></a><span class="lineno"> 3514</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a9bf5688451893bddde1d3623dd34f48d">ch_meas_get_num_samples</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03515"></a><span class="lineno"> 3515</span>&#160; </div>
+<div class="line"><a name="l03540"></a><span class="lineno"> 3540</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#acfc7192978564ab0f477ee2132870fea">ch_meas_set_max_range</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t max_range_mm);</div>
+<div class="line"><a name="l03541"></a><span class="lineno"> 3541</span>&#160; </div>
+<div class="line"><a name="l03558"></a><span class="lineno"> 3558</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#acd7763faeec4c696c10410544cb01365">ch_meas_get_max_range</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03559"></a><span class="lineno"> 3559</span>&#160; </div>
+<div class="line"><a name="l03584"></a><span class="lineno"> 3584</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a4203c97c07e47db67bf2e1c1eb16b054">ch_meas_mm_to_samples</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_mm);</div>
+<div class="line"><a name="l03585"></a><span class="lineno"> 3585</span>&#160; </div>
+<div class="line"><a name="l03618"></a><span class="lineno"> 3618</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a70baf4591a0f4031f566ca7fcb73b0cd">ch_meas_samples_to_mm</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, uint16_t num_samples);</div>
+<div class="line"><a name="l03619"></a><span class="lineno"> 3619</span>&#160; </div>
+<div class="line"><a name="l03635"></a><span class="lineno"> 3635</span>&#160;<a class="code" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> <a class="code" href="soniclib_8h.html#abae9547bfdb9eda44b7f3f44c42d815e">ch_meas_get_iq_output</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l03636"></a><span class="lineno"> 3636</span>&#160; </div>
+<div class="line"><a name="l03654"></a><span class="lineno"> 3654</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a3fb6e60f175bbb08c87787c0ac680865">ch_meas_set_iq_output</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="code" href="soniclib_8h.html#a5143295fdd1fdd439dad873fb9e04948">ch_output_type_t</a> output_format);</div>
+<div class="line"><a name="l03655"></a><span class="lineno"> 3655</span>&#160; </div>
+<div class="line"><a name="l03672"></a><span class="lineno"> 3672</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#ad725040c45603cc81f47ccb4ab104efc">ch_init_algo</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l03673"></a><span class="lineno"> 3673</span>&#160; </div>
+<div class="line"><a name="l03689"></a><span class="lineno"> 3689</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a40e276c66c4a835c1146135580d7d5c7">ch_get_algo_output</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_out_ptr);</div>
+<div class="line"><a name="l03690"></a><span class="lineno"> 3690</span>&#160; </div>
+<div class="line"><a name="l03706"></a><span class="lineno"> 3706</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#abfe62802f4bc1c41bc96d903e3aa323c">ch_get_algo_state</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_state_ptr);</div>
+<div class="line"><a name="l03707"></a><span class="lineno"> 3707</span>&#160; </div>
+<div class="line"><a name="l03723"></a><span class="lineno"> 3723</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#ac05e1055eb673ae1c6e03d8d72046039">ch_get_algo_config</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
+<div class="line"><a name="l03724"></a><span class="lineno"> 3724</span>&#160; </div>
+<div class="line"><a name="l03740"></a><span class="lineno"> 3740</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a0946a2fe093c2eb4c8de5d4d7535c159">ch_set_algo_config</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <span class="keyword">const</span> <span class="keywordtype">void</span> *algo_cfg_ptr);</div>
+<div class="line"><a name="l03741"></a><span class="lineno"> 3741</span>&#160; </div>
+<div class="line"><a name="l03757"></a><span class="lineno"> 3757</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a1e8e425d463961d442133253235c5a41">ch_get_algo_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structicu__algo__info.html">ICU_ALGO_SHASTA_INFO</a> *algo_info_ptr);</div>
+<div class="line"><a name="l03758"></a><span class="lineno"> 3758</span>&#160; </div>
+<div class="line"><a name="l03777"></a><span class="lineno"> 3777</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="soniclib_8h.html#a76945903073c49706d025c7679b07059">ch_get_sensor_id</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l03778"></a><span class="lineno"> 3778</span>&#160; </div>
+<div class="line"><a name="l03799"></a><span class="lineno"> 3799</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a0894c6a31cecc608ab6c457f918abe09">ch_get_mfg_info</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="structch__mfg__info__t.html">ch_mfg_info_t</a> *info_ptr);</div>
+<div class="line"><a name="l03800"></a><span class="lineno"> 3800</span>&#160; </div>
+<div class="line"><a name="l03801"></a><span class="lineno"> 3801</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// INCLUDE_SHASTA_SUPPORT</span></div>
+<div class="line"><a name="l03802"></a><span class="lineno"> 3802</span>&#160; </div>
+<div class="line"><a name="l03813"></a><span class="lineno"> 3813</span>&#160;uint32_t <a class="code" href="soniclib_8h.html#a7747e4f758aa7d957d3e69a94ced2363">ch_get_cpu_frequency</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l03814"></a><span class="lineno"> 3814</span>&#160; </div>
+<div class="line"><a name="l03921"></a><span class="lineno"> 3921</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a5e0552ddb44341f86d96a9c5b4d9a1ca">ch_set_rtc</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a95396c4034eb6e41fffcfa7d9dbcd830">ch_rtc_src_t</a> rtc_source, uint16_t rtc_freq);</div>
+<div class="line"><a name="l03922"></a><span class="lineno"> 3922</span>&#160; </div>
+<div class="line"><a name="l03933"></a><span class="lineno"> 3933</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a3157748b36bfb84930fd16ab06570eb7">ch_get_rtc_frequency</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l03934"></a><span class="lineno"> 3934</span>&#160; </div>
+<div class="line"><a name="l03996"></a><span class="lineno"> 3996</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a50819630a6c6dc83303090054413866d">ch_set_pmut_clock</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#aca9006600c4c232750578f7ed6c0416e">ch_pmut_clk_cfg_t</a> clock_cfg);</div>
+<div class="line"><a name="l03997"></a><span class="lineno"> 3997</span>&#160; </div>
+<div class="line"><a name="l04011"></a><span class="lineno"> 4011</span>&#160;<a class="code" href="soniclib_8h.html#aca9006600c4c232750578f7ed6c0416e">ch_pmut_clk_cfg_t</a> <a class="code" href="soniclib_8h.html#a80da2e1dc19b0f3a40c775b818ead954">ch_get_pmut_clock</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l04012"></a><span class="lineno"> 4012</span>&#160; </div>
+<div class="line"><a name="l04045"></a><span class="lineno"> 4045</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#ac5702e109dfbbd351a32df3df36c6e1b">ch_group_set_pmut_clock_freq</a>(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint32_t pmut_clock_freq);</div>
+<div class="line"><a name="l04046"></a><span class="lineno"> 4046</span>&#160; </div>
+<div class="line"><a name="l04072"></a><span class="lineno"> 4072</span>&#160;uint32_t <a class="code" href="soniclib_8h.html#af80e105e4c2bcee89f2f606d35015050">ch_group_get_pmut_clock_freq</a>(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr);</div>
+<div class="line"><a name="l04073"></a><span class="lineno"> 4073</span>&#160; </div>
+<div class="line"><a name="l04099"></a><span class="lineno"> 4099</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a0fd13d9b1ba62dca747988e1b4abc1e0">ch_set_data_ready_delay</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t delay_ms);</div>
+<div class="line"><a name="l04100"></a><span class="lineno"> 4100</span>&#160; </div>
+<div class="line"><a name="l04115"></a><span class="lineno"> 4115</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#aacf8233ee597b2795c3e478e70f3aefd">ch_get_data_ready_delay</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l04116"></a><span class="lineno"> 4116</span>&#160; </div>
+<div class="line"><a name="l04136"></a><span class="lineno"> 4136</span>&#160;uint16_t <a class="code" href="soniclib_8h.html#a2806d7b51748c5dcd870d7c3c21b222a">ch_get_num_output_samples</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l04137"></a><span class="lineno"> 4137</span>&#160; </div>
+<div class="line"><a name="l04154"></a><span class="lineno"> 4154</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a2b585794c893ffa579775e060df36915">ch_trigger_soft</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l04155"></a><span class="lineno"> 4155</span>&#160; </div>
+<div class="line"><a name="l04181"></a><span class="lineno"> 4181</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a035896185096ae0cc1e4c54db205d38c">ch_set_trigger_type</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#aa18105c6986688c2700df504020bc2f2">ch_trigger_type_t</a> trig_type);</div>
+<div class="line"><a name="l04182"></a><span class="lineno"> 4182</span>&#160; </div>
+<div class="line"><a name="l04201"></a><span class="lineno"> 4201</span>&#160;<a class="code" href="soniclib_8h.html#aa18105c6986688c2700df504020bc2f2">ch_trigger_type_t</a> <a class="code" href="soniclib_8h.html#a74355ffe5e8887d74e9cdf5b3bd48a6f">ch_get_trigger_type</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l04202"></a><span class="lineno"> 4202</span>&#160; </div>
+<div class="line"><a name="l04226"></a><span class="lineno"> 4226</span>&#160;<a class="code" href="soniclib_8h.html#a00b8943dd0033cdbdd6e4da6334f283b">ch_meas_status_t</a> <a class="code" href="soniclib_8h.html#a90245534189e3893901e90e63fc9e26c">ch_meas_get_status</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num);</div>
+<div class="line"><a name="l04227"></a><span class="lineno"> 4227</span>&#160; </div>
+<div class="line"><a name="l04239"></a><span class="lineno"> 4239</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a4a33406081a2392fd38f36cd65e8b8cb">ch_log_init</a>(<a class="code" href="structch__group__t.html">ch_group_t</a> *grp_ptr, <a class="code" href="soniclib_8h.html#a9b0598bc1d023573411e2831f3d28108">ch_log_fmt_t</a> format, <a class="code" href="structch__log__cfg__t.html">ch_log_cfg_t</a> *config_ptr);</div>
+<div class="line"><a name="l04240"></a><span class="lineno"> 4240</span>&#160; </div>
+<div class="line"><a name="l04255"></a><span class="lineno"> 4255</span>&#160;<span class="keywordtype">void</span> <a class="code" href="soniclib_8h.html#a21e0ba880449ca3c613730091ba089c4">ch_log_append</a>(uint8_t log_id, <a class="code" href="soniclib_8h.html#a9b0598bc1d023573411e2831f3d28108">ch_log_fmt_t</a> format, uint64_t timestamp, <a class="code" href="structch__log__data__t.html">ch_log_data_t</a> *log_data_ptr);</div>
+<div class="line"><a name="l04256"></a><span class="lineno"> 4256</span>&#160; </div>
+<div class="line"><a name="l04280"></a><span class="lineno"> 4280</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a6703bf9649051f66c8c8acff42db746d">ch_watchdog_enable</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l04281"></a><span class="lineno"> 4281</span>&#160; </div>
+<div class="line"><a name="l04296"></a><span class="lineno"> 4296</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#aabaaeecabbda3d134a582405cc2ec812">ch_watchdog_disable</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr);</div>
+<div class="line"><a name="l04297"></a><span class="lineno"> 4297</span>&#160; </div>
+<div class="line"><a name="l04314"></a><span class="lineno"> 4314</span>&#160;uint8_t <a class="code" href="soniclib_8h.html#a1a659b8b3969c202074c09bfb54ee9b7">ch_check_reset_state</a>(<a class="code" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="code" href="soniclib_8h.html#a8579cbcd7ce6352dcb003317568123c9">ch_sensor_reset_state_t</a> *reset_state_ptr);</div>
+<div class="line"><a name="l04315"></a><span class="lineno"> 4315</span>&#160; </div>
+<div class="line"><a name="l04316"></a><span class="lineno"> 4316</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l04317"></a><span class="lineno"> 4317</span>&#160;}</div>
+<div class="line"><a name="l04318"></a><span class="lineno"> 4318</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l04319"></a><span class="lineno"> 4319</span>&#160; </div>
+<div class="line"><a name="l04320"></a><span class="lineno"> 4320</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __SONICLIB_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="ach__driver_8h_html"><div class="ttname"><a href="ch__driver_8h.html">ch_driver.h</a></div><div class="ttdoc">Internal driver functions for operation with the Chirp ultrasonic sensor.</div></div>
 <div class="ttc" id="ach__math__utils_8h_html"><div class="ttname"><a href="ch__math__utils_8h.html">ch_math_utils.h</a></div><div class="ttdoc">Functions for performing fixed point arithmetic. https://github.com/dmoulding/log2fix https://github....</div></div>
 <div class="ttc" id="aicu_8h_html"><div class="ttname"><a href="icu_8h.html">icu.h</a></div><div class="ttdoc">Internal definitions for TDK/Chirp ICU ultrasonic sensors.</div></div>
