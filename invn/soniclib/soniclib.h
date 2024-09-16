@@ -113,7 +113,7 @@ extern "C" {
 /* SonicLib API/Driver version */
 #define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
 #define SONICLIB_VER_MINOR  (2) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (1) /*!< SonicLib revision. */
+#define SONICLIB_VER_REV    (5) /*!< SonicLib revision. */
 #define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
@@ -3194,6 +3194,12 @@ void ch_meas_init_segment_count(ch_meas_segment_t *seg_ptr, uint16_t num_cycles,
  *
  * This function initializes the measurement segment descriptor specified by \a seg_ptr as
  * a receive segment.
+ * The number of samples of added to the segments is limited by the maximum number of rx samples
+ * that firmware can read and by the number of cycles a segment can store.
+ * The length of segment in samples is converted to a number of cycles.
+ * A segment have a maximum length of 65535 cycles.
+ * If the number of sample exceeds the limitation, define the segments manually and import them
+ * to a measure queue using \a ch_meas_import()
  */
 void ch_meas_init_segment_rx(ch_meas_segment_t *seg_ptr, uint16_t num_samples, ch_odr_t odr, uint8_t gain_reduce,
                              uint8_t atten, uint8_t int_enable);

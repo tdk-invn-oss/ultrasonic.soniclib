@@ -76,12 +76,13 @@ Additionally, there are several CMake variables that control various build
 options. These are as follows. See the
 `invn/soniclib/details/chirp_board_config.h` header for details.
 
-* `CHIRP_INIT_FW_TYPE`: One of `FULL`, `NO_TX_OPTIMIZATION`, or `NONE`.
 * `CHIRP_MAX_NUM_SENSORS`: Maximum number of sensors supported.
 * `CHIRP_NUM_BUSES`: Number of SPI/I2C buses supported.
 * `CHIRP_SENSOR_INT_PIN`: (ICU-x0201 only) Pin to use for interrupts.
 * `CHIRP_SENSOR_TRIG_PIN`: (ICU-x0201 only) Pin to use for triggers.
-* `INCLUDE_SHASTA_SUPPORT`: Build for Shasta (ICU) architecture sensors.
+* `CHIRP_MAIN_FW_TYPE` : Select the main firmware to build with, can be one of `NONE` (fw built externally) or one of the firmware embedded by default with Soniclib `GPT` (for shasta devices), `CH101_GPR`, `CH201_GPRMT` or `CHX01_FREQSWEEP`
+* `CHIRP_INIT_FW_TYPE`: Select an init firmware to build, if necessary in one of `FULL`, `NO_TX_OPTIMIZATION`, or `NONE`.
+* `CHIRP_LOG_LEVEL` : Define the log level to use for the Soniclib internal log messages
 
 These variables can be set through the CMake GUI, through command line -D
 options in the main CMake command, or manually through the `CMakeCache.txt` file
@@ -96,10 +97,28 @@ line-continuation.
 ```powershell
 cmake -G "MinGW Makefiles" `
     -DCMAKE_TOOLCHAIN_FILE="CMakeToolchains/arm-none-eabi-m4.cmake" `
-    -DINCLUDE_SHASTA_SUPPORT:BOOL=ON `
+    -DCHIRP_MAIN_FW_TYPE:STRING=GPT `
     -DCHIRP_INIT_FW_TYPE:STRING=NO_TX_OPTIMIZATION `
     -B build
 ```
 
+To build Soniclib from a parent cmake project, you can follow this example :
+
+```cmake
+set(CHIRP_MAX_NUM_SENSORS 1 CACHE STRING "one sensor connected" FORCE)
+set(CHIRP_NUM_BUSES 1 CACHE STRING "one sensor connected" FORCE)
+set(INCLUDE_SHASTA_SUPPORT ON CACHE BOOL "using ICU sensors" FORCE)
+set(CHIRP_SENSOR_INT_PIN 1 CACHE STRING "use INT1 in freerun mode" FORCE)
+set(CHIRP_SENSOR_TRIG_PIN 1 CACHE STRING "use INT1 in freerun mode" FORCE)
+set(CHIRP_INIT_FW_TYPE "NO_TX_OPTIMIZATION" CACHE STRING "using fw presencev2" FORCE)
+set(CHIRP_LOG_LEVEL 2 CACHE STRING "log=info" FORCE)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/invn/soniclib/)
+
+...
+
+target_link_libraries(app PRIVATE soniclib)
+```
+
 ## Copyright
-&copy; Copyright 2016-2023, TDK/InvenSense.  All rights reserved.
+&copy; Copyright 2016-2024, TDK/InvenSense.  All rights reserved.

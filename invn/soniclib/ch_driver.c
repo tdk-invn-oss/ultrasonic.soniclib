@@ -689,7 +689,8 @@ void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num) {
 				uint16_t last_meas_reg_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->raw.last_measurement);
 
 				chdrv_read_byte(dev_ptr, last_meas_reg_addr, &last_meas);
-				dev_ptr->last_measurement = last_meas;
+				dev_ptr->last_measurement = last_meas & ~LAST_MEASUREMENT_CONTINUOUS;
+				dev_ptr->is_continuous    = (last_meas & LAST_MEASUREMENT_CONTINUOUS) > 0;
 
 				uint8_t last_fmt;
 				uint16_t last_fmt_reg_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->raw.iq_output_format);
