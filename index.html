@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.2.5</span>
+   &#160;<span id="projectnumber">4.2.5+6ddd125</span>
    </div>
   </td>
  </tr>
@@ -95,22 +95,37 @@ $(function() {
 <p>A <code>CMakeLists.txt</code> is provided for easy integration of SonicLib into a CMake-based project. Generally, all that is required is to use the <code>add_subdirectory</code> command to add the directory containing this <code>CMakeLists.txt</code> to your project. You then get a target called <code>soniclib</code> that you can use with the target-based CMake commands (<code>target_link_libraries</code>, <code>target_include_directories</code>).</p>
 <p>Additionally, there are several CMake variables that control various build options. These are as follows. See the <code><a class="el" href="chirp__board__config_8h_source.html">invn/soniclib/details/chirp_board_config.h</a></code> header for details.</p>
 <ul>
-<li><code>CHIRP_INIT_FW_TYPE</code>: One of <code>FULL</code>, <code>NO_TX_OPTIMIZATION</code>, or <code>NONE</code>.</li>
 <li><code>CHIRP_MAX_NUM_SENSORS</code>: Maximum number of sensors supported.</li>
 <li><code>CHIRP_NUM_BUSES</code>: Number of SPI/I2C buses supported.</li>
 <li><code>CHIRP_SENSOR_INT_PIN</code>: (ICU-x0201 only) Pin to use for interrupts.</li>
 <li><code>CHIRP_SENSOR_TRIG_PIN</code>: (ICU-x0201 only) Pin to use for triggers.</li>
-<li><code>INCLUDE_SHASTA_SUPPORT</code>: Build for Shasta (ICU) architecture sensors.</li>
+<li><code>CHIRP_MAIN_FW_TYPE</code> : Select the main firmware to build with, can be one of <code>NONE</code> (fw built externally) or one of the firmware embedded by default with Soniclib <code>GPT</code> (for shasta devices), <code>CH101_GPR</code>, <code>CH201_GPRMT</code> or <code>CHX01_FREQSWEEP</code></li>
+<li><code>CHIRP_INIT_FW_TYPE</code>: Select an init firmware to build, if necessary in one of <code>FULL</code>, <code>NO_TX_OPTIMIZATION</code>, or <code>NONE</code>.</li>
+<li><code>CHIRP_LOG_LEVEL</code> : Define the log level to use for the Soniclib internal log messages</li>
 </ul>
 <p>These variables can be set through the CMake GUI, through command line -D options in the main CMake command, or manually through the <code>CMakeCache.txt</code> file post-configuration.</p>
 <p>For example, the following cmake command configures the SonicLib build for shasta support with the <code>NO_TX_OPTIMIZATION</code> init firmware. Below we are using a toolchain file for an STM32 target. You can replace this with the toolchain file needed by your target. Note the <code>`</code> character is for powershell line-continuation.</p>
 <div class="fragment"><div class="line">cmake -G &quot;MinGW Makefiles&quot; `</div>
 <div class="line">    -DCMAKE_TOOLCHAIN_FILE=&quot;CMakeToolchains/arm-none-eabi-m4.cmake&quot; `</div>
-<div class="line">    -DINCLUDE_SHASTA_SUPPORT:BOOL=ON `</div>
+<div class="line">    -DCHIRP_MAIN_FW_TYPE:STRING=GPT `</div>
 <div class="line">    -DCHIRP_INIT_FW_TYPE:STRING=NO_TX_OPTIMIZATION `</div>
 <div class="line">    -B build</div>
+</div><!-- fragment --><p>To build Soniclib from a parent cmake project, you can follow this example :</p>
+<div class="fragment"><div class="line">set(CHIRP_MAX_NUM_SENSORS 1 CACHE STRING &quot;one sensor connected&quot; FORCE)</div>
+<div class="line">set(CHIRP_NUM_BUSES 1 CACHE STRING &quot;one sensor connected&quot; FORCE)</div>
+<div class="line">set(INCLUDE_SHASTA_SUPPORT ON CACHE BOOL &quot;using ICU sensors&quot; FORCE)</div>
+<div class="line">set(CHIRP_SENSOR_INT_PIN 1 CACHE STRING &quot;use INT1 in freerun mode&quot; FORCE)</div>
+<div class="line">set(CHIRP_SENSOR_TRIG_PIN 1 CACHE STRING &quot;use INT1 in freerun mode&quot; FORCE)</div>
+<div class="line">set(CHIRP_INIT_FW_TYPE &quot;NO_TX_OPTIMIZATION&quot; CACHE STRING &quot;using fw presencev2&quot; FORCE)</div>
+<div class="line">set(CHIRP_LOG_LEVEL 2 CACHE STRING &quot;log=info&quot; FORCE)</div>
+<div class="line"> </div>
+<div class="line">add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/invn/soniclib/)</div>
+<div class="line"> </div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line">target_link_libraries(app PRIVATE soniclib)</div>
 </div><!-- fragment --><h1>Copyright</h1>
-<p>&copy; Copyright 2016-2023, TDK/InvenSense. All rights reserved. </p>
+<p>&copy; Copyright 2016-2024, TDK/InvenSense. All rights reserved. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
