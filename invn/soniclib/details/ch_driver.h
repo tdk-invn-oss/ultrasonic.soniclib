@@ -689,16 +689,31 @@ uint8_t chdrv_dbg_reg_write(ch_dev_t *dev_ptr, uint8_t reg_id, uint16_t reg_valu
  * \param dev_num	interrupting sensor's device number within group
  *
  *
- * This function should be called from the board support package when
- * an interrupt from the sensor is received.  The \a dev_num parameter
+ * This function is called from \a ch_interrupt() when
+ * an interrupt from the sensor is received. The \a dev_num parameter
  * indicates which sensor interrupted.
+ *
+ */
+void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num);
+
+/*!
+ * \brief Driver callback deferred routine for sensor interrupt.
+ *
+ * \param grp_ptr 	pointer to the ch_group_t config structure for a group of sensors
+ * \param dev_num	interrupting sensor's device number within group
+ *
+ *
+ * This function is called from \a ch_interrupt() when
+ * an interrupt from the sensor is received. Or shall be called in app context
+ * if USE_DEFERRED_INTERRUPT_PROCESSING is defined.
+ * The \a dev_num parameter indicates which sensor interrupted.
  *
  * For sensor data-ready interrupts, this routine will in turn call the
  * application's callback routine which was set using \a ch_io_int_callback_set().
  *
  * See also \a ch_io_int_callback_set()
  */
-void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num);
+void chdrv_int_callback_deferred(ch_group_t *grp_ptr, uint8_t dev_num);
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 

@@ -112,8 +112,8 @@ extern "C" {
 /*==============  SonicLib Version Info ===================*/
 /* SonicLib API/Driver version */
 #define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
-#define SONICLIB_VER_MINOR  (2) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (5) /*!< SonicLib revision. */
+#define SONICLIB_VER_MINOR  (3) /*!< SonicLib minor version. */
+#define SONICLIB_VER_REV    (2) /*!< SonicLib revision. */
 #define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
@@ -718,9 +718,11 @@ struct ch_group_t {
 	                                                     completes */
 	ch_dev_t *device[CHIRP_MAX_NUM_SENSORS];        /*!< Array of pointers to ch_dev_t structures for
 	                                                     individual sensors */
-	uint8_t num_connected[CHIRP_NUM_BUSES];         /*!< Array of counters for connected sensors per bus */
-	chdrv_queue_t queue[CHIRP_NUM_BUSES];           /*!< Array of SPI/I2C non-blocking transaction
-	                                                             queues (one per bus) */
+#ifdef INCLUDE_WHITNEY_SUPPORT
+	uint8_t num_connected[CHIRP_NUM_BUSES]; /*!< Array of counters for connected sensors per bus */
+#endif
+	chdrv_queue_t queue[CHIRP_NUM_BUSES]; /*!< Array of SPI/I2C non-blocking transaction
+	                                                   queues (one per bus) */
 };
 
 //! Chirp sensor device descriptor structure.

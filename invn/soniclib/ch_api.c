@@ -243,6 +243,9 @@ uint8_t ch_get_dev_num(ch_dev_t *dev_ptr) {
 
 ch_dev_t *ch_get_dev_ptr(ch_group_t *grp_ptr, uint8_t dev_num) {
 
+	if (dev_num >= grp_ptr->num_ports) {
+		return NULL;
+	}
 	return grp_ptr->device[dev_num];
 }
 
