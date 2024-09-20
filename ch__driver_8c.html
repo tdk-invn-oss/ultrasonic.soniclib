@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.2.5+6ddd125</span>
+   &#160;<span id="projectnumber">4.3.2</span>
    </div>
   </td>
  </tr>
@@ -200,6 +200,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a57e0ec9efd96a9470dee37e6df5a6047"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a57e0ec9efd96a9470dee37e6df5a6047">chdrv_int_callback</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num)</td></tr>
 <tr class="memdesc:a57e0ec9efd96a9470dee37e6df5a6047"><td class="mdescLeft">&#160;</td><td class="mdescRight">Driver callback routine for sensor interrupt.  <a href="ch__driver_8c.html#a57e0ec9efd96a9470dee37e6df5a6047">More...</a><br /></td></tr>
 <tr class="separator:a57e0ec9efd96a9470dee37e6df5a6047"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f045c98d7f0219f18e0de939fb77d00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a7f045c98d7f0219f18e0de939fb77d00">chdrv_int_callback_deferred</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num)</td></tr>
+<tr class="memdesc:a7f045c98d7f0219f18e0de939fb77d00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Driver callback deferred routine for sensor interrupt.  <a href="ch__driver_8c.html#a7f045c98d7f0219f18e0de939fb77d00">More...</a><br /></td></tr>
+<tr class="separator:a7f045c98d7f0219f18e0de939fb77d00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a396170bdd891cf5177cd87203580a152"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a396170bdd891cf5177cd87203580a152">chdrv_int_group_assert</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr)</td></tr>
 <tr class="memdesc:a396170bdd891cf5177cd87203580a152"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assert the interrupt lines for all sensors in a group.  <a href="ch__driver_8c.html#a396170bdd891cf5177cd87203580a152">More...</a><br /></td></tr>
 <tr class="separator:a396170bdd891cf5177cd87203580a152"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1438,7 +1441,45 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This function should be called from the board support package when an interrupt from the sensor is received. The <em>dev_num</em> parameter indicates which sensor interrupted.</p>
+<p>This function is called from <em><a class="el" href="ch__api_8c.html#a68080a85a27dc680ce55c020f575c5c3" title="Notify SonicLib that a sensor interrupt occurred.">ch_interrupt()</a></em> when an interrupt from the sensor is received. The <em>dev_num</em> parameter indicates which sensor interrupted. </p>
+
+</div>
+</div>
+<a id="a7f045c98d7f0219f18e0de939fb77d00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f045c98d7f0219f18e0de939fb77d00">&#9670;&nbsp;</a></span>chdrv_int_callback_deferred()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void chdrv_int_callback_deferred </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__group__t.html">ch_group_t</a> *&#160;</td>
+          <td class="paramname"><em>grp_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>dev_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Driver callback deferred routine for sensor interrupt. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> config structure for a group of sensors </td></tr>
+    <tr><td class="paramname">dev_num</td><td>interrupting sensor's device number within group</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This function is called from <em><a class="el" href="ch__api_8c.html#a68080a85a27dc680ce55c020f575c5c3" title="Notify SonicLib that a sensor interrupt occurred.">ch_interrupt()</a></em> when an interrupt from the sensor is received. Or shall be called in app context if USE_DEFERRED_INTERRUPT_PROCESSING is defined. The <em>dev_num</em> parameter indicates which sensor interrupted.</p>
 <p>For sensor data-ready interrupts, this routine will in turn call the application's callback routine which was set using <em><a class="el" href="ch__api_8c.html#af3d4045f3510d82596c8231123e890b9" title="Set callback function for Chirp sensor I/O interrupt.">ch_io_int_callback_set()</a></em>.</p>
 <p>See also <em><a class="el" href="ch__api_8c.html#af3d4045f3510d82596c8231123e890b9" title="Set callback function for Chirp sensor I/O interrupt.">ch_io_int_callback_set()</a></em> </p>
 

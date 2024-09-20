@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.2.5+6ddd125</span>
+   &#160;<span id="projectnumber">4.3.2</span>
    </div>
   </td>
  </tr>
@@ -82,7 +82,8 @@ $(function() {
 
 <p>User-supplied board support package functions to interface Chirp SonicLib to a specific hardware platform.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="soniclib_8h_source.html">invn/soniclib/soniclib.h</a>&gt;</code><br />
 </div>
 <p><a href="chirp__bsp_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -103,6 +104,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a86cc5ddf0167c307d9ef9ffaa180c5ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a86cc5ddf0167c307d9ef9ffaa180c5ae">chbsp_delay_us</a> (uint32_t us)</td></tr>
 <tr class="memdesc:a86cc5ddf0167c307d9ef9ffaa180c5ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delay for specified number of microseconds.  <a href="chirp__bsp_8h.html#a86cc5ddf0167c307d9ef9ffaa180c5ae">More...</a><br /></td></tr>
 <tr class="separator:a86cc5ddf0167c307d9ef9ffaa180c5ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34a907cf1cc5eb4466ad7e798dc8a54e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a34a907cf1cc5eb4466ad7e798dc8a54e">chbsp_event_notify</a> (uint32_t event_mask)</td></tr>
+<tr class="memdesc:a34a907cf1cc5eb4466ad7e798dc8a54e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify an interrupt event for the selected device.  <a href="chirp__bsp_8h.html#a34a907cf1cc5eb4466ad7e798dc8a54e">More...</a><br /></td></tr>
+<tr class="separator:a34a907cf1cc5eb4466ad7e798dc8a54e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb7a72a562e34dba6642e577129a9f9f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#abb7a72a562e34dba6642e577129a9f9f">chbsp_event_wait</a> (uint16_t time_out_ms, uint32_t event_mask)</td></tr>
+<tr class="memdesc:abb7a72a562e34dba6642e577129a9f9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for any interrupt event.  <a href="chirp__bsp_8h.html#abb7a72a562e34dba6642e577129a9f9f">More...</a><br /></td></tr>
+<tr class="separator:abb7a72a562e34dba6642e577129a9f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ac2b5380cd6de3da32d9fd7e8fc85f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a6ac2b5380cd6de3da32d9fd7e8fc85f7">chbsp_event_wait_setup</a> (uint32_t event_mask)</td></tr>
+<tr class="memdesc:a6ac2b5380cd6de3da32d9fd7e8fc85f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare the mechanism to wait for an event.  <a href="chirp__bsp_8h.html#a6ac2b5380cd6de3da32d9fd7e8fc85f7">More...</a><br /></td></tr>
+<tr class="separator:a6ac2b5380cd6de3da32d9fd7e8fc85f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a3ecf5c737e49a39bbe34a7c9100158"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#a3a3ecf5c737e49a39bbe34a7c9100158">chbsp_external_irq_handler</a> (<a class="el" href="ch__driver_8h.html#a0eb6a38a59c07da652551cfde916ec35">chdrv_transaction_t</a> *trans)</td></tr>
 <tr class="memdesc:a3a3ecf5c737e49a39bbe34a7c9100158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interrupt handler callout for external devices sharing the SPI/I2C bus.  <a href="chirp__bsp_8h.html#a3a3ecf5c737e49a39bbe34a7c9100158">More...</a><br /></td></tr>
 <tr class="separator:a3a3ecf5c737e49a39bbe34a7c9100158"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -445,6 +455,92 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
 </dl>
 <p>This function should wait for the specified number of microseconds before returning to the caller.</p>
 <p>This function is REQUIRED. </p>
+
+</div>
+</div>
+<a id="a34a907cf1cc5eb4466ad7e798dc8a54e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34a907cf1cc5eb4466ad7e798dc8a54e">&#9670;&nbsp;</a></span>chbsp_event_notify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void chbsp_event_notify </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>event_mask</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Notify an interrupt event for the selected device. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">event_mask</td><td>Each bit of the mask represents a device</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This function is called from <em>ch_interrupt</em> , in interrupt context </p>
+
+</div>
+</div>
+<a id="abb7a72a562e34dba6642e577129a9f9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb7a72a562e34dba6642e577129a9f9f">&#9670;&nbsp;</a></span>chbsp_event_wait()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t chbsp_event_wait </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>time_out_ms</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>event_mask</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Wait for any interrupt event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">time_out_ms</td><td>time-out of the wait loop </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if an event has been received on INT pin, 1 if time-out happened</dd></dl>
+<p>This function is called during initialization when an event is triggered on sensor and we wait the the result. This event is called in "application" context </p>
+
+</div>
+</div>
+<a id="a6ac2b5380cd6de3da32d9fd7e8fc85f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ac2b5380cd6de3da32d9fd7e8fc85f7">&#9670;&nbsp;</a></span>chbsp_event_wait_setup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void chbsp_event_wait_setup </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>event_mask</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Prepare the mechanism to wait for an event. </p>
+<p>This function is called before <em>chbsp_event_wait</em> </p>
 
 </div>
 </div>
@@ -1067,9 +1163,9 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
 <p>The <em><a class="el" href="chirp__bsp_8h.html#afe9a08ed35bb3ea40afb042b03a50621" title="Write bytes to an I2C slave using memory addressing.">chbsp_i2c_mem_write()</a></em> function is basically a standard I2C data write, except that the destination register address and the number of bytes being written must be included, like a header.</p>
 <p>The byte sequence being sent should look like the following: </p><table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadCenter">0   </th><th class="markdownTableHeadCenter">1   </th><th class="markdownTableHeadCenter">2   </th><th class="markdownTableHeadCenter">3   </th><th class="markdownTableHeadCenter">4   </th><th class="markdownTableHeadCenter">5   </th><th class="markdownTableHeadCenter">etc...    </th></tr>
+<th class="markdownTableHeadCenter">0   </th><th class="markdownTableHeadCenter">1   </th><th class="markdownTableHeadCenter">2   </th><th class="markdownTableHeadCenter">3   </th><th class="markdownTableHeadCenter">4   </th><th class="markdownTableHeadCenter">etc...    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">I2C Addr   </td><td class="markdownTableBodyCenter"><em>mem_addr</em>   </td><td class="markdownTableBodyCenter"><em>num_bytes</em>   </td><td class="markdownTableBodyCenter">*<em>data</em>   </td><td class="markdownTableBodyCenter">*(<em>data</em> + 1)   </td><td class="markdownTableBodyCenter">*(<em>data</em> + 2)   </td><td class="markdownTableBodyCenter">...   </td></tr>
+<td class="markdownTableBodyCenter">I2C Addr   </td><td class="markdownTableBodyCenter"><em>mem_addr</em>   </td><td class="markdownTableBodyCenter">*<em>data</em>   </td><td class="markdownTableBodyCenter">*(<em>data</em> + 1)   </td><td class="markdownTableBodyCenter">*(<em>data</em> + 2)   </td><td class="markdownTableBodyCenter">...   </td></tr>
 </table>
 <p>This function is REQUIRED for CH101 and CH201 sensors. It is not used for ICU sensors.</p>
 <dl class="section note"><dt>Note</dt><dd>Implementations of this function should use the <em><a class="el" href="ch__api_8c.html#ab5496937b5fae4e2c04ff2fa23ed9fbf" title="Get the active I2C address for a sensor.">ch_get_i2c_address()</a></em> function to obtain the device I2C address. </dd></dl>
@@ -1129,9 +1225,9 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
 <p>The I2C interface must have already been initialized using <em><a class="el" href="chirp__bsp_8h.html#acf4220335bf5b8f33b634b2bf6c9764a" title="Initialize the host&#39;s I2C hardware.">chbsp_i2c_init()</a></em>.</p>
 <p>The byte sequence being sent should look like the following: </p><table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadCenter">0   </th><th class="markdownTableHeadCenter">1   </th><th class="markdownTableHeadCenter">2   </th><th class="markdownTableHeadCenter">3   </th><th class="markdownTableHeadCenter">4   </th><th class="markdownTableHeadCenter">5   </th><th class="markdownTableHeadCenter">etc...    </th></tr>
+<th class="markdownTableHeadCenter">0   </th><th class="markdownTableHeadCenter">1   </th><th class="markdownTableHeadCenter">2   </th><th class="markdownTableHeadCenter">3   </th><th class="markdownTableHeadCenter">4   </th><th class="markdownTableHeadCenter">etc...    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">I2C Addr   </td><td class="markdownTableBodyCenter"><em>mem_addr</em>   </td><td class="markdownTableBodyCenter"><em>num_bytes</em>   </td><td class="markdownTableBodyCenter">*<em>data</em>   </td><td class="markdownTableBodyCenter">*(<em>data</em> + 1)   </td><td class="markdownTableBodyCenter">*(<em>data</em> + 2)   </td><td class="markdownTableBodyCenter">...   </td></tr>
+<td class="markdownTableBodyCenter">I2C Addr   </td><td class="markdownTableBodyCenter"><em>mem_addr</em>   </td><td class="markdownTableBodyCenter">*<em>data</em>   </td><td class="markdownTableBodyCenter">*(<em>data</em> + 1)   </td><td class="markdownTableBodyCenter">*(<em>data</em> + 2)   </td><td class="markdownTableBodyCenter">...   </td></tr>
 </table>
 <p>This function is OPTIONAL for CH101 and CH201 sensors. It is not used for ICU sensors.</p>
 <dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed if non-blocking writes on the I2C bus are required. It is not called by SonicLib functions. To perform a blocking write, see <em><a class="el" href="chirp__bsp_8h.html#afe9a08ed35bb3ea40afb042b03a50621" title="Write bytes to an I2C slave using memory addressing.">chbsp_i2c_mem_write()</a></em>.</dd>
