@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.3.2</span>
+   &#160;<span id="projectnumber">4.4.0</span>
    </div>
   </td>
  </tr>
@@ -119,6 +119,14 @@ $(function() {
 <li>ch_cycles_to_usec()
 : <a class="el" href="ch__api_8c.html#acde0dc4f438051bd4fcfd19aad8b3f9c">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#acde0dc4f438051bd4fcfd19aad8b3f9c">soniclib.h</a>
+</li>
+<li>ch_enable_double_buffer()
+: <a class="el" href="ch__api_8c.html#a87c0409b1443384afe601b8098aec6ef">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a87c0409b1443384afe601b8098aec6ef">soniclib.h</a>
+</li>
+<li>ch_enable_metadata_in_iq0()
+: <a class="el" href="ch__api_8c.html#a0bc64b2a0305210e1394331a6b2dd734">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a0bc64b2a0305210e1394331a6b2dd734">soniclib.h</a>
 </li>
 <li>ch_extra_display_config_info()
 : <a class="el" href="ch__extra__display__utils_8h.html#aad2a7bd2ecae95f8cd3bcc0d6488b80c">ch_extra_display_utils.h</a>
@@ -251,6 +259,10 @@ $(function() {
 <li>ch_get_mode()
 : <a class="el" href="ch__api_8c.html#acbd52987d0cfca5d0dec4f962ce15995">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#acbd52987d0cfca5d0dec4f962ce15995">soniclib.h</a>
+</li>
+<li>ch_get_next_buf_addr()
+: <a class="el" href="ch__api_8c.html#a2fd0582578cba1dff9d781a4ce516e84">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#a2fd0582578cba1dff9d781a4ce516e84">soniclib.h</a>
 </li>
 <li>ch_get_num_output_samples()
 : <a class="el" href="ch__api_8c.html#a2806d7b51748c5dcd870d7c3c21b222a">ch_api.c</a>
@@ -628,6 +640,10 @@ $(function() {
 : <a class="el" href="ch__api_8c.html#a8f9450f4a5d409c8e1474d4ae078fbe4">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a8f9450f4a5d409c8e1474d4ae078fbe4">soniclib.h</a>
 </li>
+<li>ch_minimal_int_handler()
+: <a class="el" href="ch__api_8c.html#ae89c9e6ef3d8a200f741e81dca0e324c">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#ae89c9e6ef3d8a200f741e81dca0e324c">soniclib.h</a>
+</li>
 <li>ch_mm_to_samples()
 : <a class="el" href="ch__api_8c.html#aa256c720961a6d327c515da60d8071c2">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#aa256c720961a6d327c515da60d8071c2">soniclib.h</a>
@@ -779,6 +795,10 @@ $(function() {
 <li>ch_trigger_soft()
 : <a class="el" href="ch__api_8c.html#a2b585794c893ffa579775e060df36915">ch_api.c</a>
 , <a class="el" href="soniclib_8h.html#a2b585794c893ffa579775e060df36915">soniclib.h</a>
+</li>
+<li>ch_update_metadata_from_iq0()
+: <a class="el" href="ch__api_8c.html#ace58b8e6d9e75d368ddcb69c99db2f3f">ch_api.c</a>
+, <a class="el" href="soniclib_8h.html#ace58b8e6d9e75d368ddcb69c99db2f3f">soniclib.h</a>
 </li>
 <li>ch_usec_to_cycles()
 : <a class="el" href="ch__api_8c.html#a5d8b3ddcc0010bf7bd1f7acc1fba4232">ch_api.c</a>
@@ -1124,6 +1144,10 @@ $(function() {
 : <a class="el" href="ch__driver_8c.html#a21aa7ef214382f49f248e22235c7872a">ch_driver.c</a>
 , <a class="el" href="ch__driver_8h.html#a21aa7ef214382f49f248e22235c7872a">ch_driver.h</a>
 </li>
+<li>chdrv_int_notify()
+: <a class="el" href="ch__driver_8c.html#ae36ec5b06f3e75d0a84b1dcffc8ca2e3">ch_driver.c</a>
+, <a class="el" href="ch__driver_8h.html#ae36ec5b06f3e75d0a84b1dcffc8ca2e3">ch_driver.h</a>
+</li>
 <li>chdrv_int_set_dir_in()
 : <a class="el" href="ch__driver_8c.html#a2ebb9684c74cad8c53ab2ce34fc69872">ch_driver.c</a>
 , <a class="el" href="ch__driver_8h.html#a2ebb9684c74cad8c53ab2ce34fc69872">ch_driver.h</a>
@@ -1175,6 +1199,10 @@ $(function() {
 <li>chdrv_prog_write()
 : <a class="el" href="ch__driver_8c.html#a6ceb695e4b6b6979bba4b2d485dd1935">ch_driver.c</a>
 , <a class="el" href="ch__driver_8h.html#a6ceb695e4b6b6979bba4b2d485dd1935">ch_driver.h</a>
+</li>
+<li>chdrv_read_buf_addr()
+: <a class="el" href="ch__driver_8c.html#a388813ed8eaf01de8e17401f3d565973">ch_driver.c</a>
+, <a class="el" href="ch__driver_8h.html#a388813ed8eaf01de8e17401f3d565973">ch_driver.h</a>
 </li>
 <li>chdrv_read_byte()
 : <a class="el" href="ch__driver_8c.html#a1faf1d0682608e480b11a89c15dcdd3e">ch_driver.c</a>

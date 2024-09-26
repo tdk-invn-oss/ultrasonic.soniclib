@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.3.2</span>
+   &#160;<span id="projectnumber">4.4.0</span>
    </div>
   </td>
  </tr>
@@ -238,9 +238,9 @@ Macros</h2></td></tr>
 <tr class="separator:aef40d6fd76a720e83aa328bfc080cb0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3407caaf3d2f8bb12e8c26bccbe3ae40">SONICLIB_VER_MAJOR</a>&#160;&#160;&#160;(4)</td></tr>
 <tr class="separator:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(3)</td></tr>
+<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(4)</td></tr>
 <tr class="separator:a3114f821e7b6c5971ddf1c363597b761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(2)</td></tr>
+<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(0)</td></tr>
 <tr class="separator:a602271af8c1cf2ba218e68b49e5d465f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87026a07278934542ce439d706df7aef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87026a07278934542ce439d706df7aef">SONICLIB_VER_SUFFIX</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
 <tr class="separator:a87026a07278934542ce439d706df7aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -291,6 +291,10 @@ typedef <a class="el" href="soniclib_8h.html#ac2d701c38ecfaa08151839826667df20">
 <tr class="memitem:a2112144cdcb10798255b9fa6abd57414"><td class="memItemLeft" align="right" valign="top"><a id="a2112144cdcb10798255b9fa6abd57414"></a>
 typedef uint16_t(*&#160;</td><td class="memItemRight" valign="bottom"><b>ch_get_tx_length_func_t</b>) (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="separator:a2112144cdcb10798255b9fa6abd57414"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a157f7bf49947b1dd66ccfbd8655084f1"><td class="memItemLeft" align="right" valign="top"><a id="a157f7bf49947b1dd66ccfbd8655084f1"></a>
+typedef enum <a class="el" href="soniclib_8h.html#adfc1362d5ed7fe95e62ec2c872684763">ch_group_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a157f7bf49947b1dd66ccfbd8655084f1">ch_group_status_t</a></td></tr>
+<tr class="memdesc:a157f7bf49947b1dd66ccfbd8655084f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor group status. <br /></td></tr>
+<tr class="separator:a157f7bf49947b1dd66ccfbd8655084f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c7fa7b1b94b0e0fb63518d23f155ec5"><td class="memItemLeft" align="right" valign="top"><a id="a3c7fa7b1b94b0e0fb63518d23f155ec5"></a>
 typedef struct <a class="el" href="structch__group__t.html">ch_group_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ch_group_t</b></td></tr>
 <tr class="separator:a3c7fa7b1b94b0e0fb63518d23f155ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -377,12 +381,12 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:ab54ccbb11856e6dac54edae0527a472e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decimation factor. <br /></td></tr>
 <tr class="separator:ab54ccbb11856e6dac54edae0527a472e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bd6fee8199de517e429ac1d38d4bdc2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3bd6fee8199de517e429ac1d38d4bdc2">ch_group_status_t</a> { <a class="el" href="soniclib_8h.html#a3bd6fee8199de517e429ac1d38d4bdc2af40b0d92b6c008d626cee19ad1f63a30">CH_GROUP_STAT_NOT_INIT</a> = 0
-, <a class="el" href="soniclib_8h.html#a3bd6fee8199de517e429ac1d38d4bdc2a048eba248e2d51b5048ca915b85ea129">CH_GROUP_STAT_INIT_PENDING</a> = 1
-, <a class="el" href="soniclib_8h.html#a3bd6fee8199de517e429ac1d38d4bdc2a7359a4119461467b0f67ae8a9aea7d89">CH_GROUP_STAT_INIT_OK</a> = 2
+<tr class="memitem:adfc1362d5ed7fe95e62ec2c872684763"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#adfc1362d5ed7fe95e62ec2c872684763">ch_group_status</a> { <a class="el" href="soniclib_8h.html#adfc1362d5ed7fe95e62ec2c872684763af40b0d92b6c008d626cee19ad1f63a30">CH_GROUP_STAT_NOT_INIT</a> = 0
+, <a class="el" href="soniclib_8h.html#adfc1362d5ed7fe95e62ec2c872684763a048eba248e2d51b5048ca915b85ea129">CH_GROUP_STAT_INIT_PENDING</a> = 1
+, <a class="el" href="soniclib_8h.html#adfc1362d5ed7fe95e62ec2c872684763a7359a4119461467b0f67ae8a9aea7d89">CH_GROUP_STAT_INIT_OK</a> = 2
  }</td></tr>
-<tr class="memdesc:a3bd6fee8199de517e429ac1d38d4bdc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor group status.  <a href="soniclib_8h.html#a3bd6fee8199de517e429ac1d38d4bdc2">More...</a><br /></td></tr>
-<tr class="separator:a3bd6fee8199de517e429ac1d38d4bdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:adfc1362d5ed7fe95e62ec2c872684763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor group status.  <a href="soniclib_8h.html#adfc1362d5ed7fe95e62ec2c872684763">More...</a><br /></td></tr>
+<tr class="separator:adfc1362d5ed7fe95e62ec2c872684763"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3406ad6d96900bf23674fc44468caf5d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5d">ch_interrupt_drive_t</a> { <a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5daec532a96d78d822477341ea4e23e9436">CH_INTERRUPT_DRIVE_OPEN_DRAIN</a> = 0
 , <a class="el" href="soniclib_8h.html#a3406ad6d96900bf23674fc44468caf5dac13d00ce95a29bf7d3f2164a9d7e2152">CH_INTERRUPT_DRIVE_PUSH_PULL</a> = 1
  }</td></tr>
@@ -560,6 +564,12 @@ Functions</h2></td></tr>
 <tr class="memitem:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#acde0dc4f438051bd4fcfd19aad8b3f9c">ch_cycles_to_usec</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_cycles)</td></tr>
 <tr class="memdesc:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert sensor cycles to microseconds.  <a href="soniclib_8h.html#acde0dc4f438051bd4fcfd19aad8b3f9c">More...</a><br /></td></tr>
 <tr class="separator:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87c0409b1443384afe601b8098aec6ef"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87c0409b1443384afe601b8098aec6ef">ch_enable_double_buffer</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t enable)</td></tr>
+<tr class="memdesc:a87c0409b1443384afe601b8098aec6ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the double buffering mode.  <a href="soniclib_8h.html#a87c0409b1443384afe601b8098aec6ef">More...</a><br /></td></tr>
+<tr class="separator:a87c0409b1443384afe601b8098aec6ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bc64b2a0305210e1394331a6b2dd734"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a0bc64b2a0305210e1394331a6b2dd734">ch_enable_metadata_in_iq0</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t enable)</td></tr>
+<tr class="memdesc:a0bc64b2a0305210e1394331a6b2dd734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable placing metadata in the first IQ sample.  <a href="soniclib_8h.html#a0bc64b2a0305210e1394331a6b2dd734">More...</a><br /></td></tr>
+<tr class="separator:a0bc64b2a0305210e1394331a6b2dd734"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fe624d21c6e4c116469570a5b46f70f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3fe624d21c6e4c116469570a5b46f70f">ch_freerun_time_hop_disable</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a3fe624d21c6e4c116469570a5b46f70f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable time-hopping on measure period freerunning mode.  <a href="soniclib_8h.html#a3fe624d21c6e4c116469570a5b46f70f">More...</a><br /></td></tr>
 <tr class="separator:a3fe624d21c6e4c116469570a5b46f70f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -653,6 +663,9 @@ Functions</h2></td></tr>
 <tr class="memitem:acbd52987d0cfca5d0dec4f962ce15995"><td class="memItemLeft" align="right" valign="top"><a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">ch_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#acbd52987d0cfca5d0dec4f962ce15995">ch_get_mode</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:acbd52987d0cfca5d0dec4f962ce15995"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current operating mode for a sensor.  <a href="soniclib_8h.html#acbd52987d0cfca5d0dec4f962ce15995">More...</a><br /></td></tr>
 <tr class="separator:acbd52987d0cfca5d0dec4f962ce15995"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fd0582578cba1dff9d781a4ce516e84"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a2fd0582578cba1dff9d781a4ce516e84">ch_get_next_buf_addr</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:a2fd0582578cba1dff9d781a4ce516e84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the address of the IQ buffer that will be written by the next measurement.  <a href="soniclib_8h.html#a2fd0582578cba1dff9d781a4ce516e84">More...</a><br /></td></tr>
+<tr class="separator:a2fd0582578cba1dff9d781a4ce516e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2806d7b51748c5dcd870d7c3c21b222a"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a2806d7b51748c5dcd870d7c3c21b222a">ch_get_num_output_samples</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a2806d7b51748c5dcd870d7c3c21b222a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of valid output samples in last measurement.  <a href="soniclib_8h.html#a2806d7b51748c5dcd870d7c3c21b222a">More...</a><br /></td></tr>
 <tr class="separator:a2806d7b51748c5dcd870d7c3c21b222a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -750,7 +763,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ad725040c45603cc81f47ccb4ab104efc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the measurement algorithm on a sensor.  <a href="soniclib_8h.html#ad725040c45603cc81f47ccb4ab104efc">More...</a><br /></td></tr>
 <tr class="separator:ad725040c45603cc81f47ccb4ab104efc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68080a85a27dc680ce55c020f575c5c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3">ch_interrupt</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num)</td></tr>
-<tr class="memdesc:a68080a85a27dc680ce55c020f575c5c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify SonicLib that a sensor interrupt occurred.  <a href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3">More...</a><br /></td></tr>
+<tr class="memdesc:a68080a85a27dc680ce55c020f575c5c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run SonicLib's full-featured interrupt handler.  <a href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3">More...</a><br /></td></tr>
 <tr class="separator:a68080a85a27dc680ce55c020f575c5c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae40302a26ef7dd9868f5c28bcfc15cea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ae40302a26ef7dd9868f5c28bcfc15cea">ch_io_complete_callback_set</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, <a class="el" href="soniclib_8h.html#a98e3bc51c237abf8b03ce396db3f7caf">ch_io_complete_callback_t</a> callback_func_ptr)</td></tr>
 <tr class="memdesc:ae40302a26ef7dd9868f5c28bcfc15cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register non-blocking I/O complete callback routine for a group of sensors.  <a href="soniclib_8h.html#ae40302a26ef7dd9868f5c28bcfc15cea">More...</a><br /></td></tr>
@@ -905,6 +918,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a8f9450f4a5d409c8e1474d4ae078fbe4"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a8f9450f4a5d409c8e1474d4ae078fbe4">ch_meas_write_config</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a8f9450f4a5d409c8e1474d4ae078fbe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write measurement configuration to sensor.  <a href="soniclib_8h.html#a8f9450f4a5d409c8e1474d4ae078fbe4">More...</a><br /></td></tr>
 <tr class="separator:a8f9450f4a5d409c8e1474d4ae078fbe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae89c9e6ef3d8a200f741e81dca0e324c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ae89c9e6ef3d8a200f741e81dca0e324c">ch_minimal_int_handler</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num)</td></tr>
+<tr class="memdesc:ae89c9e6ef3d8a200f741e81dca0e324c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify SonicLib that a sensor interrupt was received.  <a href="soniclib_8h.html#ae89c9e6ef3d8a200f741e81dca0e324c">More...</a><br /></td></tr>
+<tr class="separator:ae89c9e6ef3d8a200f741e81dca0e324c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa256c720961a6d327c515da60d8071c2"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#aa256c720961a6d327c515da60d8071c2">ch_mm_to_samples</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_mm)</td></tr>
 <tr class="memdesc:aa256c720961a6d327c515da60d8071c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert millimeters to sample count for a sensor.  <a href="soniclib_8h.html#aa256c720961a6d327c515da60d8071c2">More...</a><br /></td></tr>
 <tr class="separator:aa256c720961a6d327c515da60d8071c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1010,6 +1026,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a2b585794c893ffa579775e060df36915"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a2b585794c893ffa579775e060df36915">ch_trigger_soft</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a2b585794c893ffa579775e060df36915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trigger a measurement using software (SPI) interface.  <a href="soniclib_8h.html#a2b585794c893ffa579775e060df36915">More...</a><br /></td></tr>
 <tr class="separator:a2b585794c893ffa579775e060df36915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace58b8e6d9e75d368ddcb69c99db2f3f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ace58b8e6d9e75d368ddcb69c99db2f3f">ch_update_metadata_from_iq0</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__iq__sample__t.html">ch_iq_sample_t</a> *iq_data)</td></tr>
+<tr class="memdesc:ace58b8e6d9e75d368ddcb69c99db2f3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the metadata from the first IQ sample and update the device pointer.  <a href="soniclib_8h.html#ace58b8e6d9e75d368ddcb69c99db2f3f">More...</a><br /></td></tr>
+<tr class="separator:ace58b8e6d9e75d368ddcb69c99db2f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d8b3ddcc0010bf7bd1f7acc1fba4232"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a5d8b3ddcc0010bf7bd1f7acc1fba4232">ch_usec_to_cycles</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_usec)</td></tr>
 <tr class="memdesc:a5d8b3ddcc0010bf7bd1f7acc1fba4232"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert microseconds to sensor cycles.  <a href="soniclib_8h.html#a5d8b3ddcc0010bf7bd1f7acc1fba4232">More...</a><br /></td></tr>
 <tr class="separator:a5d8b3ddcc0010bf7bd1f7acc1fba4232"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1539,7 +1558,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(3)</td>
+          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(4)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1554,7 +1573,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(2)</td>
+          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(0)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1600,25 +1619,25 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a3bd6fee8199de517e429ac1d38d4bdc2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bd6fee8199de517e429ac1d38d4bdc2">&#9670;&nbsp;</a></span>ch_group_status_t</h2>
+<a id="adfc1362d5ed7fe95e62ec2c872684763"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfc1362d5ed7fe95e62ec2c872684763">&#9670;&nbsp;</a></span>ch_group_status</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="soniclib_8h.html#a3bd6fee8199de517e429ac1d38d4bdc2">ch_group_status_t</a></td>
+          <td class="memname">enum <a class="el" href="soniclib_8h.html#adfc1362d5ed7fe95e62ec2c872684763">ch_group_status</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Sensor group status. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3bd6fee8199de517e429ac1d38d4bdc2af40b0d92b6c008d626cee19ad1f63a30"></a>CH_GROUP_STAT_NOT_INIT&#160;</td><td class="fielddoc"><p>Group not initialized. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adfc1362d5ed7fe95e62ec2c872684763af40b0d92b6c008d626cee19ad1f63a30"></a>CH_GROUP_STAT_NOT_INIT&#160;</td><td class="fielddoc"><p>Group not initialized. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a3bd6fee8199de517e429ac1d38d4bdc2a048eba248e2d51b5048ca915b85ea129"></a>CH_GROUP_STAT_INIT_PENDING&#160;</td><td class="fielddoc"><p>Group initialization pending. </p>
+<tr><td class="fieldname"><a id="adfc1362d5ed7fe95e62ec2c872684763a048eba248e2d51b5048ca915b85ea129"></a>CH_GROUP_STAT_INIT_PENDING&#160;</td><td class="fielddoc"><p>Group initialization pending. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a3bd6fee8199de517e429ac1d38d4bdc2a7359a4119461467b0f67ae8a9aea7d89"></a>CH_GROUP_STAT_INIT_OK&#160;</td><td class="fielddoc"><p>Group initialized. </p>
+<tr><td class="fieldname"><a id="adfc1362d5ed7fe95e62ec2c872684763a7359a4119461467b0f67ae8a9aea7d89"></a>CH_GROUP_STAT_INIT_OK&#160;</td><td class="fielddoc"><p>Group initialized. </p>
 </td></tr>
 </table>
 
@@ -2241,6 +2260,92 @@ Functions</h2></td></tr>
 <p>For ICU (Shasta architecture) sensors, <em>num_cycles</em> are in units of PMUT State Machine Clock (SMCLK) cycles. The SMCLK rate is 16 times the ultrasonic transducer acoustic operating frequency. These are the same units used to specify measurement transmit and count segment lengths.</p>
 <p>For CH101 and CH201 (Whitney architecture) sensors, <em>num_cycles</em> are ultrasonic transducer cycles, so are 1/16 the corresponding ICU sensor value.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#a5d8b3ddcc0010bf7bd1f7acc1fba4232" title="Convert microseconds to sensor cycles.">ch_usec_to_cycles()</a></em>. </p>
+
+</div>
+</div>
+<a id="a87c0409b1443384afe601b8098aec6ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87c0409b1443384afe601b8098aec6ef">&#9670;&nbsp;</a></span>ch_enable_double_buffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_enable_double_buffer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable or disable the double buffering mode. </p>
+<p>IMPORTANT: This function is currently only supported with gpt and init firmware.</p>
+<p>The ICU-X0201 sensors can be put into a double buffering mode which does the following:</p>
+<ul>
+<li>Splits the IQ buffer in two</li>
+<li>Swaps which half of the buffer is written after every measurement</li>
+</ul>
+<p>This enables a measurement to be triggered before the readout of the previous measurement is finished (or even started). The disadvantage is that the maximum number of supported samples is reduced by a factor of 2.</p>
+<p>You must not exceed the maximum number of supported samples, which can be found as ch_get_max_samples(...)/2. SonicLib will not check this!</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>The device pointer </td></tr>
+    <tr><td class="paramname">enable</td><td>Set to 1 to enable the double buffer mode or 0 to disable it</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 for success and non-zero otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a0bc64b2a0305210e1394331a6b2dd734"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bc64b2a0305210e1394331a6b2dd734">&#9670;&nbsp;</a></span>ch_enable_metadata_in_iq0()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_enable_metadata_in_iq0 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable or disable placing metadata in the first IQ sample. </p>
+<p>IMPORTANT: This function is currently only supported with gpt and init firmware.</p>
+<p>The ICU-X0201 can be configured to place metadata in the first IQ sample, which is otherwise always read out as 0. If enabled, this will place the IQ buffer address as well as the last measurement index in the first IQ sample.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>The device pointer </td></tr>
+    <tr><td class="paramname">enable</td><td>Set to 1 to enable metadata in IQ sample 0 or 0 to disable.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 for success and non-zero otherwise </dd></dl>
 
 </div>
 </div>
@@ -3383,6 +3488,36 @@ This function only obtains the data from the most recently completed measurement
 <li><em>CH_MODE_TRIGGERED_TX_RX</em> - hardware-triggered, sensor both transmits and receives</li>
 <li><em>CH_MODE_TRIGGERED_RX_ONLY</em> - hardware triggered, sensor only receives </li>
 </ul>
+
+</div>
+</div>
+<a id="a2fd0582578cba1dff9d781a4ce516e84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fd0582578cba1dff9d781a4ce516e84">&#9670;&nbsp;</a></span>ch_get_next_buf_addr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t ch_get_next_buf_addr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the address of the IQ buffer that will be written by the next measurement. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function returns the address of the buffer that will be written by the next measurement. This is useful in the double buffer mode.</p>
+<p>See also <a class="el" href="soniclib_8h.html#ace58b8e6d9e75d368ddcb69c99db2f3f" title="Extract the metadata from the first IQ sample and update the device pointer.">ch_update_metadata_from_iq0()</a>.</p>
+<dl class="section note"><dt>Note</dt><dd>This feature is only available for ICU sensors. </dd></dl>
 
 </div>
 </div>
@@ -4554,7 +4689,7 @@ The <em>range_type</em> parameter only controls how this function interprets the
       </table>
 </div><div class="memdoc">
 
-<p>Notify SonicLib that a sensor interrupt occurred. </p>
+<p>Run SonicLib's full-featured interrupt handler. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> sensor group descriptor structure </td></tr>
@@ -4563,9 +4698,11 @@ The <em>range_type</em> parameter only controls how this function interprets the
   </dd>
 </dl>
 <p>This function is used from the board support package (BSP) handler routine for the sensor interrupt to announce that the interrupt has occurred. <em>dev_num</em> identifies which sensor has interrupted.</p>
-<p>The SonicLib driver layer will handle further processing of the interrupt, including calling the application-supplied callback function.</p>
+<p>The SonicLib driver layer will handle further processing of the interrupt, including disabling the interrupt processing (to allow for next trigger), reading sensor metadata, and calling the application-supplied callback function.</p>
+<p>Only one of <a class="el" href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3" title="Run SonicLib&#39;s full-featured interrupt handler.">ch_interrupt()</a> and <em><a class="el" href="soniclib_8h.html#ae89c9e6ef3d8a200f741e81dca0e324c" title="Notify SonicLib that a sensor interrupt was received.">ch_minimal_int_handler()</a></em> should be called. The latter function is a simplified handler that gives the user more control of exactly what happens during the interrupt handling.</p>
 <dl class="section note"><dt>Note</dt><dd>Upon return from this routine, the sensor interrupt is disabled.</dd></dl>
-<p>See also <em><a class="el" href="ch__api_8c.html#af3d4045f3510d82596c8231123e890b9" title="Set callback function for Chirp sensor I/O interrupt.">ch_io_int_callback_set()</a></em>.</p>
+<p>See also <em><a class="el" href="soniclib_8h.html#af3d4045f3510d82596c8231123e890b9" title="Register sensor interrupt callback routine for a group of sensors.">ch_io_int_callback_set()</a></em> and <em><a class="el" href="soniclib_8h.html#ae89c9e6ef3d8a200f741e81dca0e324c" title="Notify SonicLib that a sensor interrupt was received.">ch_minimal_int_handler()</a></em>.</p>
+<p>Run SonicLib's full-featured interrupt handler.</p>
 <p>This function is used from the board support package (BSP) handler routine for the sensor interrupt to notify SonicLib that the interrupt has occurred. The SonicLib driver layer will handle further processing of the interrupt, including a call to the application-supplied callback function. </p>
 
 </div>
@@ -6938,6 +7075,53 @@ In ICU sensors, the ODR is configurable. The default is one sample per 8 transce
 
 </div>
 </div>
+<a id="ae89c9e6ef3d8a200f741e81dca0e324c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae89c9e6ef3d8a200f741e81dca0e324c">&#9670;&nbsp;</a></span>ch_minimal_int_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_minimal_int_handler </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__group__t.html">ch_group_t</a> *&#160;</td>
+          <td class="paramname"><em>grp_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>dev_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Notify SonicLib that a sensor interrupt was received. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> config structure for a group of sensors </td></tr>
+    <tr><td class="paramname">dev_num</td><td>interrupting sensor's device number within group </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 for success, non-zero otherwise.</dd></dl>
+<p>This function should be called from the board support package when an interrupt from the sensor is received. The <em>dev_num</em> parameter indicates which sensor interrupted.</p>
+<p>Unlike <em><a class="el" href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3" title="Run SonicLib&#39;s full-featured interrupt handler.">ch_interrupt()</a></em>, this function does not call the user supplied callback. It is intended to be used when the user would like more control of exactly what happens when an interrupt is received from the sensor.</p>
+<p>Other differences from <em><a class="el" href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3" title="Run SonicLib&#39;s full-featured interrupt handler.">ch_interrupt()</a></em>:</p>
+<ul>
+<li>This function does not disable interrupt handling. This must be done in user code if needed.</li>
+<li>This function does not read any metadata from the sensor, with one exception. During sensor programming, this funciton performs one SPI read in order to cause the ASIC to release the interrupt line.</li>
+<li>This function does not update state of the dev_ptr</li>
+</ul>
+<p>See also <em><a class="el" href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3" title="Run SonicLib&#39;s full-featured interrupt handler.">ch_interrupt()</a></em>. </p>
+
+</div>
+</div>
 <a id="aa256c720961a6d327c515da60d8071c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa256c720961a6d327c515da60d8071c2">&#9670;&nbsp;</a></span>ch_mm_to_samples()</h2>
 
@@ -8445,6 +8629,47 @@ For ICU sensors, this function always returns the conversion values for the defa
 <p>This function sends a special command to the sensor over the SPI bus to trigger a measurement. The software interface is always used regardless of the trigger type that has been set using <em><a class="el" href="soniclib_8h.html#a035896185096ae0cc1e4c54db205d38c" title="Set the trigger type for a sensor.">ch_set_trigger_type()</a></em>.</p>
 <p>This may be used in place of a standard hardware trigger using a GPIO line, although there will be more latency and less exact timing control.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#ade5083e622e8cc3852a4193f6d8dce9c" title="Trigger a measurement on one sensor.">ch_trigger()</a></em>. </p>
+
+</div>
+</div>
+<a id="ace58b8e6d9e75d368ddcb69c99db2f3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace58b8e6d9e75d368ddcb69c99db2f3f">&#9670;&nbsp;</a></span>ch_update_metadata_from_iq0()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_update_metadata_from_iq0 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structch__iq__sample__t.html">ch_iq_sample_t</a> *&#160;</td>
+          <td class="paramname"><em>iq_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Extract the metadata from the first IQ sample and update the device pointer. </p>
+<p>The ICU-X0201 can be configured to place metadata in the first IQ sample, which is otherwise always read out as 0. If enabled, this will place the IQ buffer address as well as the last measurement index in the first IQ sample. See <em><a class="el" href="soniclib_8h.html#a0bc64b2a0305210e1394331a6b2dd734" title="Enable or disable placing metadata in the first IQ sample.">ch_enable_metadata_in_iq0()</a></em>.</p>
+<p>This function is used to extract metadata from the read IQ data. The metadata will be updated into <em>dev_ptr</em>. That is, after calling this function, the device pointer will be updated with the correct buffer address and last measurement index.</p>
+<p>After running this function and getting a 0 exit status, the last measurement index can be retrieved using <a class="el" href="soniclib_8h.html#a2ea79708279e4f56734234dd07ae23f4" title="Get number of last completed measurement.">ch_meas_get_last_num()</a> and the next buffer address with <a class="el" href="soniclib_8h.html#a2fd0582578cba1dff9d781a4ce516e84" title="Get the address of the IQ buffer that will be written by the next measurement.">ch_get_next_buf_addr()</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>The device pointer </td></tr>
+    <tr><td class="paramname">iq_data</td><td>Pointer to the read IQ data. The metadata is extracted from the first sample, then the first sample is set back to 0.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 for success and non-zero otherwise. If this function returns non-zero, then the device pointer is not updated. This most likely means that data was read from the incorrect buffer in double buffer mode. The situation should resolve itself on the next read since the same buffer will be read again, and the ASIC will swap write buffers on each measurement. </dd></dl>
 
 </div>
 </div>

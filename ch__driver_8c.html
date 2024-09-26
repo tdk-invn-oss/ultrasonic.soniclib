@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.3.2</span>
+   &#160;<span id="projectnumber">4.4.0</span>
    </div>
   </td>
  </tr>
@@ -227,6 +227,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a21aa7ef214382f49f248e22235c7872a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a21aa7ef214382f49f248e22235c7872a">chdrv_int_interrupt_enable</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a21aa7ef214382f49f248e22235c7872a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupts on the interrupt line for a sensor.  <a href="ch__driver_8c.html#a21aa7ef214382f49f248e22235c7872a">More...</a><br /></td></tr>
 <tr class="separator:a21aa7ef214382f49f248e22235c7872a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae36ec5b06f3e75d0a84b1dcffc8ca2e3"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#ae36ec5b06f3e75d0a84b1dcffc8ca2e3">chdrv_int_notify</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num)</td></tr>
+<tr class="memdesc:ae36ec5b06f3e75d0a84b1dcffc8ca2e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify SonicLib that a sensor interrupt was received.  <a href="ch__driver_8c.html#ae36ec5b06f3e75d0a84b1dcffc8ca2e3">More...</a><br /></td></tr>
+<tr class="separator:ae36ec5b06f3e75d0a84b1dcffc8ca2e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a2ebb9684c74cad8c53ab2ce34fc69872">chdrv_int_set_dir_in</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the interrupt line for a sensor as an input.  <a href="ch__driver_8c.html#a2ebb9684c74cad8c53ab2ce34fc69872">More...</a><br /></td></tr>
 <tr class="separator:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,6 +269,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a6ceb695e4b6b6979bba4b2d485dd1935"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a6ceb695e4b6b6979bba4b2d485dd1935">chdrv_prog_write</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t reg_addr, uint16_t data)</td></tr>
 <tr class="memdesc:a6ceb695e4b6b6979bba4b2d485dd1935"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to a sensor programming register.  <a href="ch__driver_8c.html#a6ceb695e4b6b6979bba4b2d485dd1935">More...</a><br /></td></tr>
 <tr class="separator:a6ceb695e4b6b6979bba4b2d485dd1935"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a388813ed8eaf01de8e17401f3d565973"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a388813ed8eaf01de8e17401f3d565973">chdrv_read_buf_addr</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
+<tr class="memdesc:a388813ed8eaf01de8e17401f3d565973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the IQ buffer address from the sensor and store in dev_ptr.  <a href="ch__driver_8c.html#a388813ed8eaf01de8e17401f3d565973">More...</a><br /></td></tr>
+<tr class="separator:a388813ed8eaf01de8e17401f3d565973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1faf1d0682608e480b11a89c15dcdd3e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8c.html#a1faf1d0682608e480b11a89c15dcdd3e">chdrv_read_byte</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t mem_addr, uint8_t *data_ptr)</td></tr>
 <tr class="memdesc:a1faf1d0682608e480b11a89c15dcdd3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read byte from a sensor application register.  <a href="ch__driver_8c.html#a1faf1d0682608e480b11a89c15dcdd3e">More...</a><br /></td></tr>
 <tr class="separator:a1faf1d0682608e480b11a89c15dcdd3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1719,6 +1725,52 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ae36ec5b06f3e75d0a84b1dcffc8ca2e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae36ec5b06f3e75d0a84b1dcffc8ca2e3">&#9670;&nbsp;</a></span>chdrv_int_notify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t chdrv_int_notify </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__group__t.html">ch_group_t</a> *&#160;</td>
+          <td class="paramname"><em>grp_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>dev_num</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Notify SonicLib that a sensor interrupt was received. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">grp_ptr</td><td>pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> config structure for a group of sensors </td></tr>
+    <tr><td class="paramname">dev_num</td><td>interrupting sensor's device number within group </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 for success, non-zero otherwise.</dd></dl>
+<p>This function should be called from the board support package when an interrupt from the sensor is received. The <em>dev_num</em> parameter indicates which sensor interrupted.</p>
+<p>Unlike <em><a class="el" href="ch__driver_8h.html#a57e0ec9efd96a9470dee37e6df5a6047" title="Driver callback routine for sensor interrupt.">chdrv_int_callback()</a></em>, this function does not call the user supplied callback. It is intended to be used when the user would like more control of exactly what happens when an interrupt is received from the sensor.</p>
+<p>Other differences from <em><a class="el" href="ch__driver_8h.html#a57e0ec9efd96a9470dee37e6df5a6047" title="Driver callback routine for sensor interrupt.">chdrv_int_callback()</a></em>:</p>
+<ul>
+<li>This function does not disable interrupt handling. This must be done in user code if needed.</li>
+<li>This function does not read any metadata from the sensor, with one exception. During sensor programming, this funciton performs one SPI read in order to cause the ASIC to release the interrupt line.</li>
+<li>This function does not update state of the dev_ptr </li>
+</ul>
+
+</div>
+</div>
 <a id="a2ebb9684c74cad8c53ab2ce34fc69872"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2ebb9684c74cad8c53ab2ce34fc69872">&#9670;&nbsp;</a></span>chdrv_int_set_dir_in()</h2>
 
@@ -2250,6 +2302,33 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if write to sensor succeeded, non-zero otherwise</dd></dl>
 <p>This local function writes a value to a sensor programming register. </p>
+
+</div>
+</div>
+<a id="a388813ed8eaf01de8e17401f3d565973"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a388813ed8eaf01de8e17401f3d565973">&#9670;&nbsp;</a></span>chdrv_read_buf_addr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int chdrv_read_buf_addr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
+          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read the IQ buffer address from the sensor and store in dev_ptr. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure for a sensor</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if successful, non-zero otherwise </dd></dl>
 
 </div>
 </div>
