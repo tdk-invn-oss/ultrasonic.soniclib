@@ -381,13 +381,13 @@ uint32_t icu_gpt_algo_get_target_range(ch_dev_t *dev_ptr, uint8_t target_num, ch
 		err = 1;
 	}
 
-	CH_LOG_DEBUG("meas_num=%d num_iq_bytes=%d\n", dev_ptr->last_measurement, dev_ptr->num_iq_bytes);
+	CH_LOG_DEBUG("meas_num=%d num_iq_bytes=%d", dev_ptr->last_measurement, dev_ptr->num_iq_bytes);
 
 	if (!err) {
 		/* Report specified target from list */
 		time_of_flight = (uint32_t)tgt_list_ptr->targets[target_num].range;
 
-		CH_LOG_DEBUG("target list:  num_valid_targets=%d  odr_out=%d  range[0]=%d  amp[0]=%d\n\r",
+		CH_LOG_DEBUG("target list:  num_valid_targets=%d  odr_out=%d  range[0]=%d  amp[0]=%d",
 		             tgt_list_ptr->num_valid_targets, dev_ptr->odr_out, tgt_list_ptr->targets[0].range,
 		             tgt_list_ptr->targets[0].amplitude);
 
@@ -402,7 +402,7 @@ uint32_t icu_gpt_algo_get_target_range(ch_dev_t *dev_ptr, uint8_t target_num, ch
 
 		time_of_flight -= tof_offset_lsb;
 
-		CH_LOG_TRACE_MSG("adjusted time_of_flight = %lu\n", time_of_flight);
+		CH_LOG_TRACE_MSG("adjusted time_of_flight = %lu", time_of_flight);
 		CH_LOG_TRACE_END();
 
 		range = ch_common_range_lsb_to_mm(dev_ptr, time_of_flight, range_type);
@@ -578,10 +578,12 @@ uint8_t icu_gpt_set_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_thr
 	uint8_t ret_val = RET_ERR;
 	InvnAlgoRangeFinderConfig *sens_algo_cfg_addr =
 			(InvnAlgoRangeFinderConfig *)(uintptr_t)dev_ptr->algo_info.algo_cfg_ptr;
+	InvnAlgoRangeFinderConfig *algo_cfg_ptr = (InvnAlgoRangeFinderConfig *)(dev_ptr->algo_cfg_ptr);
 
 	if (dev_ptr->sensor_connected && (lib_thresh_buf_ptr != NULL)) {
 		/* Convert and write new threshold values to local copy of algo measurement config */
-		thresholds_t *sens_thresh_ptr = (thresholds_t *)&(sens_algo_cfg_addr->meas_cfg[meas_num].thresholds);
+		/* Drop the volatile qualifier by casting because not running on MSP430 */
+		thresholds_t *sens_thresh_ptr = (thresholds_t *)&(algo_cfg_ptr->meas_cfg[meas_num].thresholds);
 
 		thresh_lib_to_sensor(dev_ptr, lib_thresh_buf_ptr, sens_thresh_ptr);
 
@@ -602,7 +604,6 @@ uint8_t icu_gpt_get_thresholds(ch_dev_t *dev_ptr, uint8_t meas_num, ch_threshold
 
 	InvnAlgoRangeFinderConfig *sens_algo_cfg_addr =
 			(InvnAlgoRangeFinderConfig *)(uintptr_t)dev_ptr->algo_info.algo_cfg_ptr;
-	// thresholds_t *sens_thresh_ptr = (thresholds_t *)&(sens_algo_cfg_addr->meas_cfg[meas_num].thresholds);
 	thresholds_t sens_thresh;
 
 	uint16_t thresh_start_addr = (uint16_t)(uintptr_t) & (sens_algo_cfg_addr->meas_cfg[meas_num].thresholds);

@@ -1,1 +1,1 @@
-﻿const char *icu_gpt_plugin_version = "2.2.0+1.7.0";
+﻿const char *icu_gpt_plugin_version = "2.3.0+1.8.0";

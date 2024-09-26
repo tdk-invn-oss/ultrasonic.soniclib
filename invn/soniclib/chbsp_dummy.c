@@ -14,6 +14,7 @@
  * Copyright (c) 2017-2021 Chirp Microsystems.  All rights reserved.
  */
 #include <invn/soniclib/chirp_bsp.h>
+#include <stdint.h>
 
 /* Functions supporting debugging */
 
@@ -164,4 +165,32 @@ __attribute__((weak)) int chbsp_spi_mem_read_nb(ch_dev_t *dev_ptr, uint16_t mem_
 	(void)(data);
 	(void)(num_bytes);
 	return 1;
+}
+
+/* Local variables */
+static volatile uint32_t interrupt_sensors = 0;  // one bit for each possible sensor
+
+__attribute__((weak)) void chbsp_event_wait_setup(uint32_t event_mask) {
+	interrupt_sensors &= ~event_mask;  // re-init bitmask
+}
+
+__attribute__((weak)) uint8_t chbsp_event_wait(uint16_t time_out_ms, uint32_t event_mask) {
+	uint8_t err         = 0;
+	uint32_t start_time = chbsp_timestamp_ms();
+
+	/* Wait for sensor to interrupt */
+	while (!err && ((interrupt_sensors & event_mask) == 0)) {
+		uint32_t new_time = chbsp_timestamp_ms();
+		if (new_time >= (start_time + time_out_ms)) {
+			err = 1;                         // timeout
+			                                 // break;
+		} else if (new_time < start_time) {  // if rollover
+			start_time = new_time;           //  just re-start timeout
+		}
+	}
+	return err;
+}
+
+__attribute__((weak)) void chbsp_event_notify(uint32_t event_mask) {
+	interrupt_sensors |= event_mask;
 }

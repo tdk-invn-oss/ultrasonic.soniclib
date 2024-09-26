@@ -479,6 +479,16 @@ int chdrv_read_word(ch_dev_t *dev_ptr, uint16_t mem_addr, uint16_t *data);
 int chdrv_burst_read(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uint16_t len);
 
 /*!
+ * \brief Read the IQ buffer address from the sensor and store in dev_ptr.
+ *
+ * \param dev_ptr 	pointer to the ch_dev_t descriptor structure for a sensor
+ *
+ * \return 0 if successful, non-zero otherwise
+ *
+ */
+int chdrv_read_buf_addr(ch_dev_t *dev_ptr);
+
+/*!
  * \brief Write multiple bytes to a sensor application register location.
  *
  * \param dev_ptr 	pointer to the ch_dev_t descriptor structure for a sensor
@@ -683,22 +693,65 @@ uint8_t chdrv_dbg_reg_read(ch_dev_t *dev_ptr, uint8_t reg_id, uint16_t *reg_valu
 uint8_t chdrv_dbg_reg_write(ch_dev_t *dev_ptr, uint8_t reg_id, uint16_t reg_value);
 
 /*!
- * \brief Driver callback routine for sensor interrupt.
+ * \brief Notify SonicLib that a sensor interrupt was received
  *
  * \param grp_ptr 	pointer to the ch_group_t config structure for a group of sensors
  * \param dev_num	interrupting sensor's device number within group
+ * \return 0 for success, non-zero otherwise.
  *
  *
  * This function should be called from the board support package when
  * an interrupt from the sensor is received.  The \a dev_num parameter
  * indicates which sensor interrupted.
  *
+ * Unlike \a chdrv_int_callback(), this function does not call the user supplied
+ * callback. It is intended to be used when the user would like more control
+ * of exactly what happens when an interrupt is received from the sensor.
+ *
+ * Other differences from \a chdrv_int_callback():
+ *
+ *   - This function does not disable interrupt handling. This must be done in
+ *     user code if needed.
+ *   - This function does not read any metadata from the sensor, with one exception.
+ *     During sensor programming, this funciton performs one SPI read in order
+ *     to cause the ASIC to release the interrupt line.
+ *   - This function does not update state of the dev_ptr
+ *
+ */
+uint8_t chdrv_int_notify(ch_group_t *grp_ptr, uint8_t dev_num);
+
+/*!
+ * \brief Driver callback routine for sensor interrupt.
+ *
+ * \param grp_ptr 	pointer to the ch_group_t config structure for a group of sensors
+ * \param dev_num	interrupting sensor's device number within group
+ *
+ *
+ * This function is called from \a ch_interrupt() when
+ * an interrupt from the sensor is received. The \a dev_num parameter
+ * indicates which sensor interrupted.
+ *
+ */
+void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num);
+
+/*!
+ * \brief Driver callback deferred routine for sensor interrupt.
+ *
+ * \param grp_ptr 	pointer to the ch_group_t config structure for a group of sensors
+ * \param dev_num	interrupting sensor's device number within group
+ *
+ *
+ * This function is called from \a ch_interrupt() when
+ * an interrupt from the sensor is received. Or shall be called in app context
+ * if USE_DEFERRED_INTERRUPT_PROCESSING is defined.
+ * The \a dev_num parameter indicates which sensor interrupted.
+ *
  * For sensor data-ready interrupts, this routine will in turn call the
  * application's callback routine which was set using \a ch_io_int_callback_set().
  *
  * See also \a ch_io_int_callback_set()
  */
-void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num);
+void chdrv_int_callback_deferred(ch_group_t *grp_ptr, uint8_t dev_num);
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 
