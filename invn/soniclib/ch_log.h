@@ -34,6 +34,11 @@ extern "C" {
 #define CH_LOG_MODULE_LEVEL CH_LOG_LEVEL_ERROR
 #endif
 
+#ifndef CH_LOG_BUFFER_SIZE
+/* Size of the internal buffer to save messages before printing */
+#define CH_LOG_BUFFER_SIZE (200)
+#endif
+
 #define IS_CH_LOG_USED              (CH_LOG_MODULE_LEVEL <= CH_LOG_LEVEL_DISABLE)
 #define IS_CH_LOG_LEVEL_USED(level) (level >= CH_LOG_MODULE_LEVEL)
 

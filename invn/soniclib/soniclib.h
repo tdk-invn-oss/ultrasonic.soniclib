@@ -112,8 +112,8 @@ extern "C" {
 /*==============  SonicLib Version Info ===================*/
 /* SonicLib API/Driver version */
 #define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
-#define SONICLIB_VER_MINOR  (2) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (5) /*!< SonicLib revision. */
+#define SONICLIB_VER_MINOR  (4) /*!< SonicLib minor version. */
+#define SONICLIB_VER_REV    (1) /*!< SonicLib revision. */
 #define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
@@ -239,7 +239,7 @@ typedef enum {
 } ch_mode_t;
 
 //! Sensor group status.
-typedef enum {
+typedef enum ch_group_status {
 	CH_GROUP_STAT_NOT_INIT     = 0, /*!< Group not initialized. */
 	CH_GROUP_STAT_INIT_PENDING = 1, /*!< Group initialization pending. */
 	CH_GROUP_STAT_INIT_OK      = 2  /*!< Group initialized. */
@@ -718,9 +718,11 @@ struct ch_group_t {
 	                                                     completes */
 	ch_dev_t *device[CHIRP_MAX_NUM_SENSORS];        /*!< Array of pointers to ch_dev_t structures for
 	                                                     individual sensors */
-	uint8_t num_connected[CHIRP_NUM_BUSES];         /*!< Array of counters for connected sensors per bus */
-	chdrv_queue_t queue[CHIRP_NUM_BUSES];           /*!< Array of SPI/I2C non-blocking transaction
-	                                                             queues (one per bus) */
+#ifdef INCLUDE_WHITNEY_SUPPORT
+	uint8_t num_connected[CHIRP_NUM_BUSES]; /*!< Array of counters for connected sensors per bus */
+#endif
+	chdrv_queue_t queue[CHIRP_NUM_BUSES]; /*!< Array of SPI/I2C non-blocking transaction
+	                                                   queues (one per bus) */
 };
 
 //! Chirp sensor device descriptor structure.
@@ -793,6 +795,7 @@ struct ch_dev_t {
 	uint8_t odr_out;          /*!< Output ODR used in last measurement */
 	uint8_t iq_output_format; /*!< I/Q output format in last measurement */
 	uint16_t num_iq_bytes;    /*!< Number of valid I/Q bytes in last measurement */
+	uint16_t buf_addr;        /*!< Address of buffer containing the raw data */
 
 	/* Sensor algorithm */
 	ICU_ALGO_SHASTA_INFO *sens_algo_info_addr; /*!< Algorithm info addr on sensor */
@@ -2093,7 +2096,35 @@ uint16_t ch_iq_to_amplitude(ch_iq_sample_t *iq_sample_ptr);
 uint8_t ch_io_start_nb(ch_group_t *grp_ptr);
 
 /*!
- * \brief Notify SonicLib that a sensor interrupt occurred.
+ * \brief Notify SonicLib that a sensor interrupt was received
+ *
+ * \param grp_ptr 	pointer to the ch_group_t config structure for a group of sensors
+ * \param dev_num	interrupting sensor's device number within group
+ * \return 0 for success, non-zero otherwise.
+ *
+ * This function should be called from the board support package when
+ * an interrupt from the sensor is received.  The \a dev_num parameter
+ * indicates which sensor interrupted.
+ *
+ * Unlike \a ch_interrupt(), this function does not call the user supplied
+ * callback. It is intended to be used when the user would like more control
+ * of exactly what happens when an interrupt is received from the sensor.
+ *
+ * Other differences from \a ch_interrupt():
+ *
+ *   - This function does not disable interrupt handling. This must be done in
+ *     user code if needed.
+ *   - This function does not read any metadata from the sensor, with one exception.
+ *     During sensor programming, this funciton performs one SPI read in order
+ *     to cause the ASIC to release the interrupt line.
+ *   - This function does not update state of the dev_ptr
+ *
+ * See also \a ch_interrupt().
+ */
+uint8_t ch_minimal_int_handler(ch_group_t *grp_ptr, uint8_t dev_num);
+
+/*!
+ * \brief Run SonicLib's full-featured interrupt handler
  *
  * \param grp_ptr 			pointer to the ch_group_t sensor group descriptor structure
  * \param dev_num 			device number within group for interrupting sensor
@@ -2103,12 +2134,17 @@ uint8_t ch_io_start_nb(ch_group_t *grp_ptr);
  * occurred.  \a dev_num identifies which sensor has interrupted.
  *
  * The SonicLib driver layer will handle further processing of
- * the interrupt, including calling the application-supplied callback
- * function.
+ * the interrupt, including disabling the interrupt processing (to allow
+ * for next trigger), reading sensor metadata, and calling the application-supplied
+ * callback function.
+ *
+ * Only one of ch_interrupt() and \a ch_minimal_int_handler() should be called.
+ * The latter function is a simplified handler that gives the user more control
+ * of exactly what happens during the interrupt handling.
  *
  * \note Upon return from this routine, the sensor interrupt is disabled.
  *
- * See also \a ch_io_int_callback_set().
+ * See also \a ch_io_int_callback_set() and \a ch_minimal_int_handler().
  */
 void ch_interrupt(ch_group_t *grp_ptr, uint8_t dev_num);
 
@@ -2385,6 +2421,75 @@ uint8_t ch_set_interrupt_drive(ch_dev_t *dev_ptr, ch_interrupt_drive_t drive);
  * CH_INTERRUPT_DRIVE_OPEN_DRAIN.
  */
 ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr);
+
+/**
+ * \brief Enable or disable the double buffering mode
+ *
+ * IMPORTANT: This function is currently only supported with gpt and init firmware.
+ *
+ * The ICU-X0201 sensors can be put into a double buffering mode which does the
+ * following:
+ *
+ *  - Splits the IQ buffer in two
+ *  - Swaps which half of the buffer is written after every measurement
+ *
+ * This enables a measurement to be triggered before the readout of the previous
+ * measurement is finished (or even started). The disadvantage is that the maximum
+ * number of supported samples is reduced by a factor of 2.
+ *
+ * You must not exceed the maximum number of supported samples, which can be found
+ * as ch_get_max_samples(...)/2. SonicLib will not check this!
+ *
+ * \param dev_ptr The device pointer
+ * \param enable Set to 1 to enable the double buffer mode or 0 to disable it
+ *
+ * \return 0 for success and non-zero otherwise
+ */
+uint8_t ch_enable_double_buffer(ch_dev_t *dev_ptr, uint8_t enable);
+
+/**
+ * \brief Enable or disable placing metadata in the first IQ sample
+
+ * IMPORTANT: This function is currently only supported with gpt and init firmware.
+ *
+ * The ICU-X0201 can be configured to place metadata in the first IQ sample,
+ * which is otherwise always read out as 0. If enabled, this will place the IQ
+ * buffer address as well as the last measurement index in the first IQ sample.
+ *
+ * \param dev_ptr The device pointer
+ * \param enable Set to 1 to enable metadata in IQ sample 0 or 0 to disable.
+ *
+ * \return 0 for success and non-zero otherwise
+ */
+uint8_t ch_enable_metadata_in_iq0(ch_dev_t *dev_ptr, uint8_t enable);
+
+/**
+ * \brief Extract the metadata from the first IQ sample and update the device pointer
+ *
+ * The ICU-X0201 can be configured to place metadata in the first IQ sample,
+ * which is otherwise always read out as 0. If enabled, this will place the IQ
+ * buffer address as well as the last measurement index in the first IQ sample.
+ * See \a ch_enable_metadata_in_iq0().
+ *
+ * This function is used to extract metadata from the read IQ data. The metadata
+ * will be updated into \a dev_ptr. That is, after calling this function, the device
+ * pointer will be updated with the correct buffer address and last measurement index.
+ *
+ * After running this function and getting a 0 exit status, the last measurement index
+ * can be retrieved using ch_meas_get_last_num() and the next buffer address with
+ * ch_get_next_buf_addr().
+ *
+ * \param dev_ptr The device pointer
+ * \param iq_data Pointer to the read IQ data. The metadata is extracted from
+ *                the first sample, then the first sample is set back to 0.
+ *
+ * \return 0 for success and non-zero otherwise. If this function returns non-zero,
+ *         then the device pointer is not updated. This most likely means that
+ *         data was read from the incorrect buffer in double buffer mode. The situation
+ *         should resolve itself on the next read since the same buffer will be
+ *         read again, and the ASIC will swap write buffers on each measurement.
+ */
+uint8_t ch_update_metadata_from_iq0(ch_dev_t *dev_ptr, ch_iq_sample_t *iq_data);
 
 /*!
  * \brief Set the receive holdoff sample count.
@@ -2996,6 +3101,22 @@ uint8_t ch_meas_switch(ch_dev_t *dev_ptr);
  * \note This feature is only available for ICU sensors.
  */
 uint8_t ch_meas_get_last_num(ch_dev_t *dev_ptr);
+
+/*!
+ * \brief Get the address of the IQ buffer that will be written by the next measurement.
+ *
+ * \param dev_ptr 		 pointer to the ch_dev_t descriptor structure
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function returns the address of the buffer that will be written by the next
+ * measurement. This is useful in the double buffer mode.
+ *
+ * See also ch_update_metadata_from_iq0().
+ *
+ * \note This feature is only available for ICU sensors.
+ */
+uint16_t ch_get_next_buf_addr(ch_dev_t *dev_ptr);
 
 /*!
  * \brief Get measurement queue values for a sensor.
