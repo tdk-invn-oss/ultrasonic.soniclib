@@ -243,6 +243,9 @@ uint8_t ch_get_dev_num(ch_dev_t *dev_ptr) {
 
 ch_dev_t *ch_get_dev_ptr(ch_group_t *grp_ptr, uint8_t dev_num) {
 
+	if (dev_num >= grp_ptr->num_ports) {
+		return NULL;
+	}
 	return grp_ptr->device[dev_num];
 }
 
@@ -649,6 +652,11 @@ uint8_t ch_io_start_nb(ch_group_t *grp_ptr) {
 	return ret_val;
 }
 
+uint8_t ch_minimal_int_handler(ch_group_t *grp_ptr, uint8_t dev_num) {
+
+	return chdrv_int_notify(grp_ptr, dev_num);
+}
+
 /*!
  * \brief Notify SonicLib that a sensor interrupt occurred.
  *
@@ -773,6 +781,52 @@ ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr) {
 
 	return ch_common_get_interrupt_drive(dev_ptr);
 }
+
+uint8_t ch_enable_double_buffer(ch_dev_t *dev_ptr, uint8_t enable) {
+	int ret_val = RET_OK;
+
+	if (enable) {
+		dev_ptr->meas_queue.reserved |= READOUT_OPTIONS_DOUBLE_BUFFER_BM;
+	} else {
+		dev_ptr->meas_queue.reserved &= ~READOUT_OPTIONS_DOUBLE_BUFFER_BM;
+	}
+
+	ret_val = ch_common_meas_write_config(dev_ptr);
+
+	return ret_val;
+}
+
+uint8_t ch_enable_metadata_in_iq0(ch_dev_t *dev_ptr, uint8_t enable) {
+	int ret_val = RET_OK;
+
+	if (enable) {
+		dev_ptr->meas_queue.reserved |= READOUT_OPTIONS_METADATA_IN_S0_BM;
+	} else {
+		dev_ptr->meas_queue.reserved &= ~READOUT_OPTIONS_METADATA_IN_S0_BM;
+	}
+
+	ret_val = ch_common_meas_write_config(dev_ptr);
+
+	return ret_val;
+}
+
+uint8_t ch_update_metadata_from_iq0(ch_dev_t *dev_ptr, ch_iq_sample_t *iq_data) {
+	uint16_t *buf_ptr             = (uint16_t *)iq_data;
+	const uint16_t next_buf_addr  = *buf_ptr;
+	buf_ptr                      += 1;                  // move to next word
+	const uint8_t is_valid        = (*buf_ptr) >> 8;    // get MSByte
+	const uint8_t last_meas_num   = (*buf_ptr) & 0xFF;  // get LSByte
+	if (is_valid) {
+		dev_ptr->last_measurement = last_meas_num;
+		dev_ptr->buf_addr         = next_buf_addr;
+	}
+	// set the first IQ sample to 0 after extracting metadata since many downstream
+	// tools expect the first IQ sample to be 0 (ASIC always writes 0 as first sample).
+	iq_data[0].i = 0;
+	iq_data[0].q = 0;
+	return (is_valid) ? 0 : 1;
+}
+
 #endif
 
 uint8_t ch_set_rx_low_gain(ch_dev_t *dev_ptr, uint16_t num_samples) {
@@ -1019,6 +1073,10 @@ uint8_t ch_meas_switch(ch_dev_t *dev_ptr) {
 uint8_t ch_meas_get_last_num(ch_dev_t *dev_ptr) {
 
 	return ch_common_meas_get_last_num(dev_ptr);
+}
+
+uint16_t ch_get_next_buf_addr(ch_dev_t *dev_ptr) {
+	return dev_ptr->buf_addr;
 }
 
 uint8_t ch_meas_write_config(ch_dev_t *dev_ptr) {

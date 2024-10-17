@@ -10,6 +10,7 @@
 #include "shasta_pmut_instruction.h"
 #include "shasta_atp_format.h"
 #include "shasta_iq_format.h"
+#include "icu_algo_info.h"
 
 #define REG_FMT_MAJOR   (1)
 #define REG_FMT_MINOR   (0)
@@ -23,7 +24,7 @@ typedef struct raw_output_data{
     volatile uint8_t odr_out; //output ODR
     volatile uint8_t iq_output_format;//the format of the IQdata buffer (See IQ_OUTPUT_*)
     volatile int8_t reserved; //used for INTCONFIG_ON_TARGET; -1 by default if no algo present
-    volatile uint16_t reserved2; //hack to align this struct...
+    volatile uint16_t reserved2; // address to read IQ data from
     //! Number of IQ bytes in last measurement
     volatile uint16_t num_iq_bytes;
 #ifndef INVN_NO_VIRTUAL_REGS
@@ -55,11 +56,15 @@ typedef struct measurement{ // size: 172 bytes
 #define TRIGSRC_HWTRIGGER_INT2      (1<<1)
 #define TRIGSRC_RTC                 (1<<2)
 #define TRIGSRC_CONTINUOUS_RX        (1<<3)
+#define TRIGSRC_MEMS_DIRECT_CONNECT  (1<<4)
 
 #define INTCONFIG_DR_INT2       (1<<0) //if this bit is set, use int2 for DATAREADY
 #define INTCONFIG_ON_TARGET     (1<<1) //if this bit is set, only output DATAREADY when a target is detected
 #define INTCONFIG_PULSE_INT     (1<<2) //if this bit is set, pulse the configured INT rather than latch it til next SPI read
 #define INTCONFIG_PUSH_PULL_INT (1<<3)  // if this bit is set, int will be actively driven high instead of using PU resistor
+
+#define READOUT_OPTIONS_DOUBLE_BUFFER_BM (1)  // if set, double buffering mode is enabled
+#define READOUT_OPTIONS_METADATA_IN_S0_BM (1<<1)  // if set, IQ buffer address and last_measurement idx will be placed in IQ sample 0
 
 typedef struct measurement_queue{ // size: 142 bytes
     volatile uint8_t intconfig; // 0x02 switch interrupts to INT2 (see INTCONFIG_*)
@@ -67,7 +72,7 @@ typedef struct measurement_queue{ // size: 142 bytes
     volatile uint8_t meas_stop; // 0x04 which measurement do we stop on
     volatile uint8_t current_meas; // 0x05 which measurement do we do next
     volatile uint8_t trigsrc;// 0x06 add optional triggers from hardware pins (falling edge of INT1 or INT2) or LPWKUP timer (see TRIGSRC_*)
-    volatile uint8_t reserved; // 0x07 future use
+    volatile uint8_t reserved; // for double buffering and metadata packing options
     volatile measurement_t meas[MEAS_QUEUE_MAX_MEAS]; // 0x08 up to MEAS_QUEUE_MAX_MEAS measurements can be held at one time
 }measurement_queue_t;
 

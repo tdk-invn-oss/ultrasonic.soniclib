@@ -21,117 +21,161 @@
 #include <invn/soniclib/ch_log.h>
 #include <invn/soniclib/chirp_bsp.h>
 
-#define MSG_BUFFER_LENGTH   200
-#define MODULE_NAME_LENGTH  7 /* log module name max size in char */
-#define FUNC_NAME_LENGTH    30
-#define HEADER_LENGTH       (1 + 1 + MODULE_NAME_LENGTH + 1 + FUNC_NAME_LENGTH + 1)
-#define INDEX_LOG_MESSAGE   (HEADER_LENGTH - 1)
-#define END_OF_LINE_PATTERN "\r\n"
-#define END_OF_LINE_LENGTH  2
+#define MODULE_NAME_LENGTH   7 /* log module name max size in char */
+#define FUNC_NAME_LENGTH     30
+#define HEADER_LENGTH        (1 + 1 + MODULE_NAME_LENGTH + 1 + FUNC_NAME_LENGTH + 1)
+#define INDEX_LOG_MESSAGE    (HEADER_LENGTH - 1)
+#define END_OF_LINE_PATTERN  "\r\n"
+#define END_OF_LINE_LENGTH   2
+#define MESSAGE_MINIMAL_SIZE 50
 
-/* Get size available in buffer removing header length and the \r\n at the end of the string. */
-#define SIZEOF_BUF_FOR_DATA(buf) (sizeof(buf) - (HEADER_LENGTH + END_OF_LINE_LENGTH))
+#if CH_LOG_BUFFER_SIZE < (HEADER_LENGTH + MESSAGE_MINIMAL_SIZE + END_OF_LINE_LENGTH)
+#error Please define a greater size for CH_LOG_BUFFER_SIZE
+#endif
 
-static char buf_msg[MSG_BUFFER_LENGTH];
+static char buf_msg[CH_LOG_BUFFER_SIZE];
+static uint16_t buf_idx = 0;
 
-static inline void add_header(const char level, const char *name, const char *func_name, char *out_buf) {
-	/* Write the header :
-	   - 1 letter for the criticality,
-	   - 1 space,
-	   - module name space complemented if less than MODULE_NAME_LENGTH,
-	   - 1 space,
-	   - '\0' char */
-	snprintf(out_buf, HEADER_LENGTH + 1, "%c %-*.*s %-*.*s ", level, MODULE_NAME_LENGTH, MODULE_NAME_LENGTH, name,
-	         FUNC_NAME_LENGTH, FUNC_NAME_LENGTH, func_name);
+static inline void print(void) {
+	chbsp_print_str(&buf_msg[0]);
+	buf_idx = 0;
 }
 
-static inline void add_eof(char *out_buf, size_t out_buf_len) {
-	uint32_t len;
+static __attribute__((format(printf, 1, 0))) int print_to_buf(const char *format, va_list va) {
+	size_t buf_max_space_available;
+	int rc = 0;
 
+	for (uint8_t retry = 2; retry > 0; --retry) {
+		buf_max_space_available = sizeof(buf_msg) - buf_idx;
+
+		rc = vsnprintf(&buf_msg[buf_idx], buf_max_space_available, format, va);
+		if (rc < 0) {
+			/* encoding error , string not put to buf_msg*/
+
+		} else if ((size_t)rc > buf_max_space_available) {
+			/* Buffer is full, can't append new argument
+			 * Print current buffer and rollover */
+			buf_msg[buf_idx] = '\0';
+			print();
+		} else {
+			buf_idx += rc;
+			break;
+		}
+	}
+	return rc;
+}
+
+static inline void add_header(const char level, const char *name, const char *func_name) {
+	size_t buf_max_space_available;
+	int rc = 0;
+
+	for (uint8_t retry = 2; retry > 0; --retry) {
+		buf_max_space_available = sizeof(buf_msg) - buf_idx;
+		/* Write the header :
+		   - 1 letter for the criticality,
+		   - 1 space,
+		   - module name space complemented if less than MODULE_NAME_LENGTH,
+		   - 1 space,
+		   - '\0' char */
+		rc = snprintf(&buf_msg[buf_idx], buf_max_space_available, "%c %-*.*s %-*.*s ", level, MODULE_NAME_LENGTH,
+		              MODULE_NAME_LENGTH, name, FUNC_NAME_LENGTH, FUNC_NAME_LENGTH, func_name);
+		if (rc < 0) {
+			/* encoding error , string not put to buf_msg*/
+		} else if ((size_t)rc > buf_max_space_available) {
+			/* Buffer is full, can't append new argument
+			 * Print current buffer and rollover */
+			buf_msg[buf_idx] = '\0';
+			print();
+		} else {
+			buf_idx += rc;
+			break;
+		}
+	}
+}
+
+static inline void add_eof(void) {
+	const size_t buf_idx_eof_max = (sizeof(buf_msg) - END_OF_LINE_LENGTH - sizeof('\0'));
+
+	if (buf_idx > buf_idx_eof_max) {
+		buf_idx = buf_idx_eof_max;
+	}
 	/* Add the carriage return */
-	out_buf[out_buf_len - 1] = '\0'; /* be sure there is at least one '\0' in buffer */
-	len                      = strlen(out_buf);
-	snprintf(&out_buf[len], out_buf_len, END_OF_LINE_PATTERN);
+	memcpy(&buf_msg[buf_idx], END_OF_LINE_PATTERN, sizeof(END_OF_LINE_PATTERN));
+	buf_msg[sizeof(buf_msg) - 1] = '\0'; /* be sure there is at least one '\0' in buffer */
 }
 
 __attribute__((format(printf, 1, 2))) void ch_log_printf(const char *format, ...) {
-	char buf[MSG_BUFFER_LENGTH] = {0};
 	va_list va;
 
 	va_start(va, format);
-	vsnprintf(&buf[0], sizeof(buf), format, va);
+	print_to_buf(format, va);
 	va_end(va);
 
-	chbsp_print_str(buf);
+	print();
 }
 
 __attribute__((format(printf, 1, 2))) void ch_log_printf_eol(const char *format, ...) {
-	char buf[MSG_BUFFER_LENGTH] = {0};
 	va_list va;
 
 	va_start(va, format);
-	vsnprintf(&buf[0], sizeof(buf), format, va);
+	print_to_buf(format, va);
 	va_end(va);
 
-	add_eof(buf, sizeof(buf));
+	add_eof();
 
-	chbsp_print_str(buf);
+	print();
 }
 
 __attribute__((format(printf, 4, 5))) void ch_log_prefix_printf(const char level, const char *name,
                                                                 const char *func_name, const char *format, ...) {
-	char buf[MSG_BUFFER_LENGTH] = {0};
 	va_list va;
 
-	add_header(level, name, func_name, &buf[0]);
+	buf_idx = 0;
+	add_header(level, name, func_name);
 
 	va_start(va, format);
 	/* Copy all after the header */
-	vsnprintf(&buf[INDEX_LOG_MESSAGE], SIZEOF_BUF_FOR_DATA(buf), format, va);
+	print_to_buf(format, va);
 	va_end(va);
 
-	add_eof(buf, sizeof(buf));
+	add_eof();
 
-	chbsp_print_str(buf);
+	print();
 }
 
 __attribute__((format(printf, 4, 5))) void ch_log_prefix_start(const char level, const char *name,
                                                                const char *func_name, const char *format, ...) {
 	va_list va;
 
-	add_header(level, name, func_name, &buf_msg[0]);
+	buf_idx = 0;
+	add_header(level, name, func_name);
 
+	buf_msg[sizeof(buf_msg) - 1] = '\0'; /* be sure there is at least one '\0' in buffer */
 	va_start(va, format);
-	/* Copy all after the header. Save room for the \r\n at the end of the string. */
-	vsnprintf(&buf_msg[INDEX_LOG_MESSAGE], SIZEOF_BUF_FOR_DATA(buf_msg), format, va);
+	print_to_buf(format, va);
 	va_end(va);
-	buf_msg[MSG_BUFFER_LENGTH - 1] = '\0';
 }
 
 __attribute__((format(printf, 1, 2))) void ch_log_start(const char *format, ...) {
 	va_list va;
 
+	buf_msg[sizeof(buf_msg) - 1] = '\0'; /* be sure there is at least one '\0' in buffer */
 	va_start(va, format);
 	/* Copy all after the header. Save room for the \r\n at the end of the string. */
-	vsnprintf(&buf_msg[0], SIZEOF_BUF_FOR_DATA(buf_msg), format, va);
+	print_to_buf(format, va);
 	va_end(va);
-	buf_msg[MSG_BUFFER_LENGTH - 1] = '\0';
 }
 
 __attribute__((format(printf, 1, 2))) void ch_log_msg(const char *format, ...) {
 	va_list va;
-	uint32_t len;
 
 	buf_msg[sizeof(buf_msg) - 1] = '\0'; /* be sure there is at least one '\0' in buffer */
-	len                          = strlen(buf_msg);
 	va_start(va, format);
-	/* Copy all after the header. Save room for the \r\n at the end of the string. */
-	vsnprintf(&buf_msg[len], SIZEOF_BUF_FOR_DATA(buf_msg), format, va);
+	print_to_buf(format, va);
 	va_end(va);
 }
 
 void ch_log_end(void) {
-	add_eof(buf_msg, sizeof(buf_msg));
-
-	chbsp_print_str(buf_msg);
+	add_eof();
+	print();
 }

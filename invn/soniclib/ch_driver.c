@@ -47,9 +47,6 @@
 #endif
 #endif /* #ifdef INCLUDE_WHITNEY_SUPPORT */
 
-/* Local variables */
-static volatile uint32_t interrupt_sensors = 0;  // one bit for each possible sensor
-
 #if IS_CH_LOG_USED
 
 static inline void print_connected_sensors(int prog_status, const ch_group_t *grp_ptr, uint32_t start_time) {
@@ -197,7 +194,6 @@ static int init_ram(ch_dev_t *dev_ptr) {
 static int reset_and_halt(ch_dev_t *dev_ptr) {
 	int ch_err = 0;
 #ifdef INCLUDE_SHASTA_SUPPORT
-	dev_ptr->asic_ready = 0;
 
 	// enter debug mode and clear active-low reset bit to do reset
 	ch_err |= chdrv_sys_ctrl_write(dev_ptr, SYS_CTRL_DEBUG);
@@ -659,28 +655,124 @@ uint8_t chdrv_event_trigger(ch_dev_t *dev_ptr, uint16_t event) {
 	err = chdrv_write_word(dev_ptr, event_trigger_reg_addr, event);
 	return err;
 }
+
+static inline uint8_t event_wait(ch_dev_t *dev_ptr) {
+	uint8_t err = 0;
+
+	chbsp_event_wait_setup((1 << dev_ptr->io_index));
+	chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***/
+
+#ifdef CHDRV_WAIT_DEBUG
+	chbsp_debug_on(1);
+#endif /* CHDRV_WAIT_DEBUG */
+
+	err = chbsp_event_wait(CHDRV_EVENT_TIMEOUT_MS, (1 << dev_ptr->io_index));
+	/* The interrupts are disabled in the entry of chdrv_int_callback */
+
+#ifdef CHDRV_WAIT_DEBUG
+	chbsp_debug_off(1);
+#endif /* CHDRV_WAIT_DEBUG */
+
+#ifdef USE_DEFERRED_INTERRUPT_PROCESSING
+	if (!err) {
+		chdrv_int_callback_deferred(dev_ptr->group, dev_ptr->io_index);
+	}
 #endif
 
+	return err;
+}
+
+uint8_t chdrv_event_trigger_and_wait(ch_dev_t *dev_ptr, uint16_t event) {
+	ch_io_int_callback_t app_io_int_callback = NULL;
+	uint8_t err                              = 0;
+
+	if (dev_ptr->group->io_int_callback != NULL) {
+		/* If an application callback has already been defined
+		 * avoid to trigger it when event will happen
+		 */
+		app_io_int_callback             = dev_ptr->group->io_int_callback;
+		dev_ptr->group->io_int_callback = NULL;
+	}
+
+	chbsp_event_wait_setup((1 << dev_ptr->io_index));
+	chdrv_int_interrupt_enable(dev_ptr);         // *** enable interrupt ***
+	err |= chdrv_event_trigger(dev_ptr, event);  // trigger event
+
+#ifdef CHDRV_WAIT_DEBUG
+	chbsp_debug_on(1);
+#endif /* CHDRV_WAIT_DEBUG */
+
+	err |= chbsp_event_wait(CHDRV_EVENT_TIMEOUT_MS, (1 << dev_ptr->io_index)); /* Wait for sensor to interrupt */
+	/* The interrupts are disabled in the entry of chdrv_int_callback */
+
+#ifdef CHDRV_WAIT_DEBUG
+	chbsp_debug_off(1);
+#endif /* CHDRV_WAIT_DEBUG */
+
+#ifdef USE_DEFERRED_INTERRUPT_PROCESSING
+	chdrv_int_callback_deferred(dev_ptr->group, dev_ptr->io_index);
+#endif
+
+	if (app_io_int_callback != NULL) {
+		/* Restore previously saved callback */
+		dev_ptr->group->io_int_callback = app_io_int_callback;
+	}
+
+	return err;
+}
+#endif
+
+// grp_ptr below can likely be const, but we need to fix lower level functions first
+uint8_t chdrv_int_notify(ch_group_t *grp_ptr, uint8_t dev_num) {
+	ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
+
+	/* Get interrupt type */
+	if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
+#ifdef INCLUDE_SHASTA_SUPPORT
+		if (grp_ptr->status != CH_GROUP_STAT_INIT_OK) {
+			// dummy read needed in this case because we have not yet read the
+			// sensor config address, but we still need the asic to release the
+			// interrupt line
+			int16_t int_type;
+			chdrv_read_word(dev_ptr, SHASTA_DATA_MEM_ADDR, (uint16_t *)&int_type);
+		}
+#endif
+	}
+
+	chbsp_event_notify(1 << dev_num);
+	return (grp_ptr->status == CH_GROUP_STAT_INIT_OK) ? 0 : 1;
+}
+
 void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num) {
-	ch_dev_t *dev_ptr             = grp_ptr->device[dev_num];
-	ch_io_int_callback_t func_ptr = grp_ptr->io_int_callback;  // application callback routine
-	ch_interrupt_type_t int_type  = CH_INTERRUPT_TYPE_UNKNOWN;
+	ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 
 	/* avoid being retriggered when pin control changes */
 	chdrv_int_interrupt_disable(dev_ptr);
+
+	/* Notify the application context of the event */
+	chbsp_event_notify(1 << dev_num);
+
+#ifndef USE_DEFERRED_INTERRUPT_PROCESSING
+	chdrv_int_callback_deferred(grp_ptr, dev_num);
+#endif
+}
+
+void chdrv_int_callback_deferred(ch_group_t *grp_ptr, uint8_t dev_num) {
+	ch_dev_t *dev_ptr             = grp_ptr->device[dev_num];
+	ch_io_int_callback_t func_ptr = grp_ptr->io_int_callback;  // application callback routine
+	ch_interrupt_type_t int_type  = CH_INTERRUPT_TYPE_UNKNOWN;
 
 	/* Get interrupt type */
 	if (dev_ptr->asic_gen == CH_ASIC_GEN_2_SHASTA) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 		uint16_t int_source_reg_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->common.int_source);
-		if (!dev_ptr->asic_ready) {
+		if (grp_ptr->status != CH_GROUP_STAT_INIT_OK) {
 			// dummy read needed in this case because we have not yet read the
 			// sensor config address, but we still need the asic to release the
 			// interrupt line
 			chdrv_read_word(dev_ptr, SHASTA_DATA_MEM_ADDR, (uint16_t *)&int_type);
 			// manually set this because dummy read result is garbage
-			int_type            = CH_INTERRUPT_TYPE_PGM_LOADED;
-			dev_ptr->asic_ready = 1;
+			int_type = CH_INTERRUPT_TYPE_PGM_LOADED;
 		} else if (dev_ptr->sens_cfg_addr != 0) {
 			chdrv_read_word(dev_ptr, int_source_reg_addr, (uint16_t *)&int_type);
 
@@ -697,14 +789,14 @@ void chdrv_int_callback(ch_group_t *grp_ptr, uint8_t dev_num) {
 
 				chdrv_read_byte(dev_ptr, last_fmt_reg_addr, &last_fmt);
 				dev_ptr->iq_output_format = last_fmt;
+
+				chdrv_read_buf_addr(dev_ptr);
 			}
 		}
 #endif
 	} else {                                    // if CH_ASIC_GEN_1_WHITNEY
 		int_type = CH_INTERRUPT_TYPE_DATA_RDY;  //   Whitney only has data ready interrupt
 	}
-
-	interrupt_sensors |= (1 << dev_num);
 
 	/* Call application callback function - pass device number to identify device within group */
 	if ((func_ptr != NULL) && (grp_ptr->status == CH_GROUP_STAT_INIT_OK)) {
@@ -885,81 +977,6 @@ uint8_t chdrv_otpmem_copy(ch_dev_t *dev_ptr, otp_copy_t *otp_ptr) {
 		otp_ptr->mems_variant    = 0;
 		otp_ptr->module_variant  = 0;
 	}
-
-	return err;
-}
-
-static inline uint8_t event_wait(ch_dev_t *dev_ptr) {
-	uint8_t err         = 0;
-	uint32_t start_time = chbsp_timestamp_ms();
-	interrupt_sensors   = 0;  // re-init bitmask
-
-	chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***
-
-#ifdef CHDRV_WAIT_DEBUG
-	chbsp_debug_on(1);
-#endif /* CHDRV_WAIT_DEBUG */
-
-	while (interrupt_sensors == 0) {
-		uint32_t new_time = chbsp_timestamp_ms();
-		if (new_time >= (start_time + CHDRV_EVENT_TIMEOUT_MS)) {
-			err = 1;  // timeout
-			break;
-		} else if (new_time < start_time) {  // if rollover
-			start_time = new_time;           //  just re-start timeout
-		}
-	}
-	chdrv_int_interrupt_disable(dev_ptr);  // *** disable interrupt ***
-
-#ifdef CHDRV_WAIT_DEBUG
-	chbsp_debug_off(1);
-#endif /* CHDRV_WAIT_DEBUG */
-
-	return err;
-}
-
-uint8_t chdrv_event_trigger_and_wait(ch_dev_t *dev_ptr, uint16_t event) {
-	ch_io_int_callback_t app_io_int_callback = NULL;
-	uint32_t start_time                      = chbsp_timestamp_ms();
-	uint8_t err                              = 0;
-
-	if (dev_ptr->group->io_int_callback != NULL) {
-		/* If an application callback has already been defined
-		 * avoid to trigger it when event will happen
-		 */
-		app_io_int_callback             = dev_ptr->group->io_int_callback;
-		dev_ptr->group->io_int_callback = NULL;
-	}
-
-	interrupt_sensors = 0;                // re-init bitmask
-	chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***
-
-	err |= chdrv_event_trigger(dev_ptr, event);  // trigger event
-
-#ifdef CHDRV_WAIT_DEBUG
-	chbsp_debug_on(1);
-#endif /* CHDRV_WAIT_DEBUG */
-
-	/* Wait for sensor to interrupt */
-	while (!err && (interrupt_sensors == 0)) {
-		uint32_t new_time = chbsp_timestamp_ms();
-		if (new_time >= (start_time + CHDRV_EVENT_TIMEOUT_MS)) {
-			err = 1;  // timeout
-			break;
-		} else if (new_time < start_time) {  // if rollover
-			start_time = new_time;           //  just re-start timeout
-		}
-	}
-	chdrv_int_interrupt_disable(dev_ptr);  // *** disable interrupt ***
-
-	if (app_io_int_callback != NULL) {
-		/* Restore previously saved callback */
-		dev_ptr->group->io_int_callback = app_io_int_callback;
-	}
-
-#ifdef CHDRV_WAIT_DEBUG
-	chbsp_debug_off(1);
-#endif /* CHDRV_WAIT_DEBUG */
 
 	return err;
 }
@@ -2296,8 +2313,7 @@ EXIT_WHITNEY_DETECT_AND_PROGRAM:
  * This function resets and runs a sensor device by writing to the control registers.
  */
 static int reset_and_run(ch_dev_t *dev_ptr) {
-	int ch_err          = 0;
-	dev_ptr->asic_ready = 0;
+	int ch_err = 0;
 
 	ch_err |= chdrv_sys_ctrl_write(dev_ptr, SYS_CTRL_DEBUG);  // reset (SYS_CTRL_RESET_N is low)
 	ch_err |= chdrv_sys_ctrl_write(dev_ptr, (SYS_CTRL_DEBUG | SYS_CTRL_RESET_N));
@@ -2323,6 +2339,22 @@ static uint8_t exit_debug(ch_dev_t *dev_ptr) {
 	return err;
 }
 
+int chdrv_read_buf_addr(ch_dev_t *dev_ptr) {
+	int ch_err = 0;
+	uint16_t buf_addr;
+	uint16_t buf_addr_reg_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->raw.reserved2);
+
+	ch_err = chdrv_read_word(dev_ptr, buf_addr_reg_addr, &buf_addr);
+	if (buf_addr != 0) {
+		dev_ptr->buf_addr = buf_addr;
+	} else {
+		// for backwards compatibility before the reserved2 field was used
+		// to store the buffer address
+		dev_ptr->buf_addr = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->raw.IQdata);
+	}
+	return ch_err;
+}
+
 static inline uint8_t shasta_detect_and_program(ch_dev_t *dev_ptr) {
 	uint8_t ch_err;
 
@@ -2345,7 +2377,7 @@ static inline uint8_t shasta_detect_and_program(ch_dev_t *dev_ptr) {
 	ch_err  = reset_and_halt(dev_ptr);  // reset and enter debug mode for programming
 	ch_err |= init_ram(dev_ptr);        // init ram values
 
-	interrupt_sensors = 0;
+	chbsp_event_wait_setup((1 << dev_ptr->io_index));
 	chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***
 
 	ch_err |= write_firmware(dev_ptr);  // transfer program
@@ -2354,6 +2386,9 @@ static inline uint8_t shasta_detect_and_program(ch_dev_t *dev_ptr) {
 
 	if (!ch_err) {
 		ch_err |= event_wait(dev_ptr);  // wait for sensor to interrupt
+		if (ch_err) {
+			CH_LOG_ERR("No reset event from sensor %u", dev_ptr->io_index);
+		}
 	}
 
 	/* Get addr of shared config mem and algo info */
@@ -2367,6 +2402,9 @@ static inline uint8_t shasta_detect_and_program(ch_dev_t *dev_ptr) {
 			uint16_t algo_info_addr;
 			ch_err                       = chdrv_read_word(dev_ptr, SHASTA_ALGO_INFO_PTR_ADDR, &algo_info_addr);
 			dev_ptr->sens_algo_info_addr = (ICU_ALGO_SHASTA_INFO *)(uintptr_t)algo_info_addr;
+		}
+		if (!ch_err) {
+			ch_err = chdrv_read_buf_addr(dev_ptr);
 		}
 
 		CH_LOG_INFO("Sensor shared mem addr = 0x%04x", (uint16_t)(uintptr_t)dev_ptr->sens_cfg_addr);
@@ -2423,7 +2461,6 @@ int chdrv_prog_ping(ch_dev_t *dev_ptr) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 	uint16_t reg_val         = 0;
 	uint8_t sys_ctrl_reg_val = 0;
-	dev_ptr->asic_ready      = 0;
 
 	ch_err |= chdrv_sys_ctrl_read(dev_ptr, (uint8_t *)&sys_ctrl_reg_val);
 
