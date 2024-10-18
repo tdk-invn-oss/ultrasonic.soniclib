@@ -189,6 +189,7 @@
 #ifndef __CHIRP_BSP_H_
 #define __CHIRP_BSP_H_
 
+#include <stdint.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -661,6 +662,33 @@ void chbsp_delay_ms(uint32_t ms);
  */
 uint32_t chbsp_timestamp_ms(void);
 
+/**
+ * @brief Wait for any interrupt event
+ *
+ * @param time_out_ms time-out of the wait loop
+ * @return 0 if an event has been received on INT pin, 1 if time-out happened
+ *
+ * This function is called during initialization when an event is triggered on sensor
+ * and we wait the the result. This event is called in "application" context
+ */
+uint8_t chbsp_event_wait(uint16_t time_out_ms, uint32_t event_mask);
+
+/**
+ * @brief Notify an interrupt event for the selected device
+ *
+ * @param event_mask Each bit of the mask represents a device
+ *
+ * This function is called from \a ch_interrupt , in interrupt context
+ */
+void chbsp_event_notify(uint32_t event_mask);
+
+/**
+ * @brief Prepare the mechanism to wait for an event
+ *
+ * This function is called before \a chbsp_event_wait
+ */
+void chbsp_event_wait_setup(uint32_t event_mask);
+
 /*!
  * \brief Initialize the host's I2C hardware.
  *
@@ -743,9 +771,9 @@ int chbsp_i2c_write(ch_dev_t *dev_ptr, const uint8_t *data, uint16_t num_bytes);
  * a header.
  *
  * The byte sequence being sent should look like the following:
- *     0    |     1       |     2        |    3      |    4          |     5         |   etc...
- * :------: | :------:    | :------:     | :------:  | :------:      | :-------:     | :------:
- * I2C Addr | \a mem_addr | \a num_bytes |  *\a data | *(\a data + 1)| *(\a data + 2)|   ...
+ *     0    |     1       |     2        |    3      |    4          |   etc...
+ * :------: | :------:    | :------:     | :------:  | :------:      | :------:
+ * I2C Addr | \a mem_addr | *\a data | *(\a data + 1)| *(\a data + 2)|   ...
  *
  * This function is REQUIRED for CH101 and CH201 sensors.  It is not used for ICU sensors.
  *
@@ -773,9 +801,9 @@ int chbsp_i2c_mem_write(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t *data, uin
  * The I2C interface must have already been initialized using \a chbsp_i2c_init().
  *
  * The byte sequence being sent should look like the following:
- *     0    |     1       |     2        |    3      |    4          |     5         |   etc...
- * :------: | :------:    | :------:     | :------:  | :------:      | :-------:     | :------:
- * I2C Addr | \a mem_addr | \a num_bytes |  *\a data | *(\a data + 1)| *(\a data + 2)|   ...
+ *     0    |     1       |     2        |    3      |    4          |   etc...
+ * :------: | :------:    | :------:     | :------:  | :------:      | :------:
+ * I2C Addr | \a mem_addr | *\a data | *(\a data + 1)| *(\a data + 2)|   ...
  *
  * This function is OPTIONAL for CH101 and CH201 sensors.  It is not used for ICU sensors.
  *

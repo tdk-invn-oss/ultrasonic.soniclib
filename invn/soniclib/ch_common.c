@@ -1033,14 +1033,7 @@ static uint8_t get_sample_data(ch_dev_t *dev_ptr, ch_iq_sample_t *buf_ptr, uint1
 	}
 
 #ifdef INCLUDE_SHASTA_SUPPORT
-	const uint8_t last_meas     = ch_common_meas_get_last_num(dev_ptr);
-	const uint8_t is_continuous = dev_ptr->is_continuous;
-	iq_data_addr                = (uint16_t)(uintptr_t) & ((dev_ptr->sens_cfg_addr)->raw.IQdata);  // start of I/Q data
-	if (is_continuous && last_meas == 1) {
-		// start from middle of buffer in continuous mode when reading the
-		// result of meas 1. Mult by 4 to convert to bytes then divide by 2
-		iq_data_addr += (dev_ptr->current_fw->max_samples << 2) >> 1;
-	}
+	iq_data_addr  = dev_ptr->buf_addr;
 	iq_data_addr += (start_sample * sample_size_in_bytes);  // add sample offset
 
 	if (mode == CH_IO_MODE_BLOCK) {
@@ -2929,6 +2922,7 @@ uint8_t ch_common_read_meas_config(ch_dev_t *dev_ptr) {
 		dev_ptr->odr_out          = odr_out;
 		dev_ptr->iq_output_format = iq_output_format;
 		dev_ptr->num_iq_bytes     = num_iq_bytes;
+		err                       = chdrv_read_buf_addr(dev_ptr);
 	}
 
 	return err;
