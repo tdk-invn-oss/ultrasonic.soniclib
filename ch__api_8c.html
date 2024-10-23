@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.4.1</span>
+   &#160;<span id="projectnumber">4.4.3</span>
    </div>
   </td>
  </tr>
@@ -317,9 +317,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ac78bd32dde57faf8200f39786151040c"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#ac78bd32dde57faf8200f39786151040c">ch_iq_to_amplitude</a> (<a class="el" href="structch__iq__sample__t.html">ch_iq_sample_t</a> *iq_sample)</td></tr>
 <tr class="memdesc:ac78bd32dde57faf8200f39786151040c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate amplitude from sample I/Q values.  <a href="ch__api_8c.html#ac78bd32dde57faf8200f39786151040c">More...</a><br /></td></tr>
 <tr class="separator:ac78bd32dde57faf8200f39786151040c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21e0ba880449ca3c613730091ba089c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#a21e0ba880449ca3c613730091ba089c4">ch_log_append</a> (uint8_t log_id, <a class="el" href="soniclib_8h.html#a9b0598bc1d023573411e2831f3d28108">ch_log_fmt_t</a> format, uint64_t timestamp, <a class="el" href="structch__log__data__t.html">ch_log_data_t</a> *log_data_ptr)</td></tr>
-<tr class="memdesc:a21e0ba880449ca3c613730091ba089c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append received sensor data to log.  <a href="ch__api_8c.html#a21e0ba880449ca3c613730091ba089c4">More...</a><br /></td></tr>
-<tr class="separator:a21e0ba880449ca3c613730091ba089c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89b106baa702f500a55e64787bace2bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#a89b106baa702f500a55e64787bace2bb">ch_log_append</a> (uint8_t log_id, <a class="el" href="soniclib_8h.html#a9b0598bc1d023573411e2831f3d28108">ch_log_fmt_t</a> format, uint64_t timestamp_usec, <a class="el" href="structch__log__data__t.html">ch_log_data_t</a> *log_data_ptr)</td></tr>
+<tr class="memdesc:a89b106baa702f500a55e64787bace2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append received sensor data to log.  <a href="ch__api_8c.html#a89b106baa702f500a55e64787bace2bb">More...</a><br /></td></tr>
+<tr class="separator:a89b106baa702f500a55e64787bace2bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a33406081a2392fd38f36cd65e8b8cb"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__api_8c.html#a4a33406081a2392fd38f36cd65e8b8cb">ch_log_init</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, <a class="el" href="soniclib_8h.html#a9b0598bc1d023573411e2831f3d28108">ch_log_fmt_t</a> format, <a class="el" href="structch__log__cfg__t.html">ch_log_cfg_t</a> *config_ptr)</td></tr>
 <tr class="memdesc:a4a33406081a2392fd38f36cd65e8b8cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a log in the specified log format.  <a href="ch__api_8c.html#a4a33406081a2392fd38f36cd65e8b8cb">More...</a><br /></td></tr>
 <tr class="separator:a4a33406081a2392fd38f36cd65e8b8cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3279,8 +3279,8 @@ The <em>range_type</em> parameter only controls how this function interprets the
 
 </div>
 </div>
-<a id="a21e0ba880449ca3c613730091ba089c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21e0ba880449ca3c613730091ba089c4">&#9670;&nbsp;</a></span>ch_log_append()</h2>
+<a id="a89b106baa702f500a55e64787bace2bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89b106baa702f500a55e64787bace2bb">&#9670;&nbsp;</a></span>ch_log_append()</h2>
 
 <div class="memitem">
 <div class="memproto">
