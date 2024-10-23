@@ -51,7 +51,7 @@ uint8_t ch_group_init(ch_group_t *grp_ptr, uint8_t num_devices, uint8_t num_buse
 uint8_t ch_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, ch_fw_init_func_t fw_init_func) {
 	uint8_t ret_val;
 
-	if (dev_ptr == NULL || grp_ptr == NULL || fw_init_func == NULL) {
+	if (dev_ptr == NULL || grp_ptr == NULL || (dev_num >= CHIRP_MAX_NUM_SENSORS) || fw_init_func == NULL) {
 		return RET_ERR;
 	}
 
@@ -330,13 +330,19 @@ uint8_t ch_log_init(ch_group_t *grp_ptr, ch_log_fmt_t format, ch_log_cfg_t *conf
 	return ++log_id;
 }
 
-void ch_log_append(uint8_t log_id, ch_log_fmt_t format, uint64_t timestamp, ch_log_data_t *log_data_ptr) {
+void ch_log_append(uint8_t log_id, ch_log_fmt_t format, uint64_t timestamp_usec, ch_log_data_t *log_data_ptr) {
 	if (format == CH_LOG_FMT_REDSWALLOW) {
 		int16_t q_data[MAX_NUM_SAMPLES];
 
-		ch_log_printf("chlog, %d, %0.6f, %u, %u, %0.1f, %u, %u, %u", log_id, (float)timestamp / 1000000.0f,
-		              log_data_ptr->tx_sensor_id, log_data_ptr->rx_sensor_id,
-		              (float)log_data_ptr->range / (32.0f * 10.0f), log_data_ptr->amplitude,
+		/* Avoid usage of __aeabi_ul2f which isn't available in all lib C implementations
+		 * Source : https://github.com/adafruit/circuitpython/issues/342 and
+		 * https://github.com/adafruit/circuitpython/pull/343/files
+		 */
+		float timestamp_sec  = ((float)(uint32_t)(timestamp_usec >> 32) * 4294967296.0f +
+                               (float)(uint32_t)(timestamp_usec & 0xffffffff));
+		timestamp_sec       /= 1000000.0f;
+		ch_log_printf("chlog, %u, %0.6f, %u, %u, %0.1f, %u, %u, %u", log_id, timestamp_sec, log_data_ptr->tx_sensor_id,
+		              log_data_ptr->rx_sensor_id, (float)log_data_ptr->range / (32.0f * 10.0f), log_data_ptr->amplitude,
 		              log_data_ptr->range != CH_NO_TARGET, log_data_ptr->annotation);
 
 		/* Print first all I data then all Q data
