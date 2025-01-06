@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.4.3</span>
+   &#160;<span id="projectnumber">4.4.4</span>
    </div>
   </td>
  </tr>
@@ -138,9 +138,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a2098ace9d08c28e86a4a7927f0aa0ad1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8c.html#a2098ace9d08c28e86a4a7927f0aa0ad1">icu_gpt_algo_update_odr</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num, <a class="el" href="soniclib_8h.html#a86140657375a7e7c24ecf430da97c189">ch_odr_t</a> new_odr)</td></tr>
 <tr class="memdesc:a2098ace9d08c28e86a4a7927f0aa0ad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update algo ODR.  <a href="icu__gpt_8c.html#a2098ace9d08c28e86a4a7927f0aa0ad1">More...</a><br /></td></tr>
 <tr class="separator:a2098ace9d08c28e86a4a7927f0aa0ad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab587d5db2f266d67fa38a87e4f5be53c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8c.html#ab587d5db2f266d67fa38a87e4f5be53c">icu_gpt_display_algo_thresholds</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="memdesc:ab587d5db2f266d67fa38a87e4f5be53c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display GPT thresholds for debug purpose.  <a href="icu__gpt_8c.html#ab587d5db2f266d67fa38a87e4f5be53c">More...</a><br /></td></tr>
-<tr class="separator:ab587d5db2f266d67fa38a87e4f5be53c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af18794349aa6ebc105f7e586788aba2c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="icu__gpt_8c.html#af18794349aa6ebc105f7e586788aba2c">icu_gpt_get_filter_update</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t meas_num)</td></tr>
 <tr class="memdesc:af18794349aa6ebc105f7e586788aba2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the filter update interval for a measurement.  <a href="icu__gpt_8c.html#af18794349aa6ebc105f7e586788aba2c">More...</a><br /></td></tr>
 <tr class="separator:af18794349aa6ebc105f7e586788aba2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -708,33 +705,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <p>Shall be called before ch_meas_set_odr because it relies on current ODR to update algorithm configuration </p>
-
-</div>
-</div>
-<a id="ab587d5db2f266d67fa38a87e4f5be53c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab587d5db2f266d67fa38a87e4f5be53c">&#9670;&nbsp;</a></span>icu_gpt_display_algo_thresholds()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t icu_gpt_display_algo_thresholds </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
-          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Display GPT thresholds for debug purpose. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">dev_ptr</td><td>pointer to the <a class="el" href="structch__dev__t.html" title="Chirp sensor device descriptor structure.">ch_dev_t</a> descriptor structure</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>RET_OK if print of thresholds succeeded </dd></dl>
 
 </div>
 </div>
