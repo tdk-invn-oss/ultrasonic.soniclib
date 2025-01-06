@@ -22,6 +22,10 @@
 #include <invn/soniclib/ch_extra_display_utils.h>
 #include <invn/soniclib/ch_log.h>
 
+#if !IS_CH_LOG_USED
+#error "Can't use functions of ch_extra_display_utils.c if log module not used"
+#else
+
 #define ODR_TO_FREQ_DIV(odr) (1 << (7 - odr))
 
 #define SEG_TYPE_TO_STR(segment_type)                                                                                  \
@@ -152,9 +156,11 @@ uint8_t ch_extra_display_config_info(ch_dev_t *dev_ptr) {
 				ch_log_printf("\r\n");
 			} /* for (seg_num...) */
 		}     /* for(meas_num...) */
-#endif        // INCLUDE_SHASTA_SUPPORT
+#endif  // INCLUDE_SHASTA_SUPPORT
 	}
 	ch_log_printf("\r\n");
 
 	return ch_err;
 }
+
+#endif /* !IS_CH_LOG_USED */

@@ -39,7 +39,7 @@ extern "C" {
 #define CH_LOG_BUFFER_SIZE (200)
 #endif
 
-#define IS_CH_LOG_USED              (CH_LOG_MODULE_LEVEL <= CH_LOG_LEVEL_DISABLE)
+#define IS_CH_LOG_USED              (CH_LOG_MODULE_LEVEL < CH_LOG_LEVEL_DISABLE)
 #define IS_CH_LOG_LEVEL_USED(level) (level >= CH_LOG_MODULE_LEVEL)
 
 #if (CH_LOG_MODULE_LEVEL <= CH_LOG_LEVEL_TRACE)
