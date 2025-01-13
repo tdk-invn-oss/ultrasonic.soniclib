@@ -21,6 +21,13 @@
 #include <invn/soniclib/ch_log.h>
 #include <invn/soniclib/chirp_bsp.h>
 
+#if defined(__GNUC__)
+#define DEFINE_FCT_PRINTF_LIKE(arg_fmt_position, first_varg_position)                                                  \
+	__attribute__((format(printf, arg_fmt_position, first_varg_position)))
+#else
+#define DEFINE_FCT_PRINTF_LIKE(arg_fmt_position, first_varg_position)
+#endif
+
 #define MODULE_NAME_LENGTH   7 /* log module name max size in char */
 #define FUNC_NAME_LENGTH     30
 #define HEADER_LENGTH        (1 + 1 + MODULE_NAME_LENGTH + 1 + FUNC_NAME_LENGTH + 1)
@@ -28,6 +35,8 @@
 #define END_OF_LINE_PATTERN  "\r\n"
 #define END_OF_LINE_LENGTH   2
 #define MESSAGE_MINIMAL_SIZE 50
+
+#if IS_CH_LOG_USED
 
 #if CH_LOG_BUFFER_SIZE < (HEADER_LENGTH + MESSAGE_MINIMAL_SIZE + END_OF_LINE_LENGTH)
 #error Please define a greater size for CH_LOG_BUFFER_SIZE
@@ -41,7 +50,7 @@ static inline void print(void) {
 	buf_idx = 0;
 }
 
-static __attribute__((format(printf, 1, 0))) int print_to_buf(const char *format, va_list va) {
+static DEFINE_FCT_PRINTF_LIKE(1, 0) int print_to_buf(const char *format, va_list va) {
 	size_t buf_max_space_available;
 	int rc = 0;
 
@@ -104,7 +113,7 @@ static inline void add_eof(void) {
 	buf_msg[sizeof(buf_msg) - 1] = '\0'; /* be sure there is at least one '\0' in buffer */
 }
 
-__attribute__((format(printf, 1, 2))) void ch_log_printf(const char *format, ...) {
+DEFINE_FCT_PRINTF_LIKE(1, 2) void ch_log_printf(const char *format, ...) {
 	va_list va;
 
 	va_start(va, format);
@@ -114,7 +123,7 @@ __attribute__((format(printf, 1, 2))) void ch_log_printf(const char *format, ...
 	print();
 }
 
-__attribute__((format(printf, 1, 2))) void ch_log_printf_eol(const char *format, ...) {
+DEFINE_FCT_PRINTF_LIKE(1, 2) void ch_log_printf_eol(const char *format, ...) {
 	va_list va;
 
 	va_start(va, format);
@@ -126,8 +135,8 @@ __attribute__((format(printf, 1, 2))) void ch_log_printf_eol(const char *format,
 	print();
 }
 
-__attribute__((format(printf, 4, 5))) void ch_log_prefix_printf(const char level, const char *name,
-                                                                const char *func_name, const char *format, ...) {
+DEFINE_FCT_PRINTF_LIKE(4, 5)
+void ch_log_prefix_printf(const char level, const char *name, const char *func_name, const char *format, ...) {
 	va_list va;
 
 	buf_idx = 0;
@@ -143,8 +152,8 @@ __attribute__((format(printf, 4, 5))) void ch_log_prefix_printf(const char level
 	print();
 }
 
-__attribute__((format(printf, 4, 5))) void ch_log_prefix_start(const char level, const char *name,
-                                                               const char *func_name, const char *format, ...) {
+DEFINE_FCT_PRINTF_LIKE(4, 5)
+void ch_log_prefix_start(const char level, const char *name, const char *func_name, const char *format, ...) {
 	va_list va;
 
 	buf_idx = 0;
@@ -156,7 +165,7 @@ __attribute__((format(printf, 4, 5))) void ch_log_prefix_start(const char level,
 	va_end(va);
 }
 
-__attribute__((format(printf, 1, 2))) void ch_log_start(const char *format, ...) {
+DEFINE_FCT_PRINTF_LIKE(1, 2) void ch_log_start(const char *format, ...) {
 	va_list va;
 
 	buf_msg[sizeof(buf_msg) - 1] = '\0'; /* be sure there is at least one '\0' in buffer */
@@ -166,7 +175,7 @@ __attribute__((format(printf, 1, 2))) void ch_log_start(const char *format, ...)
 	va_end(va);
 }
 
-__attribute__((format(printf, 1, 2))) void ch_log_msg(const char *format, ...) {
+DEFINE_FCT_PRINTF_LIKE(1, 2) void ch_log_msg(const char *format, ...) {
 	va_list va;
 
 	buf_msg[sizeof(buf_msg) - 1] = '\0'; /* be sure there is at least one '\0' in buffer */
@@ -179,3 +188,5 @@ void ch_log_end(void) {
 	add_eof();
 	print();
 }
+
+#endif /* IS_CH_LOG_USED */

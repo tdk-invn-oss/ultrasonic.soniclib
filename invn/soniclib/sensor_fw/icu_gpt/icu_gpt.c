@@ -526,6 +526,7 @@ uint8_t icu_gpt_algo_is_target_in_ringdown(ch_dev_t *dev_ptr) {
 	return !err && (algo_out.tL.reserved & 0x01);
 }
 
+#if IS_CH_LOG_USED
 uint8_t icu_gpt_display_algo_thresholds(ch_dev_t *dev_ptr) {
 	uint8_t ch_err = RET_OK;
 
@@ -563,6 +564,7 @@ exit_print_cr:
 
 	return ch_err;
 }
+#endif
 
 uint8_t icu_gpt_set_num_ranges(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t num_ranges) {
 	((InvnAlgoRangeFinderConfig *)(dev_ptr->algo_cfg_ptr))->meas_cfg[meas_num].num_ranges = num_ranges;

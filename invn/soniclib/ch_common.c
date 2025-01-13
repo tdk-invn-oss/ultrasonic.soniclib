@@ -65,6 +65,10 @@ static inline uint8_t get_tof_sf_reg_addr(const ch_dev_t *dev_ptr);
 uint8_t ch_common_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, ch_fw_init_func_t fw_init_func) {
 	uint8_t ret_val;
 
+	if (!dev_ptr || !grp_ptr || (dev_num >= CHIRP_MAX_NUM_SENSORS) || !fw_init_func) {
+		return RET_ERR;
+	}
+
 #ifdef INCLUDE_WHITNEY_SUPPORT
 	ch_i2c_info_t i2c_info;
 	/* Get I2C parameters from BSP */
@@ -2081,7 +2085,11 @@ uint8_t ch_common_watchdog_disable(ch_dev_t *dev_ptr) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 
 uint8_t ch_common_meas_init_queue(ch_dev_t *dev_ptr) {
-	uint8_t err = 0;
+	uint8_t err = RET_OK;
+
+	if (!dev_ptr) {
+		return RET_ERR;
+	}
 
 	dev_ptr->meas_queue.meas_start   = CH_DEFAULT_MEAS_NUM;
 	dev_ptr->meas_queue.meas_stop    = CH_DEFAULT_MEAS_NUM;
