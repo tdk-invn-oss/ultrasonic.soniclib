@@ -1295,15 +1295,15 @@ static void clock_init(ch_dev_t *dev_ptr, uint8_t restart) {
 	} else {
 		clock_ctrl.cpu_trim  = SHASTA_CPU_TRIM_DEFAULT;  // normal start - use default values, will do auto cal later
 		clock_ctrl.pmut_trim = SHASTA_PMUT_TRIM_DEFAULT;
-
-		if (dev_ptr->pmut_clk_cfg == CH_PMUT_CLK_OUTPUT_ENABLE) {
-			clock_ctrl.pmut_trim |= SCM_PMUT_CLK_PAD_MODE_PMUT;  // enable PMUT clock output
-
-		} else if (dev_ptr->pmut_clk_cfg == CH_PMUT_CLK_SRC_EXTERNAL) {
-			clock_ctrl.pmut_trim |= (SCM_PMUT_CLK_PAD_MODE_INPUT | SCM_PMUT_CLK_EXT_EN);
-			// enable external PMUT clock input
-		}
 	}
+	if (dev_ptr->pmut_clk_cfg == CH_PMUT_CLK_OUTPUT_ENABLE) {
+		clock_ctrl.pmut_trim |= SCM_PMUT_CLK_PAD_MODE_PMUT;  // enable PMUT clock output
+
+	} else if (dev_ptr->pmut_clk_cfg == CH_PMUT_CLK_SRC_EXTERNAL) {
+		clock_ctrl.pmut_trim |= (SCM_PMUT_CLK_PAD_MODE_INPUT | SCM_PMUT_CLK_EXT_EN);
+		// enable external PMUT clock input
+	}
+	CH_LOG_INFO("Restoring pmut_trim=0x%x", clock_ctrl.pmut_trim);
 
 	/* Write to sensor */
 	reg_addr = (uint16_t)(uintptr_t) & (clock_ctrl_addr->rtc_sources);  // RTC sources
