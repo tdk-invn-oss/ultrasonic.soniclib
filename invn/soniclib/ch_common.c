@@ -1953,6 +1953,7 @@ uint8_t ch_common_set_pmut_clock(ch_dev_t *dev_ptr, ch_pmut_clk_cfg_t clock_cfg)
 	}  // end if (dev_ptr->sensor_connected)
 
 	if (ret_val == RET_OK) {
+		CH_LOG_INFO("Setting dev_ptr->pmut_clk_cfg to %x\n", clock_cfg);
 		dev_ptr->pmut_clk_cfg = clock_cfg;  // save clock config in descriptor
 	}
 
@@ -2402,6 +2403,57 @@ uint8_t ch_common_meas_write_config(ch_dev_t *dev_ptr) {
 	return err;
 }
 
+// cache leading count instructions. remove them from q and store them in p
+static void cache_leading_count_instructions(measurement_queue_t *q, pmut_transceiver_inst_t p[][32]) {
+	for (uint8_t meas_num = 0; meas_num < MEAS_QUEUE_MAX_MEAS; meas_num++) {
+		uint8_t num_count_instructions = 0;
+		for (uint8_t i = 0; i < INST_BUF_LENGTH; i++) {
+			pmut_transceiver_inst_t pmut_inst = q->meas[meas_num].trx_inst[i];
+
+			uint16_t pmut_cmd = (uint16_t)((pmut_inst.cmd_config >> PMUT_CMD_BITSHIFT) & PMUT_CMD_BITS);
+			if (pmut_cmd == PMUT_CMD_COUNT) {
+				p[meas_num][i] = pmut_inst;
+				num_count_instructions++;
+			} else {
+				break;
+			}
+		}
+		CH_LOG_INFO("meas_num: %u, num_count_instructions: %u", meas_num, num_count_instructions);
+		for (uint8_t i = 0; i < INST_BUF_LENGTH; i++) {
+			if (i + num_count_instructions < INST_BUF_LENGTH) {
+				q->meas[meas_num].trx_inst[i] = q->meas[meas_num].trx_inst[i + num_count_instructions];
+			} else {
+				q->meas[meas_num].trx_inst[i] = (pmut_transceiver_inst_t){.cmd_config = 0, .length = 0};
+			}
+		}
+	}
+}
+
+// restore leading count instructions from p into q
+static void restore_leading_count_instructions(measurement_queue_t *q, pmut_transceiver_inst_t p[][32]) {
+	for (uint8_t meas_num = 0; meas_num < MEAS_QUEUE_MAX_MEAS; meas_num++) {
+		uint8_t num_count_instructions = 0;
+		for (uint8_t i = 0; i < INST_BUF_LENGTH; i++) {
+			pmut_transceiver_inst_t pmut_inst = p[meas_num][i];
+
+			uint16_t pmut_cmd = (uint16_t)((pmut_inst.cmd_config >> PMUT_CMD_BITSHIFT) & PMUT_CMD_BITS);
+			if (pmut_cmd == PMUT_CMD_COUNT && pmut_inst.length > 0) {
+				num_count_instructions++;
+			} else {
+				break;
+			}
+		}
+		CH_LOG_INFO("meas_num: %u, num_count_instructions: %u", meas_num, num_count_instructions);
+		for (uint8_t i = INST_BUF_LENGTH; i-- > 0;) {
+			if (i >= num_count_instructions) {
+				q->meas[meas_num].trx_inst[i] = q->meas[meas_num].trx_inst[i - num_count_instructions];
+			} else {
+				q->meas[meas_num].trx_inst[i] = p[meas_num][i];
+			}
+		}
+	}
+}
+
 uint8_t ch_common_meas_optimize(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr) {
 	uint8_t ret_val = RET_ERR;
 
@@ -2411,7 +2463,8 @@ uint8_t ch_common_meas_optimize(ch_dev_t *dev_ptr, measurement_queue_t *meas_que
 	}
 
 	measurement_queue_t tx_opt_queue;  // meas queue after optimization
-	ch_group_t *grp_ptr = dev_ptr->group;
+	pmut_transceiver_inst_t count_instructions[MEAS_QUEUE_MAX_MEAS][32] = {0};
+	ch_group_t *grp_ptr                                                 = dev_ptr->group;
 
 	if (grp_ptr->status == CH_GROUP_STAT_INIT_OK) {
 
@@ -2421,6 +2474,7 @@ uint8_t ch_common_meas_optimize(ch_dev_t *dev_ptr, measurement_queue_t *meas_que
 		} else {
 			ret_val = RET_OK;
 		}
+		cache_leading_count_instructions(&dev_ptr->meas_queue, count_instructions);
 
 		/* Load init f/w to perform optimization */
 		if (ret_val == RET_OK) {
@@ -2484,6 +2538,7 @@ uint8_t ch_common_meas_optimize(ch_dev_t *dev_ptr, measurement_queue_t *meas_que
 					inst_ptr[idx] = opt_inst_ptr[idx];
 				}
 			}
+			restore_leading_count_instructions(&dev_ptr->meas_queue, count_instructions);
 		}  // end for (meas_num < MEAS_QUEUE_MAX_MEAS)
 
 		/* Reload measurement f/w */
