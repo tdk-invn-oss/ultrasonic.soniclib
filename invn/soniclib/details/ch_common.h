@@ -234,6 +234,8 @@ uint8_t ch_common_meas_init_queue(ch_dev_t *dev_ptr);
 uint8_t ch_common_meas_reset(ch_dev_t *dev_ptr, uint8_t meas_num);
 uint8_t ch_common_meas_init(ch_dev_t *dev_ptr, uint8_t meas_num, const ch_meas_config_t *meas_config_ptr);
 
+uint8_t ch_common_write_data_validation_cfg(ch_dev_t *dev_ptr, uint8_t en, int16_t seed);
+
 uint8_t ch_common_get_mfg_info(ch_dev_t *dev_ptr, ch_mfg_info_t *info_ptr);
 
 uint8_t ch_common_meas_import(ch_dev_t *dev_ptr, measurement_queue_t *meas_queue_ptr, void *algo_cfg_ptr);
@@ -333,7 +335,7 @@ ch_tgt_int_filter_t ch_common_get_target_interrupt(ch_dev_t *dev_ptr);
 uint32_t ch_common_range_lsb_to_mm(const ch_dev_t *dev_ptr, uint32_t time_of_flight, ch_range_t range_type);
 
 uint32_t ch_common_samples_to_cycles(uint16_t num_samples, ch_odr_t odr);
-uint16_t ch_common_cycles_to_samples(uint32_t num_cycles, ch_odr_t odr);
+uint16_t ch_common_cycles_to_samples(uint32_t num_cycles, ch_odr_t odr, bool include_s0);
 uint32_t ch_common_usec_to_cycles(ch_dev_t *dev_ptr, uint32_t num_usec);
 uint32_t ch_common_cycles_to_usec(ch_dev_t *dev_ptr, uint32_t num_cycles);
 uint16_t ch_common_usec_to_ticks(const ch_dev_t *dev_ptr, uint32_t num_usec);

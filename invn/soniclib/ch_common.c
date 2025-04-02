@@ -1977,16 +1977,21 @@ uint32_t ch_common_samples_to_cycles(uint16_t num_samples, ch_odr_t odr) {
 	return num_cycles;
 }
 
-uint16_t ch_common_cycles_to_samples(uint32_t num_cycles, ch_odr_t odr) {
-	uint32_t num_samples = 0;
-
+uint16_t ch_common_cycles_to_samples(uint32_t num_cycles, ch_odr_t odr, bool include_s0) {
 #ifdef INCLUDE_WHITNEY_SUPPORT
 	num_cycles *= CH_PMUT_TICKS_PER_CYCLE;  // CH101 & CH201 use PMUT cycles, not ticks
+	return num_cycles >> (CH_ODR_DEFAULT + (7 - odr));
 #endif
 
-	num_samples = num_cycles >> (CH_ODR_DEFAULT + (7 - odr));
-
-	return num_samples;
+	if (include_s0) {
+		// compensate for 2 leading SMCLK cycles before sample 0, and include sample 0 in count.
+		if (num_cycles < 2) {
+			return 0;
+		}
+		return ((num_cycles - 2) >> (CH_ODR_DEFAULT + (7 - odr))) + 1;
+	} else {
+		return num_cycles >> (CH_ODR_DEFAULT + (7 - odr));
+	}
 }
 
 uint32_t ch_common_usec_to_cycles(ch_dev_t *dev_ptr, uint32_t num_usec) {
@@ -2221,7 +2226,8 @@ uint8_t ch_common_meas_add_segment(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_
 		meas_ptr->trx_inst[seg_num].length     = seg_ptr->inst.length;
 
 		if (IS_INSTRUCTION_CMD_RX(meas_ptr->trx_inst[seg_num].cmd_config)) {
-			dev_ptr->meas_num_rx_samples[meas_num] += ch_common_cycles_to_samples(seg_ptr->inst.length, meas_ptr->odr);
+			dev_ptr->meas_num_rx_samples[meas_num] +=
+					ch_common_cycles_to_samples(seg_ptr->inst.length, meas_ptr->odr, false);
 		}
 
 		// Mark end of instruction sequence, if any remaining slots
@@ -2259,7 +2265,7 @@ uint8_t ch_common_meas_insert_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, c
 
 			if (IS_INSTRUCTION_CMD_RX(meas_ptr->trx_inst[index_to_insert].cmd_config)) {
 				dev_ptr->meas_num_rx_samples[meas_num] +=
-						ch_common_cycles_to_samples(inst_ptr->inst.length, meas_ptr->odr);
+						ch_common_cycles_to_samples(inst_ptr->inst.length, meas_ptr->odr, false);
 			}
 			error = 0;
 		}
@@ -2277,7 +2283,7 @@ uint8_t ch_common_meas_remove_instruction(ch_dev_t *dev_ptr, uint8_t meas_num, u
 		if (meas_ptr && dev_ptr->meas_num_segments[meas_num] != 0 && (index_to_remove < INST_BUF_LENGTH)) {
 			if (IS_INSTRUCTION_CMD_RX(meas_ptr->trx_inst[index_to_remove].cmd_config)) {
 				dev_ptr->meas_num_rx_samples[meas_num] -=
-						ch_common_cycles_to_samples(meas_ptr->trx_inst[index_to_remove].length, meas_ptr->odr);
+						ch_common_cycles_to_samples(meas_ptr->trx_inst[index_to_remove].length, meas_ptr->odr, false);
 			}
 
 			// copy instructions, from index_to_remove to the end, one index to the left
@@ -2378,6 +2384,21 @@ void ch_common_meas_init_segment_tx(ch_meas_segment_t *seg_ptr, uint16_t num_cyc
 
 	seg_ptr->inst.cmd_config = cmd_config;
 	seg_ptr->inst.length     = num_cycles;
+}
+
+uint8_t ch_common_write_data_validation_cfg(ch_dev_t *dev_ptr, uint8_t en_reg_val, int16_t seed) {
+	uint8_t err = 0;
+
+	uint16_t seed_addr = (uint16_t)(uintptr_t)&dev_ptr->sens_cfg_addr->common.reg_map_format.rsvd1;
+	uint8_t seed_buf[2];
+	seed_buf[0]  = seed & 0x00FF;
+	seed_buf[1]  = (seed & 0xFF00) >> 8;
+	err         |= chdrv_burst_write(dev_ptr, seed_addr, seed_buf, sizeof(seed_buf));
+
+	uint16_t meas_queue_flags_addr = (uint16_t)(uintptr_t)&dev_ptr->sens_cfg_addr->meas_queue.reserved;
+	err |= chdrv_burst_write(dev_ptr, meas_queue_flags_addr, &en_reg_val, sizeof(en_reg_val));
+
+	return err;
 }
 
 uint8_t ch_common_meas_write_config(ch_dev_t *dev_ptr) {
@@ -2646,7 +2667,7 @@ void ch_common_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t se
 		info_ptr->tx_phase       = ((cmd_config >> PMUT_TX_PHASE_BITSHIFT) & PMUT_TX_PHASE_BM);
 		info_ptr->tx_pulse_width = ((cmd_config >> PMUT_TX_PW_BITSHIFT) & PMUT_TX_PW_BM);
 	} else if (seg_type == CH_MEAS_SEG_TYPE_RX) {
-		info_ptr->num_rx_samples = ch_common_cycles_to_samples(info_ptr->num_cycles, odr);
+		info_ptr->num_rx_samples = ch_common_cycles_to_samples(info_ptr->num_cycles, odr, false);
 		info_ptr->rx_gain        = ((cmd_config >> PMUT_RXGAIN_RED_BITSHIFT) & PMUT_RXGAIN_BM);
 		info_ptr->rx_atten       = ((cmd_config >> PMUT_RXATTEN_BITSHIFT) & PMUT_RXATTEN_BM);
 	}
@@ -2677,6 +2698,7 @@ uint8_t ch_common_meas_update_counts(ch_dev_t *dev_ptr, uint8_t meas_num, measur
 	uint16_t max_range_mm        = 0;
 	uint8_t err                  = 0;
 	uint16_t total_tx_segments   = 0;  // # of tx instructions
+	uint32_t total_rx_cycles     = 0;
 
 	dev_ptr->meas_num_segments[meas_num]   = 0;
 	dev_ptr->meas_num_rx_samples[meas_num] = 0;
@@ -2684,7 +2706,6 @@ uint8_t ch_common_meas_update_counts(ch_dev_t *dev_ptr, uint8_t meas_num, measur
 	uint16_t num_inst = 0;  // # of instructions
 	/* Examine instructions until EOF marker */
 	while (trx_inst_ptr->cmd_config != PMUT_CMD_EOF) {
-		uint16_t num_samples = 0;  // samples in this segment
 		ch_meas_seg_type_t seg_type =
 				(ch_meas_seg_type_t)((trx_inst_ptr->cmd_config >> PMUT_CMD_BITSHIFT) & PMUT_CMD_BITS);
 		// use instruction as segment type
@@ -2698,8 +2719,7 @@ uint8_t ch_common_meas_update_counts(ch_dev_t *dev_ptr, uint8_t meas_num, measur
 		total_segments++;  // each instruction = 1 segment
 
 		if (seg_type == CH_MEAS_SEG_TYPE_RX) {
-			num_samples       = ch_common_cycles_to_samples(trx_inst_ptr->length, meas_ptr->odr);
-			total_rx_samples += num_samples;
+			total_rx_cycles += trx_inst_ptr->length;
 			num_rx_segments++;
 
 			if (total_tx_segments == 0) {
@@ -2722,6 +2742,8 @@ uint8_t ch_common_meas_update_counts(ch_dev_t *dev_ptr, uint8_t meas_num, measur
 		trx_inst_ptr++;  // next instruction
 
 	}  // end while (trx_inst_ptr->cmd_config != PMUT_CMD_EOF)
+
+	total_rx_samples = ch_common_cycles_to_samples(total_rx_cycles, meas_ptr->odr, true);
 
 	if (!err) {
 		dev_ptr->meas_num_cycles[meas_num]      = total_cycles;
