@@ -67,7 +67,7 @@ jobs:
           echo "Extracted SonicLib version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Get latest Git tag
+      - name: Get latest Git tag (skip ghpages_ tags)
         if: matrix.os == 'ubuntu-latest'
         id: latest_tag
         uses: actions/github-script@v6
@@ -76,34 +76,60 @@ jobs:
             const tags = await github.rest.repos.listTags({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              per_page: 1
+              per_page: 5
             });
       
             if (tags.data.length === 0) {
               throw new Error("No tags found in the repository.");
             }
       
-            const rawTag = tags.data[0].name;
-            console.log("Raw tag from GitHub:", rawTag);
-            const tag = rawTag.startsWith("ghpages_") ? rawTag.replace(/^ghpages_/, "") : rawTag;
-            console.log("Normalized tag used for comparison:", tag);
-            core.setOutput("tag_name", tag);
+            let selectedTag = null;
+            let skippedTags = [];
+      
+            for (const tag of tags.data) {
+              const name = tag.name;
+              if (name.startsWith("ghpages_")) {
+                skippedTags.push(name);
+                continue;
+              }
+              selectedTag = name;
+              break;
+            }
+      
+            if (selectedTag) {
+              console.log("✅ Selected tag for comparison:", selectedTag);
+              core.setOutput("tag_name", selectedTag);
+              core.setOutput("skip_check", "false");
+            } else {
+              console.log("⚠️ No valid tag found (only ghpages_ tags present). Skipping version check.");
+              console.log("Skipped tags:", skippedTags.join(", "));
+              core.setOutput("tag_name", "");
+              core.setOutput("skip_check", "true");
+            }
+        
 
-      - name: Compare project version with latest tag
+      - name: Compare project version with latest valid Git tag
         if: matrix.os == 'ubuntu-latest'
         run: |
           VERSION="${{ steps.extract_version.outputs.version }}"
           TAG="${{ steps.latest_tag.outputs.tag_name }}"
-
-          echo "== Version check =="
-          echo "Extracted project version : $VERSION"
-          echo "Latest GitHub release tag : $TAG"
-
+          SKIP="${{ steps.latest_tag.outputs.skip_check }}"
+      
+          echo "== Version Check =="
+          echo "Extracted version : $VERSION"
+          echo "Selected tag      : $TAG"
+          echo "Skip check?       : $SKIP"
+      
+          if [ "$SKIP" = "true" ]; then
+            echo "ℹ️ Skipping version comparison because no valid (non-ghpages_) tag was found."
+            exit 0
+          fi
+      
           if [ "$VERSION" != "$TAG" ]; then
-            echo "::error::Project version ($VERSION) does not match latest GitHub release tag ($TAG)"
+            echo "::error::Project version ($VERSION) does not match latest valid Git tag ($TAG)"
             exit 1
           else
-            echo "✅ Project version matches the latest GitHub release tag."
+            echo "✅ Project version matches the latest Git tag."
           fi
 
       - name: ✅ CI successful message
