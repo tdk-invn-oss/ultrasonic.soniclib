@@ -67,45 +67,55 @@ jobs:
           echo "Extracted SonicLib version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Get latest Git tag (skip ghpages_ tags)
+      - name: Get latest valid Git tag
         if: matrix.os == 'ubuntu-latest'
         id: latest_tag
         uses: actions/github-script@v6
         with:
           script: |
-            const tags = await github.rest.repos.listTags({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 5
-            });
-      
-            if (tags.data.length === 0) {
-              throw new Error("No tags found in the repository.");
-            }
+            const MAX_PAGES = 5;
+            const TAGS_PER_PAGE = 20;
+            const SEMVER_REGEX = /^\d+\.\d+\.\d+$/;  // Matches 'X.Y.Z'
       
             let selectedTag = null;
             let skippedTags = [];
       
-            for (const tag of tags.data) {
-              const name = tag.name;
-              if (name.startsWith("ghpages_")) {
-                skippedTags.push(name);
-                continue;
+            for (let page = 1; page <= MAX_PAGES; page++) {
+              const tags = await github.rest.repos.listTags({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: TAGS_PER_PAGE,
+                page: page
+              });
+      
+              if (tags.data.length === 0) break;
+      
+              for (const tag of tags.data) {
+                const name = tag.name;
+      
+                if (name.startsWith("ghpages_") || !SEMVER_REGEX.test(name)) {
+                  skippedTags.push(name);
+                  continue;
+                }
+      
+                selectedTag = name;
+                break;
               }
-              selectedTag = name;
-              break;
+      
+              if (selectedTag) break;
             }
       
             if (selectedTag) {
-              console.log("✅ Selected tag for comparison:", selectedTag);
+              console.log("✅ Selected valid tag for version comparison:", selectedTag);
               core.setOutput("tag_name", selectedTag);
               core.setOutput("skip_check", "false");
             } else {
-              console.log("⚠️ No valid tag found (only ghpages_ tags present). Skipping version check.");
+              console.log("⚠️ No valid semver tag found (only ghpages_ or non-semver tags present). Skipping version check.");
               console.log("Skipped tags:", skippedTags.join(", "));
               core.setOutput("tag_name", "");
               core.setOutput("skip_check", "true");
             }
+        
         
 
       - name: Compare project version with latest valid Git tag
