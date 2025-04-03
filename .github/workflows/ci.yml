@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            generator: "Unix Makefiles"
+          - os: windows-latest
+            generator: "MinGW Makefiles"
+
+    env:
+      BUILD_DIR: build
+      BuildType: Release
+      InitFwOption: FULL
+      ExternalAlgoOption: "ON"
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up Arm GCC toolchain
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+
+      - name: Install GNU Make (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: choco install make -y
+
+      - name: Configure project with CMake
+        run: cmake -S . -B ${{ github.workspace }}/${{ env.BUILD_DIR }} \
+          -G "${{ matrix.generator }}" \
+          -DCMAKE_TOOLCHAIN_FILE="CMakeToolchains/arm-none-eabi-m4.cmake" \
+          -DINCLUDE_SHASTA_SUPPORT:BOOL=ON \
+          -DCMAKE_BUILD_TYPE="${{ env.BuildType }}" \
+          -DCHIRP_INIT_FW_TYPE="${{ env.InitFwOption }}" \
+          -DINCLUDE_ALGO_EXTERNAL:BOOL="${{ env.ExternalAlgoOption }}"
+
+      - name: Build project
+        run: cmake --build ${{ github.workspace }}/${{ env.BUILD_DIR }} --parallel
+
+      - name: Extract project version from header
+        if: matrix.os == 'ubuntu-latest'
+        id: extract_version
+        shell: bash
+        run: |
+          MAJOR=$(grep -E '^#define SONICLIB_VER_MAJOR' invn/soniclib/soniclib.h | grep -Eo '[0-9]+')
+          MINOR=$(grep -E '^#define SONICLIB_VER_MINOR' invn/soniclib/soniclib.h | grep -Eo '[0-9]+')
+          REV=$(grep -E '^#define SONICLIB_VER_REV' invn/soniclib/soniclib.h | grep -Eo '[0-9]+')
+          SUFFIX=$(grep -E '^#define SONICLIB_VER_SUFFIX' invn/soniclib/soniclib.h | cut -d '"' -f2)
+
+          if [ -z "$SUFFIX" ]; then
+            VERSION="$MAJOR.$MINOR.$REV"
+          else
+            VERSION="$MAJOR.$MINOR.$REV-$SUFFIX"
+          fi
+
+          echo "Extracted SonicLib version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get latest Git tag
+        if: matrix.os == 'ubuntu-latest'
+        id: latest_tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tags = await github.rest.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 1
+            });
+      
+            if (tags.data.length === 0) {
+              throw new Error("No tags found in the repository.");
+            }
+      
+            const rawTag = tags.data[0].name;
+            console.log("Raw tag from GitHub:", rawTag);
+            const tag = rawTag.startsWith("ghpages_") ? rawTag.replace(/^ghpages_/, "") : rawTag;
+            console.log("Normalized tag used for comparison:", tag);
+            core.setOutput("tag_name", tag);
+
+      - name: Compare project version with latest tag
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          VERSION="${{ steps.extract_version.outputs.version }}"
+          TAG="${{ steps.latest_tag.outputs.tag_name }}"
+
+          echo "== Version check =="
+          echo "Extracted project version : $VERSION"
+          echo "Latest GitHub release tag : $TAG"
+
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "::error::Project version ($VERSION) does not match latest GitHub release tag ($TAG)"
+            exit 1
+          else
+            echo "✅ Project version matches the latest GitHub release tag."
+          fi
+
+      - name: ✅ CI successful message
+        if: ${{ success() && matrix.os == 'ubuntu-latest' }}
+        run: echo "🎉 Build and version check passed successfully on ubuntu!"
+       
