@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.5.1</span>
+   &#160;<span id="projectnumber">4.4.10</span>
    </div>
   </td>
  </tr>
@@ -238,9 +238,9 @@ Macros</h2></td></tr>
 <tr class="separator:aef40d6fd76a720e83aa328bfc080cb0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3407caaf3d2f8bb12e8c26bccbe3ae40">SONICLIB_VER_MAJOR</a>&#160;&#160;&#160;(4)</td></tr>
 <tr class="separator:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(5)</td></tr>
+<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(4)</td></tr>
 <tr class="separator:a3114f821e7b6c5971ddf1c363597b761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(1)</td></tr>
+<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(10)</td></tr>
 <tr class="separator:a602271af8c1cf2ba218e68b49e5d465f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87026a07278934542ce439d706df7aef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87026a07278934542ce439d706df7aef">SONICLIB_VER_SUFFIX</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
 <tr class="separator:a87026a07278934542ce439d706df7aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -565,12 +565,6 @@ Functions</h2></td></tr>
 <tr class="memitem:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#acde0dc4f438051bd4fcfd19aad8b3f9c">ch_cycles_to_usec</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint32_t num_cycles)</td></tr>
 <tr class="memdesc:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert sensor cycles to microseconds.  <a href="soniclib_8h.html#acde0dc4f438051bd4fcfd19aad8b3f9c">More...</a><br /></td></tr>
 <tr class="separator:acde0dc4f438051bd4fcfd19aad8b3f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80163f6dcdf543501edcf938b50801e3"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a80163f6dcdf543501edcf938b50801e3">ch_data_validation_check</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__iq__sample__t.html">ch_iq_sample_t</a> *data, uint16_t num_samples)</td></tr>
-<tr class="memdesc:a80163f6dcdf543501edcf938b50801e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check data in validation mode, which should be enabled before calling this. Should be run over all IQ data received by the sensor after mode is enabled to keep the counters in sync.  <a href="soniclib_8h.html#a80163f6dcdf543501edcf938b50801e3">More...</a><br /></td></tr>
-<tr class="separator:a80163f6dcdf543501edcf938b50801e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4f5dfbca9d08fb551809bfc5d1bf3cb"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ad4f5dfbca9d08fb551809bfc5d1bf3cb">ch_enable_data_validation</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, int16_t seed, uint8_t enable)</td></tr>
-<tr class="memdesc:ad4f5dfbca9d08fb551809bfc5d1bf3cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable data validation mode. In this mode, ICU-x0201 sensors will overwrite the IQ data at the end of a measurement and after running the algorithm, with a known sequence to allow validating data transfer integrity while making minimal changes to the system otherwise. Currently, this is limited to a 16-bit counter that increments for each I and Q sample and is continuous across measurements.  <a href="soniclib_8h.html#ad4f5dfbca9d08fb551809bfc5d1bf3cb">More...</a><br /></td></tr>
-<tr class="separator:ad4f5dfbca9d08fb551809bfc5d1bf3cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87c0409b1443384afe601b8098aec6ef"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87c0409b1443384afe601b8098aec6ef">ch_enable_double_buffer</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t enable)</td></tr>
 <tr class="memdesc:a87c0409b1443384afe601b8098aec6ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the double buffering mode.  <a href="soniclib_8h.html#a87c0409b1443384afe601b8098aec6ef">More...</a><br /></td></tr>
 <tr class="separator:a87c0409b1443384afe601b8098aec6ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1568,7 +1562,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(5)</td>
+          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(4)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1583,7 +1577,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(1)</td>
+          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(10)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2272,98 +2266,6 @@ Functions</h2></td></tr>
 <p>For ICU (Shasta architecture) sensors, <em>num_cycles</em> are in units of PMUT State Machine Clock (SMCLK) cycles. The SMCLK rate is 16 times the ultrasonic transducer acoustic operating frequency. These are the same units used to specify measurement transmit and count segment lengths.</p>
 <p>For CH101 and CH201 (Whitney architecture) sensors, <em>num_cycles</em> are ultrasonic transducer cycles, so are 1/16 the corresponding ICU sensor value.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#a5d8b3ddcc0010bf7bd1f7acc1fba4232" title="Convert microseconds to sensor cycles.">ch_usec_to_cycles()</a></em>. </p>
-
-</div>
-</div>
-<a id="a80163f6dcdf543501edcf938b50801e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80163f6dcdf543501edcf938b50801e3">&#9670;&nbsp;</a></span>ch_data_validation_check()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t ch_data_validation_check </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
-          <td class="paramname"><em>dev_ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structch__iq__sample__t.html">ch_iq_sample_t</a> *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>num_samples</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check data in validation mode, which should be enabled before calling this. Should be run over all IQ data received by the sensor after mode is enabled to keep the counters in sync. </p>
-<p>Note that for some values of receieve length, this will be unreliable - avoid using overall RX lengths 1 to 5 cycles longer than integer multiples of the ODR ratio.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">dev_ptr</td><td>The device pointer </td></tr>
-    <tr><td class="paramname">data</td><td>Pointer to IQ buffer containing data sequence read from the sensor </td></tr>
-    <tr><td class="paramname">num_samples</td><td>Number of IQ samples in buffer</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of samples that don't match expected counter value </dd></dl>
-
-</div>
-</div>
-<a id="ad4f5dfbca9d08fb551809bfc5d1bf3cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4f5dfbca9d08fb551809bfc5d1bf3cb">&#9670;&nbsp;</a></span>ch_enable_data_validation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t ch_enable_data_validation </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
-          <td class="paramname"><em>dev_ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int16_t&#160;</td>
-          <td class="paramname"><em>seed</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>enable</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable data validation mode. In this mode, ICU-x0201 sensors will overwrite the IQ data at the end of a measurement and after running the algorithm, with a known sequence to allow validating data transfer integrity while making minimal changes to the system otherwise. Currently, this is limited to a 16-bit counter that increments for each I and Q sample and is continuous across measurements. </p>
-<p>It is not recommended to use this functionality if the application uses continuous receieve, or has non-contiguous RX segments in its measurement queue. Note that for each sample, counter value are incremented in the order of Q then I. Data validation must be handled by the application using <a class="el" href="soniclib_8h.html#a80163f6dcdf543501edcf938b50801e3" title="Check data in validation mode, which should be enabled before calling this. Should be run over all IQ...">ch_data_validation_check()</a></p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">dev_ptr</td><td>The device pointer </td></tr>
-    <tr><td class="paramname">seed</td><td>Initial value for data validation counter </td></tr>
-    <tr><td class="paramname">enable</td><td>Set to 1 to enable data validation mode, set to 0 to disable</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 for success and non-zero otherwise </dd></dl>
 
 </div>
 </div>
