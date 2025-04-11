@@ -341,6 +341,19 @@ uint32_t ch_common_ticks_to_usec(const ch_dev_t *dev_ptr, uint16_t num_rtc_perio
 
 uint16_t ch_common_get_num_output_samples(ch_dev_t *dev_ptr);
 
+/*!
+ * \brief Measure PMUT frequency on an ICU device.
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
+ *
+ * \return PMUT operating frequency in Hz
+ *
+ * This function must only be called after initialization (ie after calling ch_group_start()).
+ */
+/*!
+ */
+uint32_t ch_common_measure_pmut_frequency(ch_dev_t *dev_ptr);
+
 #ifdef __cplusplus
 }
 #endif

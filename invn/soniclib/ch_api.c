@@ -1338,3 +1338,7 @@ uint8_t ch_check_reset_state(ch_dev_t *dev_ptr, ch_sensor_reset_state_t *reset_s
 
 	return ret_val;
 }
+
+uint32_t ch_measure_pmut_frequency(ch_dev_t *dev_ptr) {
+    return ch_common_measure_pmut_frequency(dev_ptr);
+}
