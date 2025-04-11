@@ -1242,6 +1242,10 @@ uint8_t ch_get_algo_state(ch_dev_t *dev_ptr, void *algo_state_ptr) {
 	return ch_common_get_algo_state(dev_ptr, algo_state_ptr);
 }
 
+uint32_t ch_measure_pmut_frequency(ch_dev_t *dev_ptr) {
+	return ch_common_measure_pmut_frequency(dev_ptr);
+}
+
 #endif  // INCLUDE_SHASTA_SUPPORT
 
 uint32_t ch_get_cpu_frequency(ch_dev_t *dev_ptr) {

@@ -111,10 +111,10 @@ extern "C" {
 
 /*==============  SonicLib Version Info ===================*/
 /* SonicLib API/Driver version */
-#define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
-#define SONICLIB_VER_MINOR  (4) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (7) /*!< SonicLib revision. */
-#define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
+#define SONICLIB_VER_MAJOR  (4)  /*!< SonicLib major version. */
+#define SONICLIB_VER_MINOR  (4)  /*!< SonicLib minor version. */
+#define SONICLIB_VER_REV    (10) /*!< SonicLib revision. */
+#define SONICLIB_VER_SUFFIX ""   /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
 
@@ -372,9 +372,12 @@ typedef enum {
 
 //! PMUT clock configuration (ICU sensors)
 typedef enum {
-	CH_PMUT_CLK_DEFAULT       = 0, /*!< Standard PMUT clock config - MUTCLK pad disabled. */
-	CH_PMUT_CLK_OUTPUT_ENABLE = 1, /*!< Output PMUT clock signal on MUTCLK */
-	CH_PMUT_CLK_SRC_EXTERNAL  = 2, /*!< Use external input as PMUT clock source */
+	CH_PMUT_CLK_DEFAULT = 0, /*!< Standard PMUT clock config - MUTCLK pad disabled. */
+	CH_PMUT_CLK_OUTPUT_ENABLE =
+			1, /*!< Output PMUT clock signal on MUTCLK. This option forces MUTCLK on regardless of sensor state. */
+	CH_PMUT_CLK_SRC_EXTERNAL = 2, /*!< Use external input as PMUT clock source */
+	CH_PMUT_CLK_OUTPUT_AUTO =
+			3, /*!< Output PMUT clock signal on MUTCLK but allow ICU device to control the power state */
 } ch_pmut_clk_cfg_t;
 
 //! I/O blocking mode flags.
@@ -3919,6 +3922,19 @@ const char *ch_get_sensor_id(ch_dev_t *dev_ptr);
  */
 uint8_t ch_get_mfg_info(ch_dev_t *dev_ptr, ch_mfg_info_t *info_ptr);
 
+/*!
+ * \brief Measure PMUT frequency on an ICU device.
+ *
+ * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
+ *
+ * \return PMUT operating frequency in Hz
+ *
+ * This function must only be called after initialization (ie after calling ch_group_start()).
+ */
+/*!
+ */
+uint32_t ch_measure_pmut_frequency(ch_dev_t *dev_ptr);
+
 #endif  // INCLUDE_SHASTA_SUPPORT
 
 /*!
@@ -4078,8 +4094,16 @@ uint16_t ch_get_rtc_frequency(ch_dev_t *dev_ptr);
  * default CH_PMUT_CLK_DEFAULT configuration.)
  *
  * - To enable output of the sensor's PMUT clock on the MUTCLK pad, set \a clock_cfg
- * to CH_PMUT_CLK_OUTPUT_ENABLE.  The output frequency of the signal on the pad
- * will be 16 times the sensor's acoustic operating frequency.
+ * to CH_PMUT_CLK_OUTPUT_AUTO or CH_PMUT_CLK_OUTPUT_ENABLE. The AUTO setting allows
+ * the ICU part to control the power state of the clock. In this case, the clock
+ * will only be available while the ICU part is actively performing a measurement.
+ * This is a good option to use when multiple parts will be active simultaneously.
+ * The ENABLE option will unconditionally force the clock on. This can be used
+ * in situations where the clock should be available even if the part providing it
+ * is inactive, such as during transmit optimization.
+ *
+ * - The output frequency of the signal on the pad will be 16 times the sensor's
+ * acoustic operating frequency.
  *
  * - To use an input signal on the MUTCLK pad as the external PMUT clock source,
  * set \a clock_cfg to CH_PMUT_CLK_SRC_EXTERNAL.  In this configuration, the
@@ -4092,7 +4116,7 @@ uint16_t ch_get_rtc_frequency(ch_dev_t *dev_ptr);
  * enabling and disabling the clock settings across the sensors is important.
  * The clock source must be present whenever a secondary sensor is
  * configured to use an external clock source.
- * - When enabling, the clock source sensor should be set to
+ * - When enabling, the clock source sensor should be set to CH_PMUT_CLK_OUTPUT_AUTO or
  *   CH_PMUT_CLK_OUTPUT_ENABLE first, then the other sensor(s) should
  *   be set to CH_PMUT_CLK_SRC_EXTERNAL.
  * - When disabling, the secondary sensor(s) should be set to CH_PMUT_CLK_DEFAULT

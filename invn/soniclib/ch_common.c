@@ -871,18 +871,7 @@ void ch_common_store_pt_result(ch_dev_t *dev_ptr) {
 }
 
 #ifdef INCLUDE_SHASTA_SUPPORT
-/*!
- * \brief Measure PMUT frequency on an ICU device.
- *
- * \param dev_ptr 		pointer to the ch_dev_t config structure for a sensor
- *
- * \return PMUT operating frequency in Hz
- *
- * This static function must only be called after initialization (ie after calling ch_group_start()).
- */
-/*!
- */
-static uint32_t measure_pmut_frequency(ch_dev_t *dev_ptr) {
+uint32_t ch_common_measure_pmut_frequency(ch_dev_t *dev_ptr) {
 
 	clock_control_t *clock_ctrl_ptr    = (clock_control_t *)&((dev_ptr->sens_cfg_addr)->common.clock);
 	raw_output_data_t *output_data_ptr = (raw_output_data_t *)&((dev_ptr->sens_cfg_addr)->raw);
@@ -936,7 +925,7 @@ void ch_common_store_op_freq(ch_dev_t *dev_ptr) {
 	chdrv_run_bist(dev_ptr);
 
 	/* Calculate PMUT operating frequency */
-	pmut_freq = measure_pmut_frequency(dev_ptr);
+	pmut_freq = ch_common_measure_pmut_frequency(dev_ptr);
 
 	/* Adjust cpu frequency to avoid multiple of pmut freq */
 	cpu_freq = chdrv_cpu_freq_adjust(dev_ptr, pmut_freq);
@@ -1587,7 +1576,7 @@ static uint32_t set_new_pmut_code(ch_dev_t *dev_ptr, uint16_t freq_trim, uint8_t
 	dev_ptr->pmut_trim = pmut_trim_val;
 	/* Trigger event to apply settings */
 	chdrv_event_trigger(dev_ptr, EVENT_CONFIG_CLOCKS);
-	return measure_pmut_frequency(dev_ptr);
+	return ch_common_measure_pmut_frequency(dev_ptr);
 }
 
 /*!
@@ -1911,9 +1900,11 @@ uint8_t ch_common_set_pmut_clock(ch_dev_t *dev_ptr, ch_pmut_clk_cfg_t clock_cfg)
 			new_control   = old_control & ~CLK_CONTROL_PMUT_ON;
 			new_pmut_trim = old_pmut_trim & ~(SCM_PMUT_CLK_PAD_MODE_BM | SCM_PMUT_CLK_EXT_EN);
 
-			if (clock_cfg == CH_PMUT_CLK_OUTPUT_ENABLE) {
+			if (clock_cfg == CH_PMUT_CLK_OUTPUT_ENABLE || clock_cfg == CH_PMUT_CLK_OUTPUT_AUTO) {
 				/* Enabling PMUT clock output */
-				new_control   |= CLK_CONTROL_PMUT_ON;
+				if (clock_cfg == CH_PMUT_CLK_OUTPUT_ENABLE) {
+					new_control |= CLK_CONTROL_PMUT_ON;
+				}
 				new_pmut_trim |= SCM_PMUT_CLK_PAD_MODE_PMUT;  // enable pmut clock output on pad
 
 				dev_ptr->group->pmut_clock_freq = (dev_ptr->op_frequency * CH_PMUT_TICKS_PER_CYCLE);
