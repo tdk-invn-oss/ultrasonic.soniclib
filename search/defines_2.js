@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['soniclib_5fver_5fmajor_1473',['SONICLIB_VER_MAJOR',['../soniclib_8h.html#a3407caaf3d2f8bb12e8c26bccbe3ae40',1,'soniclib.h']]],
-  ['soniclib_5fver_5fminor_1474',['SONICLIB_VER_MINOR',['../soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761',1,'soniclib.h']]],
-  ['soniclib_5fver_5frev_1475',['SONICLIB_VER_REV',['../soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f',1,'soniclib.h']]],
-  ['soniclib_5fver_5fsuffix_1476',['SONICLIB_VER_SUFFIX',['../soniclib_8h.html#a87026a07278934542ce439d706df7aef',1,'soniclib.h']]]
+  ['soniclib_5fver_5fmajor_1479',['SONICLIB_VER_MAJOR',['../soniclib_8h.html#a3407caaf3d2f8bb12e8c26bccbe3ae40',1,'soniclib.h']]],
+  ['soniclib_5fver_5fminor_1480',['SONICLIB_VER_MINOR',['../soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761',1,'soniclib.h']]],
+  ['soniclib_5fver_5frev_1481',['SONICLIB_VER_REV',['../soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f',1,'soniclib.h']]],
+  ['soniclib_5fver_5fsuffix_1482',['SONICLIB_VER_SUFFIX',['../soniclib_8h.html#a87026a07278934542ce439d706df7aef',1,'soniclib.h']]]
 ];
