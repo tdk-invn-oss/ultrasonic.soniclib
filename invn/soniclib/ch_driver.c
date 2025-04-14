@@ -1291,6 +1291,7 @@ static void clock_init(ch_dev_t *dev_ptr, uint8_t restart) {
 	if (restart) {  // if restart, use values already in ch_dev_t
 		clock_ctrl.cpu_trim  = dev_ptr->cpu_trim;
 		clock_ctrl.pmut_trim = dev_ptr->pmut_trim;
+		clock_ctrl.control   = dev_ptr->pmut_clk_cfg;
 
 	} else {
 		clock_ctrl.cpu_trim  = SHASTA_CPU_TRIM_DEFAULT;  // normal start - use default values, will do auto cal later
