@@ -65,6 +65,7 @@ typedef struct measurement{ // size: 172 bytes
 
 #define READOUT_OPTIONS_DOUBLE_BUFFER_BM (1)  // if set, double buffering mode is enabled
 #define READOUT_OPTIONS_METADATA_IN_S0_BM (1<<1)  // if set, IQ buffer address and last_measurement idx will be placed in IQ sample 0
+#define READOUT_OPTIONS_DATA_VALIDATION_BM (1<<7)  // if set, IQ data will be overwritten with incrementing counter values.
 
 typedef struct measurement_queue{ // size: 142 bytes
     volatile uint8_t intconfig; // 0x02 switch interrupts to INT2 (see INTCONFIG_*)
@@ -72,7 +73,7 @@ typedef struct measurement_queue{ // size: 142 bytes
     volatile uint8_t meas_stop; // 0x04 which measurement do we stop on
     volatile uint8_t current_meas; // 0x05 which measurement do we do next
     volatile uint8_t trigsrc;// 0x06 add optional triggers from hardware pins (falling edge of INT1 or INT2) or LPWKUP timer (see TRIGSRC_*)
-    volatile uint8_t reserved; // for double buffering and metadata packing options
+    volatile uint8_t reserved; // for double buffering and metadata packing options, as well as test data mode
     volatile measurement_t meas[MEAS_QUEUE_MAX_MEAS]; // 0x08 up to MEAS_QUEUE_MAX_MEAS measurements can be held at one time
 }measurement_queue_t;
 
@@ -195,7 +196,7 @@ typedef struct bist{
 typedef struct reg_map_format{
     uint8_t minor;
     uint8_t major;
-    uint8_t rsvd1;
+    uint8_t rsvd1; // rsvd1/2 now hold the counter value for data validation mode
     uint8_t rsvd2;
 }reg_map_format_t;
 

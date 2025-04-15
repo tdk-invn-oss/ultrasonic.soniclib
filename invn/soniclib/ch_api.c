@@ -788,6 +788,35 @@ ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr) {
 	return ch_common_get_interrupt_drive(dev_ptr);
 }
 
+uint8_t ch_enable_data_validation(ch_dev_t *dev_ptr, int16_t seed, uint8_t enable) {
+	if (enable) {
+		dev_ptr->meas_queue.reserved |= READOUT_OPTIONS_DATA_VALIDATION_BM;
+	} else {
+		dev_ptr->meas_queue.reserved &= ~READOUT_OPTIONS_DATA_VALIDATION_BM;
+	}
+	dev_ptr->data_validation_counter = seed;
+	return ch_common_write_data_validation_cfg(dev_ptr, dev_ptr->meas_queue.reserved, seed);
+}
+
+uint16_t ch_data_validation_check(ch_dev_t *dev_ptr, ch_iq_sample_t *data, uint16_t num_samples) {
+	uint16_t err_cnt = 0;
+
+	for (uint16_t i = 0; i < num_samples; i++) {
+		if ((i == 0) && (dev_ptr->meas_queue.reserved & READOUT_OPTIONS_METADATA_IN_S0_BM)) {
+			dev_ptr->data_validation_counter += 2;
+			continue;
+		}
+
+		if (data[i].q != dev_ptr->data_validation_counter++) {
+			err_cnt++;
+		}
+		if (data[i].i != dev_ptr->data_validation_counter++) {
+			err_cnt++;
+		}
+	}
+	return err_cnt;
+}
+
 uint8_t ch_enable_double_buffer(ch_dev_t *dev_ptr, uint8_t enable) {
 	int ret_val = RET_OK;
 
@@ -1242,6 +1271,10 @@ uint8_t ch_get_algo_state(ch_dev_t *dev_ptr, void *algo_state_ptr) {
 	return ch_common_get_algo_state(dev_ptr, algo_state_ptr);
 }
 
+uint32_t ch_measure_pmut_frequency(ch_dev_t *dev_ptr) {
+	return ch_common_measure_pmut_frequency(dev_ptr);
+}
+
 #endif  // INCLUDE_SHASTA_SUPPORT
 
 uint32_t ch_get_cpu_frequency(ch_dev_t *dev_ptr) {
@@ -1301,7 +1334,7 @@ uint32_t ch_samples_to_cycles(uint16_t num_samples, ch_odr_t odr) {
 
 uint16_t ch_cycles_to_samples(uint32_t num_cycles, ch_odr_t odr) {
 
-	return ch_common_cycles_to_samples(num_cycles, odr);
+	return ch_common_cycles_to_samples(num_cycles, odr, false);
 }
 
 uint16_t ch_usec_to_ticks(ch_dev_t *dev_ptr, uint32_t num_usec) {
