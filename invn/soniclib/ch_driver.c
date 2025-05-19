@@ -1061,6 +1061,9 @@ static uint8_t limit_rx_len(volatile measurement_t *meas, int rx_len, int eof_id
  * depends on the ODR. This function will truncate the RX length such that the
  * new length satisfies the integer number of samples condition.
  *
+ * This also prevents glitches with non-continuous RX at certain RX
+ * lengths, though not strictly required.
+ *
  * \param meas a pointer to a measurement_t. The instructions contained in the
  * measurement_t will be potentially modified by this function.
  * \param rx_len the total rx length in SMCLK cycles
@@ -1092,11 +1095,11 @@ static uint8_t adjust_rx_len(volatile measurement_t *meas, int rx_len, int eof_i
  * after loading it.
  *
  * What we check and correct:
+ *  - RX length results in an integer number of RX samples.
  *  - done interrupt is set only on last RX instruction and no others
  *  - in continuous RX, if the first measurement config is good but the second is blank, just make
  *    the second a copy of the first
  *  - in continuous RX, ready interrupt is set on last RX and no others
- *  - in continuous RX, RX length results in an integer number of RX samples
  */
 static uint8_t meas_queue_sanitize(measurement_queue_t *q_buf_ptr, uint16_t iq_samples_max) {
 	int eof_idx[2];
@@ -1155,6 +1158,9 @@ static uint8_t meas_queue_sanitize(measurement_queue_t *q_buf_ptr, uint16_t iq_s
 				break;
 			}
 			limit_rx_len(&q_buf_ptr->meas[i], rx_len[i], eof_idx[i], iq_samples_max);
+#ifndef ALLOW_RXLEN_FRACTIONAL_SAMPLES
+			err = adjust_rx_len(&q_buf_ptr->meas[i], rx_len[i], eof_idx[i]);
+#endif
 			// done interrupt enable on last instruction
 			q_buf_ptr->meas[i].trx_inst[eof_idx[i] - 1].cmd_config |= PMUT_DONE_IEN_BITS;
 		}
@@ -1291,6 +1297,7 @@ static void clock_init(ch_dev_t *dev_ptr, uint8_t restart) {
 	if (restart) {  // if restart, use values already in ch_dev_t
 		clock_ctrl.cpu_trim  = dev_ptr->cpu_trim;
 		clock_ctrl.pmut_trim = dev_ptr->pmut_trim;
+		clock_ctrl.control   = dev_ptr->pmut_clk_cfg;
 
 	} else {
 		clock_ctrl.cpu_trim  = SHASTA_CPU_TRIM_DEFAULT;  // normal start - use default values, will do auto cal later
