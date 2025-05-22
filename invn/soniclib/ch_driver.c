@@ -1055,37 +1055,36 @@ static uint8_t limit_rx_len(volatile measurement_t *meas, int rx_len, int eof_id
 	}
 }
 
-//! Adjust the rx length so that it's compatible with continuous RX
-/*! In continuous RX mode, the total RX length must be set to an integer number
- * of RX samples. The number of RX samples given RX length (in SMCLK cycles)
- * depends on the ODR. This function will truncate the RX length such that the
- * new length satisfies the integer number of samples condition.
- *
- * This also prevents glitches with non-continuous RX at certain RX
- * lengths, though not strictly required.
- *
- * \param meas a pointer to a measurement_t. The instructions contained in the
- * measurement_t will be potentially modified by this function.
- * \param rx_len the total rx length in SMCLK cycles
- * \param eof_idx the index of the EOF instruction
- */
-static uint8_t adjust_rx_len(volatile measurement_t *meas, int rx_len, int eof_idx) {
-	const int rx_samples = rx_len >> (11 - meas->odr);
-	const int new_rx_len = rx_samples << (11 - meas->odr);
+uint8_t chdrv_adjust_rx_len(volatile pmut_transceiver_inst_t *trx_inst, uint8_t cic_odr, int rx_len, int eof_idx) {
+	const int rx_samples = rx_len >> (11 - cic_odr);
+	const int new_rx_len = rx_samples << (11 - cic_odr);
 	int samples_to_cut   = rx_len - new_rx_len;
 
-	CH_LOG_DEBUG("rx_len=%d rx_samples=%d new_rx_len=%d samples_to_cut=%d", rx_len, rx_samples, new_rx_len,
-	             samples_to_cut);
-
-	if (meas->trx_inst[eof_idx - 1].length > (1 << (11 - meas->odr)) + samples_to_cut) {
+	if (trx_inst[eof_idx - 1].length > (1 << (11 - cic_odr)) + samples_to_cut) {
 		// make sure resulting rx instruction will have at least one RX sample left
 		// in it after the cut.
-		meas->trx_inst[eof_idx - 1].length -= samples_to_cut;
+		trx_inst[eof_idx - 1].length -= samples_to_cut;
 		return 0;
 	} else {
 		// return error otherwise
 		return 1;
 	}
+}
+
+static uint8_t adjust_rx_len(volatile measurement_t *meas, int rx_len, int eof_idx) {
+	return chdrv_adjust_rx_len(meas->trx_inst, meas->odr, rx_len, eof_idx);
+}
+
+void chdrv_enable_mq_sanitize(ch_dev_t *dev_ptr) {
+	dev_ptr->mq_sanitize_enabled = 1;
+}
+
+void chdrv_disable_mq_sanitize(ch_dev_t *dev_ptr) {
+	dev_ptr->mq_sanitize_enabled = 0;
+}
+
+int16_t chdrv_is_mq_sanitize_enabled(const ch_dev_t *dev_ptr) {
+	return dev_ptr->mq_sanitize_enabled;
 }
 
 //! Sanitize the measurement queue
@@ -1185,12 +1184,14 @@ uint8_t chdrv_meas_queue_write(ch_dev_t *dev_ptr, measurement_queue_t *q_buf_ptr
 	if (q_buf_ptr == NULL) {
 		q_buf_ptr = &(dev_ptr->meas_queue);  // source is local copy in ch_dev_t
 	}
-	// Note that we do not abort the write when the sanitize funciton returns an
-	// error. This is mostly for historical reasons. We have previously allowed
-	// writing invalid queues. It is OK to write them so long as they are not
-	// used, and it's a bit confusing for us to just arbitrarily set them when
-	// the user has not requested it
-	meas_queue_sanitize(q_buf_ptr, dev_ptr->current_fw->max_samples);
+	if (chdrv_is_mq_sanitize_enabled(dev_ptr)) {
+		// Note that we do not abort the write when the sanitize funciton returns an
+		// error. This is mostly for historical reasons. We have previously allowed
+		// writing invalid queues. It is OK to write them so long as they are not
+		// used, and it's a bit confusing for us to just arbitrarily set them when
+		// the user has not requested it
+		meas_queue_sanitize(q_buf_ptr, dev_ptr->current_fw->max_samples);
+	}
 	err |= chdrv_burst_write(dev_ptr, meas_queue_addr, (uint8_t *)q_buf_ptr, sizeof(measurement_queue_t));
 
 	return err;
@@ -2413,9 +2414,18 @@ static inline uint8_t shasta_detect_and_program(ch_dev_t *dev_ptr) {
 		if (!ch_err) {
 			ch_err = chdrv_read_buf_addr(dev_ptr);
 		}
+		if (!ch_err) {
+			uint16_t ver_major_addr = (uint16_t)(uintptr_t)&dev_ptr->sens_cfg_addr->common.reg_map_format.major;
+			uint16_t ver_minor_addr = (uint16_t)(uintptr_t)&dev_ptr->sens_cfg_addr->common.reg_map_format.minor;
+			ch_err                  = chdrv_read_byte(dev_ptr, ver_major_addr, &dev_ptr->reg_fmt_ver_major);
+			if (!ch_err) {
+				ch_err = chdrv_read_byte(dev_ptr, ver_minor_addr, &dev_ptr->reg_fmt_ver_minor);
+			}
+		}
 
 		CH_LOG_INFO("Sensor shared mem addr = 0x%04x", (uint16_t)(uintptr_t)dev_ptr->sens_cfg_addr);
 		CH_LOG_INFO("Sensor algo info addr = 0x%04x", (uint16_t)(uintptr_t)dev_ptr->sens_algo_info_addr);
+		CH_LOG_INFO("Sensor register map version = %u.%u", dev_ptr->reg_fmt_ver_major, dev_ptr->reg_fmt_ver_minor);
 	}
 
 	/* Copy OTP (one-time-programmable) mem contents to sensor ram and process contents.

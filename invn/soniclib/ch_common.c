@@ -80,7 +80,8 @@ uint8_t ch_common_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, 
 		ret_val = (*fw_init_func)(dev_ptr, &dev_ptr->main_fw_info);
 	}
 #else
-	dev_ptr->main_fw_init_done = 0;
+	dev_ptr->main_fw_init_done   = 0;
+	dev_ptr->mq_sanitize_enabled = 1;
 	/* Call asic f/w init function passed in as parameter */
 	ret_val = (*fw_init_func)(dev_ptr, &dev_ptr->main_fw_info);
 #endif

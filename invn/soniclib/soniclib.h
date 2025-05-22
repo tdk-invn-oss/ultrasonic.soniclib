@@ -112,8 +112,8 @@ extern "C" {
 /*==============  SonicLib Version Info ===================*/
 /* SonicLib API/Driver version */
 #define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
-#define SONICLIB_VER_MINOR  (5) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (3) /*!< SonicLib revision. */
+#define SONICLIB_VER_MINOR  (6) /*!< SonicLib minor version. */
+#define SONICLIB_VER_REV    (0) /*!< SonicLib revision. */
 #define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
@@ -784,6 +784,10 @@ struct ch_dev_t {
 	ch_clock_cal_t test_clock_cal; /*!< Clock calibration values from factory test */
 
 	int16_t data_validation_counter; /*!< Counter value for data validation */
+	int16_t mq_sanitize_enabled;     /* !< Perform mq sanitization step when non-zero */
+
+	uint8_t reg_fmt_ver_major; /*!< SW defined register format major version */
+	uint8_t reg_fmt_ver_minor; /*!< SW defined register format minor version */
 
 	/* Sensor measurement queue */
 	measurement_queue_t meas_queue; /*!< Sensor measurement queue (local copy) */
