@@ -1072,15 +1072,17 @@ static uint8_t limit_rx_len(volatile measurement_t *meas, int rx_len, int eof_id
 static uint8_t adjust_rx_len(volatile measurement_t *meas, int rx_len, int eof_idx) {
 	const int rx_samples = rx_len >> (11 - meas->odr);
 	const int new_rx_len = rx_samples << (11 - meas->odr);
-	int samples_to_cut   = rx_len - new_rx_len;
+	int len_to_cut       = rx_len - new_rx_len;
 
-	CH_LOG_DEBUG("rx_len=%d rx_samples=%d new_rx_len=%d samples_to_cut=%d", rx_len, rx_samples, new_rx_len,
-	             samples_to_cut);
+	CH_LOG_DEBUG("rx_len=%d rx_samples=%d new_rx_len=%d len_to_cut=%d", rx_len, rx_samples, new_rx_len, len_to_cut);
 
-	if (meas->trx_inst[eof_idx - 1].length > (1 << (11 - meas->odr)) + samples_to_cut) {
+	if (len_to_cut == 0) {
+		// No modification needed for this rx instruction
+		return 0;
+	} else if (meas->trx_inst[eof_idx - 1].length >= (1 << (11 - meas->odr)) + len_to_cut) {
 		// make sure resulting rx instruction will have at least one RX sample left
 		// in it after the cut.
-		meas->trx_inst[eof_idx - 1].length -= samples_to_cut;
+		meas->trx_inst[eof_idx - 1].length -= len_to_cut;
 		return 0;
 	} else {
 		// return error otherwise

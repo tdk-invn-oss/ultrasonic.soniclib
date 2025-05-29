@@ -3010,7 +3010,7 @@ uint8_t ch_common_set_target_interrupt(ch_dev_t *dev_ptr, ch_tgt_int_filter_t tg
 	if (tgt_filter_mode == CH_TGT_INT_FILTER_ANY) {
 		dev_ptr->meas_queue.intconfig |= INTCONFIG_ON_TARGET;
 	} else if (tgt_filter_mode == CH_TGT_INT_FILTER_OFF) {
-		dev_ptr->meas_queue.intconfig &= !INTCONFIG_ON_TARGET;
+		dev_ptr->meas_queue.intconfig &= ~INTCONFIG_ON_TARGET;
 	} else {
 		ret_val = RET_ERR;  // no Shasta target int counter support yet
 	}
