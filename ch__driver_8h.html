@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.6.0</span>
+   &#160;<span id="projectnumber">4.5.4</span>
    </div>
   </td>
  </tr>
@@ -90,7 +90,6 @@ $(function() {
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;invn/icu_interface/shasta_pmut_instruction.h&gt;</code><br />
 </div>
 <p><a href="ch__driver_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -188,9 +187,6 @@ typedef struct <a class="el" href="structchdrv__transaction.html">chdrv_transact
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a6324da3f9d34e13da5e0ff3372f01f9a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a6324da3f9d34e13da5e0ff3372f01f9a">chdrv_adjust_rx_len</a> (volatile pmut_transceiver_inst_t *trx_inst, uint8_t cic_odr, int rx_len, int eof_idx)</td></tr>
-<tr class="memdesc:a6324da3f9d34e13da5e0ff3372f01f9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function trims the total RX length to remove excess ADC samples that don't result in additional IQ sample.  <a href="ch__driver_8h.html#a6324da3f9d34e13da5e0ff3372f01f9a">More...</a><br /></td></tr>
-<tr class="separator:a6324da3f9d34e13da5e0ff3372f01f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29920c0933777700bce6f82ee6d72355"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a29920c0933777700bce6f82ee6d72355">chdrv_algo_cfg_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, void *algo_cfg_ptr)</td></tr>
 <tr class="memdesc:a29920c0933777700bce6f82ee6d72355"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the algorithm configuration data from a sensor.  <a href="ch__driver_8h.html#a29920c0933777700bce6f82ee6d72355">More...</a><br /></td></tr>
 <tr class="separator:a29920c0933777700bce6f82ee6d72355"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -233,12 +229,6 @@ Functions</h2></td></tr>
 <tr class="memitem:abee4264f20f394d9a6c68dfc0fa654c4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#abee4264f20f394d9a6c68dfc0fa654c4">chdrv_detect_and_program</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:abee4264f20f394d9a6c68dfc0fa654c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detect, program, and start a sensor.  <a href="ch__driver_8h.html#abee4264f20f394d9a6c68dfc0fa654c4">More...</a><br /></td></tr>
 <tr class="separator:abee4264f20f394d9a6c68dfc0fa654c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66665863732013c7ea8f0e608e3abaca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a66665863732013c7ea8f0e608e3abaca">chdrv_disable_mq_sanitize</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="memdesc:a66665863732013c7ea8f0e608e3abaca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable the measurement config sanitization step when loading configs.  <a href="ch__driver_8h.html#a66665863732013c7ea8f0e608e3abaca">More...</a><br /></td></tr>
-<tr class="separator:a66665863732013c7ea8f0e608e3abaca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e6f6b232156ab586a7747731ddf0728"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a9e6f6b232156ab586a7747731ddf0728">chdrv_enable_mq_sanitize</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="memdesc:a9e6f6b232156ab586a7747731ddf0728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable the measurement config sanitization step when loading configs.  <a href="ch__driver_8h.html#a9e6f6b232156ab586a7747731ddf0728">More...</a><br /></td></tr>
-<tr class="separator:a9e6f6b232156ab586a7747731ddf0728"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4117080373fd81402ca3b88d21516bec"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a4117080373fd81402ca3b88d21516bec">chdrv_event_trigger</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t event)</td></tr>
 <tr class="memdesc:a4117080373fd81402ca3b88d21516bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trigger an event on a sensor and return immediately.  <a href="ch__driver_8h.html#a4117080373fd81402ca3b88d21516bec">More...</a><br /></td></tr>
 <tr class="separator:a4117080373fd81402ca3b88d21516bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -329,9 +319,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a2ebb9684c74cad8c53ab2ce34fc69872">chdrv_int_set_dir_in</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the interrupt line for a sensor as an input.  <a href="ch__driver_8h.html#a2ebb9684c74cad8c53ab2ce34fc69872">More...</a><br /></td></tr>
 <tr class="separator:a2ebb9684c74cad8c53ab2ce34fc69872"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a768a64eb2c8d6dd9a0c04b3f255e83a2"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a768a64eb2c8d6dd9a0c04b3f255e83a2">chdrv_is_mq_sanitize_enabled</a> (const <a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
-<tr class="memdesc:a768a64eb2c8d6dd9a0c04b3f255e83a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the measurement config sanitization is enabled.  <a href="ch__driver_8h.html#a768a64eb2c8d6dd9a0c04b3f255e83a2">More...</a><br /></td></tr>
-<tr class="separator:a768a64eb2c8d6dd9a0c04b3f255e83a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9741825591693ed0c4884d96f34cee8e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ch__driver_8h.html#a9741825591693ed0c4884d96f34cee8e">chdrv_meas_queue_read</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, measurement_queue_t *q_buf_ptr)</td></tr>
 <tr class="memdesc:a9741825591693ed0c4884d96f34cee8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the measurement queue from a sensor.  <a href="ch__driver_8h.html#a9741825591693ed0c4884d96f34cee8e">More...</a><br /></td></tr>
 <tr class="separator:a9741825591693ed0c4884d96f34cee8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -889,66 +876,6 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a6324da3f9d34e13da5e0ff3372f01f9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6324da3f9d34e13da5e0ff3372f01f9a">&#9670;&nbsp;</a></span>chdrv_adjust_rx_len()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t chdrv_adjust_rx_len </td>
-          <td>(</td>
-          <td class="paramtype">volatile pmut_transceiver_inst_t *&#160;</td>
-          <td class="paramname"><em>trx_inst</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>cic_odr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>rx_len</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>eof_idx</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function trims the total RX length to remove excess ADC samples that don't result in additional IQ sample. </p>
-<p>The ICU-x0201 parts use an oversampling ADC. The PMUT state machine time-base is in terms of the ADC clock. That is, when you set the length of the instruction, you are specifying the length in ADC clock cycles. There are many values of total RX length that result in the same number of total IQ samples. This function trims the excess RX length.</p>
-<p>It is required to run this function before loading the config to avoid particular values of RX length that can cause some undesirable or unexpected behavior.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">trx_inst</td><td>a pointer to a instruction sequence. The instructions will potentially be modified by this function </td></tr>
-    <tr><td class="paramname">rx_len</td><td>the total rx length in SMCLK cycles </td></tr>
-    <tr><td class="paramname">eof_idx</td><td>the index of the EOF instruction</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An error code.</dd></dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">0</td><td>Success. </td></tr>
-    <tr><td class="paramname">1</td><td>The trim could not be completed because it would result in a 0 length RX instruction. Either remove the final RX instruction or make it longer. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a29920c0933777700bce6f82ee6d72355"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a29920c0933777700bce6f82ee6d72355">&#9670;&nbsp;</a></span>chdrv_algo_cfg_read()</h2>
 
@@ -1527,68 +1454,6 @@ Functions</h2></td></tr>
 <p>This function probes the I2C bus for the device. If it is found, the sensor firmware is programmed into the device, and the application I2C address is set. Then the sensor is reset and execution starts.</p>
 <p>Once started, the sensor device will begin an internal initialization and self-test sequence. The <em><a class="el" href="ch__driver_8c.html#ac453b83c7c8197be1e5caea164086cf4" title="Wait for an individual sensor to finish start-up procedure.">chdrv_wait_for_lock()</a></em> function may be used to wait for this sequence to complete.</p>
 <dl class="section note"><dt>Note</dt><dd>This routine will leave the PROG pin de-asserted when it completes. </dd></dl>
-
-</div>
-</div>
-<a id="a66665863732013c7ea8f0e608e3abaca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66665863732013c7ea8f0e608e3abaca">&#9670;&nbsp;</a></span>chdrv_disable_mq_sanitize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chdrv_disable_mq_sanitize </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
-          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Disable the measurement config sanitization step when loading configs. </p>
-<p>Not all possible measurement configurations are valid. In particular, there are limits on instruction length and specific control flags that need to be set appropriately. This function disabled the sanitization, which is on by default.</p>
-<p>This function is intended to be called from ch_common_init(), before the FW specific initialization function. This allows a specific ASIC firmware to change the setting in its initialization function.</p>
-<p>See <a class="el" href="ch__driver_8h.html#a9e6f6b232156ab586a7747731ddf0728" title="Enable the measurement config sanitization step when loading configs.">chdrv_enable_mq_sanitize()</a>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">dev_ptr</td><td>The device pointer.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
-<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="ch__driver_8h.html#a9e6f6b232156ab586a7747731ddf0728" title="Enable the measurement config sanitization step when loading configs.">chdrv_enable_mq_sanitize()</a> and <a class="el" href="ch__driver_8h.html#a768a64eb2c8d6dd9a0c04b3f255e83a2" title="Check whether the measurement config sanitization is enabled.">chdrv_is_mq_sanitize_enabled()</a>. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd></dd></dl>
-
-</div>
-</div>
-<a id="a9e6f6b232156ab586a7747731ddf0728"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e6f6b232156ab586a7747731ddf0728">&#9670;&nbsp;</a></span>chdrv_enable_mq_sanitize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void chdrv_enable_mq_sanitize </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
-          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable the measurement config sanitization step when loading configs. </p>
-<p>Not all possible measurement configurations are valid. In particular, there are limits on instruction length and specific control flags that need to be set appropriately. This function enables the sanitization, which is on by default.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">dev_ptr</td><td>The device pointer.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
-<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="ch__driver_8h.html#a66665863732013c7ea8f0e608e3abaca" title="Disable the measurement config sanitization step when loading configs.">chdrv_disable_mq_sanitize()</a> and <a class="el" href="ch__driver_8h.html#a768a64eb2c8d6dd9a0c04b3f255e83a2" title="Check whether the measurement config sanitization is enabled.">chdrv_is_mq_sanitize_enabled()</a>. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -2734,43 +2599,6 @@ Functions</h2></td></tr>
 </dl>
 <p>This function configures the specified sensor's interrupt line an an input pin. For ICU sensors, the current measurement configuration for interrupt pin (INT1 or INT2) is used. For CH101/CH201 sensors, the single INT line is used.</p>
 <p>This function calls the appropriate routine(s) in the the board support package to set the pin direction. </p>
-
-</div>
-</div>
-<a id="a768a64eb2c8d6dd9a0c04b3f255e83a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a768a64eb2c8d6dd9a0c04b3f255e83a2">&#9670;&nbsp;</a></span>chdrv_is_mq_sanitize_enabled()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int16_t chdrv_is_mq_sanitize_enabled </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structch__dev__t.html">ch_dev_t</a> *&#160;</td>
-          <td class="paramname"><em>dev_ptr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check whether the measurement config sanitization is enabled. </p>
-<p>See <a class="el" href="ch__driver_8h.html#a9e6f6b232156ab586a7747731ddf0728" title="Enable the measurement config sanitization step when loading configs.">chdrv_enable_mq_sanitize()</a>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">dev_ptr</td><td>The device pointer.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The enabled status of the sanitization.</dd></dl>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">0</td><td>Sanitization disabled. </td></tr>
-    <tr><td class="paramname">1</td><td>Sanitization enabled.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd></dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd></dd></dl>
 
 </div>
 </div>

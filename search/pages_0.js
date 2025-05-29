@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['soniclib_1495',['SonicLib',['../index.html',1,'']]]
+  ['soniclib_1483',['SonicLib',['../index.html',1,'']]]
 ];

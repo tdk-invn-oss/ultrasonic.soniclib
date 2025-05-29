@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['icu_5falgo_5finfo_775',['icu_algo_info',['../structicu__algo__info.html',1,'']]],
-  ['icu_5fgpt_5falgo_5fconfig_5ft_776',['icu_gpt_algo_config_t',['../structicu__gpt__algo__config__t.html',1,'']]]
+  ['icu_5falgo_5finfo_769',['icu_algo_info',['../structicu__algo__info.html',1,'']]],
+  ['icu_5fgpt_5falgo_5fconfig_5ft_770',['icu_gpt_algo_config_t',['../structicu__gpt__algo__config__t.html',1,'']]]
 ];
