@@ -112,8 +112,8 @@ extern "C" {
 /*==============  SonicLib Version Info ===================*/
 /* SonicLib API/Driver version */
 #define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
-#define SONICLIB_VER_MINOR  (5) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (4) /*!< SonicLib revision. */
+#define SONICLIB_VER_MINOR  (6) /*!< SonicLib minor version. */
+#define SONICLIB_VER_REV    (1) /*!< SonicLib revision. */
 #define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
@@ -784,6 +784,10 @@ struct ch_dev_t {
 	ch_clock_cal_t test_clock_cal; /*!< Clock calibration values from factory test */
 
 	int16_t data_validation_counter; /*!< Counter value for data validation */
+	int16_t mq_sanitize_enabled;     /* !< Perform mq sanitization step when non-zero */
+
+	uint8_t reg_fmt_ver_major; /*!< SW defined register format major version */
+	uint8_t reg_fmt_ver_minor; /*!< SW defined register format minor version */
 
 	/* Sensor measurement queue */
 	measurement_queue_t meas_queue; /*!< Sensor measurement queue (local copy) */
@@ -3456,6 +3460,31 @@ void ch_meas_get_queue_info(ch_dev_t *dev_ptr, ch_meas_queue_info_t *info_ptr);
  * - rx_atten - attenuation (receive segments only)
  */
 void ch_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t seg_num, ch_meas_seg_info_t *info_ptr);
+
+/*!
+ * \brief Get configuration information for a measurement segment.
+ *
+ * \param inst_ptr 		pointer to the pmut_transciever_t instruction
+ * \param odr           measurement odr
+ * \param info_ptr		pointer to ch_meas_seg_info_t structure to be updated
+ *
+ * \return 0 if success, 1 if error
+ *
+ * This function obtains configuration information for the measurement segment specified
+ * by \a inst_ptr.
+ *
+ * The ch_meas_seg_info_t structure specified by \a info_ptr will be completed with the
+ * settings for the measurement segment, including:
+ * - num_rx_samples - length in sample periods (determined by num_cycles and output data rate)
+ * - num_cycles - length in cycles
+ * - rdy_int_en - sensor will interrupt when ready
+ * - done_int_en - sensor will interrupt when done with segment
+ * - tx_phase - phase (transmit segments only)
+ * - tx_pulse_width - pulse width (transmit segments only)
+ * - rx_gain_reduce - gain reduction (receive segments only)
+ * - rx_atten - attenuation (receive segments only)
+ */
+void ch_inst_get_seg_info(pmut_transceiver_inst_t *inst_ptr, uint8_t odr, ch_meas_seg_info_t *info_ptr);
 
 /*!
  * \brief Set the repeat interval for a measurement, in milliseconds.

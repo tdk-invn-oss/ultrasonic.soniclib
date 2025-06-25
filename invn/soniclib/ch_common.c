@@ -80,7 +80,8 @@ uint8_t ch_common_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, 
 		ret_val = (*fw_init_func)(dev_ptr, &dev_ptr->main_fw_info);
 	}
 #else
-	dev_ptr->main_fw_init_done = 0;
+	dev_ptr->main_fw_init_done   = 0;
+	dev_ptr->mq_sanitize_enabled = 1;
 	/* Call asic f/w init function passed in as parameter */
 	ret_val = (*fw_init_func)(dev_ptr, &dev_ptr->main_fw_info);
 #endif
@@ -2636,10 +2637,7 @@ void ch_common_meas_get_info(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_info_t
 	info_ptr->odr         = (ch_odr_t)meas_ptr->odr;
 }
 
-void ch_common_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t seg_num, ch_meas_seg_info_t *info_ptr) {
-	pmut_transceiver_inst_t *inst_ptr =
-			(pmut_transceiver_inst_t *)&(dev_ptr->meas_queue.meas[meas_num].trx_inst[seg_num]);
-	ch_odr_t odr        = (ch_odr_t)dev_ptr->meas_queue.meas[meas_num].odr;
+void ch_common_inst_get_seg_info(pmut_transceiver_inst_t *inst_ptr, uint8_t odr, ch_meas_seg_info_t *info_ptr) {
 	uint16_t cmd_config = inst_ptr->cmd_config;
 	ch_meas_seg_type_t seg_type;
 
@@ -2662,6 +2660,13 @@ void ch_common_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t se
 		info_ptr->rx_gain        = ((cmd_config >> PMUT_RXGAIN_RED_BITSHIFT) & PMUT_RXGAIN_BM);
 		info_ptr->rx_atten       = ((cmd_config >> PMUT_RXATTEN_BITSHIFT) & PMUT_RXATTEN_BM);
 	}
+}
+
+void ch_common_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t seg_num, ch_meas_seg_info_t *info_ptr) {
+	pmut_transceiver_inst_t *inst_ptr =
+			(pmut_transceiver_inst_t *)&(dev_ptr->meas_queue.meas[meas_num].trx_inst[seg_num]);
+	ch_odr_t odr = (ch_odr_t)dev_ptr->meas_queue.meas[meas_num].odr;
+	ch_common_inst_get_seg_info(inst_ptr, odr, info_ptr);
 }
 
 void ch_common_meas_get_queue_info(ch_dev_t *dev_ptr, ch_meas_queue_info_t *info_ptr) {
