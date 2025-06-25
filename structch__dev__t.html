@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.5.4</span>
+   &#160;<span id="projectnumber">4.6.1</span>
    </div>
   </td>
  </tr>
@@ -167,6 +167,9 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>meas_pre_rx_cycle
 <tr class="separator:a94aa41f7e1f1afe758376f35810db8c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a904af051ebefcd2bb2cbbaa8306a6be4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="soniclib_8h.html#a0da193cf2f2476d27fd7ceb533f8cdc4">ch_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__dev__t.html#a904af051ebefcd2bb2cbbaa8306a6be4">mode</a></td></tr>
 <tr class="separator:a904af051ebefcd2bb2cbbaa8306a6be4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae676cea24b340db8ac15d80f94fb27ec"><td class="memItemLeft" align="right" valign="top"><a id="ae676cea24b340db8ac15d80f94fb27ec"></a>
+int16_t&#160;</td><td class="memItemRight" valign="bottom"><b>mq_sanitize_enabled</b></td></tr>
+<tr class="separator:ae676cea24b340db8ac15d80f94fb27ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a593acb3666e61fd318192a57f2cb8fe1"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__dev__t.html#a593acb3666e61fd318192a57f2cb8fe1">num_iq_bytes</a></td></tr>
 <tr class="separator:a593acb3666e61fd318192a57f2cb8fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02449a432c2f8ef366de0d66e87b73b9"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__dev__t.html#a02449a432c2f8ef366de0d66e87b73b9">num_rx_samples</a></td></tr>
@@ -187,6 +190,10 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>meas_pre_rx_cycle
 <tr class="separator:a3928be492759a272f2c731449b98b38f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea185920f4a62edcf8e072538aa02b48"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__dev__t.html#aea185920f4a62edcf8e072538aa02b48">pmut_trim</a></td></tr>
 <tr class="separator:aea185920f4a62edcf8e072538aa02b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16c62f3fef7b601a2c72016ea4d1bbfa"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__dev__t.html#a16c62f3fef7b601a2c72016ea4d1bbfa">reg_fmt_ver_major</a></td></tr>
+<tr class="separator:a16c62f3fef7b601a2c72016ea4d1bbfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac070fbbf709a7e7d0d6602386a3a4687"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__dev__t.html#ac070fbbf709a7e7d0d6602386a3a4687">reg_fmt_ver_minor</a></td></tr>
+<tr class="separator:ac070fbbf709a7e7d0d6602386a3a4687"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab267eaf4d9bfb2b44d3343a3fe995c13"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__dev__t.html#ab267eaf4d9bfb2b44d3343a3fe995c13">rtc_cal_result</a></td></tr>
 <tr class="separator:ab267eaf4d9bfb2b44d3343a3fe995c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a323c6216d835b1b98e053e10db4f184e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__dev__t.html#a323c6216d835b1b98e053e10db4f184e">rtc_frequency</a></td></tr>
@@ -827,6 +834,36 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>meas_pre_rx_cycle
       </table>
 </div><div class="memdoc">
 <p>PMUT freq trim value </p>
+
+</div>
+</div>
+<a id="a16c62f3fef7b601a2c72016ea4d1bbfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16c62f3fef7b601a2c72016ea4d1bbfa">&#9670;&nbsp;</a></span>reg_fmt_ver_major</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_dev_t::reg_fmt_ver_major</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>SW defined register format major version </p>
+
+</div>
+</div>
+<a id="ac070fbbf709a7e7d0d6602386a3a4687"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac070fbbf709a7e7d0d6602386a3a4687">&#9670;&nbsp;</a></span>reg_fmt_ver_minor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t ch_dev_t::reg_fmt_ver_minor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>SW defined register format minor version </p>
 
 </div>
 </div>

@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.5.4</span>
+   &#160;<span id="projectnumber">4.6.1</span>
    </div>
   </td>
  </tr>
@@ -238,9 +238,9 @@ Macros</h2></td></tr>
 <tr class="separator:aef40d6fd76a720e83aa328bfc080cb0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3407caaf3d2f8bb12e8c26bccbe3ae40">SONICLIB_VER_MAJOR</a>&#160;&#160;&#160;(4)</td></tr>
 <tr class="separator:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(5)</td></tr>
+<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(6)</td></tr>
 <tr class="separator:a3114f821e7b6c5971ddf1c363597b761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(4)</td></tr>
+<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(1)</td></tr>
 <tr class="separator:a602271af8c1cf2ba218e68b49e5d465f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87026a07278934542ce439d706df7aef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87026a07278934542ce439d706df7aef">SONICLIB_VER_SUFFIX</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
 <tr class="separator:a87026a07278934542ce439d706df7aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -769,6 +769,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ad725040c45603cc81f47ccb4ab104efc"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ad725040c45603cc81f47ccb4ab104efc">ch_init_algo</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:ad725040c45603cc81f47ccb4ab104efc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the measurement algorithm on a sensor.  <a href="soniclib_8h.html#ad725040c45603cc81f47ccb4ab104efc">More...</a><br /></td></tr>
 <tr class="separator:ad725040c45603cc81f47ccb4ab104efc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a131cc340128caaa0339e8647b261bed6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a131cc340128caaa0339e8647b261bed6">ch_inst_get_seg_info</a> (pmut_transceiver_inst_t *inst_ptr, uint8_t odr, <a class="el" href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a> *info_ptr)</td></tr>
+<tr class="memdesc:a131cc340128caaa0339e8647b261bed6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get configuration information for a measurement segment.  <a href="soniclib_8h.html#a131cc340128caaa0339e8647b261bed6">More...</a><br /></td></tr>
+<tr class="separator:a131cc340128caaa0339e8647b261bed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68080a85a27dc680ce55c020f575c5c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3">ch_interrupt</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t dev_num)</td></tr>
 <tr class="memdesc:a68080a85a27dc680ce55c020f575c5c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run SonicLib's full-featured interrupt handler.  <a href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3">More...</a><br /></td></tr>
 <tr class="separator:a68080a85a27dc680ce55c020f575c5c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1568,7 +1571,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(5)</td>
+          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(6)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1583,7 +1586,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(4)</td>
+          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4764,6 +4767,62 @@ The <em>range_type</em> parameter only controls how this function interprets the
 <p>This function initializes a measurement algorithm that has been loaded into a sensor and configured.</p>
 <p>Normally, this routine will only be used by special applications or libraries which interact with specific sensor firmware. It is not used directly in a typical application.</p>
 <p>See also <em><a class="el" href="soniclib_8h.html#a719bb8d611224839c6d9404d339bc9e8" title="Import an externally defined measurement configuration.">ch_meas_import()</a></em>, <a class="el" href="soniclib_8h.html#abfe62802f4bc1c41bc96d903e3aa323c" title="Get the measurement algorithm state data from a sensor.">ch_get_algo_state()</a>. </p>
+
+</div>
+</div>
+<a id="a131cc340128caaa0339e8647b261bed6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a131cc340128caaa0339e8647b261bed6">&#9670;&nbsp;</a></span>ch_inst_get_seg_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ch_inst_get_seg_info </td>
+          <td>(</td>
+          <td class="paramtype">pmut_transceiver_inst_t *&#160;</td>
+          <td class="paramname"><em>inst_ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>odr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structch__meas__seg__info__t.html">ch_meas_seg_info_t</a> *&#160;</td>
+          <td class="paramname"><em>info_ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get configuration information for a measurement segment. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inst_ptr</td><td>pointer to the pmut_transciever_t instruction </td></tr>
+    <tr><td class="paramname">odr</td><td>measurement odr </td></tr>
+    <tr><td class="paramname">info_ptr</td><td>pointer to <a class="el" href="structch__meas__seg__info__t.html" title="Measurement segment info.">ch_meas_seg_info_t</a> structure to be updated</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
+<p>This function obtains configuration information for the measurement segment specified by <em>inst_ptr</em>.</p>
+<p>The <a class="el" href="structch__meas__seg__info__t.html" title="Measurement segment info.">ch_meas_seg_info_t</a> structure specified by <em>info_ptr</em> will be completed with the settings for the measurement segment, including:</p><ul>
+<li>num_rx_samples - length in sample periods (determined by num_cycles and output data rate)</li>
+<li>num_cycles - length in cycles</li>
+<li>rdy_int_en - sensor will interrupt when ready</li>
+<li>done_int_en - sensor will interrupt when done with segment</li>
+<li>tx_phase - phase (transmit segments only)</li>
+<li>tx_pulse_width - pulse width (transmit segments only)</li>
+<li>rx_gain_reduce - gain reduction (receive segments only)</li>
+<li>rx_atten - attenuation (receive segments only) </li>
+</ul>
 
 </div>
 </div>
