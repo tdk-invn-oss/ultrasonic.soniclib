@@ -1140,6 +1140,11 @@ void ch_meas_get_queue_info(ch_dev_t *dev_ptr, ch_meas_queue_info_t *info_ptr) {
 	ch_common_meas_get_queue_info(dev_ptr, info_ptr);
 }
 
+void ch_inst_get_seg_info(pmut_transceiver_inst_t *inst_ptr, uint8_t odr, ch_meas_seg_info_t *info_ptr) {
+
+	ch_common_inst_get_seg_info(inst_ptr, odr, info_ptr);
+}
+
 void ch_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t seg_num, ch_meas_seg_info_t *info_ptr) {
 
 	ch_common_meas_get_seg_info(dev_ptr, meas_num, seg_num, info_ptr);

@@ -262,6 +262,7 @@ uint8_t ch_common_meas_switch(ch_dev_t *dev_ptr);
 uint8_t ch_common_meas_get_last_num(ch_dev_t *dev_ptr);
 void ch_common_meas_get_info(ch_dev_t *dev_ptr, uint8_t meas_num, ch_meas_info_t *info_ptr);
 void ch_common_meas_get_queue_info(ch_dev_t *dev_ptr, ch_meas_queue_info_t *info_ptr);
+void ch_common_inst_get_seg_info(pmut_transceiver_inst_t *inst_ptr, uint8_t odr, ch_meas_seg_info_t *info_ptr);
 void ch_common_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t seg_num, ch_meas_seg_info_t *info_ptr);
 uint8_t ch_common_meas_set_interval(ch_dev_t *dev_ptr, uint8_t meas_num, uint16_t interval_ms);
 uint8_t ch_common_meas_set_interval_us(ch_dev_t *dev_ptr, uint8_t meas_num, uint32_t interval_us);

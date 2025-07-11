@@ -40,6 +40,7 @@ extern "C" {
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <invn/icu_interface/shasta_pmut_instruction.h>
 
 #define CHDRV_I2C_MAX_WRITE_BYTES 256 /*!< maximum number of bytes in a single I2C write */
 
@@ -1238,6 +1239,89 @@ uint8_t chdrv_run_bist(ch_dev_t *dev_ptr);
 void chdrv_group_measure_pmut(ch_group_t *grp_ptr);
 
 uint8_t chdrv_check_reset_state(ch_dev_t *dev_ptr, uint8_t *reset_state);
+
+/**
+ * @brief Enable the measurement config sanitization step when loading configs
+ *
+ * Not all possible measurement configurations are valid. In particular, there
+ * are limits on instruction length and specific control flags that need to be
+ * set appropriately. This function enables the sanitization, which is on by
+ * default.
+ *
+ * @param[in,out]  dev_ptr The device pointer.
+ *
+ * @return
+ *
+ * @note See chdrv_disable_mq_sanitize() and chdrv_is_mq_sanitize_enabled().
+ * @warning
+ */
+void chdrv_enable_mq_sanitize(ch_dev_t *dev_ptr);
+
+/**
+ * @brief Disable the measurement config sanitization step when loading configs
+ *
+ * Not all possible measurement configurations are valid. In particular, there
+ * are limits on instruction length and specific control flags that need to be
+ * set appropriately. This function disabled the sanitization, which is on by
+ * default.
+ *
+ * This function is intended to be called from ch_common_init(), before the
+ * FW specific initialization function. This allows a specific ASIC firmware to
+ * change the setting in its initialization function.
+ *
+ * See chdrv_enable_mq_sanitize().
+ *
+ * @param[in,out]  dev_ptr The device pointer.
+ *
+ * @return
+ *
+ * @note See chdrv_enable_mq_sanitize() and chdrv_is_mq_sanitize_enabled().
+ * @warning
+ */
+void chdrv_disable_mq_sanitize(ch_dev_t *dev_ptr);
+
+/**
+ * @brief Check whether the measurement config sanitization is enabled.
+ *
+ * See chdrv_enable_mq_sanitize().
+ *
+ * @param[in,out]  dev_ptr The device pointer.
+ *
+ * @return The enabled status of the sanitization.
+ *
+ * @retval 0 Sanitization disabled.
+ * @retval 1 Sanitization enabled.
+ *
+ * @note
+ * @warning
+ */
+int16_t chdrv_is_mq_sanitize_enabled(const ch_dev_t *dev_ptr);
+
+/**
+ * @brief This function trims the total RX length to remove excess ADC samples
+ *        that don't result in additional IQ sample
+ *
+ * The ICU-x0201 parts use an oversampling ADC. The PMUT state machine time-base
+ * is in terms of the ADC clock. That is, when you set the length of the instruction,
+ * you are specifying the length in ADC clock cycles. There are many values of total RX
+ * length that result in the same number of total IQ samples. This function trims
+ * the excess RX length.
+ *
+ * It is required to run this function before loading the config to avoid particular
+ * values of RX length that can cause some undesirable or unexpected behavior.
+ *
+ * @param trx_inst a pointer to a instruction sequence. The instructions will
+ *                 potentially be modified by this function
+ * @param rx_len the total rx length in SMCLK cycles
+ * @param eof_idx the index of the EOF instruction
+ *
+ * @return An error code.
+ *
+ * @retval 0 Success.
+ * @retval 1 The trim could not be completed because it would result in a 0 length
+ *           RX instruction. Either remove the final RX instruction or make it longer.
+ */
+uint8_t chdrv_adjust_rx_len(volatile pmut_transceiver_inst_t *trx_inst, uint8_t cic_odr, int rx_len, int eof_idx);
 
 #ifdef __cplusplus
 }
