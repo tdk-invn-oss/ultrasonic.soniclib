@@ -394,6 +394,18 @@ void chdrv_trig_group_set_dir_out(ch_group_t *grp_ptr) {
 #endif
 }
 
+static void chdrv_trig_group_set_dir_in(ch_group_t *grp_ptr) {
+#ifdef INCLUDE_SHASTA_SUPPORT
+	if (grp_ptr->sensor_trig_pin == 1) {
+		chbsp_group_set_int1_dir_in(grp_ptr);
+	} else if (grp_ptr->sensor_trig_pin == 2) {
+		chbsp_group_set_int2_dir_in(grp_ptr);
+	}
+#elif defined(INCLUDE_WHITNEY_SUPPORT)
+	chbsp_group_set_int1_dir_in(grp_ptr);
+#endif
+}
+
 #ifdef INCLUDE_WHITNEY_SUPPORT
 /*!
  * \brief Write bytes to a sensor device in programming mode.
@@ -1455,7 +1467,7 @@ uint8_t chdrv_run_bist(ch_dev_t *dev_ptr) {
 	CH_LOG_DEBUG("Triggering BIST :");
 	CH_LOG_DEBUG("pmut freq trim before = 0x%04x", pmut_trim);
 
-	chbsp_int1_interrupt_enable(dev_ptr);
+	chdrv_int_interrupt_enable(dev_ptr);
 	err = chdrv_event_trigger_and_wait(dev_ptr, EVENT_BIST);
 
 	if (err) {
@@ -1532,18 +1544,25 @@ void chdrv_group_measure_rtc(ch_group_t *grp_ptr) {
 	uint8_t i;
 	const uint32_t pulselength = grp_ptr->rtc_cal_pulse_ms;
 
-	/* Make sure INT line is inactive */
-	chdrv_int_group_deassert(grp_ptr);
+	/* Make sure TRIG line is inactive  */
+	chdrv_trig_group_deassert(grp_ptr);
 
-	/* Configure the host's side of the INT pin as an output */
-	chdrv_int_group_set_dir_out(grp_ptr);
+	/* Configure the host's side of the TRIG pin as an output */
+	chdrv_trig_group_set_dir_out(grp_ptr);
 
-	/* Make sure INT line is inactive */
-	chdrv_int_group_deassert(grp_ptr);
+	/* Make sure TRIG line is inactive */
+	chdrv_trig_group_deassert(grp_ptr);
 
 	/* Set up RTC calibration */
 	for (i = 0; i < grp_ptr->num_ports; i++) {
 		ch_dev_t *dev_ptr = grp_ptr->device[i];
+#ifdef INCLUDE_SHASTA_SUPPORT
+		if (grp_ptr->sensor_trig_pin == 2) {
+			uint16_t trigcfg_addr =
+					(uint16_t)(uintptr_t) & ((shasta_config_t *)SHASTA_FIXED_CFG_ADDR)->meas_queue.trigsrc;
+			chdrv_write_byte(dev_ptr, trigcfg_addr, TRIGSRC_HWTRIGGER_INT2);
+		}
+#endif
 
 		if (dev_ptr->sensor_connected) {
 			dev_ptr->current_fw->calib_funcs->prepare_pulse_timer(dev_ptr);
@@ -1552,28 +1571,28 @@ void chdrv_group_measure_rtc(ch_group_t *grp_ptr) {
 
 	chbsp_delay_ms(10);  // delay before sending pulse
 
-	/* Trigger a pulse on the INT pin */
-	chdrv_int_group_assert(grp_ptr);
+	/* Trigger a pulse on the TRIG line */
+	chdrv_trig_group_assert(grp_ptr);
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 	/* Shasta uses two separated pulses, so end the first one */
-	chbsp_delay_us(10);                 // short duration
-	chdrv_int_group_deassert(grp_ptr);  // end pulse
+	chbsp_delay_us(10);                  // short duration
+	chdrv_trig_group_deassert(grp_ptr);  // end pulse
 #endif
 
 	chbsp_delay_ms(pulselength);  // delay for calibration pulse duration
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 	/* Shasta uses two separated pulses, so begin the second one */
-	chdrv_int_group_assert(grp_ptr);  // start pulse
-	chbsp_delay_us(10);               // short duration
+	chdrv_trig_group_assert(grp_ptr);  // start pulse
+	chbsp_delay_us(10);                // short duration
 #endif
 
-	chdrv_int_group_deassert(grp_ptr);  // end pulse
+	chdrv_trig_group_deassert(grp_ptr);  // end pulse
 
 #ifdef INCLUDE_SHASTA_SUPPORT
-	/* Configure the INT pin as an input again */
-	chdrv_int_group_set_dir_in(grp_ptr);
+	/* Configure the TRIG pin as an input again */
+	chdrv_trig_group_set_dir_in(grp_ptr);
 
 	// /* Wait for all sensors to complete
 	chbsp_delay_us(100);
@@ -2390,6 +2409,11 @@ static inline uint8_t shasta_detect_and_program(ch_dev_t *dev_ptr) {
 	ch_err  = reset_and_halt(dev_ptr);  // reset and enter debug mode for programming
 	ch_err |= init_ram(dev_ptr);        // init ram values
 
+	if (dev_ptr->group->sensor_int_pin != 1) {
+		uint16_t intcfg_addr = (uint16_t)(uintptr_t) & ((shasta_config_t *)SHASTA_FIXED_CFG_ADDR)->meas_queue.intconfig;
+		ch_err               = chdrv_write_byte(dev_ptr, intcfg_addr, INTCONFIG_DR_INT2);
+	}
+
 	chbsp_event_wait_setup((1 << dev_ptr->io_index));
 	chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***
 
@@ -2641,8 +2665,8 @@ int chdrv_group_prepare(ch_group_t *grp_ptr) {
 			grp_ptr->queue[i].running      = 0;
 		}
 
-		grp_ptr->sensor_int_pin  = 1;  // sensor always uses INT1 initially
-		grp_ptr->sensor_trig_pin = 1;
+		grp_ptr->sensor_int_pin  = CHIRP_SENSOR_INT_PIN;
+		grp_ptr->sensor_trig_pin = CHIRP_SENSOR_TRIG_PIN;
 
 #ifdef INCLUDE_WHITNEY_SUPPORT
 		ch_err = chbsp_i2c_init();
