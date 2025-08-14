@@ -193,6 +193,8 @@ typedef struct bist{
 #define CURRENT_MEAS_BIST       (255)
 #define CURRENT_MEAS_TXOPT      (254)
 
+#define SHASTA_FIXED_CFG_ADDR     (0x1014)
+
 typedef struct reg_map_format{
     uint8_t minor;
     uint8_t major;
