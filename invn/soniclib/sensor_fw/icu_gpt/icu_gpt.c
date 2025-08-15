@@ -391,7 +391,7 @@ uint32_t icu_gpt_algo_get_target_range(ch_dev_t *dev_ptr, uint8_t target_num, ch
 		             tgt_list_ptr->num_valid_targets, dev_ptr->odr_out, tgt_list_ptr->targets[0].range,
 		             tgt_list_ptr->targets[0].amplitude);
 
-		CH_LOG_TRACE_START("orig time_of_flight = %ld  pre_rx_cycles = %u   ", time_of_flight, pre_rx_cycles);
+		CH_LOG_TRACE_START("orig time_of_flight = %ld  ", time_of_flight);
 
 		int32_t tof_offset_lsb;
 		if (get_tof_offset_lsb(dev_ptr, &tof_offset_lsb) != RET_OK) {
