@@ -2665,10 +2665,10 @@ int chdrv_group_prepare(ch_group_t *grp_ptr) {
 			grp_ptr->queue[i].running      = 0;
 		}
 
+#ifdef INCLUDE_SHASTA_SUPPORT
 		grp_ptr->sensor_int_pin  = CHIRP_SENSOR_INT_PIN;
 		grp_ptr->sensor_trig_pin = CHIRP_SENSOR_TRIG_PIN;
-
-#ifdef INCLUDE_WHITNEY_SUPPORT
+#elif defined(INCLUDE_WHITNEY_SUPPORT)
 		ch_err = chbsp_i2c_init();
 #endif
 	}
