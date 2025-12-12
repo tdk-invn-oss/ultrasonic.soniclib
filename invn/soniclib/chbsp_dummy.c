@@ -4,7 +4,7 @@
  * \brief Dummy implementations of optional board support package IO functions allowing
  * platforms to selectively support only needed functionality.  These are placeholder
  * routines that will satisfy references from other code to avoid link errors, but they
- * do not peform any actual operations.
+ * do not perform any actual operations.
  *
  * See chirp_bsp.h for descriptions of all board support package interfaces, including
  * details on these optional functions.
@@ -193,4 +193,14 @@ __attribute__((weak)) uint8_t chbsp_event_wait(uint16_t time_out_ms, uint32_t ev
 
 __attribute__((weak)) void chbsp_event_notify(uint32_t event_mask) {
 	interrupt_sensors |= event_mask;
+}
+
+#ifndef INCLUDE_WHITNEY_SUPPORT  // Required for CH101/201
+__attribute__((weak)) void chbsp_delay_us(uint32_t us) {
+	(void)us;
+}
+#endif
+
+__attribute__((weak)) void chbsp_pulse_len_hint_us(uint32_t us) {
+	chbsp_delay_us(us);
 }

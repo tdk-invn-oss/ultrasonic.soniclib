@@ -112,8 +112,8 @@ extern "C" {
 /*==============  SonicLib Version Info ===================*/
 /* SonicLib API/Driver version */
 #define SONICLIB_VER_MAJOR  (4) /*!< SonicLib major version. */
-#define SONICLIB_VER_MINOR  (7) /*!< SonicLib minor version. */
-#define SONICLIB_VER_REV    (1) /*!< SonicLib revision. */
+#define SONICLIB_VER_MINOR  (9) /*!< SonicLib minor version. */
+#define SONICLIB_VER_REV    (0) /*!< SonicLib revision. */
 #define SONICLIB_VER_SUFFIX ""  /*!< SonicLib version suffix (contains pre-release info) */
 
 /***** DO NOT MODIFY ANY VALUES BEYOND THIS POINT! *****/
@@ -401,6 +401,13 @@ typedef enum { CH_RESET_STATE_OK = 0, CH_RESET_STATE_ACTIVE = 1 } ch_sensor_rese
 
 //! Log format.
 typedef enum { CH_LOG_FMT_REDSWALLOW = 0 } ch_log_fmt_t;
+
+//! Data validation mode configuration.
+typedef enum {
+	CH_DATA_VALIDATION_DISABLE = 0,
+	CH_DATA_VALIDATION_COUNTER = 1,
+	CH_DATA_VALIDATION_PRNG    = 2,
+} ch_data_validation_mode_t;
 
 //! SonicLib version structure.
 typedef struct {
@@ -885,7 +892,7 @@ uint8_t ch_init(ch_dev_t *dev_ptr, ch_group_t *grp_ptr, uint8_t dev_num, ch_fw_i
  *
  * \return 0 if success, 1 if error
  *
- * This function is used to define the init firmware for a sensor if the main firwmware (determined with ch_init)
+ * This function is used to define the init firmware for a sensor if the main firmware (determined with ch_init)
  * doesn't have initialization features in it.
  * It can be necessary to set a specific initialization firmware (with tx optimization) if using measure optimization
  * API.
@@ -1175,7 +1182,7 @@ uint8_t ch_get_bus(ch_dev_t *dev_ptr);
  * The version number consists of three x.y.z fields: <major>.<minor>.<rev>
  *
  * - \a Major versions are infrequent architectural releases that may include
- * fundamental changes to interfaces and other compatiblity issues.
+ * fundamental changes to interfaces and other compatibility issues.
  * - \a Minor releases introduce new features and may include minor changes to
  * individual interfaces, but are generally backwards compatible.
  * - \a Revision releases include bug fixes and other changes that do not
@@ -1236,7 +1243,7 @@ uint8_t ch_set_mode(ch_dev_t *dev_ptr, ch_mode_t mode);
  * \param dev_ptr 	pointer to the ch_dev_t descriptor structure
  * \return 			Interval between samples (in ms), or 0 if device is not in free-running mode
  *
- * \note This function is DEPRECATED and is provided only for backwards compatiblity.  New
+ * \note This function is DEPRECATED and is provided only for backwards compatibility.  New
  * applications should use the equivalent \a ch_get_freerun_interval() function.
  *
  * This function returns the interval between measurements, in milliseconds, for
@@ -2124,7 +2131,7 @@ uint8_t ch_io_start_nb(ch_group_t *grp_ptr);
  *   - This function does not disable interrupt handling. This must be done in
  *     user code if needed.
  *   - This function does not read any metadata from the sensor, with one exception.
- *     During sensor programming, this funciton performs one SPI read in order
+ *     During sensor programming, this function performs one SPI read in order
  *     to cause the ASIC to release the interrupt line.
  *   - This function does not update state of the dev_ptr
  *
@@ -2399,7 +2406,7 @@ ch_interrupt_mode_t ch_get_interrupt_mode(ch_dev_t *dev_ptr);
  *
  * This function sets the sensor interrupt to use an open-drain or push-pull
  * drive.  In open drain, the sensor will actively drive the line low and use a
- * pull-up resistor for the hight level.  In push-pull drive, the sensor will
+ * pull-up resistor for the high level.  In push-pull drive, the sensor will
  * actively drive the line both low and high.  Additionally, the pull-up
  * resistor on the interrupt pin used for hardware trigger is disabled.  By
  * default, ICU sensors use open drain interrupt drive
@@ -2432,24 +2439,25 @@ uint8_t ch_set_interrupt_drive(ch_dev_t *dev_ptr, ch_interrupt_drive_t drive);
 ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr);
 
 /*!  \brief Enable data validation mode.  In this mode, ICU-x0201 sensors will overwrite the IQ
- *  data at the end of a measurement and after running the algorithm, with a known sequence to
- *  allow validating data transfer integrity while making minimal changes to the system otherwise.
- *  Currently, this is limited to a 16-bit counter that increments for each I and Q sample
- *  and is continuous across measurements.
- *
- *  This feature is currently only supported by icu_init_fw.  It is not recommended to use it if the
- *  application uses continuous receive, or has non-contiguous RX segments in its measurement
- *  queue.  Enabling data validation adds approximately 0.8μs per IQ sample to the measurement time.
+ *  data at the end of a measurement with a known data sequence to allow validating data transfer integrity while
+ *  making minimal changes to the system otherwise. Depending on the mode setting, the data values can either be
+ *  generated by an incrementing counter or a PRNG.
+
+ *  This feature is currently only supported by icu_init_fw and icu_init-ext_fw.  It is not recommended to use it if
+ *  the application uses continuous receive, or has non-contiguous RX segments in its measurement
+ *  queue.  In counter mode, data validation adds approximately 0.8μs per IQ sample to the measurement time.  The PRNG
+ *  has a significant sensor runtime cost and adds approximately 11μs per sample.
  *  Note that for each sample, the counter value is incremented in the order of Q then I.
  *  Data validation must be handled by the application using ch_data_validation_check().
  *
  * \param dev_ptr The device pointer
  * \param seed Initial value for data validation counter
- * \param enable Set to 1 to enable data validation mode, set to 0 to disable
+ * \param mode Set to CH_DATA_VALIDATION_COUNTER or CH_DATA_VALIDATION_PRNG to enable corresponding data validation
+ *             mode, set to CH_DATA_VALIDATION_DISABLE to disable
  *
  * \return 0 for success and non-zero otherwise
  */
-uint8_t ch_enable_data_validation(ch_dev_t *dev_ptr, int16_t seed, uint8_t enable);
+uint8_t ch_enable_data_validation(ch_dev_t *dev_ptr, int16_t seed, ch_data_validation_mode_t mode);
 
 /*!  \brief Check data in validation mode, which should be enabled before calling this. Should be
  *  run over all IQ data received by the sensor after mode is enabled to keep the counters in sync.
@@ -2670,6 +2678,8 @@ uint16_t ch_get_tx_length(ch_dev_t *dev_ptr);
  * \param grp_ptr 	pointer to the ch_group_t group descriptor structure
  * \param enable  	1 to enable pre-triggering, 0 to disable
  *
+ * \return 0 on success, 1 on error
+ *
  * This function enables or disables pre-triggering of the receive-only sensor during Pitch-Catch
  * operation.  When pre-triggering is enabled, sensors in CH_MODE_TRIGGERED_RX_ONLY mode will be
  * triggered slightly before sensors in CH_MODE_TRIGGERED_TX_RX mode when \a ch_group_trigger() is called.
@@ -2686,7 +2696,7 @@ uint16_t ch_get_tx_length(ch_dev_t *dev_ptr);
  * setting specified in \a ch_set_max_range(), by about 200mm.  You may want to increase the maximum range setting
  * accordingly.
  */
-void ch_set_rx_pretrigger(ch_group_t *grp_ptr, uint8_t enable);
+uint8_t ch_set_rx_pretrigger(ch_group_t *grp_ptr, uint8_t enable);
 
 /*!
  * \brief Get receive-only sensor pre-triggering setting.
@@ -3464,7 +3474,7 @@ void ch_meas_get_seg_info(ch_dev_t *dev_ptr, uint8_t meas_num, uint8_t seg_num, 
 /*!
  * \brief Get configuration information for a measurement segment.
  *
- * \param inst_ptr 		pointer to the pmut_transciever_t instruction
+ * \param inst_ptr 		pointer to the pmut_transceiver_t instruction
  * \param odr           measurement odr
  * \param info_ptr		pointer to ch_meas_seg_info_t structure to be updated
  *

@@ -65,7 +65,8 @@ typedef struct measurement{ // size: 172 bytes
 
 #define READOUT_OPTIONS_DOUBLE_BUFFER_BM (1)  // if set, double buffering mode is enabled
 #define READOUT_OPTIONS_METADATA_IN_S0_BM (1<<1)  // if set, IQ buffer address and last_measurement idx will be placed in IQ sample 0
-#define READOUT_OPTIONS_DATA_VALIDATION_BM (1<<7)  // if set, IQ data will be overwritten with incrementing counter values.
+#define READOUT_OPTIONS_DATA_VALIDATION_LFSR_BM (1<<6)  // if set, use LFSR for data validation mode, otherwise use counter
+#define READOUT_OPTIONS_DATA_VALIDATION_BM (1<<7)  // if set, data validation mode will be enabled
 
 typedef struct measurement_queue{ // size: 142 bytes
     volatile uint8_t intconfig; // 0x02 switch interrupts to INT2 (see INTCONFIG_*)

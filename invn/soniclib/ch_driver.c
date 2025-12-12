@@ -394,17 +394,15 @@ void chdrv_trig_group_set_dir_out(ch_group_t *grp_ptr) {
 #endif
 }
 
-static void chdrv_trig_group_set_dir_in(ch_group_t *grp_ptr) {
 #ifdef INCLUDE_SHASTA_SUPPORT
+static void chdrv_trig_group_set_dir_in(ch_group_t *grp_ptr) {
 	if (grp_ptr->sensor_trig_pin == 1) {
 		chbsp_group_set_int1_dir_in(grp_ptr);
 	} else if (grp_ptr->sensor_trig_pin == 2) {
 		chbsp_group_set_int2_dir_in(grp_ptr);
 	}
-#elif defined(INCLUDE_WHITNEY_SUPPORT)
-	chbsp_group_set_int1_dir_in(grp_ptr);
-#endif
 }
+#endif
 
 #ifdef INCLUDE_WHITNEY_SUPPORT
 /*!
@@ -502,7 +500,7 @@ int chdrv_write_byte(ch_dev_t *dev_ptr, uint16_t mem_addr, uint8_t data_value) {
  * \param dev_ptr 	pointer to the ch_dev_t config structure for a sensor
  * \param mem_addr 	sensor memory/register address
  * \param data_ptr 		pointer to transmit buffer containing data to send
- * \param len 		number of bytes to write
+ * \param num_bytes 		number of bytes to write
  *
  * \return 0 if successful, non-zero otherwise
  */
@@ -1374,6 +1372,10 @@ uint32_t chdrv_cpu_freq_adjust(ch_dev_t *dev_ptr, uint32_t pmut_op_freq) {
 	min_offset = (pmut_clock_freq / 8);      // min positive offset from multiple of pmut_freq*16
 	max_offset = (pmut_clock_freq * 7 / 8);  // max positive offset from multiple of pmut_freq*16
 
+	if (!pmut_clock_freq) {
+		CH_LOG_ERR("pmut_clock_freq is zero");
+		return 0;
+	}
 	mult_offset = (cpu_freq % pmut_clock_freq);  // calculate offset for current CPU freq
 
 	CH_LOG_INFO("Starting cpu_freq=%lu  starting cpu_trim=%d", cpu_freq, start_trim);
@@ -1576,7 +1578,7 @@ void chdrv_group_measure_rtc(ch_group_t *grp_ptr) {
 
 #ifdef INCLUDE_SHASTA_SUPPORT
 	/* Shasta uses two separated pulses, so end the first one */
-	chbsp_delay_us(10);                  // short duration
+	chbsp_pulse_len_hint_us(10);         // short duration
 	chdrv_trig_group_deassert(grp_ptr);  // end pulse
 #endif
 
@@ -1585,7 +1587,7 @@ void chdrv_group_measure_rtc(ch_group_t *grp_ptr) {
 #ifdef INCLUDE_SHASTA_SUPPORT
 	/* Shasta uses two separated pulses, so begin the second one */
 	chdrv_trig_group_assert(grp_ptr);  // start pulse
-	chbsp_delay_us(10);                // short duration
+	chbsp_pulse_len_hint_us(10);       // short duration
 #endif
 
 	chdrv_trig_group_deassert(grp_ptr);  // end pulse
@@ -1595,7 +1597,7 @@ void chdrv_group_measure_rtc(ch_group_t *grp_ptr) {
 	chdrv_trig_group_set_dir_in(grp_ptr);
 
 	// /* Wait for all sensors to complete
-	chbsp_delay_us(100);
+	chbsp_delay_ms(1);
 
 #elif defined(INCLUDE_WHITNEY_SUPPORT)
 	/* Keep the IO held for at least 50 us to allow the ASIC FW to deactivate the PT logic.
@@ -2034,8 +2036,6 @@ int chdrv_group_wait_for_lock(ch_group_t *grp_ptr) {
  */
 int chdrv_group_hw_trigger(ch_group_t *grp_ptr) {
 	int ch_err = (grp_ptr == NULL);
-	ch_dev_t *dev_ptr;
-	uint8_t dev_num;
 
 	if (!ch_err) {
 		if (grp_ptr->sensor_int_pin == grp_ptr->sensor_trig_pin) {
@@ -2045,24 +2045,30 @@ int chdrv_group_hw_trigger(ch_group_t *grp_ptr) {
 
 		chdrv_trig_group_set_dir_out(grp_ptr);  // Set TRIG pin(s) as output
 
+#if defined INCLUDE_SHASTA_SUPPORT && defined BSP_NO_MICROSECOND_DELAY
+		/* Pre-trigger delay handled on-chip */
+		chdrv_trig_group_assert(grp_ptr);
+		chbsp_pulse_len_hint_us(CHDRV_TRIGGER_PULSE_US);
+		chdrv_trig_group_deassert(grp_ptr);
+#else
 		if (grp_ptr->pretrig_delay_us == 0) {
 			/* No pre-trigger delay - trigger rx-only and tx/rx nodes together */
 			chdrv_trig_group_assert(grp_ptr);
-			chbsp_delay_us(CHDRV_TRIGGER_PULSE_US);
+			chbsp_pulse_len_hint_us(CHDRV_TRIGGER_PULSE_US);
 			chdrv_trig_group_deassert(grp_ptr);
 		} else {
 			/* Pre-trigger rx-only nodes, delay, then trigger tx/rx nodes */
 
 			// Pre-trigger any rx-only nodes
-			for (dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
-				dev_ptr = grp_ptr->device[dev_num];
+			for (int dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
+				ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 
 				if (dev_ptr->mode == CH_MODE_TRIGGERED_RX_ONLY) {  // if rx-only mode
 					chdrv_trig_assert(dev_ptr);                    // trigger this sensor
 				}
 			}
 
-			chbsp_delay_us(CHDRV_TRIGGER_PULSE_US);  // delay for pulse duration
+			chbsp_pulse_len_hint_us(CHDRV_TRIGGER_PULSE_US);  // delay for pulse duration
 
 			chdrv_trig_group_deassert(grp_ptr);  // end pulse on all lines
 
@@ -2070,22 +2076,23 @@ int chdrv_group_hw_trigger(ch_group_t *grp_ptr) {
 			chbsp_delay_us(grp_ptr->pretrig_delay_us - (CHDRV_TRIGGER_PULSE_US + CHDRV_DELAY_OVERHEAD_US));
 
 			// Trigger any tx/rx nodes
-			for (dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
-				dev_ptr = grp_ptr->device[dev_num];
+			for (int dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
+				ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
 
 				if (dev_ptr->mode == CH_MODE_TRIGGERED_TX_RX) {  // if tx/rx mode
 					chdrv_trig_assert(dev_ptr);                  // trigger this sensor
 				}
 			}
 
-			chbsp_delay_us(CHDRV_TRIGGER_PULSE_US);  // delay for pulse duration
+			chbsp_pulse_len_hint_us(CHDRV_TRIGGER_PULSE_US);  // delay for pulse duration
 
 			chdrv_trig_group_deassert(grp_ptr);  // end pulse on all lines
 		}
+#endif
 
 		if (grp_ptr->sensor_int_pin == grp_ptr->sensor_trig_pin) {
 			// Delay a bit before re-enabling pin interrupt to avoid possibly triggering on falling-edge noise
-			chbsp_delay_us(CHDRV_POST_TRIG_IEN_DELAY_US);
+			chbsp_pulse_len_hint_us(CHDRV_POST_TRIG_IEN_DELAY_US);
 
 			chdrv_int_group_set_dir_in(grp_ptr);        // make shared INT/TRIG line an input again
 			chdrv_int_group_interrupt_enable(grp_ptr);  // *** enable interrupts ***
@@ -2123,12 +2130,12 @@ int chdrv_hw_trigger(ch_dev_t *dev_ptr) {
 
 		// Generate pulse
 		chdrv_trig_assert(dev_ptr);
-		chbsp_delay_us(CHDRV_TRIGGER_PULSE_US);
+		chbsp_pulse_len_hint_us(CHDRV_TRIGGER_PULSE_US);
 		chdrv_trig_deassert(dev_ptr);
 
 		if (int_pin == trig_pin) {
 			// Delay a bit before re-enabling pin interrupt to avoid possibly triggering on falling-edge noise
-			chbsp_delay_us(CHDRV_POST_TRIG_IEN_DELAY_US);
+			chbsp_pulse_len_hint_us(CHDRV_POST_TRIG_IEN_DELAY_US);
 
 			chdrv_int_set_dir_in(dev_ptr);        // make shared INT/TRIG line an input again
 			chdrv_int_interrupt_enable(dev_ptr);  // *** enable interrupt ***
@@ -2665,11 +2672,15 @@ int chdrv_group_prepare(ch_group_t *grp_ptr) {
 			grp_ptr->queue[i].running      = 0;
 		}
 
+#ifdef INCLUDE_SHASTA_SUPPORT
 		grp_ptr->sensor_int_pin  = CHIRP_SENSOR_INT_PIN;
 		grp_ptr->sensor_trig_pin = CHIRP_SENSOR_TRIG_PIN;
+#endif
 
 #ifdef INCLUDE_WHITNEY_SUPPORT
-		ch_err = chbsp_i2c_init();
+		grp_ptr->sensor_int_pin  = 1;
+		grp_ptr->sensor_trig_pin = 1;
+		ch_err                   = chbsp_i2c_init();
 #endif
 	}
 
@@ -3051,14 +3062,68 @@ int chdrv_group_soft_reset(ch_group_t *grp_ptr) {
  * \param grp_ptr 		pointer to the ch_group_t config structure for a group of sensors
  * \param delay_us		time to delay between triggering rx-only and tx/rx nodes, in microseconds
  *
+ * \return 0 if successful, non-zero otherwise
+ *
  * This function sets a delay interval that will be inserted between triggering rx-only sensor
  * and tx/rx sensors.  This delay allows the rx-only sensor(s) to settle from any startup disruption
  * (e.g. PMUT "ringdown") before the ultrasound pulse is generated by the tx node.
  *
  */
-void chdrv_pretrigger_delay_set(ch_group_t *grp_ptr, uint16_t delay_us) {
+int chdrv_pretrigger_delay_set(ch_group_t *grp_ptr, uint16_t delay_us) {
+	if (grp_ptr->pretrig_delay_us == 0 && delay_us == 0) {
+		return 0;
+	}
+
+#if defined INCLUDE_SHASTA_SUPPORT && defined BSP_NO_MICROSECOND_DELAY
+	// Add pretrigger delay using a leading COUNT segment
+	for (uint8_t dev_num = 0; dev_num < grp_ptr->num_ports; dev_num++) {
+		ch_dev_t *dev_ptr = grp_ptr->device[dev_num];
+		if (!dev_ptr->sensor_connected) {
+			continue;
+		}
+		if (dev_ptr->mode == CH_MODE_TRIGGERED_TX_RX) {
+			for (uint8_t meas_num = 0; meas_num < MEAS_QUEUE_MAX_MEAS; meas_num++) {
+				volatile measurement_t *meas_ptr = &dev_ptr->meas_queue.meas[meas_num];
+				uint8_t num_segs                 = dev_ptr->meas_num_segments[meas_num];
+
+				if (grp_ptr->pretrig_delay_us == 0 && delay_us > 0) {
+					// add leading count instruction
+					if (num_segs >= INST_BUF_LENGTH - 1) {
+						return 1;
+					}
+					for (int i = num_segs + 1; i > 0; i--) {
+						meas_ptr->trx_inst[i] = meas_ptr->trx_inst[i - 1];
+					}
+
+					dev_ptr->meas_num_segments[meas_num]++;
+				} else if (grp_ptr->pretrig_delay_us != 0 && delay_us == 0) {
+					// remove leading count instruction
+					for (int i = 0; i < num_segs; i++) {
+						meas_ptr->trx_inst[i] = meas_ptr->trx_inst[i + 1];
+					}
+					// zero out previous last instruction
+					meas_ptr->trx_inst[num_segs].length     = 0;
+					meas_ptr->trx_inst[num_segs].cmd_config = 0;
+					dev_ptr->meas_num_segments[meas_num]--;
+					continue;
+				}
+				ch_meas_segment_t cnt_seg;
+				uint32_t delay_cycles = ch_common_usec_to_cycles(dev_ptr, delay_us);
+				ch_common_meas_init_segment_count(&cnt_seg, delay_cycles, 0);
+				meas_ptr->trx_inst[0] = cnt_seg.inst;
+			}
+
+			// write measure queue
+			uint8_t err = ch_common_meas_write_config(dev_ptr);
+			if (err) {
+				return 1;
+			}
+		}
+	}
+#endif
 
 	grp_ptr->pretrig_delay_us = delay_us;
+	return 0;
 }
 
 /*!
