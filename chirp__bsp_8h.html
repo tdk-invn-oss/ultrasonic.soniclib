@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.7.1</span>
+   &#160;<span id="projectnumber">4.9.0</span>
    </div>
   </td>
  </tr>
@@ -215,6 +215,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aef4083b837524818ced9fff00a3761c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#aef4083b837524818ced9fff00a3761c1">chbsp_program_enable</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr)</td></tr>
 <tr class="memdesc:aef4083b837524818ced9fff00a3761c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assert the PROG pin.  <a href="chirp__bsp_8h.html#aef4083b837524818ced9fff00a3761c1">More...</a><br /></td></tr>
 <tr class="separator:aef4083b837524818ced9fff00a3761c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacbcc8fbdd30a68b6eba9034262de83d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#aacbcc8fbdd30a68b6eba9034262de83d">chbsp_pulse_len_hint_us</a> (uint32_t us)</td></tr>
+<tr class="memdesc:aacbcc8fbdd30a68b6eba9034262de83d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delay for approximately the specified number of microseconds. This function times the INT pulse length, and is also used by SonicLib to add a delay between changing the level of the INT line and enabling interrupts. Unlike chbsp_delay_us, timing accuracy is not critical.  <a href="chirp__bsp_8h.html#aacbcc8fbdd30a68b6eba9034262de83d">More...</a><br /></td></tr>
+<tr class="separator:aacbcc8fbdd30a68b6eba9034262de83d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb2dcfcdab4e07721de96f6f7e01b6da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="chirp__bsp_8h.html#abb2dcfcdab4e07721de96f6f7e01b6da">chbsp_reset_assert</a> (void)</td></tr>
 <tr class="memdesc:abb2dcfcdab4e07721de96f6f7e01b6da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assert the reset pin for all sensors.  <a href="chirp__bsp_8h.html#abb2dcfcdab4e07721de96f6f7e01b6da">More...</a><br /></td></tr>
 <tr class="separator:abb2dcfcdab4e07721de96f6f7e01b6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,7 +260,7 @@ Functions</h2></td></tr>
 <p>This file defines the I/O interfaces that allow the standard Chirp SonicLib sensor driver functions to manage one or more sensors on a specific hardware platform. These include functions to initialize and control the various I/O pins connecting the sensor to the host system, the SPI or I2C communications interface, timer functions, etc.</p>
 <p>Typically, most of the functions in the BSP are implemented as "wrapper functions" for operations that are provided in the MCU vendor's I/O library. So, the BSP largely serves as a translation layer for most functions.</p>
 <p>The board support package developer should not need to modify this header file. However, that developer is responsible for implementing these support functions for the hardware platform, using the interfaces defined here. Note that some functions are optional, depending on the specific runtime requirements (e.g. is non-blocking I/O required?) or development needs (e.g. is debugging support needed?).</p>
-<dl class="section note"><dt>Note</dt><dd>All functions are marked as REQUIRED, RECOMMENDED, or OPTIONAL in their indvidual descriptions. "Recommended" functions are either not used directly by SonicLib (but may be expected by examples and other applications from Chirp) or are only required to support certain operating configurations (e.g. individual device triggering).</dd>
+<dl class="section note"><dt>Note</dt><dd>All functions are marked as REQUIRED, RECOMMENDED, or OPTIONAL in their individual descriptions. "Recommended" functions are either not used directly by SonicLib (but may be expected by examples and other applications from Chirp) or are only required to support certain operating configurations (e.g. individual device triggering).</dd>
 <dd>
 Some BSP functions are only used with a specific generation of Chirp Sensor, either the ICU family or the earlier CH101 &amp; CH201 devices. The description of these functions will indicate which sensors are applicable. If not specified, the requirement applies equally to ICU and CH101/CH201 sensors.</dd></dl>
 <h3>Organization</h3>
@@ -272,7 +275,7 @@ Some BSP functions are only used with a specific generation of Chirp Sensor, eit
 <p>CH101 and CH201 sensors have a single interrupt line that is normally used only for data ready interrupts. The line is low when inactive, so the interrupt consists of a brief high pulse. CH101/CH201 sensors always use "INT1" routines and interfaces.</p>
 <h4>Notifying SonicLib that a Sensor Interrupt Occurred</h4>
 <p>The BSP's handler routine that detects that a sensor interrupt has occurred (typically to indicate completion of a measurement) must notify SonicLib by calling <em><a class="el" href="ch__api_8c.html#a68080a85a27dc680ce55c020f575c5c3" title="Notify SonicLib that a sensor interrupt occurred.">ch_interrupt()</a></em>. The <em><a class="el" href="ch__api_8c.html#a68080a85a27dc680ce55c020f575c5c3" title="Notify SonicLib that a sensor interrupt occurred.">ch_interrupt()</a></em> function takes two parameters, a pointer to the <a class="el" href="structch__group__t.html" title="Chirp sensor group descriptor structure.">ch_group_t</a> descriptor for the group containing the interrupting sensor, and the device number within the group.</p>
-<p>The sensor will be examined by SonicLib to determine the interrupt type. Then, the application's callback routine that was registered using <em><a class="el" href="ch__api_8c.html#af3d4045f3510d82596c8231123e890b9" title="Set callback function for Chirp sensor I/O interrupt.">ch_io_int_callback_set()</a></em> will be called to notify the application. The interrupt type will be passed to the appliction callback routine.</p>
+<p>The sensor will be examined by SonicLib to determine the interrupt type. Then, the application's callback routine that was registered using <em><a class="el" href="ch__api_8c.html#af3d4045f3510d82596c8231123e890b9" title="Set callback function for Chirp sensor I/O interrupt.">ch_io_int_callback_set()</a></em> will be called to notify the application. The interrupt type will be passed to the application callback routine.</p>
 <p>All this processing takes place in the context of the BSP interrupt handler.</p>
 <h3>Non-blocking I/O Notification</h3>
 <p>If non-blocking I/O is used, the BSP's handler functions which processes the completion of an I/O operation must notify SonicLib that the I/O has completed by calling the <em><a class="el" href="ch__api_8c.html#a32b5931001ef934347a12daa46d700a7" title="Continue a non-blocking readout.">ch_io_notify()</a></em> function. The group pointer and SPI/I2C bus number must be passed as parameters to identify which I/O channel has finished.</p>
@@ -337,7 +340,7 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
   </table>
   </dd>
 </dl>
-<p>This function should drive the the specified debug indicator pin low. The <em>dbg_pin_num</em> parameter is an index value that specifies which debug pin should be controlled.</p>
+<p>This function should drive the specified debug indicator pin low. The <em>dbg_pin_num</em> parameter is an index value that specifies which debug pin should be controlled.</p>
 <p>This function is OPTIONAL.</p>
 <dl class="section note"><dt>Note</dt><dd>OPTIONAL - Implementing this function is optional and only needed for debugging support. The indicator pins may be any convenient GPIO signals on the host system. They are only used to provide a detectable indication of the program execution for debugging. If used, the debug pin(s) must be initialized during board init. </dd></dl>
 
@@ -454,7 +457,7 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
   </dd>
 </dl>
 <p>This function should wait for the specified number of microseconds before returning to the caller.</p>
-<p>This function is REQUIRED. </p>
+<p>This function is REQUIRED for CH101 or CH201 sensors, and is OPTIONAL for ICU sensors. If this function is not implemented, BSP_NO_MICROSECOND_DELAY should be defined in <a class="el" href="chirp__board__config_8h_source.html">chirp_board_config.h</a> if the ch_set_rx_pretrigger API function is used. </p>
 
 </div>
 </div>
@@ -519,7 +522,7 @@ for (dev_num = 0; dev_num &lt; ch_get_num_ports(grp_ptr); dev_num++ {
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if an event has been received on INT pin, 1 if time-out happened</dd></dl>
-<p>This function is called during initialization when an event is triggered on sensor and we wait the the result. This event is called in "application" context </p>
+<p>This function is called during initialization when an event is triggered on sensor and we wait for the result. This event is called in "application" context </p>
 
 </div>
 </div>
@@ -1721,6 +1724,33 @@ Implementations of this function should use the <em><a class="el" href="ch__api_
 <p>This function should drive the Chirp sensor PROG pin high for the specified device. It is used by the driver to initiate I2C communication with a specific Chirp sensor device before a unique I2C address is assigned to the device or when the programming interface is used.</p>
 <p>When the PROG pin is asserted, the device will respond to the standard programming I2C address (0x45).</p>
 <p>This function is REQUIRED for CH101 and CH201 sensors. It is not used for ICU sensors. </p>
+
+</div>
+</div>
+<a id="aacbcc8fbdd30a68b6eba9034262de83d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacbcc8fbdd30a68b6eba9034262de83d">&#9670;&nbsp;</a></span>chbsp_pulse_len_hint_us()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void chbsp_pulse_len_hint_us </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>us</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Delay for approximately the specified number of microseconds. This function times the INT pulse length, and is also used by SonicLib to add a delay between changing the level of the INT line and enabling interrupts. Unlike chbsp_delay_us, timing accuracy is not critical. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">us</td><td>number of microseconds to delay before returning</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This function is optional. It should be implemented if necessary to satisfy minimum INT pin pulse length requirements, and if a delay between setting the INT pin low and enabling interrupts is required to avoid spurious interrupts. </p>
 
 </div>
 </div>

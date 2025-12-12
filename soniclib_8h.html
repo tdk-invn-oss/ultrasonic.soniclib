@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Chirp SonicLib
-   &#160;<span id="projectnumber">4.7.1</span>
+   &#160;<span id="projectnumber">4.9.0</span>
    </div>
   </td>
  </tr>
@@ -238,9 +238,9 @@ Macros</h2></td></tr>
 <tr class="separator:aef40d6fd76a720e83aa328bfc080cb0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3407caaf3d2f8bb12e8c26bccbe3ae40">SONICLIB_VER_MAJOR</a>&#160;&#160;&#160;(4)</td></tr>
 <tr class="separator:a3407caaf3d2f8bb12e8c26bccbe3ae40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(7)</td></tr>
+<tr class="memitem:a3114f821e7b6c5971ddf1c363597b761"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a3114f821e7b6c5971ddf1c363597b761">SONICLIB_VER_MINOR</a>&#160;&#160;&#160;(9)</td></tr>
 <tr class="separator:a3114f821e7b6c5971ddf1c363597b761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(1)</td></tr>
+<tr class="memitem:a602271af8c1cf2ba218e68b49e5d465f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a602271af8c1cf2ba218e68b49e5d465f">SONICLIB_VER_REV</a>&#160;&#160;&#160;(0)</td></tr>
 <tr class="separator:a602271af8c1cf2ba218e68b49e5d465f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87026a07278934542ce439d706df7aef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87026a07278934542ce439d706df7aef">SONICLIB_VER_SUFFIX</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
 <tr class="separator:a87026a07278934542ce439d706df7aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -369,6 +369,12 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a35340d9457845a6865d3bb2e0510ed6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor asic design generations.  <a href="soniclib_8h.html#a35340d9457845a6865d3bb2e0510ed6a">More...</a><br /></td></tr>
 <tr class="separator:a35340d9457845a6865d3bb2e0510ed6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4522a6dbb9c42a2cbcdcd345ace8f2c8"><td class="memItemLeft" align="right" valign="top"><a id="a4522a6dbb9c42a2cbcdcd345ace8f2c8"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a4522a6dbb9c42a2cbcdcd345ace8f2c8">ch_data_validation_mode_t</a> { <b>CH_DATA_VALIDATION_DISABLE</b> = 0
+, <b>CH_DATA_VALIDATION_COUNTER</b> = 1
+, <b>CH_DATA_VALIDATION_PRNG</b> = 2
+ }</td></tr>
+<tr class="memdesc:a4522a6dbb9c42a2cbcdcd345ace8f2c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data validation mode configuration. <br /></td></tr>
+<tr class="separator:a4522a6dbb9c42a2cbcdcd345ace8f2c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab54ccbb11856e6dac54edae0527a472e"><td class="memItemLeft" align="right" valign="top"><a id="ab54ccbb11856e6dac54edae0527a472e"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ab54ccbb11856e6dac54edae0527a472e">ch_decimation_t</a> { <br />
 &#160;&#160;<b>CH_DECIMATION_0_25</b> = -2
 , <b>CH_DECIMATION_0_50</b> = -1
@@ -568,9 +574,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a80163f6dcdf543501edcf938b50801e3"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a80163f6dcdf543501edcf938b50801e3">ch_data_validation_check</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, <a class="el" href="structch__iq__sample__t.html">ch_iq_sample_t</a> *data, uint16_t num_samples)</td></tr>
 <tr class="memdesc:a80163f6dcdf543501edcf938b50801e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check data in validation mode, which should be enabled before calling this. Should be run over all IQ data received by the sensor after mode is enabled to keep the counters in sync.  <a href="soniclib_8h.html#a80163f6dcdf543501edcf938b50801e3">More...</a><br /></td></tr>
 <tr class="separator:a80163f6dcdf543501edcf938b50801e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4f5dfbca9d08fb551809bfc5d1bf3cb"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ad4f5dfbca9d08fb551809bfc5d1bf3cb">ch_enable_data_validation</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, int16_t seed, uint8_t enable)</td></tr>
-<tr class="memdesc:ad4f5dfbca9d08fb551809bfc5d1bf3cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable data validation mode. In this mode, ICU-x0201 sensors will overwrite the IQ data at the end of a measurement and after running the algorithm, with a known sequence to allow validating data transfer integrity while making minimal changes to the system otherwise. Currently, this is limited to a 16-bit counter that increments for each I and Q sample and is continuous across measurements.  <a href="soniclib_8h.html#ad4f5dfbca9d08fb551809bfc5d1bf3cb">More...</a><br /></td></tr>
-<tr class="separator:ad4f5dfbca9d08fb551809bfc5d1bf3cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0664816b726d1fd9361d6197cc0cb5c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ac0664816b726d1fd9361d6197cc0cb5c">ch_enable_data_validation</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, int16_t seed, <a class="el" href="soniclib_8h.html#a4522a6dbb9c42a2cbcdcd345ace8f2c8">ch_data_validation_mode_t</a> mode)</td></tr>
+<tr class="memdesc:ac0664816b726d1fd9361d6197cc0cb5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable data validation mode. In this mode, ICU-x0201 sensors will overwrite the IQ data at the end of a measurement with a known data sequence to allow validating data transfer integrity while making minimal changes to the system otherwise. Depending on the mode setting, the data values can either be generated by an incrementing counter or a PRNG.  <a href="soniclib_8h.html#ac0664816b726d1fd9361d6197cc0cb5c">More...</a><br /></td></tr>
+<tr class="separator:ac0664816b726d1fd9361d6197cc0cb5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87c0409b1443384afe601b8098aec6ef"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#a87c0409b1443384afe601b8098aec6ef">ch_enable_double_buffer</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint8_t enable)</td></tr>
 <tr class="memdesc:a87c0409b1443384afe601b8098aec6ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable the double buffering mode.  <a href="soniclib_8h.html#a87c0409b1443384afe601b8098aec6ef">More...</a><br /></td></tr>
 <tr class="separator:a87c0409b1443384afe601b8098aec6ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1009,9 +1015,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aba0abd6a2546fb40cb8fc9b832a6d63b"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#aba0abd6a2546fb40cb8fc9b832a6d63b">ch_set_rx_low_gain</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t num_samples)</td></tr>
 <tr class="memdesc:aba0abd6a2546fb40cb8fc9b832a6d63b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the receive low-gain sample count.  <a href="soniclib_8h.html#aba0abd6a2546fb40cb8fc9b832a6d63b">More...</a><br /></td></tr>
 <tr class="separator:aba0abd6a2546fb40cb8fc9b832a6d63b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee0bbd8d9e2d5e1064fa8eb9ace180f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#aee0bbd8d9e2d5e1064fa8eb9ace180f7">ch_set_rx_pretrigger</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t enable)</td></tr>
-<tr class="memdesc:aee0bbd8d9e2d5e1064fa8eb9ace180f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable receive-only sensor pre-triggering.  <a href="soniclib_8h.html#aee0bbd8d9e2d5e1064fa8eb9ace180f7">More...</a><br /></td></tr>
-<tr class="separator:aee0bbd8d9e2d5e1064fa8eb9ace180f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7abccc879965fba751519eaeb0a817c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#af7abccc879965fba751519eaeb0a817c">ch_set_rx_pretrigger</a> (<a class="el" href="structch__group__t.html">ch_group_t</a> *grp_ptr, uint8_t enable)</td></tr>
+<tr class="memdesc:af7abccc879965fba751519eaeb0a817c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable receive-only sensor pre-triggering.  <a href="soniclib_8h.html#af7abccc879965fba751519eaeb0a817c">More...</a><br /></td></tr>
+<tr class="separator:af7abccc879965fba751519eaeb0a817c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3a08fc3bf063f817bb28cd666d19fa2"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="soniclib_8h.html#ae3a08fc3bf063f817bb28cd666d19fa2">ch_set_sample_interval</a> (<a class="el" href="structch__dev__t.html">ch_dev_t</a> *dev_ptr, uint16_t interval_ms)</td></tr>
 <tr class="memdesc:ae3a08fc3bf063f817bb28cd666d19fa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the internal sensing interval (deprecated).  <a href="soniclib_8h.html#ae3a08fc3bf063f817bb28cd666d19fa2">More...</a><br /></td></tr>
 <tr class="separator:ae3a08fc3bf063f817bb28cd666d19fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1571,7 +1577,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(7)</td>
+          <td class="memname">#define SONICLIB_VER_MINOR&#160;&#160;&#160;(9)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1586,7 +1592,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(1)</td>
+          <td class="memname">#define SONICLIB_VER_REV&#160;&#160;&#160;(0)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2324,8 +2330,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad4f5dfbca9d08fb551809bfc5d1bf3cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4f5dfbca9d08fb551809bfc5d1bf3cb">&#9670;&nbsp;</a></span>ch_enable_data_validation()</h2>
+<a id="ac0664816b726d1fd9361d6197cc0cb5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0664816b726d1fd9361d6197cc0cb5c">&#9670;&nbsp;</a></span>ch_enable_data_validation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2345,8 +2351,8 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>enable</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="soniclib_8h.html#a4522a6dbb9c42a2cbcdcd345ace8f2c8">ch_data_validation_mode_t</a>&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2356,13 +2362,13 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Enable data validation mode. In this mode, ICU-x0201 sensors will overwrite the IQ data at the end of a measurement and after running the algorithm, with a known sequence to allow validating data transfer integrity while making minimal changes to the system otherwise. Currently, this is limited to a 16-bit counter that increments for each I and Q sample and is continuous across measurements. </p>
-<p>This feature is currently only supported by icu_init_fw. It is not recommended to use it if the application uses continuous receive, or has non-contiguous RX segments in its measurement queue. Enabling data validation adds approximately 0.8μs per IQ sample to the measurement time. Note that for each sample, the counter value is incremented in the order of Q then I. Data validation must be handled by the application using <a class="el" href="soniclib_8h.html#a80163f6dcdf543501edcf938b50801e3" title="Check data in validation mode, which should be enabled before calling this. Should be run over all IQ...">ch_data_validation_check()</a>.</p>
+<p>Enable data validation mode. In this mode, ICU-x0201 sensors will overwrite the IQ data at the end of a measurement with a known data sequence to allow validating data transfer integrity while making minimal changes to the system otherwise. Depending on the mode setting, the data values can either be generated by an incrementing counter or a PRNG. </p>
+<p>This feature is currently only supported by icu_init_fw and icu_init-ext_fw. It is not recommended to use it if the application uses continuous receive, or has non-contiguous RX segments in its measurement queue. In counter mode, data validation adds approximately 0.8μs per IQ sample to the measurement time. The PRNG has a significant sensor runtime cost and adds approximately 11μs per sample. Note that for each sample, the counter value is incremented in the order of Q then I. Data validation must be handled by the application using <a class="el" href="soniclib_8h.html#a80163f6dcdf543501edcf938b50801e3" title="Check data in validation mode, which should be enabled before calling this. Should be run over all IQ...">ch_data_validation_check()</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dev_ptr</td><td>The device pointer </td></tr>
     <tr><td class="paramname">seed</td><td>Initial value for data validation counter </td></tr>
-    <tr><td class="paramname">enable</td><td>Set to 1 to enable data validation mode, set to 0 to disable</td></tr>
+    <tr><td class="paramname">mode</td><td>Set to CH_DATA_VALIDATION_COUNTER or CH_DATA_VALIDATION_PRNG to enable corresponding data validation mode, set to CH_DATA_VALIDATION_DISABLE to disable</td></tr>
   </table>
   </dd>
 </dl>
@@ -3997,7 +4003,7 @@ The <em>range_type</em> parameter only controls how this function interprets the
   </dd>
 </dl>
 <p>This function returns the current state (enabled or disabled) of pre-triggering receive-only sensors.</p>
-<p>See also <em><a class="el" href="soniclib_8h.html#aee0bbd8d9e2d5e1064fa8eb9ace180f7" title="Enable/disable receive-only sensor pre-triggering.">ch_set_rx_pretrigger()</a></em>.</p>
+<p>See also <em><a class="el" href="soniclib_8h.html#af7abccc879965fba751519eaeb0a817c" title="Enable/disable receive-only sensor pre-triggering.">ch_set_rx_pretrigger()</a></em>.</p>
 <dl class="section return"><dt>Returns</dt><dd>1 if receive pre-triggering is enabled, 0 if disabled </dd></dl>
 
 </div>
@@ -4026,7 +4032,7 @@ The <em>range_type</em> parameter only controls how this function interprets the
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Interval between samples (in ms), or 0 if device is not in free-running mode</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This function is DEPRECATED and is provided only for backwards compatiblity. New applications should use the equivalent <em><a class="el" href="soniclib_8h.html#a2f5c83e0d155e17ab8ac74951f44ea02" title="Get the internal sensing timing interval for a sensor, in milliseconds.">ch_get_freerun_interval()</a></em> function.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function is DEPRECATED and is provided only for backwards compatibility. New applications should use the equivalent <em><a class="el" href="soniclib_8h.html#a2f5c83e0d155e17ab8ac74951f44ea02" title="Get the internal sensing timing interval for a sensor, in milliseconds.">ch_get_freerun_interval()</a></em> function.</dd></dl>
 <p>This function returns the interval between measurements, in milliseconds, for a sensor operating in free-running mode. If the sensor is in a different operating mode (e.g. a triggered mode), zero is returned. </p>
 
 </div>
@@ -4318,7 +4324,7 @@ The <em>range_type</em> parameter only controls how this function interprets the
 <p>This function fills the fields in the <em><a class="el" href="structch__version__t.html" title="SonicLib version structure.">ch_version_t</a></em> structure identified by <em>version_ptr</em> with the SonicLib version number.</p>
 <p>The version number consists of three x.y.z fields: &lt;major&gt;.&lt;minor&gt;.&lt;rev&gt;</p>
 <ul>
-<li><em>Major</em> versions are infrequent architectural releases that may include fundamental changes to interfaces and other compatiblity issues.</li>
+<li><em>Major</em> versions are infrequent architectural releases that may include fundamental changes to interfaces and other compatibility issues.</li>
 <li><em>Minor</em> releases introduce new features and may include minor changes to individual interfaces, but are generally backwards compatible.</li>
 <li><em>Revision</em> releases include bug fixes and other changes that do not affect public interfaces. </li>
 </ul>
@@ -4805,7 +4811,7 @@ The <em>range_type</em> parameter only controls how this function interprets the
 <p>Get configuration information for a measurement segment. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">inst_ptr</td><td>pointer to the pmut_transciever_t instruction </td></tr>
+    <tr><td class="paramname">inst_ptr</td><td>pointer to the pmut_transceiver_t instruction </td></tr>
     <tr><td class="paramname">odr</td><td>measurement odr </td></tr>
     <tr><td class="paramname">info_ptr</td><td>pointer to <a class="el" href="structch__meas__seg__info__t.html" title="Measurement segment info.">ch_meas_seg_info_t</a> structure to be updated</td></tr>
   </table>
@@ -7306,7 +7312,7 @@ In ICU sensors, the ODR is configurable. The default is one sample per 8 transce
 <p>Other differences from <em><a class="el" href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3" title="Run SonicLib&#39;s full-featured interrupt handler.">ch_interrupt()</a></em>:</p>
 <ul>
 <li>This function does not disable interrupt handling. This must be done in user code if needed.</li>
-<li>This function does not read any metadata from the sensor, with one exception. During sensor programming, this funciton performs one SPI read in order to cause the ASIC to release the interrupt line.</li>
+<li>This function does not read any metadata from the sensor, with one exception. During sensor programming, this function performs one SPI read in order to cause the ASIC to release the interrupt line.</li>
 <li>This function does not update state of the dev_ptr</li>
 </ul>
 <p>See also <em><a class="el" href="soniclib_8h.html#a68080a85a27dc680ce55c020f575c5c3" title="Run SonicLib&#39;s full-featured interrupt handler.">ch_interrupt()</a></em>. </p>
@@ -7973,7 +7979,7 @@ For ICU sensors, this function always returns the conversion values for the defa
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function is used to define the init firmware for a sensor if the main firwmware (determined with ch_init) doesn't have initialization features in it. It can be necessary to set a specific initialization firmware (with tx optimization) if using measure optimization API.</p>
+<p>This function is used to define the init firmware for a sensor if the main firmware (determined with ch_init) doesn't have initialization features in it. It can be necessary to set a specific initialization firmware (with tx optimization) if using measure optimization API.</p>
 <dl class="section note"><dt>Note</dt><dd>This function only performs internal initialization of data structures, etc. It does not actually initialize the physical sensor device(s). See <em><a class="el" href="soniclib_8h.html#a3d1acc5372d38d7abd7028a5504e5634" title="Program and start a group of sensors.">ch_group_start()</a></em>, <em><a class="el" href="soniclib_8h.html#af25e3902b1313e4de920e703564bffb5" title="Restart a sensor.">ch_restart()</a></em>, <em><a class="el" href="soniclib_8h.html#a69790de1c39a18e73c4b42d4670e80a8" title="Restart a group of sensors.">ch_group_restart()</a></em> and <em><a class="el" href="soniclib_8h.html#a6d21dc9fdd39ade2eef9c269ba027272" title="Optimize ultrasound measurement sequences for a sensor.">ch_meas_optimize()</a></em>. </dd></dl>
 
 </div>
@@ -8013,7 +8019,7 @@ For ICU sensors, this function always returns the conversion values for the defa
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if success, 1 if error</dd></dl>
-<p>This function sets the sensor interrupt to use an open-drain or push-pull drive. In open drain, the sensor will actively drive the line low and use a pull-up resistor for the hight level. In push-pull drive, the sensor will actively drive the line both low and high. Additionally, the pull-up resistor on the interrupt pin used for hardware trigger is disabled. By default, ICU sensors use open drain interrupt drive (CH_INTERRUPT_DRIVE_OPEN_DRAIN).</p>
+<p>This function sets the sensor interrupt to use an open-drain or push-pull drive. In open drain, the sensor will actively drive the line low and use a pull-up resistor for the high level. In push-pull drive, the sensor will actively drive the line both low and high. Additionally, the pull-up resistor on the interrupt pin used for hardware trigger is disabled. By default, ICU sensors use open drain interrupt drive (CH_INTERRUPT_DRIVE_OPEN_DRAIN).</p>
 <p>To use this function, set <em>drive</em> to CH_INTERRUPT_DRIVE_OPEN_DRAIN to enable open drain drive. Set <em>drive</em> to CH_INTERRUPT_DRIVE_PUSH_PULL to use push-pull drive.</p>
 <dl class="section note"><dt>Note</dt><dd>This option is only available for ICU sensors. CH101 and CH201 sensors always use active-high, pull low interrupts. Attempting to set <em>drive</em> to CH_INTERRUPT_MODE_PUSH_PULL on a CH101 or CH201 will return an error. </dd></dl>
 
@@ -8401,14 +8407,14 @@ For ICU sensors, this function always returns the conversion values for the defa
 
 </div>
 </div>
-<a id="aee0bbd8d9e2d5e1064fa8eb9ace180f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee0bbd8d9e2d5e1064fa8eb9ace180f7">&#9670;&nbsp;</a></span>ch_set_rx_pretrigger()</h2>
+<a id="af7abccc879965fba751519eaeb0a817c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7abccc879965fba751519eaeb0a817c">&#9670;&nbsp;</a></span>ch_set_rx_pretrigger()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void ch_set_rx_pretrigger </td>
+          <td class="memname">uint8_t ch_set_rx_pretrigger </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structch__group__t.html">ch_group_t</a> *&#160;</td>
           <td class="paramname"><em>grp_ptr</em>, </td>
@@ -8435,6 +8441,7 @@ For ICU sensors, this function always returns the conversion values for the defa
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success, 1 on error</dd></dl>
 <p>This function enables or disables pre-triggering of the receive-only sensor during Pitch-Catch operation. When pre-triggering is enabled, sensors in CH_MODE_TRIGGERED_RX_ONLY mode will be triggered slightly before sensors in CH_MODE_TRIGGERED_TX_RX mode when <em><a class="el" href="soniclib_8h.html#aa4e917eea19df611680dc97e2401db3a" title="Trigger a measurement on a group of sensors.">ch_group_trigger()</a></em> is called. This improves the ability of a receive-only sensor to detect the transmitted pulse at very short distances.</p>
 <p>If enabled, pre-triggering is used for all receive-only sensors in the sensor group.</p>
 <p>To use this function, set <em>enable</em> to 1 to enable pre-triggering, or 0 to disable pre-triggering.</p>
