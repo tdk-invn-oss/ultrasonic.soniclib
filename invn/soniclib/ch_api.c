@@ -788,9 +788,15 @@ ch_interrupt_drive_t ch_get_interrupt_drive(ch_dev_t *dev_ptr) {
 	return ch_common_get_interrupt_drive(dev_ptr);
 }
 
-uint8_t ch_enable_data_validation(ch_dev_t *dev_ptr, int16_t seed, uint8_t enable) {
-	if (enable) {
+uint8_t ch_enable_data_validation(ch_dev_t *dev_ptr, int16_t seed, ch_data_validation_mode_t mode) {
+	if (mode != CH_DATA_VALIDATION_DISABLE) {
 		dev_ptr->meas_queue.reserved |= READOUT_OPTIONS_DATA_VALIDATION_BM;
+		if (mode == CH_DATA_VALIDATION_PRNG) {
+			dev_ptr->meas_queue.reserved |= READOUT_OPTIONS_DATA_VALIDATION_LFSR_BM;
+			if (seed == 0) {
+				seed = 1;
+			}
+		}
 	} else {
 		dev_ptr->meas_queue.reserved &= ~READOUT_OPTIONS_DATA_VALIDATION_BM;
 	}
@@ -798,21 +804,39 @@ uint8_t ch_enable_data_validation(ch_dev_t *dev_ptr, int16_t seed, uint8_t enabl
 	return ch_common_write_data_validation_cfg(dev_ptr, dev_ptr->meas_queue.reserved, seed);
 }
 
+static void xorshift(uint16_t *xs) {
+	*xs ^= *xs << 7;
+	*xs ^= *xs >> 9;
+	*xs ^= *xs << 8;
+}
+
+static void data_validation_inc(ch_dev_t *dev_ptr) {
+	if (dev_ptr->meas_queue.reserved & READOUT_OPTIONS_DATA_VALIDATION_LFSR_BM) {
+		xorshift((uint16_t *)&dev_ptr->data_validation_counter);
+	} else {
+		dev_ptr->data_validation_counter++;
+	}
+}
+
 uint16_t ch_data_validation_check(ch_dev_t *dev_ptr, ch_iq_sample_t *data, uint16_t num_samples) {
 	uint16_t err_cnt = 0;
 
 	for (uint16_t i = 0; i < num_samples; i++) {
 		if ((i == 0) && (dev_ptr->meas_queue.reserved & READOUT_OPTIONS_METADATA_IN_S0_BM)) {
-			dev_ptr->data_validation_counter += 2;
+			data_validation_inc(dev_ptr);
+			data_validation_inc(dev_ptr);
 			continue;
 		}
 
-		if (data[i].q != dev_ptr->data_validation_counter++) {
+		if (data[i].q != dev_ptr->data_validation_counter) {
 			err_cnt++;
 		}
-		if (data[i].i != dev_ptr->data_validation_counter++) {
+		data_validation_inc(dev_ptr);
+
+		if (data[i].i != dev_ptr->data_validation_counter) {
 			err_cnt++;
 		}
+		data_validation_inc(dev_ptr);
 	}
 	return err_cnt;
 }
@@ -910,12 +934,12 @@ uint16_t ch_get_tx_length(ch_dev_t *dev_ptr) {
 	return tx_length;
 }
 
-void ch_set_rx_pretrigger(ch_group_t *grp_ptr, uint8_t enable) {
+uint8_t ch_set_rx_pretrigger(ch_group_t *grp_ptr, uint8_t enable) {
 
 	if (enable) {
-		chdrv_pretrigger_delay_set(grp_ptr, CHDRV_PRETRIGGER_DELAY_US);
+		return chdrv_pretrigger_delay_set(grp_ptr, CHDRV_PRETRIGGER_DELAY_US);
 	} else {
-		chdrv_pretrigger_delay_set(grp_ptr, 0);
+		return chdrv_pretrigger_delay_set(grp_ptr, 0);
 	}
 }
 

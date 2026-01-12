@@ -18,7 +18,7 @@
  * on the specific runtime requirements (e.g. is non-blocking I/O required?) or development needs
  * (e.g. is debugging support needed?).
  *
- * \note All functions are marked as REQUIRED, RECOMMENDED, or OPTIONAL in their indvidual
+ * \note All functions are marked as REQUIRED, RECOMMENDED, or OPTIONAL in their individual
  * descriptions.  "Recommended" functions are either not used directly by SonicLib (but may be
  * expected by examples and other applications from Chirp) or are only required to support certain
  * operating configurations (e.g. individual device triggering).
@@ -77,7 +77,7 @@
  *	The sensor will be examined by SonicLib to determine the interrupt type.
  *	Then, the application's callback routine that was registered using
  *	\a ch_io_int_callback_set() will be called to notify the application.
- *	The interrupt type will be passed to the appliction callback routine.
+ *	The interrupt type will be passed to the application callback routine.
  *
  *	All this processing takes place in the context of the BSP interrupt handler.
  *
@@ -237,7 +237,7 @@ void chbsp_debug_on(uint8_t dbg_pin_num);
  *
  * \param dbg_pin_num  index value for debug pin to turn off
  *
- * This function should drive the the specified debug indicator pin low.
+ * This function should drive the specified debug indicator pin low.
  * The \a dbg_pin_num parameter is an index value that specifies which debug pin should
  * be controlled.
  *
@@ -627,9 +627,24 @@ void chbsp_int2_interrupt_disable(ch_dev_t *dev_ptr);
  * This function should wait for the specified number of microseconds before returning to
  * the caller.
  *
- * This function is REQUIRED.
+ * This function is REQUIRED for CH101 or CH201 sensors, and is OPTIONAL for ICU sensors.
+ * If this function is not implemented, BSP_NO_MICROSECOND_DELAY should be defined in chirp_board_config.h if
+ * the ch_set_rx_pretrigger API function is used.
  */
 void chbsp_delay_us(uint32_t us);
+
+/*!
+ * \brief Delay for approximately the specified number of microseconds. This function times the INT pulse
+ * length, and is also used by SonicLib to add a delay between changing the level of the INT line and enabling
+ * interrupts.  Unlike chbsp_delay_us, timing accuracy is not critical.
+ *
+ * \param us  	number of microseconds to delay before returning
+ *
+ * This function is optional.  It should be implemented if necessary to satisfy minimum INT pin pulse length
+ * requirements, and if a delay between setting the INT pin low and enabling interrupts is required to avoid spurious
+ * interrupts.
+ */
+void chbsp_pulse_len_hint_us(uint32_t us);
 
 /*!
  * \brief Delay for specified number of milliseconds.
@@ -669,7 +684,7 @@ uint32_t chbsp_timestamp_ms(void);
  * @return 0 if an event has been received on INT pin, 1 if time-out happened
  *
  * This function is called during initialization when an event is triggered on sensor
- * and we wait the the result. This event is called in "application" context
+ * and we wait for the result. This event is called in "application" context
  */
 uint8_t chbsp_event_wait(uint16_t time_out_ms, uint32_t event_mask);
 
